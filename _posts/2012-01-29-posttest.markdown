@@ -2,21 +2,22 @@
 layout: post
 title: "posttest"
 date: 2012-01-29 23:49
-content:
+comments: true
+categories: 
+---
+#  for Designers
 
-# Liquid for Designers
-
-There are two types of markup in Liquid: Output and Tag.
+There are two types of markup in : Output and Tag.
 
 * Output markup (which may resolve to text) is surrounded by
 
-```liquid
+```
 {{ matched pairs of curly brackets (ie, braces) }}
 ```
 
 * Tag markup (which cannot resolve to text) is surrounded by
 
-```liquid
+```
 {% matched pairs of curly brackets and percent signs %}
 ```
 <!-- more -->
@@ -25,7 +26,7 @@ There are two types of markup in Liquid: Output and Tag.
 Here is a simple example of Output:
 Hello {{ 'now' | date: "%Y %h" }}
 
-```liquid
+```
 nowtime {{site.time}}
 Hello {{name}}
 Hello {{user.name}}
@@ -41,7 +42,7 @@ is always the output of the left side of the filter.  The return value of the
 filter will be the new left value when the next filter is run.  When there are
 no more filters, the template will receive the resulting string.
 
-```liquid
+```
 Hello {{ 'tobi' | upcase }}
 Hello tobi has {{ 'tobi' | size }} letters!
 Hello {{ '*tobi*' | textilize | upcase }}
@@ -50,7 +51,7 @@ Hello {{ 'now' | date: "%Y %h" }}
 
 ### Standard Filters
 
-* `date` - reformat a date [syntax reference](http://liquid.rubyforge.org/classes/Liquid/StandardFilters.html#M000012)
+* `date` - reformat a date [syntax reference](http://.rubyforge.org/classes//StandardFilters.html#M000012)
 * `capitalize` - capitalize words in the input sentence
 * `downcase` - convert an input string to lowercase
 * `upcase` - convert an input string to uppercase
@@ -101,17 +102,17 @@ Here is a list of currently supported tags:
 
 Comment is the simplest tag.  It just swallows content.
 
-```liquid
+```
 We made 1 million dollars {% comment %} in losses {% endcomment %} this year
 ```
 
 ### If / Else
 
 `if / else` should be well known from any imaginable programming language.
-Liquid allows you to write simple expressions in the `if` or `unless` (and
+ allows you to write simple expressions in the `if` or `unless` (and
 optionally, `elsif` and `else`) clause:
 
-```liquid
+```
 {% if user %}
   Hello {{ user.name }}
 {% endif %}
@@ -175,7 +176,7 @@ optionally, `elsif` and `else`) clause:
 
 If you need more conditions, you can use the `case` statement:
 
-```liquid
+```
 {% case condition %}
 {% when 1 %}
 hit 1
@@ -188,7 +189,7 @@ hit 2 or 3
 
 *Example:*
 
-```liquid
+```
 {% case template %}
 
 {% when 'label' %}
@@ -202,10 +203,10 @@ hit 2 or 3
 
 ### Cycle
 
-Often you have to alternate between different colors or similar tasks.  Liquid
+Often you have to alternate between different colors or similar tasks.  
 has built-in support for such operations, using the `cycle` tag.
 
-```liquid
+```
 {% cycle 'one', 'two', 'three' %}
 {% cycle 'one', 'two', 'three' %}
 {% cycle 'one', 'two', 'three' %}
@@ -225,7 +226,7 @@ calls with the same parameters are one group.
 If you want to have total control over cycle groups, you can optionally specify
 the name of the group.  This can even be a variable.
 
-```liquid
+```
 {% cycle 'group 1': 'one', 'two', 'three' %}
 {% cycle 'group 1': 'one', 'two', 'three' %}
 {% cycle 'group 2': 'one', 'two', 'three' %}
@@ -241,9 +242,9 @@ two
 
 ### For loops
 
-Liquid allows `for` loops over collections:
+ allows `for` loops over collections:
 
-```liquid
+```
 {% for item in array %}
   {{ item }}
 {% endfor %}
@@ -252,7 +253,7 @@ Liquid allows `for` loops over collections:
 During every `for` loop, the following helper variables are available for extra
 styling needs:
 
-```liquid
+```
 forloop.length      # => length of the entire for loop
 forloop.index       # => index of the current iteration
 forloop.index0      # => index of the current iteration (zero based)
@@ -268,7 +269,7 @@ your loop
 `limit:int` lets you restrict how many items you get.
 `offset:int` lets you start the collection with the nth item.
 
-```liquid
+```
 # array = [1,2,3,4,5,6]
 {% for item in array limit:2 offset:2 %}
   {{ item }}
@@ -278,7 +279,7 @@ your loop
 
 Reversing the loop
 
-```liquid
+```
 {% for item in collection reversed %} {{item}} {% endfor %}
 ```
 
@@ -286,7 +287,7 @@ Instead of looping over an existing collection, you can define a range of
 numbers to loop through.  The range can be defined by both literal and variable
 numbers:
 
-```liquid
+```
 # if item.quantity is 4...
 {% for i in (1..item.quantity) %}
   {{ i }}
@@ -300,7 +301,7 @@ You can store data in your own variables, to be used in output or other tags as
 desired.  The simplest way to create a variable is with the `assign` tag, which
 has a pretty straightforward syntax:
 
-```liquid
+```
 {% assign name = 'freestyle' %}
 
 {% for t in collections.tags %}{% if t == name %}
@@ -311,7 +312,7 @@ has a pretty straightforward syntax:
 Another way of doing this would be to assign `true / false` values to the
 variable:
 
-```liquid
+```
 {% assign freestyle = false %}
 
 {% for t in collections.tags %}{% if t == 'freestyle' %}
@@ -328,7 +329,7 @@ a variable, you can do that with the `capture` tag. This tag is a block which
 "captures" whatever is rendered inside it, then assigns the captured value to
 the given variable instead of rendering it to the screen.
 
-```liquid
+```
   {% capture attribute_name %}{{ item.title | handleize }}-{{ i }}-color{% endcapture %}
 
   <label for="{{ attribute_name }}">Color:</label>
@@ -339,7 +340,7 @@ the given variable instead of rendering it to the screen.
   </select>
 ```
 # Template Data
-Jekyll traverses your site looking for files to process. Any files with [[YAML Front Matter]] are subject to processing. For each of these files, Jekyll makes a variety of data available to the pages via the "Liquid templating system":http://wiki.github.com/shopify/liquid/liquid-for-designers. The following is a reference of the available data. 
+Jekyll traverses your site looking for files to process. Any files with [[YAML Front Matter]] are subject to processing. For each of these files, Jekyll makes a variety of data available to the pages via the " templating system":http://wiki.github.com/shopify//-for-designers. The following is a reference of the available data. 
 
 h2. Global
 
@@ -390,7 +391,3 @@ h2. Paginator
 | @paginator.page@ | The number of the current page. |
 | @paginator.previous_page@ | The number of the previous page. |
 | @paginator.next_page@ | The number of the next page. |
-
-comments: true
-categories: 
----
