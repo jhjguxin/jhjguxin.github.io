@@ -230,7 +230,7 @@ Now that you’re setup with POW, you’ll just run rake watch and load up http:
 
 Also see [Sharing Code Snippets](http://octopress.org/docs/blogging/code) and [Blogging with Plugins](http://octopress.org/docs/blogging/plugins).
 
-### About branch（尽量只编写source分支应该就够了）
+### About branch
 git clone默认会把远程仓库整个给clone下来
 但只会在本地默认创建一个master分支
 如果远程还有其他的分支，此时用git branch -a查看所有分支：
@@ -246,17 +246,17 @@ git clone默认会把远程仓库整个给clone下来
 
 能看到远程的所有的分支，如
 
-    git checkout origin/source
+    git checkout source#尽量checkout一次就push一次相应的分支再checkout其他的分支
 
 可以使用checkout命令来把远程分支取到本地，并自动建立tracking
 
-    $ git checkout -b source origin/source
+    $ git checkout -b source source
     Branch source set up to track remote branch source from origin.
     Switched to a new branch 'source'
 
 或者使用-t参数，它默认会在本地建立一个和远程分支名字一样的分支
 
-    $ git checkout -t origin/source
+    $ git checkout -t source
 
  也可以使用fetch来做：
 
@@ -273,3 +273,4 @@ git clone默认会把远程仓库整个给clone下来
     $ git pull origin source:source
 
 因为，这样建立的branch是以master为基础建立的，再pull下来的话，会和master的内容进行合并，有可能会发生冲突…
+

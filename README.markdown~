@@ -142,6 +142,7 @@ Blog posts must be stored in the <code>source/_posts</code> directory and named 
 
 **Octopress provides a rake task to create new blog posts with the right naming conventions, with sensible yaml metadata.**
 Syntax
+
     rake new_post["title"]
 
 <code>new_post</code> expects a naturally written title and strips out undesirable url characters when creating the filename. The default file extension for new posts is <code>markdown</code> but you can configure that in the <code>Rakefile</code>.
@@ -245,17 +246,17 @@ git clone默认会把远程仓库整个给clone下来
 
 能看到远程的所有的分支，如
 
-    git checkout origin/source
+    git checkout source
 
 可以使用checkout命令来把远程分支取到本地，并自动建立tracking
 
-    $ git checkout -b source origin/source
+    $ git checkout -b source source
     Branch source set up to track remote branch source from origin.
     Switched to a new branch 'source'
 
 或者使用-t参数，它默认会在本地建立一个和远程分支名字一样的分支
 
-    $ git checkout -t origin/source
+    $ git checkout -t source
 
  也可以使用fetch来做：
 
