@@ -142,10 +142,12 @@ Blog posts must be stored in the <code>source/_posts</code> directory and named 
 
 **Octopress provides a rake task to create new blog posts with the right naming conventions, with sensible yaml metadata.**
 Syntax
+
     rake new_post["title"]
 
 <code>new_post</code> expects a naturally written title and strips out undesirable url characters when creating the filename. The default file extension for new posts is <code>markdown</code> but you can configure that in the <code>Rakefile</code>.
 **Example**
+
     rake new_post["Zombie Ninjas Attack: A survivor's retrospective"]
     # Creates source/_posts/2011-07-03-zombie-ninjas-attack-a-survivors-retrospective.markdown
 
@@ -228,7 +230,7 @@ Now that you’re setup with POW, you’ll just run rake watch and load up http:
 
 Also see [Sharing Code Snippets](http://octopress.org/docs/blogging/code) and [Blogging with Plugins](http://octopress.org/docs/blogging/plugins).
 
-### About branch
+### About branch（尽量只编写source分支应该就够了）
 git clone默认会把远程仓库整个给clone下来
 但只会在本地默认创建一个master分支
 如果远程还有其他的分支，此时用git branch -a查看所有分支：
@@ -267,7 +269,7 @@ git clone默认会把远程仓库整个给clone下来
 
 
     $ git branch source
-    $ git checkout source
+    $ git checkout source#checkout 远程的分支到本地那么本地未提交的commit也就没有了
     $ git pull origin source:source
 
 因为，这样建立的branch是以master为基础建立的，再pull下来的话，会和master的内容进行合并，有可能会发生冲突…
