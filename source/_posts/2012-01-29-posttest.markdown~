@@ -2,8 +2,9 @@
 layout: post
 title: "posttest"
 date: 2012-01-29 23:49
-content:
-
+comments: true
+categories: 
+---
 # Liquid for Designers
 
 There are two types of markup in Liquid: Output and Tag.
@@ -23,7 +24,7 @@ There are two types of markup in Liquid: Output and Tag.
 ## Output
 
 Here is a simple example of Output:
-nowtime {{site.time}}
+Hello {{ 'now' | date: "%Y %h" }}
 
 ```liquid
 nowtime {{site.time}}
@@ -390,7 +391,3 @@ h2. Paginator
 | @paginator.page@ | The number of the current page. |
 | @paginator.previous_page@ | The number of the previous page. |
 | @paginator.next_page@ | The number of the next page. |
-
-comments: true
-categories: 
----
