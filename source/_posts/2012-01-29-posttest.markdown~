@@ -6,28 +6,25 @@ comments: true
 categories: 
 ---
 # Liquid for Designers
-
 There are two types of markup in Liquid: Output and Tag.
 
 * Output markup (which may resolve to text) is surrounded by
 
 ```liquid
-{{ matched pairs of curly brackets (ie, braces) }}
+{{ site pairs of curly brackets (ie, braces) }}
 ```
 
 * Tag markup (which cannot resolve to text) is surrounded by
 
 ```liquid
-{% matched pairs of curly brackets and percent signs %}
+{% site pairs of curly brackets and percent signs %}
 ```
-<!-- more -->
+
 ## Output
 
 Here is a simple example of Output:
-Hello {{ 'now' | date: "%Y %h" }}
 
 ```liquid
-nowtime {{site.time}}
 Hello {{name}}
 Hello {{user.name}}
 Hello {{ 'tobi' }}
@@ -339,8 +336,10 @@ the given variable instead of rendering it to the screen.
     <option value="blue">Blue</option>
   </select>
 ```
+
+
 # Template Data
-Jekyll traverses your site looking for files to process. Any files with [[YAML Front Matter]] are subject to processing. For each of these files, Jekyll makes a variety of data available to the pages via the "Liquid templating system":http://wiki.github.com/shopify/liquid/liquid-for-designers. The following is a reference of the available data. 
+Jekyll traverses your site looking for files to process. Any files with [[YAML Front Matter]] are subject to processing. For each of these files, Jekyll makes a variety of data available to the pages via the " templating system":http://wiki.github.com/shopify//-for-designers. The following is a reference of the available data. 
 
 h2. Global
 
