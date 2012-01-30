@@ -1,0 +1,45 @@
+---
+layout: post
+title: "CN guide for push to github pages"
+date: 2012-01-30 13:32
+comments: true
+categories: 
+---
+### CN guide for push to github pages
+
+#### 發佈到 GitHub （免費）
+先建立 GitHub Repository ，並使用 username.github.com 命名（如果是組織則用 organization.github.com），例如你的 GitHub 帳號是 john2011 就將 Repository 命名為 john2011.github.com，完成後會得到一組 GitHub Pages URL http://yourname.github.com/ （注意不能用 https: 必須用 http: ）。 
+
+#### 設定 GitHub Pages 
+
+rake setup_github_pages以上執行後會要求 read/write url for repository ：
+git@github.com:yourname/yourname.github.com.git 
+
+#### 建立及發佈 
+
+    rake generate
+    rake deploy#發佈到git等待幾分鐘時間，會收到一封信：「[sslab.github.com] Page build successful」，第一次發佈會等比較久，之後每次都會直接更新。 
+
+#### 瀏覽 http://yourname.github.com/ 
+
+將 source 也加入 git 
+
+    git add .
+    git commit -m 'initial source commit'
+    git push origin source更新 Octopress
+
+日後有 Octopress 新版本發佈，使用以下指令升級。 
+
+    git pull octopress master     # Get the latest Octopress
+    bundle install                # Keep gems updated
+    rake update_source            # update the template's source
+    rake update_style             # update the template's style常用指令
+
+####建立新文章 
+    rake new_post["how-to-install-octopress"] 常用語法
+
+####程式碼區塊 
+
+``` 
+println 1+2+3
+```
