@@ -246,7 +246,7 @@ git clone默认会把远程仓库整个给clone下来
 
 能看到远程的所有的分支，如
 
-    git checkout source
+    git checkout source#尽量checkout一次就push一次相应的分支再checkout其他的分支
 
 可以使用checkout命令来把远程分支取到本地，并自动建立tracking
 
@@ -273,3 +273,4 @@ git clone默认会把远程仓库整个给clone下来
     $ git pull origin source:source
 
 因为，这样建立的branch是以master为基础建立的，再pull下来的话，会和master的内容进行合并，有可能会发生冲突…
+
