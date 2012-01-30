@@ -20,6 +20,8 @@ git@github.com:yourname/yourname.github.com.git
     rake generate
     rake deploy#發佈到git等待幾分鐘時間，會收到一封信：「[sslab.github.com] Page build successful」，第一次發佈會等比較久，之後每次都會直接更新。 
 
+<!-- more -->
+
 #### 瀏覽 http://yourname.github.com/ 
 
 將 source 也加入 git 

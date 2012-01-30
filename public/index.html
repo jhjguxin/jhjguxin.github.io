@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>My Octopress Blog</title>
-  <meta name="author" content="Your Name">
+  <title>Francis's Octopress Blog</title>
+  <meta name="author" content="Francis Jiang">
 
   
-  <meta name="description" content="CN guide for push to github pages 發佈到 GitHub （免費） 先建立 GitHub Repository ，並使用 username.github.com 命名（如果是組織則用 organization.github.com），例如你的 GitHub 帳號是 &hellip;">
+  <meta name="description" content="理解分支 git在创建分支的时候，实际上是从整个提交历史里的某个起点开始（该起点被记录为分支的祖先，标识分支的起始位置），创建提交历史树的枝干。 由于git每次提交的时候均会记录当次提交的校检和，配合将数据打包存储，记录当前仓库相对于前一版本的变化。所以git的分支，实际上只是一串包含对象校检和（ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -24,7 +24,7 @@
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="/javascripts/ender.js"></script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <link href="/atom.xml" rel="alternate" title="My Octopress Blog" type="application/atom+xml">
+  <link href="/atom.xml" rel="alternate" title="Francis's Octopress Blog" type="application/atom+xml">
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
@@ -35,7 +35,7 @@
 
 <body   >
   <header role="banner"><hgroup>
-  <h1><a href="/">My Octopress Blog</a></h1>
+  <h1><a href="/">Francis's Octopress Blog</a></h1>
   
     <h2>A blogging framework for hackers.</h2>
   
@@ -64,6 +64,63 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/01/30/git-branch/">Git Branch</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-30T14:13:00+08:00" pubdate data-updated="true">Jan 30<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>理解分支</h2>
+
+<p>git在创建分支的时候，实际上是从整个提交历史里的某个起点开始（该起点被记录为分支的祖先，标识分支的起始位置），创建提交历史树的枝干。</p>
+
+<p>由于git每次提交的时候均会记录当次提交的校检和，配合将数据打包存储，记录当前仓库相对于前一版本的变化。所以git的分支，实际上只是一串包含对象校检和（SHA-1）的文件。通过这个校检和，得出分支在提交历史树上的走向。</p>
+
+<p>git里创建删除分支变得非常简单。这一点不像svn那样每创建一个分支就需要整个目录拷贝一份。在git上非常推荐频繁使用分支。</p>
+
+<p>甚至可以一个issue(bug)一个分支，解决完切回主分支合并；没解决完就让分支继续走，主分支继续正常任务。</p>
+
+<h3>基本操作</h3>
+
+<ol>
+<li>创建和销毁</li>
+<li>分支列表：</li>
+</ol>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/01/30/git-branch/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -110,35 +167,12 @@ git@github.com:yourname/yourname.github.com.git</p>
 rake deploy#發佈到git等待幾分鐘時間，會收到一封信：「[sslab.github.com] Page build successful」，第一次發佈會等比較久，之後每次都會直接更新。 
 </code></pre>
 
-<h4>瀏覽 http://yourname.github.com/</h4>
-
-<p>將 source 也加入 git</p>
-
-<pre><code>git add .
-git commit -m 'initial source commit'
-git push origin source更新 Octopress
-</code></pre>
-
-<p>日後有 Octopress 新版本發佈，使用以下指令升級。</p>
-
-<pre><code>git pull octopress master     # Get the latest Octopress
-bundle install                # Keep gems updated
-rake update_source            # update the template's source
-rake update_style             # update the template's style常用指令
-</code></pre>
-
-<h4>建立新文章</h4>
-
-<pre><code>rake new_post["how-to-install-octopress"] 常用語法
-</code></pre>
-
-<h4>程式碼區塊</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>println 1+2+3</span></code></pre></td></tr></table></div></figure>
-
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/01/30/cn-guide-for-push-to-github-pages/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -196,93 +230,12 @@ rake update_style             # update the template's style常用指令
 </ul>
 
 
-<h2>What does it look like?</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;ul</span> <span class="na">id=</span><span class="s">&quot;products&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>  
-</span><span class='line'><span class="nt">&lt;/ul&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Howto use Liquid</h2>
-
-<p>Liquid supports a very simple API based around the Liquid::Template class.
-For standard use you can just pass it the content of a file and call render with a parameters hash.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="vi">@template</span> <span class="o">=</span> <span class="no">Liquid</span><span class="o">::</span><span class="no">Template</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;hi &quot;</span><span class="p">)</span> <span class="c1"># Parses and compiles the template</span>
-</span><span class='line'><span class="vi">@template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;tobi&#39;</span><span class="p">)</span>                <span class="c1"># =&gt; &quot;hi tobi&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><a href="http://travis-ci.org/Shopify/liquid"><img src="https://secure.travis-ci.org/Shopify/liquid.png" alt="Build Status" /></a></p>
-
-<h1>Template Data</h1>
-
-<p>Jekyll traverses your site looking for files to process. Any files with [[YAML Front Matter]] are subject to processing. For each of these files, Jekyll makes a variety of data available to the pages via the &#8221; templating system&#8221;:http://wiki.github.com/shopify//-for-designers. The following is a reference of the available data.</p>
-
-<p>h2. Global</p>
-
-<p>| <em>Variable</em> | <em>Description</em> |
-| @site@ | Sitewide information + Configuration settings from @_config.yml@ |
-| @page@ | This is just the [[YAML Front Matter]] with 2 additions: @url@ and @content@. |
-| @content@ | In layout files, this contains the content of the subview(s). This is the variable used to insert the rendered content into the layout. This is not used in post files or page files. |
-| @paginator@| When the @paginate@ configuration option is set, this variable becomes available for use. |</p>
-
-<p>h2. Site</p>
-
-<p>| <em>Variable</em> | <em>Description</em> |
-| @site.time@ | The current Time (when you run the jekyll command). |
-| @site.posts@ | A reverse chronological list of all Posts. |
-| @site.related_posts@ |If the page being processed is a Post, this contains a list of up to ten related Posts. By default, these are low quality but fast to compute. For high quality but slow to compute results, run the jekyll command with the @&#8211;lsi@ (latent semantic indexing) option. |
-| @site.categories.CATEGORY@ | The list of all Posts in category @CATEGORY@. |
-| @site.tags.TAG@ | The list of all Posts with tag @TAG@. |
-| @site.[CONFIGURATION_DATA]@ | As of <em>0.5.2</em>, all data inside of your @<em>config.yml@ is now available through the @site@ variable. So for example, if you have @url: http://mysite.com@ in your configuration file, then in your posts and pages it can be used like so: <code>http://jhjguxin.github.com</code>. Jekyll does not parse a changed @</em>config.yml@ in @auto@ mode, you have to restart jekyll. |</p>
-
-<p>h2. Page</p>
-
-<p>| <em>Variable</em> | <em>Description</em> |
-| @page.url@ | The URL of the Page without the domain. e.g. @/es/index.html@ |
-| @page.content@ | The un-rendered content of the Page. |</p>
-
-<p>Note: Any custom front matter that you specify will be available under @page@. For example, if you specify @custom_css: true@ in a page&#8217;s front matter, that value will be available in templates as @page.custom_css@</p>
-
-<p>h2. Post</p>
-
-<p>| <em>Variable</em> | <em>Description</em> |
-| @post.title@ | The title of the Post. |
-| @post.url@ | The URL of the Post without the domain. e.g. @/2008/12/14/my-post.html@ |
-| @post.date@ | The Date assigned to the Post. This can be overridden in a post&#8217;s front matter by specifying a new date/time in the format @YYYY-MM-DD HH:MM:SS@ |
-| @post.id@ | An identifier unique to the Post (useful in RSS feeds). e.g. @/2008/12/14/my-post@ |
-| @post.categories@ | The list of categories to which this post belongs. Categories are derived from the directory structure above the ==<em>posts== directory. For example, a post at @/work/code/</em>posts/2008-12-24-closures.textile@ would have this field set to @[&#8216;work&#8217;, &#8216;code&#8217;]@. These can also be specified in the [[YAML Front Matter]] |
-| @post.tags@ | The list of tags to which this post belongs. These can be specified in the [[YAML Front Matter]] |
-| @post.content@ | The rendered content of the Post. |</p>
-
-<p>h2. Paginator</p>
-
-<p><em>note: only available in index files, can be in subdirectory /blog/index.html</em></p>
-
-<p>| <em>Variable</em> | <em>Description</em> |
-| @paginator.per_page@ | Number of posts per page. |
-| @paginator.posts@ | Posts available for that page. |
-| @paginator.total_posts@ | Total number of posts. |
-| @paginator.total_pages@ | Total number of pages. |
-| @paginator.page@ | The number of the current page. |
-| @paginator.previous_page@ | The number of the previous page. |
-| @paginator.next_page@ | The number of the next page. |</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/01/29/posttest/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -299,6 +252,10 @@ For standard use you can just pass it the content of a file and call render with
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/01/30/git-branch/">git branch</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2012/01/30/cn-guide-for-push-to-github-pages/">CN guide for push to github pages</a>
@@ -322,7 +279,7 @@ For standard use you can just pass it the content of a file and call render with
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2012 - Your Name -
+  Copyright &copy; 2012 - Francis Jiang -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
@@ -332,6 +289,14 @@ For standard use you can just pass it the content of a file and call render with
 
 
 
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
 
 
 

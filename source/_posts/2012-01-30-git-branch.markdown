@@ -3,7 +3,7 @@ layout: post
 title: "git branch"
 date: 2012-01-30 14:13
 comments: true
-categories: 
+categories: Git
 ---
 
 ##理解分支
@@ -19,12 +19,15 @@ git里创建删除分支变得非常简单。这一点不像svn那样每创建�
 1. 创建和销毁
 2. 分支列表： 
 
+<!-- more -->
+
 ```
 $: git branch
 * master
   prepub
   product
 ```
+
 ### 创建分支： 
 
     $: git branch prepub
@@ -40,6 +43,7 @@ $: git branch
 $: git checkout -b issue1234
 Switched to branch 'issue1234'
 ```
+
 ### 删除分支： 
 
 ```
@@ -60,6 +64,7 @@ Merge made by recursive.
  README |    1 +
  1 files changed, 1 insertions(+), 0 deletions(-)
 ```
+
 冲突的时候，git会报出哪些文件冲突，这时候需要手动解决完冲突方可提交。 
 
 ```
@@ -68,6 +73,7 @@ Auto-merging index.html
 CONFLICT (content): Merge conflict in index.html
 Automatic merge failed; fix conflicts and then commit the result.
 ```
+
 通过git status查看冲突文件。 
 
 ```
@@ -81,6 +87,7 @@ index.html: needs merge
 #	unmerged:   index.html
 #
 ```
+
 打开index.html，git会在冲突位置做上标示。 
 
 ```
@@ -106,6 +113,7 @@ $: git status
 #	modified:   index.html
 #
 ```
+
 这时候就可以提交了。
  
 ```
@@ -171,21 +179,21 @@ git本身的log提供--gragh选项，可以提供字符界面的分支可视化�
 ```
 $: git log --graph --pretty=oneline
 | *   50cc7a78b7f2704a2014afa3667f6ac5b5b47374 merging refs/remotes/origin/prepub into HEAD
-| |\  
+| |\
 | | * 8f685bd1be3757effe32d6ff37f86bd07dd2b549 又被无情地冲掉了代码
 | * | 75a17b4ad610327a9b0e1eecfc6c4bf9cade7359 修改icon
-| |/  
+| |/
 | *   146a0990de450c854b1a7d9995e12979fff2d537 merging refs/remotes/origin/prepub into HEAD
-| |\  
+| |\
 | | *   93b379680796eb443961bb8c59008f8ae5678be4 Merge branch 'prepub' of search.ued.taobao.net:projects/search into prepub
-| | |\  
+| | |\
 | | * | 8b93380ccfb9020bf8f8e1e8a4a553601de3c788 p4p加上refpid，开发给出来的配置是 P4P_refpid
 | * | | 08201de89834f6fecb195c2b7c3546b5cafccc85 秒杀折扣浮动层样式
-| | |/  
-| |/|   
+| | |/
+| |/|
 | * | 0f4d1df17f79c7aa3ca3d36ab848c10b78029010 修改icon
 | * | ae719fc29cc550321f284323db06a294b97c1398 p4p创意优化
-| |/  
+| |/
 | * a6d4501e1456589d30ab1a5800b651876629c8ca 修改icon
 ```
 
@@ -233,6 +241,7 @@ $: git branch -a
 $: git branch product origin/product
 Branch product set up to track remote branch product from origin.
 ```
+
 而1.6.2以上版本的git，可以通过--track选项，简化这一过程。这也是为什么直接执行git clone的时候，会自动创建本地master分支的原因。（实际上，pull操作相当于fetch+merge。） 
 
 ```

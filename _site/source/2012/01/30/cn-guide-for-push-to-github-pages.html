@@ -1,0 +1,39 @@
+<h3 id='cn_guide_for_push_to_github_pages'>CN guide for push to github pages</h3>
+
+<h4 id='_github_'>發佈到 GitHub （免費）</h4>
+
+<p>先建立 GitHub Repository ，並使用 username.github.com 命名（如果是組織則用 organization.github.com），例如你的 GitHub 帳號是 john2011 就將 Repository 命名為 john2011.github.com，完成後會得到一組 GitHub Pages URL http://yourname.github.com/ （注意不能用 https: 必須用 http: ）。</p>
+
+<h4 id='_github_pages'>設定 GitHub Pages</h4>
+
+<p>rake setup_github_pages以上執行後會要求 read/write url for repository ： git@github.com:yourname/yourname.github.com.git</p>
+
+<h4 id='id1'>建立及發佈</h4>
+
+<pre><code>rake generate
+rake deploy#發佈到git等待幾分鐘時間，會收到一封信：「[sslab.github.com] Page build successful」，第一次發佈會等比較久，之後每次都會直接更新。 </code></pre>
+<!-- more -->
+<h4 id='_httpyournamegithubcom'>瀏覽 http://yourname.github.com/</h4>
+
+<p>將 source 也加入 git</p>
+
+<pre><code>git add .
+git commit -m &#39;initial source commit&#39;
+git push origin source更新 Octopress</code></pre>
+
+<p>日後有 Octopress 新版本發佈，使用以下指令升級。</p>
+
+<pre><code>git pull octopress master     # Get the latest Octopress
+bundle install                # Keep gems updated
+rake update_source            # update the template&#39;s source
+rake update_style             # update the template&#39;s style常用指令</code></pre>
+
+<h4 id='id2'>建立新文章</h4>
+
+<pre><code>rake new_post[&quot;how-to-install-octopress&quot;] 常用語法</code></pre>
+
+<h4 id='id3'>程式碼區塊</h4>
+
+<p><code>
+println 1+2+3
+</code></p>

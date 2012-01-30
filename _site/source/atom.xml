@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[]]></title>
+  <link href="/atom.xml" rel="self"/>
+  <link href="/"/>
+  <updated>2012-01-30T16:47:38+08:00</updated>
+  <id>/</id>
+  <author>
+    <name><![CDATA[]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[git branch]]></title>
+    <link href="/source/2012/01/30/git-branch.html"/>
+    <updated>2012-01-30T14:13:00+08:00</updated>
+    <id>/source/2012/01/30/git-branch</id>
+    <content type="html"><![CDATA[<h2 id='id4'>理解分支</h2>
+
+<p>git在创建分支的时候，实际上是从整个提交历史里的某个起点开始（该起点被记录为分支的祖先，标识分支的起始位置），创建提交历史树的枝干。</p>
+
+<p>由于git每次提交的时候均会记录当次提交的校检和，配合将数据打包存储，记录当前仓库相对于前一版本的变化。所以git的分支，实际上只是一串包含对象校检和（SHA-1）的文件。通过这个校检和，得出分支在提交历史树上的走向。</p>
+
+<p>git里创建删除分支变得非常简单。这一点不像svn那样每创建一个分支就需要整个目录拷贝一份。在git上非常推荐频繁使用分支。</p>
+
+<p>甚至可以一个issue(bug)一个分支，解决完切回主分支合并；没解决完就让分支继续走，主分支继续正常任务。</p>
+
+<h3 id='id5'>基本操作</h3>
+
+<p>1. 创建和销毁 2. 分支列表：</p>]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[CN guide for push to github pages]]></title>
+    <link href="/source/2012/01/30/cn-guide-for-push-to-github-pages.html"/>
+    <updated>2012-01-30T13:32:00+08:00</updated>
+    <id>/source/2012/01/30/cn-guide-for-push-to-github-pages</id>
+    <content type="html"><![CDATA[<h3 id='cn_guide_for_push_to_github_pages'>CN guide for push to github pages</h3>
+
+<h4 id='_github_'>發佈到 GitHub （免費）</h4>
+
+<p>先建立 GitHub Repository ，並使用 username.github.com 命名（如果是組織則用 organization.github.com），例如你的 GitHub 帳號是 john2011 就將 Repository 命名為 john2011.github.com，完成後會得到一組 GitHub Pages URL http://yourname.github.com/ （注意不能用 https: 必須用 http: ）。</p>
+
+<h4 id='_github_pages'>設定 GitHub Pages</h4>
+
+<p>rake setup_github_pages以上執行後會要求 read/write url for repository ： git@github.com:yourname/yourname.github.com.git</p>
+
+<h4 id='id1'>建立及發佈</h4>
+
+<pre><code>rake generate
+rake deploy#發佈到git等待幾分鐘時間，會收到一封信：「[sslab.github.com] Page build successful」，第一次發佈會等比較久，之後每次都會直接更新。 </code></pre>
+<!-- more -->
+<h4 id='_httpyournamegithubcom'>瀏覽 http://yourname.github.com/</h4>
+
+<p>將 source 也加入 git</p>
+
+<pre><code>git add .
+git commit -m &#39;initial source commit&#39;
+git push origin source更新 Octopress</code></pre>
+
+<p>日後有 Octopress 新版本發佈，使用以下指令升級。</p>
+
+<pre><code>git pull octopress master     # Get the latest Octopress
+bundle install                # Keep gems updated
+rake update_source            # update the template&#39;s source
+rake update_style             # update the template&#39;s style常用指令</code></pre>
+
+<h4 id='id2'>建立新文章</h4>
+
+<pre><code>rake new_post[&quot;how-to-install-octopress&quot;] 常用語法</code></pre>
+
+<h4 id='id3'>程式碼區塊</h4>
+
+<p><code>
+println 1+2+3
+</code></p>]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[posttest]]></title>
+    <link href="/source/2012/01/29/posttest.html"/>
+    <updated>2012-01-29T23:49:00+08:00</updated>
+    <id>/source/2012/01/29/posttest</id>
+    <content type="html"><![CDATA[<h1 id='liquid_template_engine'>Liquid template engine</h1>
+
+<h2 id='introduction'>Introduction</h2>
+
+<p>Liquid is a template engine which was written with very specific requirements:</p>
+
+<ul>
+<li>It has to have beautiful and simple markup. Template engines which don&#8217;t produce good looking markup are no fun to use.</li>
+
+<li>It needs to be non evaling and secure. Liquid templates are made so that users can edit them. You don&#8217;t want to run code on your server which your users wrote.</li>
+
+<li>It has to be stateless. Compile and render steps have to be seperate so that the expensive parsing and compiling can be done once and later on you can just render it passing in a hash with local variables and objects.</li>
+</ul>
+
+<h2 id='why_you_should_use_liquid'>Why you should use Liquid</h2>
+
+<ul>
+<li>You want to allow your users to edit the appearance of your application but don&#8217;t want them to run <strong>insecure code on your server</strong>.</li>
+
+<li>You want to render templates directly from the database</li>
+
+<li>You like smarty (PHP) style template engines</li>
+
+<li>You need a template engine which does HTML just as well as emails</li>
+
+<li>You don&#8217;t like the markup of your current templating engine</li>
+</ul>]]></content>
+  </entry>
+  
+</feed>

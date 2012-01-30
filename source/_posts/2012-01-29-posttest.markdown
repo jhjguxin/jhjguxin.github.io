@@ -3,7 +3,7 @@ layout: post
 title: "posttest"
 date: 2012-01-29 23:49
 comments: true
-categories: 
+categories: [Git,Markdown,Liquid]
 ---
 # Liquid template engine
 
@@ -23,9 +23,11 @@ Liquid is a template engine which was written with very specific requirements:
 * You need a template engine which does HTML just as well as emails
 * You don't like the markup of your current templating engine
 
+<!-- more -->
+
 ## What does it look like?
 
-```html
+<code>
 <ul id="products">
   {% for product in products %}
     <li>
@@ -36,7 +38,7 @@ Liquid is a template engine which was written with very specific requirements:
     </li>
   {% endfor %}
 </ul>
-```
+</code>
 
 ## Howto use Liquid
 

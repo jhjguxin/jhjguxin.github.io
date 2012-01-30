@@ -1,17 +1,395 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[My Octopress Blog]]></title>
+  <title><![CDATA[Francis's Octopress Blog]]></title>
   <link href="http://jhjguxin.github.com/atom.xml" rel="self"/>
   <link href="http://jhjguxin.github.com/"/>
-  <updated>2012-01-30T13:37:51+08:00</updated>
+  <updated>2012-01-30T16:55:24+08:00</updated>
   <id>http://jhjguxin.github.com/</id>
   <author>
-    <name><![CDATA[Your Name]]></name>
+    <name><![CDATA[Francis Jiang]]></name>
     
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[git branch]]></title>
+    <link href="http://jhjguxin.github.com/blog/2012/01/30/git-branch/"/>
+    <updated>2012-01-30T14:13:00+08:00</updated>
+    <id>http://jhjguxin.github.com/blog/2012/01/30/git-branch</id>
+    <content type="html"><![CDATA[<h2>理解分支</h2>
+
+<p>git在创建分支的时候，实际上是从整个提交历史里的某个起点开始（该起点被记录为分支的祖先，标识分支的起始位置），创建提交历史树的枝干。</p>
+
+<p>由于git每次提交的时候均会记录当次提交的校检和，配合将数据打包存储，记录当前仓库相对于前一版本的变化。所以git的分支，实际上只是一串包含对象校检和（SHA-1）的文件。通过这个校检和，得出分支在提交历史树上的走向。</p>
+
+<p>git里创建删除分支变得非常简单。这一点不像svn那样每创建一个分支就需要整个目录拷贝一份。在git上非常推荐频繁使用分支。</p>
+
+<p>甚至可以一个issue(bug)一个分支，解决完切回主分支合并；没解决完就让分支继续走，主分支继续正常任务。</p>
+
+<h3>基本操作</h3>
+
+<ol>
+<li>创建和销毁</li>
+<li>分支列表：</li>
+</ol>
+
+
+<!-- more -->
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$: git branch
+</span><span class='line'>* master
+</span><span class='line'>  prepub
+</span><span class='line'>  product</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>创建分支：</h3>
+
+<pre><code>$: git branch prepub
+</code></pre>
+
+<h3>切换已有分支：</h3>
+
+<pre><code>$: git checkout prepub
+Switched to branch 'prepub'
+</code></pre>
+
+<h3>创建并切换分支：</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$: git checkout -b issue1234
+</span><span class='line'>Switched to branch 'issue1234'</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>删除分支：</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$: git branch -d issue1234
+</span><span class='line'>Deleted branch issue1234 (was b904c07).</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>合并和冲突</h3>
+
+<p>合并前要先切回 要并入 的分支。</p>
+
+<p>以下表示issue1234分支合并入master分支</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$: git checkout master
+</span><span class='line'>$: git merge issue1234
+</span><span class='line'>Merge made by recursive.
+</span><span class='line'> README |    1 +
+</span><span class='line'> 1 files changed, 1 insertions(+), 0 deletions(-)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>冲突的时候，git会报出哪些文件冲突，这时候需要手动解决完冲突方可提交。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$: git merge issue1234
+</span><span class='line'>Auto-merging index.html
+</span><span class='line'>CONFLICT (content): Merge conflict in index.html
+</span><span class='line'>Automatic merge failed; fix conflicts and then commit the result.</span></code></pre></td></tr></table></div></figure>
+
+
+<p>通过git status查看冲突文件。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$: git status
+</span><span class='line'>index.html: needs merge
+</span><span class='line'># On branch master
+</span><span class='line'># Changed but not updated:
+</span><span class='line'>#   (use "git add &lt;file&gt;..." to update what will be committed)
+</span><span class='line'>#   (use "git checkout -- &lt;file&gt;..." to discard changes in working directory)
+</span><span class='line'>#
+</span><span class='line'># unmerged:   index.html
+</span><span class='line'>#</span></code></pre></td></tr></table></div></figure>
+
+
+<p>打开index.html，git会在冲突位置做上标示。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD:index.html
+</span><span class='line'>&lt;div id="footer"&gt;contact : email.support@github.com&lt;/div&gt;
+</span><span class='line'>=======
+</span><span class='line'>&lt;div id="footer"&gt;
+</span><span class='line'>  please contact us at support@github.com
+</span><span class='line'>&lt;/div&gt;
+</span><span class='line'>&gt;&gt;&gt;&gt;&gt;&gt;&gt; iss53:index.html</span></code></pre></td></tr></table></div></figure>
+
+
+<p>解决完冲突，这时候需要手动标识该冲突已经解决，类似svn的resolved。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$: git add index.html
+</span><span class='line'>$: git status
+</span><span class='line'># On branch master
+</span><span class='line'># Changed but not updated:
+</span><span class='line'>#   (use "git add &lt;file&gt;..." to update what will be committed)
+</span><span class='line'>#   (use "git checkout -- &lt;file&gt;..." to discard changes in working directory)
+</span><span class='line'>#
+</span><span class='line'># modified:   index.html
+</span><span class='line'>#</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这时候就可以提交了。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$: git commit -m "合并issue1234"
+</span><span class='line'>[master e3ece67] 合并issue1234
+</span><span class='line'> 1 files changed, 1 insertions(+), 0 deletions(-)</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>管理多个分支</h3>
+
+<p>前面提到，git非常推荐频繁使用分支，在大量分支的情况下，我们需要对分支做好管理（曾经一次上线，开了13个分支 = =）</p>
+
+<p>通过-v可以看到最后一次提交日志。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$: git branch -v
+</span><span class='line'>* master          b904c07 把丘迟的产品搜改动合并一下
+</span><span class='line'>  p4popt          8b93380 p4p加上refpid，开发给出来的配置是 P4P_refpid
+</span><span class='line'>  prepub          a6cc66b P4P解析参数少一次替换，顺便解决\!失效的问题
+</span><span class='line'>  product         301ae4e rankbar图片换成data uri</span></code></pre></td></tr></table></div></figure>
+
+
+<p>通过&#8211;merged和&#8211;no-merged来查看分支是否已经合并完成。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$: git branch --merged
+</span><span class='line'>* master
+</span><span class='line'>  p4popt
+</span><span class='line'>$: git branch --no-merged
+</span><span class='line'>  prepub
+</span><span class='line'>  product</span></code></pre></td></tr></table></div></figure>
+
+
+<p>未合并的分支，在删除时会提示分支未合并。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$: git branch -d product
+</span><span class='line'>warning: deleting branch 'product' that has been merged to
+</span><span class='line'>         'refs/remotes/s/product', but it is not yet merged to HEAD.
+</span><span class='line'>Deleted branch product (was 301ae4e).</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>分支管理流程</h3>
+
+<p>一般情况下，分支可以划分为长分支和短分支两种。</p>
+
+<p>长分支
+长期任务
+prepub：上线前合并，根据上线列表，从各个分支中集中到该分支，统一部署提测
+master：上线后合并，长期保留一个稳定可用的分支应付紧急任务
+项目
+较难解决的bug
+新特性试验田
+重构
+长分支，经常会落后其他分支一大截，需要养成习惯，适时从其他重要分支进行合并， 尤其是项目分支 。</p>
+
+<p>短分支
+临时需求
+小bug
+分支可视化
+git本身的log提供&#8211;gragh选项，可以提供字符界面的分支可视化视图。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$: git log --graph --pretty=oneline
+</span><span class='line'>| *   50cc7a78b7f2704a2014afa3667f6ac5b5b47374 merging refs/remotes/origin/prepub into HEAD
+</span><span class='line'>| |\
+</span><span class='line'>| | * 8f685bd1be3757effe32d6ff37f86bd07dd2b549 又被无情地冲掉了代码
+</span><span class='line'>| * | 75a17b4ad610327a9b0e1eecfc6c4bf9cade7359 修改icon
+</span><span class='line'>| |/
+</span><span class='line'>| *   146a0990de450c854b1a7d9995e12979fff2d537 merging refs/remotes/origin/prepub into HEAD
+</span><span class='line'>| |\
+</span><span class='line'>| | *   93b379680796eb443961bb8c59008f8ae5678be4 Merge branch 'prepub' of search.ued.taobao.net:projects/search into prepub
+</span><span class='line'>| | |\
+</span><span class='line'>| | * | 8b93380ccfb9020bf8f8e1e8a4a553601de3c788 p4p加上refpid，开发给出来的配置是 P4P_refpid
+</span><span class='line'>| * | | 08201de89834f6fecb195c2b7c3546b5cafccc85 秒杀折扣浮动层样式
+</span><span class='line'>| | |/
+</span><span class='line'>| |/|
+</span><span class='line'>| * | 0f4d1df17f79c7aa3ca3d36ab848c10b78029010 修改icon
+</span><span class='line'>| * | ae719fc29cc550321f284323db06a294b97c1398 p4p创意优化
+</span><span class='line'>| |/
+</span><span class='line'>| * a6d4501e1456589d30ab1a5800b651876629c8ca 修改icon</span></code></pre></td></tr></table></div></figure>
+
+
+<p>git还有很多GUI工具，可以提供可视化地分支走势图，比如gitk，qgit，GitX等等。</p>
+
+<p>远程分支
+至今为止，前面所有提到的概念都是直接本地操作的，并不需要任何网络连接。</p>
+
+<p>而git本身是一个分布式代码管理工具(DVCS)，所以分支管理上，存在本地分支和远程分支两种概念。</p>
+
+<p>可以简单的理解，远程分支就是别人的本地分支push到服务器上的时候产生的。比如master就是一个最典型的远程分支（默认）。</p>
+
+<pre><code>$: git push origin master
+</code></pre>
+
+<p>除了master之外，我们还可以随便创建分支，然后push到服务器上去。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$: git push origin prepub
+</span><span class='line'>Counting objects: 27, done.
+</span><span class='line'>Delta compression using up to 2 threads.
+</span><span class='line'>Compressing objects: 100% (15/15), done.
+</span><span class='line'>Writing objects: 100% (15/15), 7.30 KiB, done.
+</span><span class='line'>Total 15 (delta 10), reused 0 (delta 0)
+</span><span class='line'>To git@search.ued.taobao.net:projects/search.git
+</span><span class='line'>   1b95a57..779dbe1  prepub -&gt; prepub</span></code></pre></td></tr></table></div></figure>
+
+
+<p>远程分支的标识形式为{remote/branch}，比如origin/product。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$: git branch -a
+</span><span class='line'>  master
+</span><span class='line'>  p4popt
+</span><span class='line'>* prepub
+</span><span class='line'>  product
+</span><span class='line'>  remotes/origin/HEAD -&gt; origin/master
+</span><span class='line'>  remotes/origin/master
+</span><span class='line'>  remotes/origin/p4popt
+</span><span class='line'>  remotes/origin/prepub
+</span><span class='line'>  remotes/origin/product</span></code></pre></td></tr></table></div></figure>
+
+
+<p>远程分支和本地分支需要区分，所以，在从服务器上拉取特定分支的时候，需要指定本地分支名字。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$: git branch product origin/product
+</span><span class='line'>Branch product set up to track remote branch product from origin.</span></code></pre></td></tr></table></div></figure>
+
+
+<p>而1.6.2以上版本的git，可以通过&#8211;track选项，简化这一过程。这也是为什么直接执行git clone的时候，会自动创建本地master分支的原因。（实际上，pull操作相当于fetch+merge。）</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$: git checkout --track origin/product
+</span><span class='line'>Branch product set up to track remote branch refs/remotes/origin/product.
+</span><span class='line'>Switched to a new branch "product"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>远程分支和本地分支是松散的结构，可以把任意远程分支合并到任意本地分支里；同样，也可以把任意本地分支push到任意远程分支上。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># THIS WILL MESS UP YOUR REPO!!
+</span><span class='line'>$: git branch
+</span><span class='line'>  master
+</span><span class='line'>* prepub
+</span><span class='line'>  p4popt
+</span><span class='line'>  product
+</span><span class='line'>$: git pull origin product
+</span><span class='line'>$: git push origin master</span></code></pre></td></tr></table></div></figure>
+
+
+<p>同步本地远程分支。</p>
+
+<pre><code>$: git fetch origin
+</code></pre>
+
+<p>删除远程分支。</p>
+
+<pre><code>$: git push origin :p4popt
+To git@search.ued.taobao.net
+</code></pre>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[CN guide for push to github pages]]></title>
@@ -34,6 +412,9 @@ git@github.com:yourname/yourname.github.com.git</p>
 <pre><code>rake generate
 rake deploy#發佈到git等待幾分鐘時間，會收到一封信：「[sslab.github.com] Page build successful」，第一次發佈會等比較久，之後每次都會直接更新。 
 </code></pre>
+
+<!-- more -->
+
 
 <h4>瀏覽 http://yourname.github.com/</h4>
 
@@ -94,23 +475,19 @@ rake update_style             # update the template's style常用指令
 </ul>
 
 
+<!-- more -->
+
+
 <h2>What does it look like?</h2>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;ul</span> <span class="na">id=</span><span class="s">&quot;products&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>  
-</span><span class='line'><span class="nt">&lt;/ul&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
+<p><code></p>
 
+<ul id="products">
+  
+</ul>
+
+
+<p></code></p>
 
 <h2>Howto use Liquid</h2>
 

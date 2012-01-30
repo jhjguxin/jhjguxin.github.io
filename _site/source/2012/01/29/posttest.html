@@ -1,0 +1,27 @@
+<h1 id='liquid_template_engine'>Liquid template engine</h1>
+
+<h2 id='introduction'>Introduction</h2>
+
+<p>Liquid is a template engine which was written with very specific requirements:</p>
+
+<ul>
+<li>It has to have beautiful and simple markup. Template engines which don&#8217;t produce good looking markup are no fun to use.</li>
+
+<li>It needs to be non evaling and secure. Liquid templates are made so that users can edit them. You don&#8217;t want to run code on your server which your users wrote.</li>
+
+<li>It has to be stateless. Compile and render steps have to be seperate so that the expensive parsing and compiling can be done once and later on you can just render it passing in a hash with local variables and objects.</li>
+</ul>
+
+<h2 id='why_you_should_use_liquid'>Why you should use Liquid</h2>
+
+<ul>
+<li>You want to allow your users to edit the appearance of your application but don&#8217;t want them to run <strong>insecure code on your server</strong>.</li>
+
+<li>You want to render templates directly from the database</li>
+
+<li>You like smarty (PHP) style template engines</li>
+
+<li>You need a template engine which does HTML just as well as emails</li>
+
+<li>You don&#8217;t like the markup of your current templating engine</li>
+</ul>
