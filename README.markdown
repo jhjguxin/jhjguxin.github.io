@@ -265,6 +265,8 @@ git@github.com:yourname/yourname.github.com.git
     会在“source/_posts”目录下自动生成“Timestamp-qing-song-an-zhuang-octopress.markdown”，编辑后即可发布：
 
     Ruby代码
+    rake generate # generate your blog static pages content according to your input.
+    rake preview # start a web server on "http://localhost:4000", you can preview your blog content.
     rake preview
     会在本地启动sinatra服务，用浏览器打开 http://localhost:4000 就可以看到效果了。如果都没有问题就可以发布了。
 
