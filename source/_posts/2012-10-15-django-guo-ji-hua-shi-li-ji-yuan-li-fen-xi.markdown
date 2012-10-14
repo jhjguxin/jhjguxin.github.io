@@ -1,0 +1,981 @@
+---
+layout: post
+title: "Django 国际化实例及原理分析"
+date: 2011-11-24 12:02
+comments: true
+categories: ["django"]
+tags: ["django", "i18n"]
+---
+## Django 国际化实例及原理分析
+<div>
+
+当 Web 服务搭建好以后，可以接收来自全球不同国家用户访问。这样就要求开发人员调整软件，使之能适用于不同的语言，即国际化和本地化。国际化 -- Internationalization，i 和 n 之间有 18 个字母，简称 I18N,。本地化 -- localization， l 和 n 之间有 10 个字母，简称 L10N。国际化意味着 Web 产品有适用于任何地方的潜力，针对程序开发人员；本地化则是指使一个国际化的程序为了在某个特定地区使用而进行实际翻译的过程，针对翻译人员而言。
+
+Django 提供了非常强大的翻译机制，开发者一旦理解它的实现，就能减少编码量，提高开发效率。
+
+本文通过两个 Django 国际化实例循序渐进地介绍在 Django 环境里进行 Web 程序国际化和本地化开发的相关方法和知识。并结合 Django 国际化现有代码进行分析，向读者阐述 Django 国际化的原理与内部实现。学习本文，可以很好的掌握国际化 Django 程序的技术。
+
+当 Web 服务搭建好以后，可以接收来自全球不同国家用户访问。这样就要求开发人员调整软件，使之能适用于不同的语言，即国际化和本地化。国际化 -- Internationalization，i 和 n 之间有 18 个字母，简称 I18N,。本地化 -- Localization， l 和 n 之间有 10 个字母，简称 L10N。国际化意味着 Web 产品有适用于任何地方的潜力，针对程序开发人员；本地化则是指使一个国际化的程序为了在某个特定地区使用而进行实际翻译的过程，针对翻译人员而言。
+
+Django 提供了非常强大的翻译机制，开发者一旦理解它的实现，就能减少编码量，提高开发效率。
+
+<a name="major1"></a>Django 国际化简介
+
+Django 的开发和维护者对 Django 框架本身进行了完全国际化，我们可以在 ./Python2.5/site-packages/django/conf/locale/ 找到相关的语言文件。目前 Django-1.2.1 带着 52 个不同的本地化语言文件发行的，使用户能够方便的使用它现有的管理界面。
+
+Django 国际化的本质就是开发者对需要翻译的字符串进行标记，并对字符串进行相应的翻译。当用户访问该 Web 时，Django 内部框架根据用户使用偏好进行 Web 呈现。
+
+Django 国际化使用的翻译模块是使用 Python 自带的 gettext 标准模块。通过一个到 GNU gettext 消息目录库的接口，这个模块为 Python 程序提供了国际化 (I18N) 和本地化 (L10N)。
+
+开发人员和翻译人员需要完成一下 3 个步骤：
+
+1. 第一步：在 Python 代码和模板中嵌入待翻译的字符串，
+
+2. 第二步：把那些字符串翻译成需要支持的语言，并进行相应的编译
+
+3. 第三步：在 Django settings 文件中激活本地中间件，
+
+下面我们将通过这个几个步骤，介绍两个实例，然后在每个实例后结合 Django 代码来向读者介绍 Django 国际化的原理。本文环境：CentOS release 5.3 (Final)，Python 2.5.5 ， gettext 版本为 gettext-0.14.6-4.el5，浏览器为 Fixfox 3.6.3., Django-1.2.1。请前往<a href="http://www.djangoproject.com/download/">http://www.djangoproject.com/download/</a>下载并安装 Django。
+
+读者最好能边阅读本文，边在计算机上进行操作，达到最佳学习效果。因此，需要读者具备以下技能：
+<ol type="1">
+	<li>熟悉基本的 Linux 操作命令</li>
+	<li>熟悉 Python 语法，对编写 Django 应用程序所有了解。</li>
+</ol>
+本文附带相关源代码，直接下载并解压缩到配置好 Django 的环境中，就可以运行看到效果。
+<div> </div>
+&nbsp;
+
+<a name="major2"></a>针对 Python 代码的国际化实例及原理分析
+
+对 Django 中 Python 代码进行国际化主要用到 ugettext()，gettext_noop()，gettext_lazy() 和 ungettext() 等函数。在本 Django 应用程序实例中，主要 Python 代码都集中在 models.py 和 views.py。 我们将 ugettext() 使用对 views.py 中的相关字符串进行实例化。接着，我们将会结合 Django 代码对整个过程的原理实现做详细的介绍。
+
+<a name="minor2.1"></a>一个简单的 Python Web 程序
+
+首先在 /home/jerry/ 目录下 , 创建名为 testsite 的 Project，请参考清单 1:
+<a name="listing1"></a><strong>清单 1. 创建一名为 testsite 的 project</strong>
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>				 
+ [root@localhost jerry]# django-admin.py startproject testsite 
+ [root@localhost jerry]# cd testsite/ 
+ [root@localhost testsite]# ls 
+ __init__.py  manage.py  settings.py  urls.py</pre>
+</td>
+</tr>
+</tbody>
+</table>
+&nbsp;
+
+接着，在 /home/jerry/testsite 目录下创建一个名为 test1 的 Django App, 请参看清单 2。
+<a name="listing2"></a><strong>清单 2. 创建名为 test1 的 Django App</strong>
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>				 
+ [root@localhost testsite]# Python manage.py startapp test1 
+ [root@localhost testsite]# ls 
+ __init__.py  __init__.pyc  manage.py  settings.py  settings.pyc  test1  urls.py 
+ [root@localhost testsite]#cd test1</pre>
+</td>
+</tr>
+</tbody>
+</table>
+&nbsp;
+
+接着，在 test1 的 views.py 中添加代码获取今天周期几，具体代码参看清单 3。
+<a name="listing3"></a><strong>清单 3. test1 的 views.py 中的代码</strong>
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>				 
+ [root@localhost test1]# vim views.py 
+
+ # Create your views here. 
+ from django.http import HttpResponse 
+ import time 
+
+ def test1_view(request): 
+ # 获得系统本地时间，返回的格式是 UTC 中的 struct_time 数据
+        t  = time.localtime() 
+ # 第 6 个元素是 tm_wday , 范围为 [0,6], 星期一 is 0 
+        n  = t[6] 
+ # 星期一到星期日字符串
+weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 
+'Sunday'] 
+ # 返回一个 HttpResponse、，这段代码将用来返回服务器系统上是星期几。
+        return HttpResponse(weekdays[n])</pre>
+</td>
+</tr>
+</tbody>
+</table>
+&nbsp;
+
+然后配置 URL, 在 url.py 增加用户访问 test1_view 的 url, 具体请参看清单 4。
+<a name="listing4"></a><strong>清单 4. test1_view 的 url 配置</strong>
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>				 
+ [root@localhost testsite]# vim urls.py 
+ from testsite.test1 import views 
+
+ urlpatterns = patterns('', 
+    …
+    (r'^test1_view$', views.test1_view), 
+ ) 
+
+在 testsite 中，setting.py 中默认的语言设置为 en-us: 
+
+ LANGUAGE_CODE = 'en-us'</pre>
+</td>
+</tr>
+</tbody>
+</table>
+&nbsp;
+
+在更新 url.py 和 setting.py 后，在 /home/jerry/testsite 目录下启动服务，具体参看清单 5：
+<a name="listing5"></a><strong>清单 5. 启动 testsite 服务</strong>
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>				 
+ root@localhost testsite]# Python manage.py runserver 0.0.0.0:8080</pre>
+</td>
+</tr>
+</tbody>
+</table>
+&nbsp;
+
+当启动服务没有错误提示，就可以在在浏览器中输入 Web 服务地址 : <a href="http://192.168.174.128:8080/test1_view">http://192.168.174.128:8080/test1_view</a>，就会看到英文星期几，具体见图 1:
+<a name="fig1"></a><strong>图 1. test1 未国际化时的显示结果</strong>
+<img src="http://www.ibm.com/developerworks/cn/web/1101_jinjh_djangoi18n/image003.jpg" alt="图 1. test1 未国际化时的显示结果" width="484" height="251" /> 
+
+<a name="minor2.2"></a>对 Python 代码的国际化和本地化
+
+接下来我们将对 views.py 中的字符串进行国际化和本地化。
+
+<strong>指定待翻译的字符串</strong>
+
+首先，代码中，使用函数 ugettext() 指定一个待翻译的字符串。另外，为了节约输入时间，代码中使用“from django.utils.translation import ugettext as _”即用短别名 _ 来引入这个函数。具体代码修改如下清单 6:
+<a name="listing6"></a><strong>清单 6. 国际化 test1</strong>
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>				 
+ [root@localhost test1]# vim views.py 
+
+ # Create your views here. 
+ from django.http import HttpResponse 
+ from django.utils.translation import ugettext as _ 
+ import time 
+
+ def test1_view(request): 
+ # 获得系统本地时间，返回的格式是 UTC 中的 struct_time 数据
+        t  = time.localtime() 
+ # 第 6 个元素是 tm_wday , 范围为 [0,6], 星期一 is 0 
+        n  = t[6] 
+ # 星期一到星期日字符串，每个字符串用 _() 标识出来。
+weekdays = [_('Monday'), _('Tuesday'), _('Wednesday'), _('Thursday'), 
+_('Friday'), _('Saturday'), _('Sunday')] 
+ # 返回一个 HttpResponse 
+
+        return HttpResponse(weekdays[n])</pre>
+</td>
+</tr>
+</tbody>
+</table>
+&nbsp;
+
+<strong>创建语言文件</strong>
+
+接下来，先在 test1 App 目录下创建 locale 目录，并运行“django-admin.py makemessages -l zh_CN”产生 locale/zh_CN/LC_MESSAGES/django.po 文件 , 具体操作请参看清单 7.
+<a name="listing7"></a><strong>清单 7. 创建语言文件</strong>
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>				 
+ [root@localhost test1]# mkdir locale 
+ [root@localhost test1]# ls 
+ __init__.py  __init__.pyc  locale  models.py  tests.py  views.py  views.pyc 
+ [root@localhost test1]# django-admin.py makemessages -l zh_CN</pre>
+</td>
+</tr>
+</tbody>
+</table>
+&nbsp;
+
+打开 locale/zh_CN/LC_MESSAGES/django.po 文件，其主要内容如清单 8：
+<a name="listing8"></a><strong>清单 8. 更新 django.po 文件</strong>
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>				 
+ #: views.py:12 
+ msgid "Monday"
+ msgstr "星期一"
+
+ #: views.py:12 
+ msgid "Tuesday"
+ msgstr "星期二"
+
+ #: views.py:12 
+ msgid "Wednesday"
+ msgstr "星期三"
+
+ #: views.py:12 
+ msgid "Thursday"
+ msgstr "星期四"
+
+ #: views.py:12 
+ msgid "Friday"
+ msgstr "星期五"
+
+ #: views.py:12 
+ msgid "Saturday"
+ msgstr "星期六"
+
+ #: views.py:12 
+ msgid "Sunday"
+ msgstr "星期天"</pre>
+</td>
+</tr>
+</tbody>
+</table>
+&nbsp;
+
+这个文件是一个纯文本文件，包含用于翻译的原始字符串和目标语言字符串。
+
+# 为前缀的行起注释作用。msgid 是在源文件中出现的翻译字符串。msgstr 是相应语言的翻译结果。注意语句前后都有引号。 刚创建时 msgstr 是空字符串，需要翻译人员翻译。这个文件，用户可以手动按格式添加一些内容。
+
+<strong>编译信息文件</strong>
+
+创建信息文件之后，每次对其做了修改，都需要用 django-admin.py compilemessages 编译成“.mo”文件供 gettext 使用，具体操作请参看清单 9。
+<a name="listing9"></a><strong>清单 9. 编译信息文件</strong>
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>				 
+ [root@localhost test1]# django-admin.py compilemessages</pre>
+</td>
+</tr>
+</tbody>
+</table>
+&nbsp;
+
+<strong>确认相关配置</strong>
+
+首先需要确认 testsite 目录下 setting.py 的配置，主要需要核实 LANGUAGE_CODE，USE_I18N 和 MIDDLEWARE_CLASSES。主要配置请参看清单 10:
+<a name="listing10"></a><strong>清单 10. setting.py 中的国际化相关配置</strong>
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>				 
+ LANGUAGE_CODE = 'en-us'
+ USE_I18N = True 
+ MIDDLEWARE_CLASSES = ( 
+    'django.middleware.common.CommonMiddleware', 
+    'django.contrib.sessions.middleware.SessionMiddleware', 
+    'django.middleware.locale.LocaleMiddleware', 
+    'django.contrib.auth.middleware.AuthenticationMiddleware', 
+ )</pre>
+</td>
+</tr>
+</tbody>
+</table>
+&nbsp;
+
+请注意注意 MIDDLEWARE_CLASSES 中的'django.middleware.locale.LocaleMiddleware', 需要放在'django.contrib.sessions.middleware.SessionMiddleware' 后面。
+
+<strong>Firefox 语言顺序的选择</strong>
+
+工具 - 〉选项 - 〉内容，语言栏这一项选着，将汉语 / 中国 [zh-cn] 移到最上面。这样页面将会根据浏览器的配置，优先中文显示，具体请参看图 2。
+<a name="fig2"></a><strong>图 2. Firefox 中文选择</strong>
+<img src="http://www.ibm.com/developerworks/cn/web/1101_jinjh_djangoi18n/image005.jpg" alt="图 2. Firefox 中文选择" width="510" height="483" /> 
+
+<a name="listing11"></a><strong>启动 test1 服务</strong>
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>				 
+ [root@localhost testsite]# Python manage.py runserver 0.0.0.0:8080</pre>
+</td>
+</tr>
+</tbody>
+</table>
+&nbsp;
+
+<strong>察看 test1 国际化效果</strong>
+
+在 Firefox 中输入 服务地址 : <a href="http://192.168.174.128:8080/test1_view">http://192.168.174.128:8080/test1_view</a>, 就能看到中文星期四几，具体效果请参看图 3。
+<a name="fig3"></a><strong>图 3. test1 国际化效果</strong>
+<img src="http://www.ibm.com/developerworks/cn/web/1101_jinjh_djangoi18n/image007.jpg" alt="图 3. test1 国际化效果" width="472" height="276" /> 
+
+<strong>指定待翻译的字符串另外一种方式</strong>
+
+另外，_() 的参数也可以是变量，views.py 中的相关行可修改成如清单 11：
+<a name="listing12"></a><strong>清单 11. _() 的参数为变量</strong>
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>				 
+  …
+weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 
+'Friday', 'Saturday', 'Sunday'] 
+return HttpResponse(_(weekdays[n])) 
+  … ..</pre>
+</td>
+</tr>
+</tbody>
+</table>
+&nbsp;
+
+此时运行，重新创建语言文件 :
+
+[root@localhost test1]# django-admin.py makemessages -l zh_CN
+
+processing language zh_CN
+
+若之前没有 django.po 文件，此时也不会产生。需要自己将 weekdays 里面的每个元素按格式添加到 locale/zh_CN/LC_MESSAGES/django.po 中，再运行
+
+django-admin.py compilemessages
+
+这样国际化也可以成功。
+
+<a name="minor2.3"></a>针对 Python 代码国际化原理分析
+
+通过上面那个实例，可以了解到对 Python 代码国际化的全过程。接下来，我们结合 Django 代码来分析以下两个国际化的关键点的工作流程来理解 Python 代码的国际化的原理 :
+
+1，配置文件 setting.py 中 USE_I18N = True
+
+2, 指定翻译字符串的 4 个主要函数
+
+django.utils.translation.ugettext()
+
+django.utils.translation.gettext_noop()
+
+django.utils.translation.gettext_lazy()
+
+django.utils.translation.ungettext()
+
+<strong>4 个主要函数的用途</strong>
+
+其中：
+
+django.utils.translation.ugettext()
+
+指定一个翻译字符串，一般都用于 views.py
+
+django.utils.translation.gettext_noop()
+
+标记一个不需要立即翻译的字符串。 这个串会稍后从变量翻译。使用这种方法的环境是，有字符串必须以原始语言的形式存储（如储存在数据库中的字符串）而在最后需要被 翻译出来（如显示给用户时）。
+
+django.utils.translation.gettext_lazy()
+
+ugettext_lazy() 将字符串作为惰性参照存储，而不是实际翻译 , 一般会用于 models.py。 翻译工作将在字符串在字符串上下文中被用到时进行，比如在 Django 管理页面提交模板时。在 Django 模型中总是无一例外的使用惰性翻译。
+
+django.utils.translation.ungettext()
+
+函数包括三个参数： 单数形式的翻译字符串，复数形式的翻译字符串，和对象的个数（将以 count 变量传递给需要翻译的语言）。
+
+<strong>主要函数实现原理和 USE_I18N 变量</strong>
+
+在 /usr/local/lib/Python2.5/site-packages/django/utils/translation 中存在 __init__.py，trans_null.py 和 trans_real.py 3 个重要的文件。
+
+__init__.py 表示该目录作为 Python 的一个包，在 Python 中可以为空。django.utils.translation 模块中的 __init__.py 包含了包级别的初始化代码。“__init__.py”文件定义了一个名为“__all__”的列表，这个列表就作为从包内导入 * 时要导入的所有模块的名字表。
+
+具体代码如下 :
+
+__all__ = ['gettext', 'gettext_noop', 'gettext_lazy', 'ngettext',
+
+'ngettext_lazy', 'string_concat', 'activate', 'deactivate',
+
+'get_language', 'get_language_bidi', 'get_date_formats',
+
+'get_partial_date_formats', 'check_for_language', 'to_locale',
+
+'get_language_from_request', 'templatize', 'ugettext', 'ugettext_lazy',
+
+'ungettext', 'deactivate_all']
+
+并且在 __init__.py 中定义了我们上面提到的几个函数：
+
+def gettext_noop(message):
+
+return real_gettext_noop(message)
+
+def gettext(message):
+
+return real_gettext(message)
+
+def ugettext(message):
+
+return real_ugettext(message)
+
+def ungettext(singular, plural, number):
+
+return real_ungettext(singular, plural, number)
+
+gettext_lazy = lazy(gettext, str)
+
+注意 : lazy 是一种延迟计算，使用它表示一种对结果的承诺，但只有当真正需要时才会去计算。只要你不是真是需要，你得到的并不是真正的结果。
+
+USE_I18N 变量的如何产生作用的？
+
+/usr/local/lib/Python2.5/site-packages/django/utils/translation/__init__.py 将调用本文件内的 delayed_loader（）函数。
+
+在 delayed_loader（）函数中会把这些 real_* 函数替换成 trans_real 和 trans_null 中的函数，如 real_gettext 被替换成 trans_real.gettext 或者 trans_null.gettext。如果在项目的根目录 settings.py 中设置了 USE_I18N = True，表示我们在应用程序中采用国际化，则所有的函数被替换成 trans_real.*，否则，不采用国际化，将被替换成 trans_null.*。这个替换做一次，并且一次将所有的函数都替换掉。
+
+trans_null.py 文件：不打算翻译时，为了性能考虑。 settings.USE_I18N = False 时，使用这个模块中函数 , 此时，django.utils.translation.trans_real 中的函数将不作任何事情。
+
+trans_real.py 文件 : settings.USE_I18N = True 时，将会使用这个模块中的函数。我们看看上面几个函数在 trans_real.py 中的实现 :
+
+def gettext(message):
+
+return do_translate(message, 'gettext')
+
+def ugettext(message):
+
+return do_translate(message, 'ugettext')
+
+def gettext_noop(message):
+
+......
+
+标识这个字符串将要翻译，但现在没有翻译。它可被用于在全局变量中存储基本语言的字符串 ( 因为它们可能在外部被使用 )，稍微翻译。
+
+......
+
+return message
+
+gettext 和 ugettext 都调用了 do_translate（）函数。do_translate（）函数使用了 Python 的 gettext 模块来处理带翻译的字符串。从而通过 Python 的 gettext 模块来完成国际化和本地化。
+<div> </div>
+&nbsp;
+
+<a name="major3"></a>针对 template 代码的国际化实例及原理分析
+
+<a name="minor3.1"></a>一个较复杂的 Django 的国际化实例
+
+<strong>创建名为 test2 的 Django App</strong>
+
+同第一个实例在同一项目，在 testsite 目录里创建名为 test2 的 Django App.
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre> [root@localhost testsite]# Python manage.py startapp test2</pre>
+</td>
+</tr>
+</tbody>
+</table>
+&nbsp;
+
+<strong>创建 test2 的模版文件</strong>
+
+在项目（Project）testsite 目录下创建 templates/test2/index.html 文件。具体操作及文件内容请参看清单 12。
+<a name="listing13"></a><strong>清单 12. test2 的模版文件</strong>
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>				 
+ [root@localhost testsite]#mkdir – p templates/test2 
+ [root@localhost testsite]#cd  templates/test2 
+ [root@localhost test2]#vim index.html 
+
+ {% load i18n %} 
+ &lt;html xmlns="http://www.w3.org/1999/xhtml" 
+ xml:lang="{{ LANGUAGE_CODE }}" lang="{{ LANGUAGE_CODE }}"&gt; 
+
+ &lt;head&gt; 
+    &lt;meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" /&gt; 
+    &lt;title&gt;Welcome to my site&lt;/title&gt; 
+         &lt;script  type="text/javascript"&gt; 
+               function selectdo(obj) { 
+                        str="/i18n/setlang/"; 
+                        myform = document.getElementById('testform'); 
+                        myform.method = "POST"; 
+                        myform.action = str; 
+                        myform.submit(); 
+                } 
+        &lt;/script&gt; 
+
+ &lt;/head&gt; 
+ &lt;body&gt; 
+        &lt;form name="testform" id="testform" method='post'&gt; 
+            &lt;select id="language" name="language" onchange="selectdo(this)"&gt; 
+           &lt;!--    &lt;input name="next" type="hidden" value="{{request.path}}" /&gt;--&gt; 
+                &lt;option value="1" &gt;{% trans "Languages" %}&lt;/option&gt; 
+                 {% for lang in LANGUAGES %} 
+                &lt;option value="{{ lang.0 }}" &gt; {{ lang.1 }}&lt;/option&gt; 
+                 {% endfor %} 
+              &lt;/select&gt; 
+         &lt;/form&gt; 
+         &lt;p&gt;{% trans "The first sentence is from the  template index.html" %}&lt;/p&gt; 
+        {{ code }} 
+ &lt;/body&gt; 
+ &lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+&nbsp;
+
+在代码中已经加入了国际化模版相关代码，下面 4 点需要注意：
+
+1 ． {% load i18n %}
+
+使模版能够访问到访问到标签。
+
+2 ． {% trans str %}
+
+标记翻译一个常量字符串或 可变内容
+
+3 ． 模版中的 select 的 name 值必须为"language"
+
+4. 将 testform 的 action 重定向到 /i18n/setlang/，启用了 django.views.i18n.set_language 视图，它的作用是设置用户语言偏好并重定向返回到前一页面。
+
+它们的工作原理，将在“针对 template 代码国际化原理分析”进行剖析。
+
+<strong>设置模版路径</strong>
+
+我们需要在 setting.py 里配置 template 的路径，具体请参看清单 13：
+<a name="listing14"></a><strong>清单 13. 设置模版路径</strong>
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>				 
+ [root@localhost testsite] vim settings.py 
+ TEMPLATE_DIRS = ( 
+      。。。。。。
+     '/home/jerry/testsite/templates', 
+ )</pre>
+</td>
+</tr>
+</tbody>
+</table>
+&nbsp;
+
+请注意 : Template 不能放在 app 目录下，需要放在 project 下面。否则，国际化将会失败，页面仅显示英文。
+
+<strong>增加 test2 App 的 views.py 代码</strong>
+
+在 /home/jerry/testsite/test2/views.py 增加一下内容，具体请参看清单 14：
+<a name="listing15"></a><strong>清单 14. test2 的 views.py 内容</strong>
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>				 
+ # Create your views here. 
+ from django.http import HttpResponse 
+ from django.shortcuts import render_to_response 
+ from django.template import RequestContext 
+ from django.utils.translation import ugettext_lazy as _ 
+
+ def test2_view(request): 
+    code = _("The second sentence is from the Python code."); 
+    responseContext = {'lang':request.LANGUAGE_CODE, 
+                        'code':code, 
+                        } 
+    resp = render_to_response('test2/index.html', responseContext, 
+                                context_instance=RequestContext(request)) 
+    return resp</pre>
+</td>
+</tr>
+</tbody>
+</table>
+&nbsp;
+
+<strong>更新 URL</strong>
+
+修改 /home/jerry/testsite/urls.py，首先，我们需要从 testsite.test2.views 模块中导入所有函数。接着在 urlpatterns 中加入 test2_veiw 和 i18n 的 url，具体请参看清单 15。
+<a name="listing16"></a><strong>清单 15. 更新 URL</strong>
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>				 
+ from django.conf.urls.defaults import * 
+ from testsite.test2.views import * 
+。。。。。。
+
+ urlpatterns = patterns('', 
+    。。。。。。
+    (r'^test2_view$', test2_view), 
+    (r'^i18n/', include('django.conf.urls.i18n')), 
+ )</pre>
+</td>
+</tr>
+</tbody>
+</table>
+&nbsp;
+
+<strong>更新 setting</strong>
+
+修改 /home/jerry/testsite/settings.py，更新国际化 相关的设置 , 具体请参看清单 16。
+<a name="listing17"></a><strong>清单 16. 更新国际化相关设置</strong>
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>				 
+ DATABASE_ENGINE = 'mysql' # 'postgresql_psycopg2', 'postgresql' 
+ DATABASE_NAME = 'test' # Or path to database file if using sqlite3. 
+ DATABASE_USER = 'root' # Not used with sqlite3. 
+ DATABASE_PASSWORD = '1234'  # Not used with sqlite3. 
+ DATABASE_HOST = ''  # Set to empty string for localhost. Not used with sqlite3. 
+ DATABASE_PORT = ''  # Set to empty string for default. Not used with sqlite3. 
+
+ USE_I18N = True 
+
+ ugettext = lambda s: s 
+
+ LANGUAGES = ( 
+    ('en-us', ugettext('English')), 
+    ('zh-CN', ugettext('Chinese')), 
+ ) 
+
+ TEMPLATE_CONTEXT_PROCESSORS = ( 
+ #     "django.core.context_processors.auth", 
+ #    "django.core.context_processors.debug", 
+
+    "django.core.context_processors.i18n", 
+ #    "django.core.context_processors.request", 
+ ) 
+
+ MIDDLEWARE_CLASSES = ( 
+    'django.middleware.common.CommonMiddleware', 
+    'django.contrib.sessions.middleware.SessionMiddleware', 
+    'django.middleware.locale.LocaleMiddleware', 
+    'django.contrib.auth.middleware.AuthenticationMiddleware', 
+ )</pre>
+</td>
+</tr>
+</tbody>
+</table>
+&nbsp;
+
+这里需要注意，需要用数据库保存 session。在本实例中用到了 mysql test2 数据库中的 django_session 数据表。我们在 /home/jerry/testsite 目录下运行 Python manage.py syncdb 就能产生 django_session 了。具体见清单 17：
+<a name="listing18"></a><strong>清单 17. 产生 django_session 数据表</strong>
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>				 
+ [root@localhost testsite]# Python manage.py syncdb</pre>
+</td>
+</tr>
+</tbody>
+</table>
+&nbsp;
+
+<strong>创建并更新语言文件</strong>
+
+创建 django.po 文件后，需要将其中 msgid 所在行引号内的英语，都翻译中文，写在 msgstr 所在行的引号内。具体请参看清单 18。
+<a name="listing19"></a><strong>清单 18. 创建并更新语言文件</strong>
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>				 
+ [root@localhost testsite]# django-admin.py makemessages -l zh_CN 
+ [root@localhost testsite]# vim locale/zh_CN/LC_MESSAGES/django.po 
+……
+ #: settings.py:41 
+ msgid "English"
+ msgstr "英语"
+
+ #: settings.py:42 
+ msgid "Chinese"
+ msgstr "中文"
+
+ #: templates/test2/index.html:8 
+ msgid "Welcome to my site"
+ msgstr "欢迎访问我的网站"
+
+ #: templates/test2/index.html:24 
+ msgid "Languages"
+ msgstr "语言"
+
+ #: templates/test2/index.html:30 
+ msgid "The first sentence is from the  template index.html"
+ msgstr "第一句话来自 intex.html 模版。"
+
+ #: test2/views.py:8 
+ msgid "The second sentence is from the Python code."
+ msgstr "第二句话来自 Python 代码。"</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<a name="listing20"></a><strong>编译信息文件</strong>
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>				 
+ [root@localhost testsite]#  django-admin.py compilemessages</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<a name="listing21"></a><strong>启动服务</strong>
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>				 
+ [root@localhost testsite]# Python manage.py runserver 0.0.0.0:8080</pre>
+</td>
+</tr>
+</tbody>
+</table>
+&nbsp;
+
+<strong>察看结果</strong>
+
+在 firfox 中输入 服务地址 : <a href="http://192.168.174.128:8080/test2_view">http://192.168.174.128:8080/test2_view</a>
+
+应为 Firfox 浏览器的配置如图， 优先中文配置。所以，初始显示如图 4：
+<a name="fig4"></a><strong>图 4. test2 中文显示效果</strong>
+<img src="http://www.ibm.com/developerworks/cn/web/1101_jinjh_djangoi18n/image009.jpg" alt="图 4. test2 中文显示效果" width="475" height="321" /> 
+
+当选择下拉框中的 English 时，页面将会迅速更新为图 5:
+<a name="fig5"></a><strong>图 5. test2 英文显示效果</strong>
+<img src="http://www.ibm.com/developerworks/cn/web/1101_jinjh_djangoi18n/image011.jpg" alt="图 5. test2 英文显示效果" width="476" height="331" /> 
+
+<a name="minor3.2"></a>针对 template 代码国际化原理分析
+
+本小节将结合 Django 代码来分析在 template 代码国际化所用到的关键点的工作原理。
+
+<strong>Load i18n 实现原理</strong>
+
+模板中的 {% load %} 标签用于加载已有的模板。
+
+在 /usr/local/lib/Python2.5/site-packages/django/templatetags/i18n.py 文件中定义了指定模版中翻译字符串的模板标签。在 django 的模板前加入 {% load i18n %}，在 i18n.py 源文件中的定义标签就可以在有 load 语句的模板中使用了。
+
+<strong>模板标签的实现原理</strong>
+
+<strong>Django 模板两种常用模板标签</strong>
+
+{% trans %} 模板标签标记需要翻译的字符串；如果只需要标记字符串而以后再翻译，可以使用 noop 选项。
+
+在 {% trans %} 中不允许使用模板中的变量，只能使用单引号或双引号中的字符串。如果翻译时需要用到变量（占位符），可以使用 {% blocktrans %}。
+
+如果需要在 blocktrans 标签内绑定多个表达式，可以用 and 来分隔。
+
+为了表示单复数相关的内容，需要在 {% blocktrans %} 和 {% endblocktrans %} 之间使用 {% plural %} 标签来指定单复数形式。
+
+<strong>模版标签实现分析</strong>
+
+{% trans %}
+
+通过 /usr/local/lib/Python2.5/site-packages/django/templatetags/i18n.py 文件 do_translate（）实现的。do_translate（）处理了 {% trans %} 的三种格式：
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre> {% trans "this is a test" %} 
+ {% trans "this is a test" noop %} 
+ {% trans variable %}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+&nbsp;
+
+do_translate() 调用了 TranslateNode（），最后通过 django.utils.translation.ugettext() 来处理的。具体实现可参看 Django 源代码。
+
+{% blocktrans %} 和 {% endblocktrans %}
+
+通过 /usr/local/lib/Python2.5/site-packages/django/templatetags/i18n.py 文件 do_block_translate（）实现的。
+
+用于翻译带参数的文本块
+
+用法 :
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>{% blocktrans with foo|filter as bar and baz|filter as boo %} 
+This is {{ bar }} and {{ boo }}. 
+{% endblocktrans %}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+&nbsp;
+
+另外，支持复数 ::
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>{% blocktrans count var|length as count %} 
+There is {{ count }} object. 
+{% plural %} 
+There are {{ count }} objects. 
+{% endblocktrans %}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+&nbsp;
+
+do_block_translate（）条用了 BlockTranslateNode（），其内在机制是，所有的块和内嵌翻译调用 django.utils.translation.ugettext() 和 django.utils.translation.ungettext() 即相应的 gettext 或 ngettext 。
+
+在 i18n.py 中，用 register.tag() 注册 Tag 名字和对应的处理方法 :
+
+register.tag('trans', do_translate)
+
+register.tag('blocktrans', do_block_translate)
+
+这样 i18n.py 中定义标签就可以在 template 中使用了。
+
+<strong>激活 set_language 重定向视图的实现原理</strong>
+
+django.views.i18n.set_language 视图的主要作用是设置用户语言偏好并重定向返回到前一页面。
+
+对 template 代码国际化时，需要在项目中的 urls.py 添加 url 到 urlpatterns 中 :
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre> urlpatterns += patterns('', 
+    (r'^i18n/', include('django.conf.urls.i18n')), 
+ )</pre>
+</td>
+</tr>
+</tbody>
+</table>
+&nbsp;
+
+为什么呢？
+
+我们继续深入 django.conf.urls.i18n 看看到底做什么处理。
+
+在 /usr/local/lib/Python2.5/site-packages/django/conf/urls/i18n.py 中内容为 :
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre> from django.conf.urls.defaults import * 
+
+ urlpatterns = patterns('', 
+    (r'^setlang/$', 'django.views.i18n.set_language'), 
+ )</pre>
+</td>
+</tr>
+</tbody>
+</table>
+&nbsp;
+
+当用户在 url 附加上 /i18n/setlang/，就会重定向到 django.views.i18n.set_language()。
+
+在 /usr/local/lib/Python2.5/site-packages/django/views/ i18n.py 中的 set_language() 函数的实现比较经典，如清单 19，供大家参考。
+<a name="listing22"></a><strong>清单 19. 重定向视图函数 set_language</strong>
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>				 
+ def set_language(request): 
+    """
+当在 session 或 cookie 中设置所选择的语言时，会重定向到指定的网址。
+URL 和语言代码需要在 request 的参数中被指定。由于这个视图改变用户如何看到网站的其他部分，
+它必须只能通过 POST request. 如果调用 GET request, 
+它将重定向到 request 的那页，但没有任何状态改变。
+    """
+    next = request.REQUEST.get('next', None) 
+    if not next: 
+        next = request.META.get('HTTP_REFERER', None) 
+    if not next: 
+        next = '/'
+    response = http.HttpResponseRedirect(next) 
+    if request.method == 'POST': 
+        lang_code = request.POST.get('language', None) 
+        if lang_code and check_for_language(lang_code): 
+            if hasattr(request, 'session'): 
+                request.session['django_language'] = lang_code 
+            else: 
+                response.set_cookie(settings.LANGUAGE_COOKIE_NAME, lang_code) 
+ return response</pre>
+</td>
+</tr>
+</tbody>
+</table>
+&nbsp;
+
+从上面的代码，可以了解到保存了语言选择后，Django 根据以下算法来重定向页面：
+
+（1）Django 在 POST 数据中寻找 next 参数。
+
+（2）如果 next 参数不存在或为空，Django 尝试重定向页面为 HTML 头部信息中 Referer 的值。
+
+（3）如果 Referer 也是空的，即该用户的浏览器并不发送 Referer 头信息，则页面将重定向到 / （页面根目录）。
+
+这个视图是通过 POST 方法调用的，在请求中包含了 language 参数。所以在前面的模版的 select 的 name 和 id 必须为” language”。
+
+如果 session 已启用，这个视图会将语言选择保存在用户的 session 中。 否则，它会以缺省名 django_language 在 cookie 中保存这个语言选择。( 这个名字可以通过 LANGUAGE_COOKIE_NAME 设置来改变 )。
+<div> </div>
+&nbsp;
+
+<a name="major4"></a>小结
+
+本文通过两个 Django 国际化实例向读者介绍了如何对 Django 程序中的 Python 和 template 代码进行国际化和本地化。并结合 Django 国际化现有代码框架进行分析，向读者阐述 Django 国际化的原理与内部实现。通过学习，可以很好的掌握国际化 Django 程序的技术。
+
+&nbsp;
+<div> </div>
+&nbsp;
+
+<a name="download"></a>下载
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<th scope="col">描述</th>
+<th scope="col">名字</th>
+<th scope="col">大小</th>
+<th scope="col">下载方法</th>
+</tr>
+<tr>
+<td scope="row">示例代码</td>
+<td nowrap="nowrap">testsite.zip</td>
+<td nowrap="nowrap">15KB</td>
+<td nowrap="nowrap"><a href="http://www.ibm.com/developerworks/apps/download/index.jsp?contentid=620166&amp;filename=testsite.zip&amp;method=http&amp;locale=zh_CN">HTTP</a></td>
+</tr>
+</tbody>
+</table>
+<a href="http://www.ibm.com/developerworks/cn/whichmethod.html">关于下载方法的信息</a>
+
+&nbsp;
+
+<a name="resources"></a>参考资料
+
+<strong>学习</strong>
+<ul>
+	<li><a href="http://docs.python.org/library/time.html">Python 库函数文件</a>：该页面能查到很多 time 相关的 Python 库函数。 </li>
+	<li><a href="http://www.djangoproject.com/">Django 官方网站</a>，在上面可以下载到 Django 源代码，及其他文档。 </li>
+	<li><a href="http://www.djangobook.com/">Django 书在线版</a>，关于 Django Web 框架介绍的一本免费书 。 </li>
+	<li><a href="http://www.woodpecker.org.cn/share/projects/django/django-stepbystep/newtest/doc/">Django Step by Step 系列教程</a>，非常好的 Django 入门必备书籍。 </li>
+	<li><a href="http://www.ibm.com/developerworks/cn/web/">developerWorks Web development 专区</a>：通过专门关于 Web 技术的文章和教程，扩展您在网站开发方面的技能。</li>
+	<li><a href="http://www.ibm.com/developerworks/cn/ajax/">developerWorks Ajax 资源中心</a>：这是有关 Ajax 编程模型信息的一站式中心，包括很多文档、教程、论坛、blog、wiki 和新闻。任何 Ajax 的新信息都能在这里找到。</li>
+	<li><a href="http://www.ibm.com/developerworks/cn/web20/">developerWorks Web 2.0 资源中心</a>，这是有关 Web 2.0 相关信息的一站式中心，包括大量 Web 2.0 技术文章、教程、下载和相关技术资源。您还可以通过 <a href="http://www.ibm.com/developerworks/cn/web20/newto/">Web 2.0 新手入门</a> 栏目，迅速了解 Web 2.0 的相关概念。</li>
+	<li>查看 <a href="http://www.ibm.com/developerworks/cn/web/lp/html5/">HTML5 专题</a>，了解更多和 HTML5 相关的知识和动向。</li>
+</ul>
+</div>
+<div>标签： <a href="http://jhjguxin.hwcrazy.com/tag/django/">django</a> <a href="http://jhjguxin.hwcrazy.com/tag/i18n/">i18n</a></div>

@@ -1,0 +1,65 @@
+---
+layout: post
+title: "django学习笔记：django-pagination分页应用和内置的分页处理 "
+date: 2011-12-17 16:13
+comments: true
+categories: ["django", "python"]
+tags: ["django", "pagination"]
+---
+## django学习笔记：django-pagination分页应用和内置的分页处理 
+<div>
+
+<strong>django-pagination的分页</strong>
+<div>
+{% load pagination_tags %} ＃导入pagination模板标签
+
+{% autopaginate scenics_list 15 %} # 加上这一行处理分页，后面跟的那个整数表示每页多少条记录。
+{% for scenic in scenics_list %}
+{{ scenic.title }}
+{% endfor %}
+
+{% paginate %} # 秀出分页</div>
+<a name="entrymore"></a>
+－－－－－－－－－－－－ 分割线 －－－－－－－－－－－－－
+<strong>原django自带的分页：</strong>
+<div>
+from django.views.generic import list_detail, create_update #导入通用视图
+scenic_list_info = {
+'queryset': Scenic.objects.all(), #必要参数，要列出的对象的QuerySet显示出来的结果集; 其余为可选参数。
+'template_name': 'scenics/scenic_list.html', #模板名称，不指定的话默认使用 templates/_list.html
+'template_object_name': 'scenics', #在模板中，通用视图会通过在template_object_name后追加一个_list的方式来创建一个表示列表项目的变量名 scenics_list 。以便制作友好的模板Context，在模板中引用 {% for scenic in scenics_list %} 。
+'allow_empty': True,
+'paginate_by': 15, #一个整型数，分页时用到，用来制定每页显示多少条记录。
+#'extra_context': {'book_list': Book.objects.all()}
+#'extra_context': {'string':'aaa','query':get_query} #向通用视图传递额外的数据，以字典形式存储
+}</div>
+&lt;div style="text-align:center;width:75%;font-size:12px;"&gt;
+{% if is_paginated %}
+{% ifequal page 1 %}
+首页
+{% else %}
+&lt;a href="?page=1"&gt;首页&lt;/a&gt;
+{% endifequal %}
+{% if has_previous %}
+&lt;a href="?page={{ previous }}"&gt;上一页&lt;/a&gt;
+{% else %}
+上一页
+{% endif %}
+{% if has_next %}
+&lt;a href="?page={{ next }}"&gt;下一页&lt;/a&gt;
+{% else %}
+下一页
+{% endif %}
+{% ifequal page pages %}
+末页
+{% else %}
+&lt;a href="?page={{ pages }}"&gt;末页&lt;/a&gt;
+{% endifequal %}
+&amp;nbsp;&amp;nbsp;
+当前页：{{ page }}/{{ pages }}
+&amp;nbsp;&amp;nbsp;
+{% endif %}
+&lt;/div&gt;
+
+</div>
+<div>标签： <a href="http://jhjguxin.hwcrazy.com/tag/django/">django</a></div>

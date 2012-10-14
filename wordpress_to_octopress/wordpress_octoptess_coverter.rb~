@@ -1,0 +1,27 @@
+#http://www.germane-software.com/software/rexml/docs/tutorial.html
+#this convter
+require 'rexml/document'
+
+def unescape( src )
+  String.class_eval(%Q("#{src}"))
+end
+
+#p unescape("\\t\\n") == "\t\n"  #=> true
+
+xmldata =REXML::Document.new(File.open "jhjguxin.wordpress.2012-10-14.xml")
+template = File.open "template.markdown"
+#xmldata.elements.each("rss/channel/item") { |element| puts element.attributes["upc"] }
+xmldata.elements.each("rss/channel/item") do |item|
+  #title =  element.children[1].text
+  #title = element.elements.to_a("title").first.text
+  title = element.elements["title"].text
+  content = element.elements["content:encoded"].text
+  comments = (element.elements["wp:comment_status"].text.eql? "open") ? "true" "false"
+  #categories = element.elements["category"].text if element.elements["category"].attributes["domain"].eql? "category"
+  #post_tags = element.elements["category"].text if element.elements["category"].attributes["domain"].eql? "post_tag"
+  categories = element.elements.each("category"){|element| element.text if element.attributes["domain"].eql? "category"}.compact.join(",")
+  post_tags = element.elements.each("category"){|element| element.text if element.attributes["domain"].eql? "post_tag"}.compact.join(",")
+  #puts element.children[1].text
+  date = element.elements["wp:post_date"].text
+  post = unescape(template.read)
+end

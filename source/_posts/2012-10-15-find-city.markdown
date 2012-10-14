@@ -1,0 +1,57 @@
+---
+layout: post
+title: "find_city"
+date: 2012-05-25 15:45
+comments: true
+categories: ["ruby"]
+tags: ["city", "sina"]
+---
+## find_city
+1. base on sina api
+
+&nbsp;
+
+&nbsp;
+<code>require 'json'
+
+class FindCity
+  CityHash = JSON.parse `curl http://api.t.sina.com.cn/provinces.json`
+  def initialize
+    @cityhash=CityHash
+    @municipality=[6,11,12,50,81,82]
+  end
+  def getcity(province_id=nil, city_id=nil)
+    province_id.to_i
+    city_id.to_i
+    if @municipality.include? province_id
+      @cityhash["provinces"].each do |provinces|
+        if provinces["id"] == province_id
+          return provinces["name"]
+        end
+      end
+    else
+      @cityhash["provinces"].each do |provinces|
+        if provinces["id"] == province_id
+          provinces["citys"].each do |city|
+            return city[city_id.to_s] if city[city_id.to_s]
+          end
+        end
+      end
+    end
+    return nil
+  end
+end
+
+if __FILE__==$0
+  #************************以下测试代码*****************
+  time_start = Time.now
+  city = FindCity.new
+  list=[[6,2],[11,1],[43,2]]
+
+  list.each do |l|
+    puts city.getcity l[0],l[1]
+  end
+
+
+  puts "total time:#{Time.now-time_start}"
+end</code>
