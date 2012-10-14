@@ -3,8 +3,8 @@ layout: post
 title: "Rails里的Magic Column Names"
 date: 2012-08-27 00:37
 comments: true
-categories: ["rails"]
-tags: ["column", "Names", "rails"]
+categories: [rails]
+tags: [column,Names,rails]
 ---
 ## Rails里的Magic Column Names
 Active Record有一些富有“魔力”的列名:

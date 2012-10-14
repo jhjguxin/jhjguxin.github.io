@@ -3,8 +3,8 @@ layout: post
 title: "Rails Routing from the Outside In Rails"
 date: 2011-12-29 00:23
 comments: true
-categories: ["rails", "ruby"]
-tags: ["guide", "http", "rails", "route", "ruby", "translate"]
+categories: [rails,ruby]
+tags: [guide,http,rails,route,ruby,translate]
 ---
 ## Rails Routing from the Outside In Rails
 <h2>Rails Routing from the Outside In Rails<span style="font-family: WenQuanYi Micro Hei;">来自外部的</span>Routing</h2>

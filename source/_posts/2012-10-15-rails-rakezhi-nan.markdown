@@ -3,8 +3,8 @@ layout: post
 title: "Rails Rake指南"
 date: 2012-02-13 13:47
 comments: true
-categories: ["rails", "ruby"]
-tags: ["rails", "rake"]
+categories: [rails,ruby]
+tags: [rails,rake]
 ---
 ## Rails Rake指南
 这是Rails Envy网站的一篇Rake指南，你可以在这里找到原文。

@@ -3,14 +3,15 @@ layout: post
 title: "django学习笔记：django-pagination分页应用和内置的分页处理 "
 date: 2011-12-17 16:13
 comments: true
-categories: ["django", "python"]
-tags: ["django", "pagination"]
+categories: [django,python]
+tags: [django,pagination]
 ---
-## django学习笔记：django-pagination分页应用和内置的分页处理 
+## django学习笔记：django-pagination分页应用和内置的分页处理
 <div>
 
 <strong>django-pagination的分页</strong>
-<div>
+
+<pre>
 {% load pagination_tags %} ＃导入pagination模板标签
 
 {% autopaginate scenics_list 15 %} # 加上这一行处理分页，后面跟的那个整数表示每页多少条记录。
@@ -18,7 +19,8 @@ tags: ["django", "pagination"]
 {{ scenic.title }}
 {% endfor %}
 
-{% paginate %} # 秀出分页</div>
+{% paginate %} # 秀出分页</pre>
+
 <a name="entrymore"></a>
 －－－－－－－－－－－－ 分割线 －－－－－－－－－－－－－
 <strong>原django自带的分页：</strong>
@@ -33,6 +35,8 @@ scenic_list_info = {
 #'extra_context': {'book_list': Book.objects.all()}
 #'extra_context': {'string':'aaa','query':get_query} #向通用视图传递额外的数据，以字典形式存储
 }</div>
+
+<pre>
 &lt;div style="text-align:center;width:75%;font-size:12px;"&gt;
 {% if is_paginated %}
 {% ifequal page 1 %}
@@ -60,6 +64,6 @@ scenic_list_info = {
 &amp;nbsp;&amp;nbsp;
 {% endif %}
 &lt;/div&gt;
-
+</pre>
 </div>
 <div>标签： <a href="http://jhjguxin.hwcrazy.com/tag/django/">django</a></div>

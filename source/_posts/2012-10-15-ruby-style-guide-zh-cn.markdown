@@ -3,8 +3,8 @@ layout: post
 title: "ruby-style-guide-zh-cn"
 date: 2012-03-29 23:35
 comments: true
-categories: ["ruby"]
-tags: ["guide", "ruby", "style", "zh-cn"]
+categories: [ruby]
+tags: [guide,ruby,style,zh-cn]
 ---
 ## ruby-style-guide-zh-cn
 <h1>序</h1>

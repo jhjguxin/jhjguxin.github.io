@@ -3,8 +3,8 @@ layout: post
 title: "Single table inheritance (单表继承)"
 date: 2012-06-18 15:40
 comments: true
-categories: ["rails", "ruby"]
-tags: ["inheritance", "rails", "ruby", "single", "table", "单表继承"]
+categories: [rails,ruby]
+tags: [inheritance,rails,ruby,single,table,单表继承]
 ---
 ## Single table inheritance (单表继承)
 Active Record allows inheritance by storing the name of the class in a column that by default is named “type” (can be changed by overwriting <code>Base.inheritance_column</code>). This means that an inheritance looking like this:

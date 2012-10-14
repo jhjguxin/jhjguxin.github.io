@@ -3,8 +3,8 @@ layout: post
 title: "RVM 下载 加速 -by liuhui998"
 date: 2012-05-14 15:37
 comments: true
-categories: ["专业"]
-tags: ["rvm", "speed"]
+categories: [专业]
+tags: [rvm,speed]
 ---
 ## RVM 下载 加速 -by liuhui998
 今天晚上有点时间，我就折腾了一下 rails。

@@ -3,8 +3,8 @@ layout: post
 title: "Devise logout link non-functional"
 date: 2012-05-22 13:37
 comments: true
-categories: ["rails", "ruby"]
-tags: ["delete", "devise", "logout", "rails", "signout"]
+categories: [rails,ruby]
+tags: [delete,devise,logout,rails,signout]
 ---
 ## Devise logout link non-functional
 Resources: <a href="http://stackoverflow.com/questions/6110047/rails-devise-override-sessionscontroller">http://stackoverflow.com/questions/6110047/rails-devise-override-sessionscontroller</a>

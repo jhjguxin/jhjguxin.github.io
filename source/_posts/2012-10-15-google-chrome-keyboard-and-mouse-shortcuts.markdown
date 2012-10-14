@@ -3,8 +3,8 @@ layout: post
 title: "Google Chrome Keyboard and mouse shortcuts"
 date: 2012-08-30 11:10
 comments: true
-categories: ["工具控"]
-tags: ["chrome", "shurtcuts"]
+categories: [工具控]
+tags: [chrome,shurtcuts]
 ---
 ## Google Chrome Keyboard and mouse shortcuts
 <h3> Keyboard and mouse shortcuts</h3>

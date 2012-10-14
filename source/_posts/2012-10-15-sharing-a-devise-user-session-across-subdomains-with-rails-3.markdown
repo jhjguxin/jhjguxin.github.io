@@ -3,8 +3,8 @@ layout: post
 title: "Sharing A Devise User Session Across Subdomains With Rails 3"
 date: 2012-09-15 16:21
 comments: true
-categories: ["rails", "ruby", "web"]
-tags: ["devise", "rails", "Session", "Subdomains"]
+categories: [rails,ruby,web]
+tags: [devise,rails,Session,Subdomains]
 ---
 ## Sharing A Devise User Session Across Subdomains With Rails 3
 <pre>to andersen

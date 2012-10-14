@@ -3,8 +3,8 @@ layout: post
 title: "Ruby-------- loop "
 date: 2012-03-02 10:52
 comments: true
-categories: ["ruby"]
-tags: ["loop", "ruby"]
+categories: [ruby]
+tags: [loop,ruby]
 ---
 ## Ruby-------- loop 
 <code>

@@ -3,8 +3,8 @@ layout: post
 title: "你不必这么着急 --by Rei"
 date: 2012-04-23 10:50
 comments: true
-categories: ["live"]
-tags: ["hurry"]
+categories: [live]
+tags: [hurry]
 ---
 ## 你不必这么着急 --by Rei
 现在这个世界，似乎一切都在快速演进：各种年少暴富的新闻充斥着我们的眼球，软件开发世界到处是敏捷方法，甚至你最亲近的人都在催促你更快——谁谁谁都已经XX了，你将来怎么打算？所以，现在的学生找实习的时间越来越早，想速成的心态越来越重。

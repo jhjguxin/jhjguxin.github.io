@@ -3,8 +3,8 @@ layout: post
 title: "How use the collection type model column怎样使用集合类型的模型字段"
 date: 2012-05-17 16:09
 comments: true
-categories: ["rails", "ruby"]
-tags: ["collection", "column"]
+categories: [rails,ruby]
+tags: [collection,column]
 ---
 ## How use the collection type model column怎样使用集合类型的模型字段
 For example you have bellow code in migrate folder

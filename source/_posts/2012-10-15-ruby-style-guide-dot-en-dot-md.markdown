@@ -3,7 +3,7 @@ layout: post
 title: "ruby-style-guide.en.md"
 date: 2012-03-30 12:56
 comments: true
-categories: ["ruby"]
+categories: [ruby]
 tags: []
 ---
 ## ruby-style-guide.en.md

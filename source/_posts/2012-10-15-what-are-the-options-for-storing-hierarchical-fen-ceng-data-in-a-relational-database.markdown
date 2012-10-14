@@ -3,8 +3,8 @@ layout: post
 title: "What are the Options for Storing Hierarchical 分层 Data in a Relational Database?"
 date: 2012-04-13 23:29
 comments: true
-categories: ["rails", "专业"]
-tags: ["Database", "Hierarchial", "Relational", "Storing", "分层"]
+categories: [rails,专业]
+tags: [Database,Hierarchial,Relational,Storing,分层]
 ---
 ## What are the Options for Storing Hierarchical 分层 Data in a Relational Database?
 Generally speaking you're making a decision between fast read times (e.g. nested set) or fast write times (adjacency list). Usually you end up with a combination of the options below that best fit your needs. The following provides some in depth reading:

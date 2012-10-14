@@ -3,7 +3,7 @@ layout: post
 title: "python hashlib module"
 date: 2012-04-12 17:46
 comments: true
-categories: ["未分类"]
+categories: [未分类]
 tags: []
 ---
 ## python hashlib module

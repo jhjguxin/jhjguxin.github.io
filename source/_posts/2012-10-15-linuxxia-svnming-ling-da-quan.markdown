@@ -3,8 +3,8 @@ layout: post
 title: "linux下svn命令大全 "
 date: 2012-04-10 11:38
 comments: true
-categories: ["专业"]
-tags: ["command", "linux", "svn"]
+categories: [专业]
+tags: [command,linux,svn]
 ---
 ## linux下svn命令大全 
 <strong>1、将文件checkout到本地目录</strong> <wbr>

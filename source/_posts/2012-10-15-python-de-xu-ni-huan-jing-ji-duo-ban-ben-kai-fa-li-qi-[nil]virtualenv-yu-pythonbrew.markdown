@@ -3,8 +3,8 @@ layout: post
 title: "Python 的虛擬環境及多版本開發利器─Virtualenv 與 Pythonbrew"
 date: 2011-12-15 21:29
 comments: true
-categories: ["python"]
-tags: ["python", "Pythonbrew", "Virtualenv"]
+categories: [python]
+tags: [python,Pythonbrew,Virtualenv]
 ---
 ## Python 的虛擬環境及多版本開發利器─Virtualenv 與 Pythonbrew
 Virtualenv 和 Pythonbrew 都是可以創造虛擬（獨立）Python 環境的工具，只是虛擬（獨立）標的不同。

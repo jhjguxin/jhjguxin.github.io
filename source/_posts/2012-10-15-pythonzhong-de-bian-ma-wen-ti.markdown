@@ -3,8 +3,8 @@ layout: post
 title: "python中的编码问题"
 date: 2011-12-07 13:37
 comments: true
-categories: ["python"]
-tags: ["python"]
+categories: [python]
+tags: [python]
 ---
 ## python中的编码问题
 这里简单的说一下。（下面内容基本上时从《Python.Core.Programming.2ed》上摘的）

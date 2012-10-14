@@ -3,8 +3,8 @@ layout: post
 title: "Conditional comments in html"
 date: 2012-08-20 11:31
 comments: true
-categories: ["web"]
-tags: ["comments", "conditional", "html"]
+categories: [web]
+tags: [comments,conditional,html]
 ---
 ## Conditional comments in html
 Conditional comments only work in IE, and are thus excellently suited to give special instructions meant only for IE. They are supported from IE 5 onwards.

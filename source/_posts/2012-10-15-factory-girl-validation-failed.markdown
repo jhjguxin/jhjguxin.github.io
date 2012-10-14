@@ -3,8 +3,8 @@ layout: post
 title: "factory_girl Validation failed"
 date: 2012-03-16 16:22
 comments: true
-categories: ["rails", "ruby"]
-tags: ["factory_girl", "failed", "Validation"]
+categories: [rails,ruby]
+tags: [factory_girl,failed,Validation]
 ---
 ## factory_girl Validation failed
 You need to use a sequence to prevent the creation of user objects with the same email, since you must have a validation for the uniqueness of emails in your User model.

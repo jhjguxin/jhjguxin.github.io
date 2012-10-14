@@ -3,8 +3,8 @@ layout: post
 title: "不要自称为程序员"
 date: 2011-12-28 18:50
 comments: true
-categories: ["网文"]
-tags: ["程序员"]
+categories: [网文]
+tags: [程序员]
 ---
 ## 不要自称为程序员
 每年都有无数年轻程序员，加入软件行业。

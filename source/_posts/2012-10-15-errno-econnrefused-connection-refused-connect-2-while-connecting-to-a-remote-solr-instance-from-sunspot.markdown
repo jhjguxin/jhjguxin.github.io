@@ -3,8 +3,8 @@ layout: post
 title: "Errno::ECONNREFUSED:  Connection refused - connect(2) while connecting to a remote solr instance from Sunspot"
 date: 2012-02-03 20:10
 comments: true
-categories: ["rails"]
-tags: ["rails", "ruby", "sunspot"]
+categories: [rails]
+tags: [rails,ruby,sunspot]
 ---
 ## Errno::ECONNREFUSED:  Connection refused - connect(2) while connecting to a remote solr instance from Sunspot
 <h2>Quickstart with Rails 3</h2>

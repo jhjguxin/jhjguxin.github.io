@@ -3,8 +3,8 @@ layout: post
 title: "How To: Allow users to sign in using their username or email address"
 date: 2012-05-18 14:58
 comments: true
-categories: ["rails", "ruby"]
-tags: ["devise"]
+categories: [rails,ruby]
+tags: [devise]
 ---
 ## How To: Allow users to sign in using their username or email address
 For this example, we will assume your model is called <code>User</code>

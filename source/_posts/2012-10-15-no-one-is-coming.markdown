@@ -3,8 +3,8 @@ layout: post
 title: "No one is coming"
 date: 2012-03-30 23:36
 comments: true
-categories: ["未分类"]
-tags: ["optimism", "resilience", "self-faith", "sence-meaning", "social behavior"]
+categories: [未分类]
+tags: [optimism,resilience,self-faith,sence-meaning,social behavior]
 ---
 ## No one is coming
 Happiness: resilience, optimism, self-faith, sence-meaning, social behavior, helping others

@@ -3,8 +3,8 @@ layout: post
 title: "跨越边界: Ajax on Rails"
 date: 2012-03-02 13:26
 comments: true
-categories: ["rails", "ruby"]
-tags: ["ajax", "rails", "ruby"]
+categories: [rails,ruby]
+tags: [ajax,rails,ruby]
 ---
 ## 跨越边界: Ajax on Rails
 <em>跨越边界</em> 系列之前的两篇文章（参见 <a href="http://www.ibm.com/developerworks/cn/java/j-cb12056/index.html#resources">参考资料</a>）全面介绍了 Streamlined，这是 Rails 的辅助框架，该框架有效地利用 scaffolding 来快速生成简单的、使用 Ajax 的用户界面。除非您一直与世隔绝，不然您一定会知道 Ajax 是这样一种编程技术，它使用 XML、JavaScript 和 Web 标准来创建高度交互性的 Web 页面，正如您在 Google Maps 和大量其他站点上所看到的页面那样。许多读过 Streamlined 文章的读者都要求我描述一下 Ajax 在 Ruby on Rails 上的运行方式。本文全面介绍了两个简单的 Ajax 例子，延着这个思路介绍了 Ruby/Ajax 这一组合如此成功的原因。在本系列的下篇文章中，我将探究 JavaScript 这门编程语言。

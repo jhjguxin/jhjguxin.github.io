@@ -3,8 +3,8 @@ layout: post
 title: "Parse a web page and extract some json arrays"
 date: 2012-05-23 10:29
 comments: true
-categories: ["ruby"]
-tags: ["array", "json"]
+categories: [ruby]
+tags: [array,json]
 ---
 ## Parse a web page and extract some json arrays
 So I have some basic code below, which fetches the json from <a href="http://www.highcharts.com/demo/" rel="nofollow">http://www.highcharts.com/demo/</a>. But I want to be able to extract a hash, more specifically this:

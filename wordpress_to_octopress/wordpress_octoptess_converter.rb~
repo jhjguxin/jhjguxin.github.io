@@ -104,6 +104,7 @@ def create_new_post(params = {})
     abort("rake aborted!") if ask("#{filename} already exists. Do you want to overwrite?", ['y', 'n']) == 'n'
   end
 
+=begin
   puts "Creating new post: #{filename} on #{filename}"
   puts "---"
   puts "layout: post"
@@ -112,10 +113,10 @@ def create_new_post(params = {})
   puts "comments: #{comments}"
   puts "categories: #{categories}"
   puts "tags: #{tags}"
-  puts "---"
-  #puts "#{content}"
+  puts "---\n"
+  puts "#{content}"
+=end
 
-=begin
   open(filename, 'w') do |post|
     post.puts "---"
     post.puts "layout: post"
@@ -124,10 +125,10 @@ def create_new_post(params = {})
     post.puts "comments: #{comments}"
     post.puts "categories: #{categories}"
     post.puts "tags: #{tags}"
-    post.puts "---"
+    post.puts "---\n"
     post.puts "#{content}"
   end
-=end
+
 end
 
 def convert_to_octopress

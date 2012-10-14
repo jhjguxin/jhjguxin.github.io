@@ -3,8 +3,8 @@ layout: post
 title: "5 个常见的 Rails 开发误区"
 date: 2012-05-15 19:14
 comments: true
-categories: ["rails"]
-tags: ["Common", "Mistakes", "rails"]
+categories: [rails]
+tags: [Common,Mistakes,rails]
 ---
 ## 5 个常见的 Rails 开发误区
 本文作者是一名Rails开发者，他总结了在Rails开发过程中的一些常见误区。<strong>文章内容如下：</strong>

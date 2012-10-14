@@ -3,8 +3,8 @@ layout: post
 title: "windows Shell 脚本语法"
 date: 2012-04-06 14:22
 comments: true
-categories: ["未分类"]
-tags: ["shell", "windows"]
+categories: [未分类]
+tags: [shell,windows]
 ---
 ## windows Shell 脚本语法
 windows Shell 脚本语法

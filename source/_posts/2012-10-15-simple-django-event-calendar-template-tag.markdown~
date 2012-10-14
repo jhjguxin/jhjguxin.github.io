@@ -1,0 +1,251 @@
+---
+layout: post
+title: "Simple Django event calendar template tag"
+date: 2011-11-14 04:56
+comments: true
+categories: [django]
+tags: [calendar,tagm,templates]
+---
+## Simple Django event calendar template tag
+
+Simple Django event calendar template tag
+
+<strong><a href="https://github.com/jhjguxin/blogserver">blogserver</a></strong> / <a href="https://github.com/jhjguxin/blogserver/tree/master/apps">apps</a> / <a href="https://github.com/jhjguxin/blogserver/tree/master/apps/blog">blog</a> / <a href="https://github.com/jhjguxin/blogserver/tree/master/apps/blog/templatetags">templatetags</a> / event_tags.py
+<pre class="brush: python; gutter: true"></pre>
+<pre>##### Here is the template tag code. It goes in a file named
+# &quot;event_tags.py&quot; in a subdirectory of your app called &quot;templatetags&quot;.
+#####
+
+from calendar import HTMLCalendar
+from django import template
+from datetime import *
+from itertools import groupby
+import pdb
+from django.utils.html import conditional_escape as esc
+from blogserver.apps.blog.models import Post
+register = template.Library()
+
+def do_event_calendar(parser, token):
+    &quot;&quot;&quot;
+    The template tag&#039;s syntax is {% event_calendar year month event_list %}
+    &quot;&quot;&quot;
+
+    try:
+        #tag_name, year, month, event_list = token.split_contents()
+        tag_name= token.split_contents()
+    except ValueError:
+        raise template.TemplateSyntaxError, &quot;%r tag requires three arguments&quot; % token.contents.split()[0]
+    #return EventCalendarNode(year, month, event_list)
+    return EventCalendarNode()
+
+class EventCalendarNode(template.Node):
+    &quot;&quot;&quot;
+    Process a particular node in the template. Fail silently.
+    &quot;&quot;&quot;
+
+    def __init__(self,):
+        try:
+            lToday = datetime.now()
+            #self.year = template.Variable(year)
+            #self.month = template.Variable(month)
+            self.year = lToday.year
+            self.month = lToday.month
+            my_events = Post.objects.filter(date_published__year=self.year, date_published__month=self.month)
+            #self.event_list = template.Variable(event_list)
+            self.event_list = my_events
+        except ValueError:
+            raise template.TemplateSyntaxError
+
+    def render(self, context):
+        try:
+            # Get the variables from the context so the method is thread-safe.
+            #my_event_list = self.event_list.resolve(context)
+            #my_year = self.year.resolve(context)
+            #my_month = self.month.resolve(context)
+            my_event_list = self.event_list
+            my_year = self.year
+            #pdb.set_trace()
+            my_month = self.month
+            cal = EventCalendar(my_event_list)
+            return cal.formatmonth(int(my_year), int(my_month))
+        except ValueError:
+            return
+        except template.VariableDoesNotExist:
+            return
+
+class EventCalendar(HTMLCalendar):
+    &quot;&quot;&quot;
+    Overload Python&#039;s calendar.HTMLCalendar to add the appropriate events to
+    each day&#039;s table cell.
+    &quot;&quot;&quot;
+
+    def __init__(self, events):
+        super(EventCalendar, self).__init__()
+        self.events = self.group_by_day(events)
+
+    def formatday(self, day, weekday):
+        if day != 0:
+            cssclass = self.cssclasses[weekday]
+            if date.today() == date(self.year, self.month, day):
+                cssclass += &#039; today&#039;
+            if day in self.events:
+                cssclass += &#039; filled&#039;
+                href=&quot;/%d/%02d/%02d/&quot;%(self.year,self.month,day)
+                return self.day_cell(cssclass, &#039;&lt;span class=&quot;dayNumber&quot; title=&quot;click to view post&quot;&gt;&lt;a href=%s &gt;%d&lt;/a&gt;&lt;/span&gt;&#039; % (href,day))
+            return self.day_cell(cssclass, &#039;&lt;span class=&quot;dayNumberNoEvents&quot;&gt;%d&lt;/span&gt;&#039; % (day))
+        return self.day_cell(&#039;noday&#039;, &#039;&amp;nbsp;&#039;)
+
+    def formatmonth(self, year, month):
+        self.year, self.month = year, month
+        return super(EventCalendar, self).formatmonth(year, month)
+
+    def group_by_day(self, events):
+        field = lambda event: event.date_published.day
+        return dict(
+            [(day, list(items)) for day, items in groupby(events, field)]
+        )
+
+    def day_cell(self, cssclass, body):
+        return &#039;&lt;td class=&quot;%s&quot;&gt;%s&lt;/td&gt;&#039; % (cssclass, body)
+
+# Register the template tag so it is available to templates
+register.tag(&quot;event_calendar&quot;, do_event_calendar)</pre>
+<div>
+
+ <strong><a href="https://github.com/jhjguxin/blogserver">blogserver</a></strong>/ views.py
+<div id="LC1"># Create your views here.</div>
+<div id="LC2">from django.shortcuts import render_to_response</div>
+<div id="LC3">import pdb</div>
+<div id="LC4">from datetime import *</div>
+<div id="LC5">from calendar import monthrange</div>
+<div id="LC6">from blogserver.apps.blog.models import Post</div>
+<div id="LC7">from django.template import RequestContext</div>
+<div id="LC8">from django.utils.html import conditional_escape as esc</div>
+<div id="LC9">from django.utils.safestring import mark_safe</div>
+<div id="LC10">from itertools import groupby</div>
+<div id="LC11">from calendar import HTMLCalendar, monthrange</div>
+<div id="LC12">##### Here's code for the view to look up the event objects for to put in</div>
+<div id="LC13"># the context for the template. It goes in your app's views.py file (or</div>
+<div id="LC14"># wherever you put your views).</div>
+<div id="LC15">#####</div>
+<div id="LC17">def named_month(month_number):</div>
+<div id="LC18">    """</div>
+<div id="LC19">Return the name of the month, given the number.</div>
+<div id="LC20">"""</div>
+<div id="LC21">    return date(1900, month_number, 1).strftime("%B")</div>
+<div id="LC23">def this_month(request):</div>
+<div id="LC24">    """</div>
+<div id="LC25">Show calendar of events this month.</div>
+<div id="LC26">"""</div>
+<div id="LC27">    today = datetime.now()</div>
+<div id="LC28">    return calendar(request, today.year, today.month)</div>
+<div id="LC31">def calendar(request, year, month, series_id=None):</div>
+<div id="LC32">    """</div>
+<div id="LC33">Show calendar of events for a given month of a given year.</div>
+<div id="LC34">``series_id``</div>
+<div id="LC35">The event series to show. None shows all event series.</div>
+<div id="LC37">"""</div>
+<div id="LC39">    my_year = int(year)</div>
+<div id="LC40">    my_month = int(month)</div>
+<div id="LC41">    my_calendar_from_month = datetime(my_year, my_month, 1)</div>
+<div id="LC42">    my_calendar_to_month = datetime(my_year, my_month, monthrange(my_year, my_month)[1])</div>
+<div id="LC44">    my_events = Post.objects.filter(date_published__year=my_year, date_published__month=my_month)</div>
+<div id="LC45">    if series_id:</div>
+<div id="LC46">        my_events = my_events.filter(series=series_id)</div>
+<div id="LC48">    # Calculate values for the calendar controls. 1-indexed (Jan = 1)</div>
+<div id="LC49">    my_previous_year = my_year</div>
+<div id="LC50">    my_previous_month = my_month - 1</div>
+<div id="LC51">    if my_previous_month == 0:</div>
+<div id="LC52">        my_previous_year = my_year - 1</div>
+<div id="LC53">        my_previous_month = 12</div>
+<div id="LC54">    my_next_year = my_year</div>
+<div id="LC55">    my_next_month = my_month + 1</div>
+<div id="LC56">    if my_next_month == 13:</div>
+<div id="LC57">        my_next_year = my_year + 1</div>
+<div id="LC58">        my_next_month = 1</div>
+<div id="LC59">    my_year_after_this = my_year + 1</div>
+<div id="LC60">    my_year_before_this = my_year - 1</div>
+<div id="LC61">    #pdb.set_trace()</div>
+<div id="LC62">    return render_to_response("blog/calendar.html", { 'events_list': my_events,</div>
+<div id="LC63">                                                        'month': my_month,</div>
+<div id="LC64">                                                        'month_name': named_month(my_month),</div>
+<div id="LC65">                                                        'year': my_year,</div>
+<div id="LC66">                                                        'previous_month': my_previous_month,</div>
+<div id="LC67">                                                        'previous_month_name': named_month(my_previous_month),</div>
+<div id="LC68">                                                        'previous_year': my_previous_year,</div>
+<div id="LC69">                                                        'next_month': my_next_month,</div>
+<div id="LC70">                                                        'next_month_name': named_month(my_next_month),</div>
+<div id="LC71">                                                        'next_year': my_next_year,</div>
+<div id="LC72">                                                        'year_before_this': my_year_before_this,</div>
+<div id="LC73">                                                        'year_after_this': my_year_after_this,</div>
+<div id="LC74">    }, context_instance=RequestContext(request))</div>
+<div id="LC75">def post_calendar(request):</div>
+<div id="LC76">  #pdb.set_trace()</div>
+<div id="LC77"># return render_to_response("base.html",)</div>
+<div id="LC78">  lToday = datetime.now()</div>
+<div id="LC79">  return calendar(request, lToday.year, lToday.month)</div>
+<div id="LC81">def base_page(request):</div>
+<div id="LC82">  #pdb.set_trace()</div>
+<div id="LC83">  return render_to_response("base.html",)</div>
+<div id="LC84">  #lToday = datetime.now()</div>
+<div id="LC85">  #return calendar(request, lToday.year, lToday.month)</div>
+<div id="LC86">##### Here's code for the view to look up the event objects for to put in</div>
+<div id="LC87"># the context for the template. It goes in your app's views.py file (or</div>
+<div id="LC88"># wherever you put your views).</div>
+<div id="LC89">#####</div>
+</div>
+<div> <strong><a href="https://github.com/jhjguxin/blogserver">blogserver</a></strong> / <a href="https://github.com/jhjguxin/blogserver/tree/master/templates">templates</a> / <a href="https://github.com/jhjguxin/blogserver/tree/master/templates/blog">blog</a>/ calendar.html</div>
+<div>at end do not forget to setting your url files</div>
+<pre>
+&lt;style type=&quot;text/css&quot;&gt;
+/* Calendar */
+
+#calendar table {
+    width: 100%;
+}
+
+#calendar table tr th {
+    text-align: center;
+    font-size: 16px;
+    background-color: #316497;
+    color: #99ccff;
+}
+
+#calendar table tr td {
+    width: 10%;
+    border: 1px solid #555;
+    vertical-align: top;
+    height: 20px;
+    padding: 2px;
+}
+
+#calendar td.noday {
+
+}
+
+#calendar td.filled {
+    background-color: #99ccff;
+}
+
+#calendar td.today {
+    border: 4px solid #316497;
+}
+
+#calendar .dayNumber {
+    font-size: 16px !important;
+    font-weight: bold;
+}
+
+#calendar a {
+    font-size: 10px;
+}
+
+}
+&lt;/style&gt;
+{% load event_tags %}
+
+&lt;div id=&quot;calendar&quot;&gt;
+{% event_calendar year month events_list %}
+&lt;/div&gt;
+</pre>
+<div>And I think the better way is bulit the calendar in css or js files and get event from the server</div>

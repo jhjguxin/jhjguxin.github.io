@@ -3,8 +3,8 @@ layout: post
 title: "Ruby on Rails 3.1 Release Notes"
 date: 2011-12-30 19:12
 comments: true
-categories: ["rails", "ruby"]
-tags: ["gem", "git", "guide", "jquery", "learning", "rails", "release", "ruby"]
+categories: [rails,ruby]
+tags: [gem,git,guide,jquery,learning,rails,release,ruby]
 ---
 ## Ruby on Rails 3.1 Release Notes
 <h2>Ruby on Rails 3.1 Release Notes</h2>

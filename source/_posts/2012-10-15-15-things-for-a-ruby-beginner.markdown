@@ -3,8 +3,8 @@ layout: post
 title: "15 Things for a Ruby Beginner"
 date: 2012-06-16 22:47
 comments: true
-categories: ["ruby"]
-tags: ["beginner", "ruby", "thing"]
+categories: [ruby]
+tags: [beginner,ruby,thing]
 ---
 ## 15 Things for a Ruby Beginner
 <em>The following is a post I had recently sent the <a href="https://groups.google.com/group/bangalorerug">Bangalore Ruby User Group</a>. It has been slightly modified to address a larger audience.</em>

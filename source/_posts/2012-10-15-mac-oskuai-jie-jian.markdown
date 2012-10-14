@@ -3,8 +3,8 @@ layout: post
 title: "MAC OS快捷键 "
 date: 2011-12-07 00:05
 comments: true
-categories: ["网文"]
-tags: ["apple", "mac", "shortcuts"]
+categories: [网文]
+tags: [apple,mac,shortcuts]
 ---
 ## MAC OS快捷键 
 <div>

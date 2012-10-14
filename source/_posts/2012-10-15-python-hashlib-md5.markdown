@@ -3,8 +3,8 @@ layout: post
 title: "python hashlib md5"
 date: 2012-04-12 17:53
 comments: true
-categories: ["python"]
-tags: ["hashlib", "md5", "python"]
+categories: [python]
+tags: [hashlib,md5,python]
 ---
 ## python hashlib md5
 <blockquote>#-*- coding:utf-8 -*-

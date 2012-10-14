@@ -3,8 +3,8 @@ layout: post
 title: "rvm下安装gem编译失败 linecache19"
 date: 2012-02-14 15:41
 comments: true
-categories: ["rails", "ruby"]
-tags: ["linecache19", "rails", "ruby", "rvm"]
+categories: [rails,ruby]
+tags: [linecache19,rails,ruby,rvm]
 ---
 ## rvm下安装gem编译失败 linecache19
 报错:An error occured while installing linecache19 (0.5.12), and Bundler cannot continue.

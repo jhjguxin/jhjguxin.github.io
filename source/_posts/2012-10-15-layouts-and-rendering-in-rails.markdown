@@ -3,8 +3,8 @@ layout: post
 title: "Layouts and Rendering in Rails"
 date: 2011-12-08 21:12
 comments: true
-categories: ["rails"]
-tags: ["guide", "layouts", "rails", "rendering", "templates", "view"]
+categories: [rails]
+tags: [guide,layouts,rails,rendering,templates,view]
 ---
 ## Layouts and Rendering in Rails
 <h2>Layouts and Rendering in Rails</h2>

@@ -3,8 +3,8 @@ layout: post
 title: "Markdown语法"
 date: 2012-04-24 14:52
 comments: true
-categories: ["专业", "网文"]
-tags: ["CN", "markdown", "中文"]
+categories: [专业,网文]
+tags: [CN,markdown,中文]
 ---
 ## Markdown语法
 <h2 id="overview">概述</h2>

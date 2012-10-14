@@ -3,8 +3,8 @@ layout: post
 title: "[進階]使用 Facade Pattern 取代 Model Callbacks by xdite"
 date: 2012-03-20 15:24
 comments: true
-categories: ["rails", "ruby"]
-tags: ["Callbacks", "Facade", "Model", "rails", "ruby", "xdite"]
+categories: [rails,ruby]
+tags: [Callbacks,Facade,Model,rails,ruby,xdite]
 ---
 ## [進階]使用 Facade Pattern 取代 Model Callbacks by xdite
 <h2>What is “callbacks”?</h2>

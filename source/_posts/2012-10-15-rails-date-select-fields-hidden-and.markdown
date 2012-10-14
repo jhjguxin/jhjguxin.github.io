@@ -3,8 +3,8 @@ layout: post
 title: "Rails date_select fields hidden and "
 date: 2012-07-27 17:08
 comments: true
-categories: ["rails", "ruby"]
-tags: ["date_select", "rails", "ruby"]
+categories: [rails,ruby]
+tags: [date_select,rails,ruby]
 ---
 ## Rails date_select fields hidden and 
 Another 2 hours wasted. Today I was trying to use the date_select helper, but I could not figure out why the fields kept showing up as hidden inputs instead of select boxes.

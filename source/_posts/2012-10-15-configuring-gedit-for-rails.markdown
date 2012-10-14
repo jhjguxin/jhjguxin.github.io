@@ -3,8 +3,8 @@ layout: post
 title: "Configuring Gedit for Rails"
 date: 2012-06-07 10:34
 comments: true
-categories: ["rails", "ruby"]
-tags: ["configuring", "gedit", "rails", "ruby"]
+categories: [rails,ruby]
+tags: [configuring,gedit,rails,ruby]
 ---
 ## Configuring Gedit for Rails
 I haven’t kept my feelings about IDEs hidden, I’m a big believer in using text editors instead.

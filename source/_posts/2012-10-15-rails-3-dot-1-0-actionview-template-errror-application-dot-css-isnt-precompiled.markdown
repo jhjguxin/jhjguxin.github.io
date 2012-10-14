@@ -3,8 +3,8 @@ layout: post
 title: "rails 3.1.0 ActionView::Template::Errror (application.css isn't precompiled)"
 date: 2012-02-23 16:30
 comments: true
-categories: ["rails", "ruby"]
-tags: ["assets", "precompiled", "rails", "ruby"]
+categories: [rails,ruby]
+tags: [assets,precompiled,rails,ruby]
 ---
 ## rails 3.1.0 ActionView::Template::Errror (application.css isn't precompiled)
 I made a basic rails app with a simple pages controller with an index function and when I load the page I get:

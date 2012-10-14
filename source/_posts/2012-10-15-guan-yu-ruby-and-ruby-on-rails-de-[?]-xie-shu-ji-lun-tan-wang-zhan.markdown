@@ -3,8 +3,8 @@ layout: post
 title: "关于 Ruby &amp;Ruby on Rails 的一些书及论坛网站"
 date: 2011-10-20 06:56
 comments: true
-categories: ["ruby"]
-tags: ["ruby"]
+categories: [ruby]
+tags: [ruby]
 ---
 ## 关于 Ruby &Ruby on Rails 的一些书及论坛网站
 需要用到的一些书

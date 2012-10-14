@@ -3,8 +3,8 @@ layout: post
 title: "Advanced Caching: Part 1 - Caching Strategies"
 date: 2012-08-29 23:15
 comments: true
-categories: ["rails", "ruby", "web"]
-tags: ["advanced", "cache", "rails"]
+categories: [rails,ruby,web]
+tags: [advanced,cache,rails]
 ---
 ## Advanced Caching: Part 1 - Caching Strategies
 First, let's start with a brief overview of the different types of caching. We'll start from 50,000ft and work our way down.

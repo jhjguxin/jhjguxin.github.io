@@ -3,8 +3,8 @@ layout: post
 title: "Rubyonrails Guide to Active Record Associations"
 date: 2011-11-29 15:31
 comments: true
-categories: ["rails"]
-tags: ["guide", "rails", "ruby"]
+categories: [rails]
+tags: [guide,rails,ruby]
 ---
 ## Rubyonrails Guide to Active Record Associations
 <div>

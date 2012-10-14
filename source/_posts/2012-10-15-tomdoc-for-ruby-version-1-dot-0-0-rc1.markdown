@@ -3,8 +3,8 @@ layout: post
 title: "TomDoc for Ruby - Version 1.0.0-rc1"
 date: 2012-03-15 10:54
 comments: true
-categories: ["rails", "ruby"]
-tags: ["doc", "ruby", "tomdoc"]
+categories: [rails,ruby]
+tags: [doc,ruby,tomdoc]
 ---
 ## TomDoc for Ruby - Version 1.0.0-rc1
 Purpose

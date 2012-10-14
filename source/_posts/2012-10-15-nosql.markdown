@@ -3,7 +3,7 @@ layout: post
 title: "NoSQL"
 date: 2012-05-08 17:39
 comments: true
-categories: ["DB", "专业"]
+categories: [DB,专业]
 tags: []
 ---
 ## NoSQL

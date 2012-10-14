@@ -3,8 +3,8 @@ layout: post
 title: "版本号(the version number in baike)"
 date: 2011-12-29 10:28
 comments: true
-categories: ["专业"]
-tags: ["version"]
+categories: [专业]
+tags: [version]
 ---
 ## 版本号(the version number in baike)
 版本号(version number)是版本的标识号。每一个操作系统（或广义的讲，每一个软件）都有一个版本号。版本号能使用户了解所使用的操作系统是否为最新的版本以及它所提供的功能与设施。 每一个版本号可以分为主版本号与次版本号两部分。

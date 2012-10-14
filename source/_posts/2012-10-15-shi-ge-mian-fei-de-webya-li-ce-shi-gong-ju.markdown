@@ -3,8 +3,8 @@ layout: post
 title: "十个免费的Web压力测试工具"
 date: 2012-05-03 11:15
 comments: true
-categories: ["专业"]
-tags: ["web", "压力测试", "工具"]
+categories: [专业]
+tags: [web,压力测试,工具]
 ---
 ## 十个免费的Web压力测试工具
 relate resources:

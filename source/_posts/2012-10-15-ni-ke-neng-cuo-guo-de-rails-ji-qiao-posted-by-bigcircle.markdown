@@ -3,8 +3,8 @@ layout: post
 title: "你可能错过的 Rails 技巧 --Posted by bigcircle"
 date: 2012-09-07 23:29
 comments: true
-categories: ["rails", "ruby", "web"]
-tags: ["rails.ruby", "tips"]
+categories: [rails,ruby,web]
+tags: [rails.ruby,tips]
 ---
 ## 你可能错过的 Rails 技巧 --Posted by bigcircle
 记得前段时间 RailsConf2012 之后看过一个不错的pdf，<a href="https://speakerdeck.com/u/jeg2/p/10-things-you-didnt-know-rails-could-do">10 things you didn’t know rails could do</a>

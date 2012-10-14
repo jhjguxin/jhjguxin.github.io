@@ -3,8 +3,8 @@ layout: post
 title: "ubuntu 下利用ndiswrapper安装无线网卡驱动"
 date: 2012-03-31 21:49
 comments: true
-categories: ["ubuntu"]
-tags: ["driver", "ndisgtk", "wifi"]
+categories: [ubuntu]
+tags: [driver,ndisgtk,wifi]
 ---
 ## ubuntu 下利用ndiswrapper安装无线网卡驱动
 <div>

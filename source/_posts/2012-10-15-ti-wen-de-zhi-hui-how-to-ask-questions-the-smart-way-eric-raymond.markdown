@@ -3,8 +3,8 @@ layout: post
 title: "提问的智慧 - How To Ask Questions The Smart Way [Eric Raymond]"
 date: 2011-11-01 02:01
 comments: true
-categories: ["网文"]
-tags: ["question", "smart"]
+categories: [网文]
+tags: [question,smart]
 ---
 ## 提问的智慧 - How To Ask Questions The Smart Way [Eric Raymond]
 艾瑞克.史蒂文.雷蒙德（Eric Steven Raymond）

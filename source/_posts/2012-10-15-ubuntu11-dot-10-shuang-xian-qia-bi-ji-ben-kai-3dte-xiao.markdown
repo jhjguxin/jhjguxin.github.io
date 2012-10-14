@@ -3,8 +3,8 @@ layout: post
 title: "ubuntu11.10 双显卡笔记本 开3d特效"
 date: 2011-11-09 03:04
 comments: true
-categories: ["网文"]
-tags: ["ubuntu", "ubuntu 11.10"]
+categories: [网文]
+tags: [ubuntu,ubuntu 11.10]
 ---
 ## ubuntu11.10 双显卡笔记本 开3d特效
 我的本本是双显卡配置的，集成显卡是intel的，独立显卡是nvidia，使用系统自带的附加驱动装nvidia失败....................

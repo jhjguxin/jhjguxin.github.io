@@ -3,8 +3,8 @@ layout: post
 title: "Rails counter cache"
 date: 2012-08-27 00:44
 comments: true
-categories: ["rails", "ruby"]
-tags: ["cache", "counter", "rails"]
+categories: [rails,ruby]
+tags: [cache,counter,rails]
 ---
 ## Rails counter cache
 这次就是讲用_count字段来缓存has_many的计数 

@@ -3,8 +3,8 @@ layout: post
 title: "码农熬夜指南"
 date: 2011-11-10 05:40
 comments: true
-categories: ["网文"]
-tags: ["指南", "熬夜", "码农"]
+categories: [网文]
+tags: [指南,熬夜,码农]
 ---
 ## 码农熬夜指南
 <div>

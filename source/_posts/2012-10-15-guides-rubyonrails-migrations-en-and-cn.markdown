@@ -3,8 +3,8 @@ layout: post
 title: "guides rubyonrails Migrations (EN and CN)"
 date: 2011-11-21 02:48
 comments: true
-categories: ["rails"]
-tags: ["rails", "ruby", "translate", "经验"]
+categories: [rails]
+tags: [rails,ruby,translate,经验]
 ---
 ## guides rubyonrails Migrations (EN and CN)
 <h2>Migrations</h2>

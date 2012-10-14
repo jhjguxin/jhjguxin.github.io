@@ -3,8 +3,8 @@ layout: post
 title: "Starting Ruby on Rails: What I Wish I Knew"
 date: 2012-05-05 19:38
 comments: true
-categories: ["rails", "ruby"]
-tags: ["rails", "ruby", "Starting"]
+categories: [rails,ruby]
+tags: [rails,ruby,Starting]
 ---
 ## Starting Ruby on Rails: What I Wish I Knew
 <blockquote>from betterexplained.com , update by francis</blockquote>

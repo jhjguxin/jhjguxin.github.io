@@ -3,8 +3,8 @@ layout: post
 title: "Getting Started with Rails-(EN-CN)"
 date: 2011-11-10 03:05
 comments: true
-categories: ["rails"]
-tags: ["book", "rails", "ubuntu 11.10", "web", "经验"]
+categories: [rails]
+tags: [book,rails,ubuntu 11.10,web,经验]
 ---
 ## Getting Started with Rails-(EN-CN)
 <h2>Getting Started with Rails</h2>

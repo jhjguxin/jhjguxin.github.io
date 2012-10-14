@@ -3,8 +3,8 @@ layout: post
 title: "晒晒我们的开源项目 ITEYE开源代码"
 date: 2012-09-27 08:34
 comments: true
-categories: ["rails", "ruby", "web", "专业", "工具控"]
-tags: ["iteye", "opensources"]
+categories: [rails,ruby,web,专业,工具控]
+tags: [iteye,opensources]
 ---
 ## 晒晒我们的开源项目 ITEYE开源代码
 我们的研发团队是一支mini型研发团队，目前共有研发人员13人。由于网站产品维护的历史原因，这13人的研发团队分为4支小组，分别是：Ruby研发小组5人；PHP研发小组4人；.net研发小组2人，Java搜索小组2人。

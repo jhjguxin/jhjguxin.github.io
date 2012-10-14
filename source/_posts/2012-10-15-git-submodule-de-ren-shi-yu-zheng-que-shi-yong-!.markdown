@@ -3,8 +3,8 @@ layout: post
 title: "Git Submodule 的認識與正確使用！"
 date: 2012-04-19 18:36
 comments: true
-categories: ["Project Manage", "专业"]
-tags: ["git", "Submodule"]
+categories: [Project Manage,专业]
+tags: [git,Submodule]
 ---
 ## Git Submodule 的認識與正確使用！
 <div>

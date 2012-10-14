@@ -3,8 +3,8 @@ layout: post
 title: "Rails form_for with associations defined and multipart set to true not working"
 date: 2012-02-08 22:26
 comments: true
-categories: ["rails", "ruby", "专业"]
-tags: ["Form", "rails"]
+categories: [rails,ruby,专业]
+tags: [Form,rails]
 ---
 ## Rails form_for with associations defined and multipart set to true not working
 So I have one form:

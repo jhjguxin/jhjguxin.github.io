@@ -3,8 +3,8 @@ layout: post
 title: "The 501 Developer Manifesto--《501程序员宣言》"
 date: 2012-05-11 13:55
 comments: true
-categories: ["CoderFarmer", "网文"]
-tags: ["developer", "Manifesto，501程序员宣言"]
+categories: [CoderFarmer,网文]
+tags: [developer,Manifesto，501程序员宣言]
 ---
 ## The 501 Developer Manifesto--《501程序员宣言》
 We are software developers who take pride in our work but choose not to be wholly defined by it.

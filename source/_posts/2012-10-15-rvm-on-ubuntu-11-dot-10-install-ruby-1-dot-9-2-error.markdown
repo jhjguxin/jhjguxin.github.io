@@ -3,8 +3,8 @@ layout: post
 title: "rvm on ubuntu 11.10 install ruby 1.9.2 error"
 date: 2012-01-31 22:42
 comments: true
-categories: ["ruby"]
-tags: ["openssl", "ruby", "rvm"]
+categories: [ruby]
+tags: [openssl,ruby,rvm]
 ---
 ## rvm on ubuntu 11.10 install ruby 1.9.2 error
 <div>

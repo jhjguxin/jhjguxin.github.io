@@ -3,8 +3,8 @@ layout: post
 title: "Active Record-Query Interface-CN"
 date: 2011-12-02 17:54
 comments: true
-categories: ["rails"]
-tags: ["active record", "CN", "interface", "query", "rails", "ruby", "syntax"]
+categories: [rails]
+tags: [active record,CN,interface,query,rails,ruby,syntax]
 ---
 ## Active Record-Query Interface-CN
 <h1>Active Record</h1>

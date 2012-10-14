@@ -3,8 +3,8 @@ layout: post
 title: "OO设计原则总结"
 date: 2012-03-21 13:40
 comments: true
-categories: ["专业"]
-tags: ["dip", "dry", "isp", "it", "ocp", "oo设计原则", "srp"]
+categories: [专业]
+tags: [dip,dry,isp,it,ocp,oo设计原则,srp]
 ---
 ## OO设计原则总结
 <div> <wbr>设计原则是基本的工具，应用这些规则可以使你的代码更加灵活，更容易维护，更容易扩展。</wbr></div>

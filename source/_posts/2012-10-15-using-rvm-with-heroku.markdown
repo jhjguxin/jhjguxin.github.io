@@ -3,8 +3,8 @@ layout: post
 title: "Using RVM with Heroku"
 date: 2012-02-01 11:29
 comments: true
-categories: ["rails", "ruby"]
-tags: ["heroku", "rails", "ruby"]
+categories: [rails,ruby]
+tags: [heroku,rails,ruby]
 ---
 ## Using RVM with Heroku
 Heroku is a deployment platform for running rails application on a scalable architecture.

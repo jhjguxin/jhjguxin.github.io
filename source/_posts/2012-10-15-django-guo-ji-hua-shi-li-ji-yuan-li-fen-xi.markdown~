@@ -3,8 +3,8 @@ layout: post
 title: "Django 国际化实例及原理分析"
 date: 2011-11-24 12:02
 comments: true
-categories: ["django"]
-tags: ["django", "i18n"]
+categories: [django]
+tags: [django,i18n]
 ---
 ## Django 国际化实例及原理分析
 <div>
@@ -58,10 +58,10 @@ Django 国际化使用的翻译模块是使用 Python 自带的 gettext 标准�
 <tbody>
 <tr>
 <td>
-<pre>				 
- [root@localhost jerry]# django-admin.py startproject testsite 
- [root@localhost jerry]# cd testsite/ 
- [root@localhost testsite]# ls 
+<pre>
+ [root@localhost jerry]# django-admin.py startproject testsite
+ [root@localhost jerry]# cd testsite/
+ [root@localhost testsite]# ls
  __init__.py  manage.py  settings.py  urls.py</pre>
 </td>
 </tr>
@@ -75,10 +75,10 @@ Django 国际化使用的翻译模块是使用 Python 自带的 gettext 标准�
 <tbody>
 <tr>
 <td>
-<pre>				 
- [root@localhost testsite]# Python manage.py startapp test1 
- [root@localhost testsite]# ls 
- __init__.py  __init__.pyc  manage.py  settings.py  settings.pyc  test1  urls.py 
+<pre>
+ [root@localhost testsite]# Python manage.py startapp test1
+ [root@localhost testsite]# ls
+ __init__.py  __init__.pyc  manage.py  settings.py  settings.pyc  test1  urls.py
  [root@localhost testsite]#cd test1</pre>
 </td>
 </tr>
@@ -92,21 +92,21 @@ Django 国际化使用的翻译模块是使用 Python 自带的 gettext 标准�
 <tbody>
 <tr>
 <td>
-<pre>				 
- [root@localhost test1]# vim views.py 
+<pre>
+ [root@localhost test1]# vim views.py
 
- # Create your views here. 
- from django.http import HttpResponse 
- import time 
+ # Create your views here.
+ from django.http import HttpResponse
+ import time
 
- def test1_view(request): 
+ def test1_view(request):
  # 获得系统本地时间，返回的格式是 UTC 中的 struct_time 数据
-        t  = time.localtime() 
- # 第 6 个元素是 tm_wday , 范围为 [0,6], 星期一 is 0 
-        n  = t[6] 
+        t  = time.localtime()
+ # 第 6 个元素是 tm_wday , 范围为 [0,6], 星期一 is 0
+        n  = t[6]
  # 星期一到星期日字符串
-weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 
-'Sunday'] 
+weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday',
+'Sunday']
  # 返回一个 HttpResponse、，这段代码将用来返回服务器系统上是星期几。
         return HttpResponse(weekdays[n])</pre>
 </td>
@@ -121,16 +121,16 @@ weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday',
 <tbody>
 <tr>
 <td>
-<pre>				 
- [root@localhost testsite]# vim urls.py 
- from testsite.test1 import views 
+<pre>
+ [root@localhost testsite]# vim urls.py
+ from testsite.test1 import views
 
- urlpatterns = patterns('', 
+ urlpatterns = patterns('',
     …
-    (r'^test1_view$', views.test1_view), 
- ) 
+    (r'^test1_view$', views.test1_view),
+ )
 
-在 testsite 中，setting.py 中默认的语言设置为 en-us: 
+在 testsite 中，setting.py 中默认的语言设置为 en-us:
 
  LANGUAGE_CODE = 'en-us'</pre>
 </td>
@@ -145,7 +145,7 @@ weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday',
 <tbody>
 <tr>
 <td>
-<pre>				 
+<pre>
  root@localhost testsite]# Python manage.py runserver 0.0.0.0:8080</pre>
 </td>
 </tr>
@@ -169,23 +169,23 @@ weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday',
 <tbody>
 <tr>
 <td>
-<pre>				 
- [root@localhost test1]# vim views.py 
+<pre>
+ [root@localhost test1]# vim views.py
 
- # Create your views here. 
- from django.http import HttpResponse 
- from django.utils.translation import ugettext as _ 
- import time 
+ # Create your views here.
+ from django.http import HttpResponse
+ from django.utils.translation import ugettext as _
+ import time
 
- def test1_view(request): 
+ def test1_view(request):
  # 获得系统本地时间，返回的格式是 UTC 中的 struct_time 数据
-        t  = time.localtime() 
- # 第 6 个元素是 tm_wday , 范围为 [0,6], 星期一 is 0 
-        n  = t[6] 
+        t  = time.localtime()
+ # 第 6 个元素是 tm_wday , 范围为 [0,6], 星期一 is 0
+        n  = t[6]
  # 星期一到星期日字符串，每个字符串用 _() 标识出来。
-weekdays = [_('Monday'), _('Tuesday'), _('Wednesday'), _('Thursday'), 
-_('Friday'), _('Saturday'), _('Sunday')] 
- # 返回一个 HttpResponse 
+weekdays = [_('Monday'), _('Tuesday'), _('Wednesday'), _('Thursday'),
+_('Friday'), _('Saturday'), _('Sunday')]
+ # 返回一个 HttpResponse
 
         return HttpResponse(weekdays[n])</pre>
 </td>
@@ -202,10 +202,10 @@ _('Friday'), _('Saturday'), _('Sunday')]
 <tbody>
 <tr>
 <td>
-<pre>				 
- [root@localhost test1]# mkdir locale 
- [root@localhost test1]# ls 
- __init__.py  __init__.pyc  locale  models.py  tests.py  views.py  views.pyc 
+<pre>
+ [root@localhost test1]# mkdir locale
+ [root@localhost test1]# ls
+ __init__.py  __init__.pyc  locale  models.py  tests.py  views.py  views.pyc
  [root@localhost test1]# django-admin.py makemessages -l zh_CN</pre>
 </td>
 </tr>
@@ -219,32 +219,32 @@ _('Friday'), _('Saturday'), _('Sunday')]
 <tbody>
 <tr>
 <td>
-<pre>				 
- #: views.py:12 
+<pre>
+ #: views.py:12
  msgid "Monday"
  msgstr "星期一"
 
- #: views.py:12 
+ #: views.py:12
  msgid "Tuesday"
  msgstr "星期二"
 
- #: views.py:12 
+ #: views.py:12
  msgid "Wednesday"
  msgstr "星期三"
 
- #: views.py:12 
+ #: views.py:12
  msgid "Thursday"
  msgstr "星期四"
 
- #: views.py:12 
+ #: views.py:12
  msgid "Friday"
  msgstr "星期五"
 
- #: views.py:12 
+ #: views.py:12
  msgid "Saturday"
  msgstr "星期六"
 
- #: views.py:12 
+ #: views.py:12
  msgid "Sunday"
  msgstr "星期天"</pre>
 </td>
@@ -265,7 +265,7 @@ _('Friday'), _('Saturday'), _('Sunday')]
 <tbody>
 <tr>
 <td>
-<pre>				 
+<pre>
  [root@localhost test1]# django-admin.py compilemessages</pre>
 </td>
 </tr>
@@ -281,14 +281,14 @@ _('Friday'), _('Saturday'), _('Sunday')]
 <tbody>
 <tr>
 <td>
-<pre>				 
+<pre>
  LANGUAGE_CODE = 'en-us'
- USE_I18N = True 
- MIDDLEWARE_CLASSES = ( 
-    'django.middleware.common.CommonMiddleware', 
-    'django.contrib.sessions.middleware.SessionMiddleware', 
-    'django.middleware.locale.LocaleMiddleware', 
-    'django.contrib.auth.middleware.AuthenticationMiddleware', 
+ USE_I18N = True
+ MIDDLEWARE_CLASSES = (
+    'django.middleware.common.CommonMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
  )</pre>
 </td>
 </tr>
@@ -309,7 +309,7 @@ _('Friday'), _('Saturday'), _('Sunday')]
 <tbody>
 <tr>
 <td>
-<pre>				 
+<pre>
  [root@localhost testsite]# Python manage.py runserver 0.0.0.0:8080</pre>
 </td>
 </tr>
@@ -331,11 +331,11 @@ _('Friday'), _('Saturday'), _('Sunday')]
 <tbody>
 <tr>
 <td>
-<pre>				 
+<pre>
   …
-weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 
-'Friday', 'Saturday', 'Sunday'] 
-return HttpResponse(_(weekdays[n])) 
+weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday',
+'Friday', 'Saturday', 'Sunday']
+return HttpResponse(_(weekdays[n]))
   … ..</pre>
 </td>
 </tr>
@@ -491,42 +491,42 @@ gettext 和 ugettext 都调用了 do_translate（）函数。do_translate（）�
 <tbody>
 <tr>
 <td>
-<pre>				 
- [root@localhost testsite]#mkdir – p templates/test2 
- [root@localhost testsite]#cd  templates/test2 
- [root@localhost test2]#vim index.html 
+<pre>
+ [root@localhost testsite]#mkdir – p templates/test2
+ [root@localhost testsite]#cd  templates/test2
+ [root@localhost test2]#vim index.html
 
- {% load i18n %} 
- &lt;html xmlns="http://www.w3.org/1999/xhtml" 
- xml:lang="{{ LANGUAGE_CODE }}" lang="{{ LANGUAGE_CODE }}"&gt; 
+ {% load i18n %}
+ &lt;html xmlns="http://www.w3.org/1999/xhtml"
+ xml:lang="{{ LANGUAGE_CODE }}" lang="{{ LANGUAGE_CODE }}"&gt;
 
- &lt;head&gt; 
-    &lt;meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" /&gt; 
-    &lt;title&gt;Welcome to my site&lt;/title&gt; 
-         &lt;script  type="text/javascript"&gt; 
-               function selectdo(obj) { 
-                        str="/i18n/setlang/"; 
-                        myform = document.getElementById('testform'); 
-                        myform.method = "POST"; 
-                        myform.action = str; 
-                        myform.submit(); 
-                } 
-        &lt;/script&gt; 
+ &lt;head&gt;
+    &lt;meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" /&gt;
+    &lt;title&gt;Welcome to my site&lt;/title&gt;
+         &lt;script  type="text/javascript"&gt;
+               function selectdo(obj) {
+                        str="/i18n/setlang/";
+                        myform = document.getElementById('testform');
+                        myform.method = "POST";
+                        myform.action = str;
+                        myform.submit();
+                }
+        &lt;/script&gt;
 
- &lt;/head&gt; 
- &lt;body&gt; 
-        &lt;form name="testform" id="testform" method='post'&gt; 
-            &lt;select id="language" name="language" onchange="selectdo(this)"&gt; 
-           &lt;!--    &lt;input name="next" type="hidden" value="{{request.path}}" /&gt;--&gt; 
-                &lt;option value="1" &gt;{% trans "Languages" %}&lt;/option&gt; 
-                 {% for lang in LANGUAGES %} 
-                &lt;option value="{{ lang.0 }}" &gt; {{ lang.1 }}&lt;/option&gt; 
-                 {% endfor %} 
-              &lt;/select&gt; 
-         &lt;/form&gt; 
-         &lt;p&gt;{% trans "The first sentence is from the  template index.html" %}&lt;/p&gt; 
-        {{ code }} 
- &lt;/body&gt; 
+ &lt;/head&gt;
+ &lt;body&gt;
+        &lt;form name="testform" id="testform" method='post'&gt;
+            &lt;select id="language" name="language" onchange="selectdo(this)"&gt;
+           &lt;!--    &lt;input name="next" type="hidden" value="{{request.path}}" /&gt;--&gt;
+                &lt;option value="1" &gt;{% trans "Languages" %}&lt;/option&gt;
+                 {% for lang in LANGUAGES %}
+                &lt;option value="{{ lang.0 }}" &gt; {{ lang.1 }}&lt;/option&gt;
+                 {% endfor %}
+              &lt;/select&gt;
+         &lt;/form&gt;
+         &lt;p&gt;{% trans "The first sentence is from the  template index.html" %}&lt;/p&gt;
+        {{ code }}
+ &lt;/body&gt;
  &lt;/html&gt;</pre>
 </td>
 </tr>
@@ -536,11 +536,11 @@ gettext 和 ugettext 都调用了 do_translate（）函数。do_translate（）�
 
 在代码中已经加入了国际化模版相关代码，下面 4 点需要注意：
 
-1 ． {% load i18n %}
+1 ． `{% load i18n %}`
 
 使模版能够访问到访问到标签。
 
-2 ． {% trans str %}
+2 ． `{% trans str %}`
 
 标记翻译一个常量字符串或 可变内容
 
@@ -558,11 +558,11 @@ gettext 和 ugettext 都调用了 do_translate（）函数。do_translate（）�
 <tbody>
 <tr>
 <td>
-<pre>				 
- [root@localhost testsite] vim settings.py 
- TEMPLATE_DIRS = ( 
+<pre>
+ [root@localhost testsite] vim settings.py
+ TEMPLATE_DIRS = (
       。。。。。。
-     '/home/jerry/testsite/templates', 
+     '/home/jerry/testsite/templates',
  )</pre>
 </td>
 </tr>
@@ -580,20 +580,20 @@ gettext 和 ugettext 都调用了 do_translate（）函数。do_translate（）�
 <tbody>
 <tr>
 <td>
-<pre>				 
- # Create your views here. 
- from django.http import HttpResponse 
- from django.shortcuts import render_to_response 
- from django.template import RequestContext 
- from django.utils.translation import ugettext_lazy as _ 
+<pre>
+ # Create your views here.
+ from django.http import HttpResponse
+ from django.shortcuts import render_to_response
+ from django.template import RequestContext
+ from django.utils.translation import ugettext_lazy as _
 
- def test2_view(request): 
-    code = _("The second sentence is from the Python code."); 
-    responseContext = {'lang':request.LANGUAGE_CODE, 
-                        'code':code, 
-                        } 
-    resp = render_to_response('test2/index.html', responseContext, 
-                                context_instance=RequestContext(request)) 
+ def test2_view(request):
+    code = _("The second sentence is from the Python code.");
+    responseContext = {'lang':request.LANGUAGE_CODE,
+                        'code':code,
+                        }
+    resp = render_to_response('test2/index.html', responseContext,
+                                context_instance=RequestContext(request))
     return resp</pre>
 </td>
 </tr>
@@ -609,15 +609,15 @@ gettext 和 ugettext 都调用了 do_translate（）函数。do_translate（）�
 <tbody>
 <tr>
 <td>
-<pre>				 
- from django.conf.urls.defaults import * 
- from testsite.test2.views import * 
+<pre>
+ from django.conf.urls.defaults import *
+ from testsite.test2.views import *
 。。。。。。
 
- urlpatterns = patterns('', 
+ urlpatterns = patterns('',
     。。。。。。
-    (r'^test2_view$', test2_view), 
-    (r'^i18n/', include('django.conf.urls.i18n')), 
+    (r'^test2_view$', test2_view),
+    (r'^i18n/', include('django.conf.urls.i18n')),
  )</pre>
 </td>
 </tr>
@@ -633,36 +633,36 @@ gettext 和 ugettext 都调用了 do_translate（）函数。do_translate（）�
 <tbody>
 <tr>
 <td>
-<pre>				 
- DATABASE_ENGINE = 'mysql' # 'postgresql_psycopg2', 'postgresql' 
- DATABASE_NAME = 'test' # Or path to database file if using sqlite3. 
- DATABASE_USER = 'root' # Not used with sqlite3. 
- DATABASE_PASSWORD = '1234'  # Not used with sqlite3. 
- DATABASE_HOST = ''  # Set to empty string for localhost. Not used with sqlite3. 
- DATABASE_PORT = ''  # Set to empty string for default. Not used with sqlite3. 
+<pre>
+ DATABASE_ENGINE = 'mysql' # 'postgresql_psycopg2', 'postgresql'
+ DATABASE_NAME = 'test' # Or path to database file if using sqlite3.
+ DATABASE_USER = 'root' # Not used with sqlite3.
+ DATABASE_PASSWORD = '1234'  # Not used with sqlite3.
+ DATABASE_HOST = ''  # Set to empty string for localhost. Not used with sqlite3.
+ DATABASE_PORT = ''  # Set to empty string for default. Not used with sqlite3.
 
- USE_I18N = True 
+ USE_I18N = True
 
- ugettext = lambda s: s 
+ ugettext = lambda s: s
 
- LANGUAGES = ( 
-    ('en-us', ugettext('English')), 
-    ('zh-CN', ugettext('Chinese')), 
- ) 
+ LANGUAGES = (
+    ('en-us', ugettext('English')),
+    ('zh-CN', ugettext('Chinese')),
+ )
 
- TEMPLATE_CONTEXT_PROCESSORS = ( 
- #     "django.core.context_processors.auth", 
- #    "django.core.context_processors.debug", 
+ TEMPLATE_CONTEXT_PROCESSORS = (
+ #     "django.core.context_processors.auth",
+ #    "django.core.context_processors.debug",
 
-    "django.core.context_processors.i18n", 
- #    "django.core.context_processors.request", 
- ) 
+    "django.core.context_processors.i18n",
+ #    "django.core.context_processors.request",
+ )
 
- MIDDLEWARE_CLASSES = ( 
-    'django.middleware.common.CommonMiddleware', 
-    'django.contrib.sessions.middleware.SessionMiddleware', 
-    'django.middleware.locale.LocaleMiddleware', 
-    'django.contrib.auth.middleware.AuthenticationMiddleware', 
+ MIDDLEWARE_CLASSES = (
+    'django.middleware.common.CommonMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
  )</pre>
 </td>
 </tr>
@@ -676,7 +676,7 @@ gettext 和 ugettext 都调用了 do_translate（）函数。do_translate（）�
 <tbody>
 <tr>
 <td>
-<pre>				 
+<pre>
  [root@localhost testsite]# Python manage.py syncdb</pre>
 </td>
 </tr>
@@ -692,31 +692,31 @@ gettext 和 ugettext 都调用了 do_translate（）函数。do_translate（）�
 <tbody>
 <tr>
 <td>
-<pre>				 
- [root@localhost testsite]# django-admin.py makemessages -l zh_CN 
- [root@localhost testsite]# vim locale/zh_CN/LC_MESSAGES/django.po 
+<pre>
+ [root@localhost testsite]# django-admin.py makemessages -l zh_CN
+ [root@localhost testsite]# vim locale/zh_CN/LC_MESSAGES/django.po
 ……
- #: settings.py:41 
+ #: settings.py:41
  msgid "English"
  msgstr "英语"
 
- #: settings.py:42 
+ #: settings.py:42
  msgid "Chinese"
  msgstr "中文"
 
- #: templates/test2/index.html:8 
+ #: templates/test2/index.html:8
  msgid "Welcome to my site"
  msgstr "欢迎访问我的网站"
 
- #: templates/test2/index.html:24 
+ #: templates/test2/index.html:24
  msgid "Languages"
  msgstr "语言"
 
- #: templates/test2/index.html:30 
+ #: templates/test2/index.html:30
  msgid "The first sentence is from the  template index.html"
  msgstr "第一句话来自 intex.html 模版。"
 
- #: test2/views.py:8 
+ #: test2/views.py:8
  msgid "The second sentence is from the Python code."
  msgstr "第二句话来自 Python 代码。"</pre>
 </td>
@@ -728,7 +728,7 @@ gettext 和 ugettext 都调用了 do_translate（）函数。do_translate（）�
 <tbody>
 <tr>
 <td>
-<pre>				 
+<pre>
  [root@localhost testsite]#  django-admin.py compilemessages</pre>
 </td>
 </tr>
@@ -739,7 +739,7 @@ gettext 和 ugettext 都调用了 do_translate（）函数。do_translate（）�
 <tbody>
 <tr>
 <td>
-<pre>				 
+<pre>
  [root@localhost testsite]# Python manage.py runserver 0.0.0.0:8080</pre>
 </td>
 </tr>
@@ -765,33 +765,33 @@ gettext 和 ugettext 都调用了 do_translate（）函数。do_translate（）�
 
 <strong>Load i18n 实现原理</strong>
 
-模板中的 {% load %} 标签用于加载已有的模板。
+模板中的 `{% load %}` 标签用于加载已有的模板。
 
-在 /usr/local/lib/Python2.5/site-packages/django/templatetags/i18n.py 文件中定义了指定模版中翻译字符串的模板标签。在 django 的模板前加入 {% load i18n %}，在 i18n.py 源文件中的定义标签就可以在有 load 语句的模板中使用了。
+在 /usr/local/lib/Python2.5/site-packages/django/templatetags/i18n.py 文件中定义了指定模版中翻译字符串的模板标签。在 django 的模板前加入 `{% load i18n %}`，在 i18n.py 源文件中的定义标签就可以在有 load 语句的模板中使用了。
 
 <strong>模板标签的实现原理</strong>
 
 <strong>Django 模板两种常用模板标签</strong>
 
-{% trans %} 模板标签标记需要翻译的字符串；如果只需要标记字符串而以后再翻译，可以使用 noop 选项。
+`{% trans %}` 模板标签标记需要翻译的字符串；如果只需要标记字符串而以后再翻译，可以使用 noop 选项。
 
-在 {% trans %} 中不允许使用模板中的变量，只能使用单引号或双引号中的字符串。如果翻译时需要用到变量（占位符），可以使用 {% blocktrans %}。
+在 `{% trans %}` 中不允许使用模板中的变量，只能使用单引号或双引号中的字符串。如果翻译时需要用到变量（占位符），可以使用 `{% blocktrans %}`。
 
 如果需要在 blocktrans 标签内绑定多个表达式，可以用 and 来分隔。
 
-为了表示单复数相关的内容，需要在 {% blocktrans %} 和 {% endblocktrans %} 之间使用 {% plural %} 标签来指定单复数形式。
+为了表示单复数相关的内容，需要在 `{% blocktrans %}` 和 `{% endblocktrans %}` 之间使用 `{% plural %}` 标签来指定单复数形式。
 
 <strong>模版标签实现分析</strong>
 
 {% trans %}
 
-通过 /usr/local/lib/Python2.5/site-packages/django/templatetags/i18n.py 文件 do_translate（）实现的。do_translate（）处理了 {% trans %} 的三种格式：
+通过 /usr/local/lib/Python2.5/site-packages/django/templatetags/i18n.py 文件 do_translate（）实现的。do_translate（）处理了 `{% trans %}` 的三种格式：
 <table border="0" cellspacing="0" cellpadding="0">
 <tbody>
 <tr>
 <td>
-<pre> {% trans "this is a test" %} 
- {% trans "this is a test" noop %} 
+<pre> {% trans "this is a test" %}
+ {% trans "this is a test" noop %}
  {% trans variable %}</pre>
 </td>
 </tr>
@@ -801,7 +801,7 @@ gettext 和 ugettext 都调用了 do_translate（）函数。do_translate（）�
 
 do_translate() 调用了 TranslateNode（），最后通过 django.utils.translation.ugettext() 来处理的。具体实现可参看 Django 源代码。
 
-{% blocktrans %} 和 {% endblocktrans %}
+`{% blocktrans %}` 和 `{% endblocktrans %}`
 
 通过 /usr/local/lib/Python2.5/site-packages/django/templatetags/i18n.py 文件 do_block_translate（）实现的。
 
@@ -812,8 +812,8 @@ do_translate() 调用了 TranslateNode（），最后通过 django.utils.transla
 <tbody>
 <tr>
 <td>
-<pre>{% blocktrans with foo|filter as bar and baz|filter as boo %} 
-This is {{ bar }} and {{ boo }}. 
+<pre>{% blocktrans with foo|filter as bar and baz|filter as boo %}
+This is {{ bar }} and {{ boo }}.
 {% endblocktrans %}</pre>
 </td>
 </tr>
@@ -826,10 +826,10 @@ This is {{ bar }} and {{ boo }}.
 <tbody>
 <tr>
 <td>
-<pre>{% blocktrans count var|length as count %} 
-There is {{ count }} object. 
-{% plural %} 
-There are {{ count }} objects. 
+<pre>{% blocktrans count var|length as count %}
+There is {{ count }} object.
+{% plural %}
+There are {{ count }} objects.
 {% endblocktrans %}</pre>
 </td>
 </tr>
@@ -856,8 +856,8 @@ django.views.i18n.set_language 视图的主要作用是设置用户语言偏好�
 <tbody>
 <tr>
 <td>
-<pre> urlpatterns += patterns('', 
-    (r'^i18n/', include('django.conf.urls.i18n')), 
+<pre> urlpatterns += patterns('',
+    (r'^i18n/', include('django.conf.urls.i18n')),
  )</pre>
 </td>
 </tr>
@@ -874,10 +874,10 @@ django.views.i18n.set_language 视图的主要作用是设置用户语言偏好�
 <tbody>
 <tr>
 <td>
-<pre> from django.conf.urls.defaults import * 
+<pre> from django.conf.urls.defaults import *
 
- urlpatterns = patterns('', 
-    (r'^setlang/$', 'django.views.i18n.set_language'), 
+ urlpatterns = patterns('',
+    (r'^setlang/$', 'django.views.i18n.set_language'),
  )</pre>
 </td>
 </tr>
@@ -893,27 +893,27 @@ django.views.i18n.set_language 视图的主要作用是设置用户语言偏好�
 <tbody>
 <tr>
 <td>
-<pre>				 
- def set_language(request): 
+<pre>
+ def set_language(request):
     """
 当在 session 或 cookie 中设置所选择的语言时，会重定向到指定的网址。
 URL 和语言代码需要在 request 的参数中被指定。由于这个视图改变用户如何看到网站的其他部分，
-它必须只能通过 POST request. 如果调用 GET request, 
+它必须只能通过 POST request. 如果调用 GET request,
 它将重定向到 request 的那页，但没有任何状态改变。
     """
-    next = request.REQUEST.get('next', None) 
-    if not next: 
-        next = request.META.get('HTTP_REFERER', None) 
-    if not next: 
+    next = request.REQUEST.get('next', None)
+    if not next:
+        next = request.META.get('HTTP_REFERER', None)
+    if not next:
         next = '/'
-    response = http.HttpResponseRedirect(next) 
-    if request.method == 'POST': 
-        lang_code = request.POST.get('language', None) 
-        if lang_code and check_for_language(lang_code): 
-            if hasattr(request, 'session'): 
-                request.session['django_language'] = lang_code 
-            else: 
-                response.set_cookie(settings.LANGUAGE_COOKIE_NAME, lang_code) 
+    response = http.HttpResponseRedirect(next)
+    if request.method == 'POST':
+        lang_code = request.POST.get('language', None)
+        if lang_code and check_for_language(lang_code):
+            if hasattr(request, 'session'):
+                request.session['django_language'] = lang_code
+            else:
+                response.set_cookie(settings.LANGUAGE_COOKIE_NAME, lang_code)
  return response</pre>
 </td>
 </tr>

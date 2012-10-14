@@ -3,8 +3,8 @@ layout: post
 title: "在Heroku上部署（托管）你的Rails应用"
 date: 2012-02-01 14:56
 comments: true
-categories: ["rails"]
-tags: ["develop", "git", "heroku", "rails"]
+categories: [rails]
+tags: [develop,git,heroku,rails]
 ---
 ## 在Heroku上部署（托管）你的Rails应用
 Heroku 是Ruby on Rails的托管提供商，提供运行Ruby on Rails应用的整套环境。和传统的托管商相比，他并不仅仅是提供一个服务器给你，而且提供有趣的工具和接口来帮助你更加容易的工作，使你从繁重的安装、配置、管理和保证服务器安全中解脱出来。

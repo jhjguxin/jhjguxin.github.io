@@ -3,8 +3,8 @@ layout: post
 title: "A Practical Guide to Use Spine.JS in Real World App."
 date: 2012-08-21 13:13
 comments: true
-categories: ["web"]
-tags: ["guide", "Spine.JS"]
+categories: [web]
+tags: [guide,Spine.JS]
 ---
 ## A Practical Guide to Use Spine.JS in Real World App.
 To give users the best possible fluid experience, we designed <a href="http://pragmatic.ly/">Pragmatic.ly</a> and complied with the <a title="Single Page Application" href="http://en.wikipedia.org/wiki/Single-page_application" target="_blank">single page application</a> standard. We believe that could make users focus on building product rather than spending time on project management itself. A wide range of technology solutions are available to make a single page application. Current trends suggest moving core application from server to client side and keeping server load at minimum for better performance by pure data APIs. <a href="http://pragmatic.ly/">Pragmatic.ly</a> took on the challange to cater to this need by developing server side in Rails, Spine.js at client side.

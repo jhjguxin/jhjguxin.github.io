@@ -3,8 +3,8 @@ layout: post
 title: "ActionDispatch::RequestId < Object"
 date: 2012-07-03 13:15
 comments: true
-categories: ["rails"]
-tags: ["rails", "requestId"]
+categories: [rails]
+tags: [rails,requestId]
 ---
 ## ActionDispatch::RequestId < Object
 Makes a unique request id available to the action_dispatch.request_id env variable (which is then accessible through <a href="http://api.rubyonrails.org/classes/ActionDispatch/Request.html#method-i-uuid">ActionDispatch::Request#uuid</a>) and sends the same id to the client via the X-Request-Id header.

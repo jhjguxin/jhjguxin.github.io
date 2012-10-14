@@ -3,8 +3,8 @@ layout: post
 title: "rails - Devise - Handling - devise_error_messages"
 date: 2012-05-30 13:10
 comments: true
-categories: ["rails", "ruby"]
-tags: ["devise", "errors", "messages", "rails"]
+categories: [rails,ruby]
+tags: [devise,errors,messages,rails]
 ---
 ## rails - Devise - Handling - devise_error_messages
 in my user edit page, there is a line as follows:

@@ -3,8 +3,8 @@ layout: post
 title: "Helper Antipatterns"
 date: 2012-03-19 10:44
 comments: true
-categories: ["rails", "ruby"]
-tags: ["helpers", "rails", "ruby", "templates"]
+categories: [rails,ruby]
+tags: [helpers,rails,ruby,templates]
 ---
 ## Helper Antipatterns
 <h2>Helper AntiPatterns</h2>

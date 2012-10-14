@@ -3,8 +3,8 @@ layout: post
 title: "My five favorite “hidden” features in Rails 3.2"
 date: 2012-08-10 23:23
 comments: true
-categories: ["rails", "ruby"]
-tags: ["crafting rails applications", "exception handling", "rails 3.2"]
+categories: [rails,ruby]
+tags: [crafting rails applications,exception handling,rails 3.2]
 ---
 ## My five favorite “hidden” features in Rails 3.2
 Rails 3.2 is out with <a title="Rails 3.2.rc1 announced" href="http://weblog.rubyonrails.org/2011/12/20/rails-3-2-rc1-faster-dev-mode-routing-explain-queries-tagged-logger-store">great features on spotlight</a>: faster development reloading, faster router and explain queries. However, every Rails release ships with minor features that do not get that much attention but still would be a great fit to your application. This blog post is about my five favorites “hidden” features of Rails 3.2.

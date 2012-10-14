@@ -3,8 +3,8 @@ layout: post
 title: "rvm常用用法"
 date: 2012-01-31 16:43
 comments: true
-categories: ["rails", "ruby"]
-tags: ["rails", "ruby", "rvm"]
+categories: [rails,ruby]
+tags: [rails,ruby,rvm]
 ---
 ## rvm常用用法
 <strong>jhjguxin@jhjguxin-virtual-machine:~$ su<span>d</span>o gpassw<span>d</span> -a root rvm</strong>

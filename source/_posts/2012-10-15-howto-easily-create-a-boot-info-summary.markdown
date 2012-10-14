@@ -3,8 +3,8 @@ layout: post
 title: "HOWTO : easily create a Boot-Info summary"
 date: 2012-05-25 20:16
 comments: true
-categories: ["ubuntu"]
-tags: ["Boot-Repair"]
+categories: [ubuntu]
+tags: [Boot-Repair]
 ---
 ## HOWTO : easily create a Boot-Info summary
 <strong>Boot-Repair</strong> is a simple tool to repair frequent boot issues you may encounter in Ubuntu like when you can't boot Ubuntu after installing Windows or another Linux distribution, or when you can't boot Windows after installing Ubuntu, or when GRUB is not displayed anymore, some upgrade breaks GRUB, etc.

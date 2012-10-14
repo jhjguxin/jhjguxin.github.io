@@ -3,8 +3,8 @@ layout: post
 title: "HTML4和HTML5之间的10个主要不同"
 date: 2011-11-17 02:30
 comments: true
-categories: ["网文"]
-tags: ["html"]
+categories: [网文]
+tags: [html]
 ---
 ## HTML4和HTML5之间的10个主要不同
 HTML5是最新的HTML标准，或迟或早，所有的web程序员都会发现需要使用到这个最新的标准，而且，很多人都会感觉到，重新开发一个HTML5的网站，要比把一个网站从HTML4迁移到HTML5上容易的多，这是因为这两个版本之间有很大不同之处。

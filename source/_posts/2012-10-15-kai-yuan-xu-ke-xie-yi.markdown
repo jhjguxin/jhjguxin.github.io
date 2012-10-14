@@ -3,8 +3,8 @@ layout: post
 title: "开源许可协议"
 date: 2012-04-11 12:37
 comments: true
-categories: ["专业"]
-tags: ["apache", "BSD", "GPL", "LGPL", "MIT", "Mozilla", "开源许可协议"]
+categories: [专业]
+tags: [apache,BSD,GPL,LGPL,MIT,Mozilla,开源许可协议]
 ---
 ## 开源许可协议
 <h1>1       目的</h1>

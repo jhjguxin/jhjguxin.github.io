@@ -3,8 +3,8 @@ layout: post
 title: "Action Controller Overview"
 date: 2011-12-27 00:24
 comments: true
-categories: ["rails", "ruby"]
-tags: ["controller", "filter", "guide", "rails", "ruby"]
+categories: [rails,ruby]
+tags: [controller,filter,guide,rails,ruby]
 ---
 ## Action Controller Overview
 <h3>Controllers</h3>

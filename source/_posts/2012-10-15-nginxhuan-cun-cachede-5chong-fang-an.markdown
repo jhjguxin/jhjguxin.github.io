@@ -3,8 +3,8 @@ layout: post
 title: "nginx缓存cache的5种方案"
 date: 2011-11-30 17:54
 comments: true
-categories: ["网文"]
-tags: ["cache", "nginx", "web", "website-manage"]
+categories: [网文]
+tags: [cache,nginx,web,website-manage]
 ---
 ## nginx缓存cache的5种方案
 <div>

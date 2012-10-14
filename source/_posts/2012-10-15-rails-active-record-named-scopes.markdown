@@ -3,8 +3,8 @@ layout: post
 title: "Rails Active Record Named Scopes"
 date: 2012-10-06 18:56
 comments: true
-categories: ["rails", "ruby"]
-tags: ["active record", "rails", "Scopes"]
+categories: [rails,ruby]
+tags: [active record,rails,Scopes]
 ---
 ## Rails Active Record Named Scopes
 <a href="http://api.rubyonrails.org/classes/ActiveRecord/Scoping.html">Active Record Named Scopes</a>

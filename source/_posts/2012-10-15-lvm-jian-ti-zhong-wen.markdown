@@ -3,8 +3,8 @@ layout: post
 title: "LVM (简体中文)"
 date: 2012-06-01 10:55
 comments: true
-categories: ["linux", "ubuntu"]
-tags: ["linux", "logical", "lvm", "volume"]
+categories: [linux,ubuntu]
+tags: [linux,logical,lvm,volume]
 ---
 ## LVM (简体中文)
 <h2> 介绍</h2>

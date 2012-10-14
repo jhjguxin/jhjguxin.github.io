@@ -3,8 +3,8 @@ layout: post
 title: "Using Resque to send mail for Devise"
 date: 2012-06-15 15:03
 comments: true
-categories: ["rails", "ruby"]
-tags: ["devise", "mail", "resque"]
+categories: [rails,ruby]
+tags: [devise,mail,resque]
 ---
 ## Using Resque to send mail for Devise
 <div>

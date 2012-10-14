@@ -3,8 +3,8 @@ layout: post
 title: "安装GitLab"
 date: 2012-04-17 10:22
 comments: true
-categories: ["Project Manage", "专业"]
-tags: ["gitlab", "install", "setting"]
+categories: [Project Manage,专业]
+tags: [gitlab,install,setting]
 ---
 ## 安装GitLab
 一、准备工作

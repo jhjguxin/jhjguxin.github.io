@@ -3,8 +3,8 @@ layout: post
 title: "折腾rails3"
 date: 2011-11-03 13:45
 comments: true
-categories: ["专业"]
-tags: ["fast", "gem", "rails", "ruby"]
+categories: [专业]
+tags: [fast,gem,rails,ruby]
 ---
 ## 折腾rails3
 ///////////gem install 报错或是太慢,gem install 本地安装/////////////////////////

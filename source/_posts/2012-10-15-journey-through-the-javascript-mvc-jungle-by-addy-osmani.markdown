@@ -3,8 +3,8 @@ layout: post
 title: "Journey Through The JavaScript MVC Jungle -- By Addy Osmani"
 date: 2012-08-16 00:51
 comments: true
-categories: ["web"]
-tags: ["Essentials", "javascript", "MVCTools"]
+categories: [web]
+tags: [Essentials,javascript,MVCTools]
 ---
 ## Journey Through The JavaScript MVC Jungle -- By Addy Osmani
 When writing a Web application from scratch, it’s easy to feel like we can get by simply by relying on a <a href="https://developer.mozilla.org/en/DOM/About_the_Document_Object_Model">DOM</a> manipulation library (like <a href="http://jquery.com/">jQuery</a>) and a handful of utility plugins. The problem with this is that it doesn’t take long to get lost in a nested pile of jQuery callbacks and DOM elements without any real structure in place for our applications.

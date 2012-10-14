@@ -3,8 +3,8 @@ layout: post
 title: "Rails Object Relationships and JSON Rendering"
 date: 2012-04-03 22:46
 comments: true
-categories: ["rails", "ruby"]
-tags: ["JSON Rendering", "Object", "rails", "Relationships"]
+categories: [rails,ruby]
+tags: [JSON Rendering,Object,rails,Relationships]
 ---
 ## Rails Object Relationships and JSON Rendering
 <code>class ModelA &lt; ActiveRecord::Base

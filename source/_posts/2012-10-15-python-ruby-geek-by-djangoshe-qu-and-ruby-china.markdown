@@ -3,8 +3,8 @@ layout: post
 title: "python ruby geek by django社区and ruby-china"
 date: 2012-03-20 13:48
 comments: true
-categories: ["python", "rails", "ruby"]
-tags: ["python", "rails", "ruby", "ruby-china"]
+categories: [python,rails,ruby]
+tags: [python,rails,ruby,ruby-china]
 ---
 ## python ruby geek by django社区and ruby-china
 <p style="text-align: left;">by ruby-china 由 <a href="http://ruby-china.org/users/gaicitadie" data-name="盖茨他爹">gaicitadie</a> 在 <a href="http://ruby-china.org/topics/node27">瞎扯淡</a> 节点</p>

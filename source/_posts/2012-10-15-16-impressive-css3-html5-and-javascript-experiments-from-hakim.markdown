@@ -3,8 +3,8 @@ layout: post
 title: "16 Impressive CSS3, HTML5 and Javascript Experiments From Hakim"
 date: 2012-04-26 10:45
 comments: true
-categories: ["网文"]
-tags: ["CSS3", "HTML5", "javascript"]
+categories: [网文]
+tags: [CSS3,HTML5,javascript]
 ---
 ## 16 Impressive CSS3, HTML5 and Javascript Experiments From Hakim
 If you're a fan of Canvas, WebGL and interactive CSS3, HTML5 and Javascript, you most probably have heard of the name <a href="http://hakim.se/">Hakim</a>. Hakim is a web developer and creative programmer from Sweden who passionate about working with animation and interactivity. He has many personal projects and experiments with HTML5, CSS and Javascript showcased in <a href="http://www.chromeexperiments.com/">Chrome Experiments</a> and other places. We are really impressed but his creativity and cool stuff that he managed to create, and the following is some of the coolest things on the web.

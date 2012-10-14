@@ -3,8 +3,8 @@ layout: post
 title: "rails学习笔记: rake  相关命令"
 date: 2012-02-15 18:23
 comments: true
-categories: ["rails", "ruby"]
-tags: ["rails", "rake"]
+categories: [rails,ruby]
+tags: [rails,rake]
 ---
 ## rails学习笔记: rake  相关命令
 命令行 

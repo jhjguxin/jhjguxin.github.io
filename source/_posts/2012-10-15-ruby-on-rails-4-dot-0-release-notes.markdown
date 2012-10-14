@@ -3,8 +3,8 @@ layout: post
 title: "Ruby on Rails 4.0 Release Notes"
 date: 2012-10-06 19:46
 comments: true
-categories: ["rails"]
-tags: ["Rails 4.0"]
+categories: [rails]
+tags: [Rails 4.0]
 ---
 ## Ruby on Rails 4.0 Release Notes
 <h1>sources:</h1>

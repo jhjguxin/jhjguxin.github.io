@@ -3,8 +3,8 @@ layout: post
 title: "Phusion Passenger users guide"
 date: 2012-01-09 14:26
 comments: true
-categories: ["rails", "ruby"]
-tags: ["apache", "passenger", "phusion", "rails", "ruby", "server", "web"]
+categories: [rails,ruby]
+tags: [apache,passenger,phusion,rails,ruby,server,web]
 ---
 ## Phusion Passenger users guide
 <div>

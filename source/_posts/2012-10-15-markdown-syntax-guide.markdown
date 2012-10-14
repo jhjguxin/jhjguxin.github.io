@@ -3,8 +3,8 @@ layout: post
 title: "Markdown Syntax Guide"
 date: 2011-11-22 18:13
 comments: true
-categories: ["网文"]
-tags: ["guide", "markdown", "syntax"]
+categories: [网文]
+tags: [guide,markdown,syntax]
 ---
 ## Markdown Syntax Guide
 Markdown Syntax Guide

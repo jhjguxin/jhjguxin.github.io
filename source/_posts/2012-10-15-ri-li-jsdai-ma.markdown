@@ -3,8 +3,8 @@ layout: post
 title: "日历js代码"
 date: 2011-11-16 02:53
 comments: true
-categories: ["专业"]
-tags: ["calendar", "javascript"]
+categories: [专业]
+tags: [calendar,javascript]
 ---
 ## 日历js代码
 a simple js calendar code:

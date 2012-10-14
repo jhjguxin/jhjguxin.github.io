@@ -3,8 +3,8 @@ layout: post
 title: "解决Illegal mix of collations (latin1_swedish_ci,IMPLICIT) and (utf8_general_ci,COER"
 date: 2012-06-13 10:56
 comments: true
-categories: ["linux"]
-tags: ["encode", "errors", "mysql"]
+categories: [linux]
+tags: [encode,errors,mysql]
 ---
 ## 解决Illegal mix of collations (latin1_swedish_ci,IMPLICIT) and (utf8_general_ci,COER
 部署完项目，测试一下，诶，数据出来了 没有多大问题（暗舒一口气）。继续测吧，一点新建完了，报错了，看看什么错误

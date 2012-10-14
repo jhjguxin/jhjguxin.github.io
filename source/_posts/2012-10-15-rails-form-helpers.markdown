@@ -3,8 +3,8 @@ layout: post
 title: "Rails Form helpers"
 date: 2011-12-21 23:22
 comments: true
-categories: ["rails", "ruby"]
-tags: ["Form", "helpers", "rails"]
+categories: [rails,ruby]
+tags: [Form,helpers,rails]
 ---
 ## Rails Form helpers
 <h2>Rails Form helpers</h2>

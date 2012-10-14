@@ -3,8 +3,8 @@ layout: post
 title: "Siri 现在都能听懂哪些句子（英语）"
 date: 2011-10-25 09:51
 comments: true
-categories: ["网文"]
-tags: ["apple", "iphone", "siri"]
+categories: [网文]
+tags: [apple,iphone,siri]
 ---
 ## Siri 现在都能听懂哪些句子（英语）
 <div>

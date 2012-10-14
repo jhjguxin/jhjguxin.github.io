@@ -3,8 +3,8 @@ layout: post
 title: "Single sign-on 单点登录 sso"
 date: 2012-09-26 08:35
 comments: true
-categories: ["ruby", "web"]
-tags: ["oauth2", "sso"]
+categories: [ruby,web]
+tags: [oauth2,sso]
 ---
 ## Single sign-on 单点登录 sso
 from wiki

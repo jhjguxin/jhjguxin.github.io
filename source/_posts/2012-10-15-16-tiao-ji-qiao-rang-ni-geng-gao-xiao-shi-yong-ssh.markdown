@@ -3,8 +3,8 @@ layout: post
 title: "16 条技巧让你更高效使用 SSH"
 date: 2011-12-28 18:53
 comments: true
-categories: ["网文"]
-tags: ["skills", "SSH", "技巧"]
+categories: [网文]
+tags: [skills,SSH,技巧]
 ---
 ## 16 条技巧让你更高效使用 SSH
 SSH有很多非常酷的特性，如何它是你每天的工作伴侣，那么我想你有必要了解以下16条高效使用SSH的秘籍，它们帮你节省的时间肯定会远远大于你用来配置它们的时间。

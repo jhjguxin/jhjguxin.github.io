@@ -3,8 +3,8 @@ layout: post
 title: "在 Cloud Foundry 上使用 JRuby for Rails 应用程序"
 date: 2012-09-10 22:28
 comments: true
-categories: ["ruby", "web"]
-tags: ["Cloud Foundry", "JRuby for Rails"]
+categories: [ruby,web]
+tags: [Cloud Foundry,JRuby for Rails]
 ---
 ## 在 Cloud Foundry 上使用 JRuby for Rails 应用程序
 <p align="left">[译注]本文翻译自Cloud Foundry英文博客站点，原文题为“<a href="http://blog.cloudfoundry.com/post/13481011043/deploying-jruby-on-rails-applications-on-cloud-foundry"><strong>Using JRuby for Rails Applications on Cloud Foundry</strong></a>”，文章发表时间是 2012 年 4 月 19 日。</p>

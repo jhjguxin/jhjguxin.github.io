@@ -3,8 +3,8 @@ layout: post
 title: "Windows 8消费者预览版Winkey快捷键汇总"
 date: 2012-03-04 17:12
 comments: true
-categories: ["网文"]
-tags: ["shortcuts", "win8"]
+categories: [网文]
+tags: [shortcuts,win8]
 ---
 ## Windows 8消费者预览版Winkey快捷键汇总
 Windows 8消费者预览版带来了很多新变化，极大地方便了用户在触屏设备上的操作，不过对于采用键盘的用户，微软也没有怠慢，下面就为大家汇总一下Windows 8的Winkey快捷键，能在实际操作中节省不少时间。

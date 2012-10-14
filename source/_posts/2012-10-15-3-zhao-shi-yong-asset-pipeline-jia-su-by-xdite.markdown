@@ -3,8 +3,8 @@ layout: post
 title: "3 招实用Asset Pipeline 加速 --by xdite"
 date: 2012-07-10 09:24
 comments: true
-categories: ["rails", "ruby"]
-tags: ["asset", "pipline", "rails"]
+categories: [rails,ruby]
+tags: [asset,pipline,rails]
 ---
 ## 3 招实用Asset Pipeline 加速 --by xdite
 Asset Pipeline 最让人诟病的就是deploy 时花费速度过久。 在<a href="http://translate.googleusercontent.com/translate_c?hl=zh-CN&amp;prev=/search%3Fq%3D3-way-to-speedup-asset-pipeline/%26hl%3Dzh-CN%26newwindow%3D1%26safe%3Dstrict%26prmd%3Dimvns&amp;rurl=translate.google.com.hk&amp;sl=zh-TW&amp;u=http://www.meetup.com/Ruby-Taiwan-Group/&amp;usg=ALkJrhjELOiQOaWuvMEzLA44bw1JAEHk4Q">社群聚会</a>时发现大家都对这个主题非常不熟。 所以把最近累积了的这方面技巧整理出来分享给大家。

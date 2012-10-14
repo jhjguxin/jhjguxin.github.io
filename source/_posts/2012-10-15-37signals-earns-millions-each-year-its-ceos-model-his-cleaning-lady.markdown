@@ -3,8 +3,8 @@ layout: post
 title: "37signals Earns Millions Each Year. Its CEO’s Model? His Cleaning Lady"
 date: 2012-09-03 22:55
 comments: true
-categories: ["live", "web"]
-tags: ["Fast Company", "slow one"]
+categories: [live,web]
+tags: [Fast Company,slow one]
 ---
 ## 37signals Earns Millions Each Year. Its CEO’s Model? His Cleaning Lady
 &nbsp;

@@ -3,8 +3,8 @@ layout: post
 title: "rails中的业务处理Active Record Transactions"
 date: 2012-03-24 22:19
 comments: true
-categories: ["rails", "ruby"]
-tags: ["rails", "transation", "业务，处理"]
+categories: [rails,ruby]
+tags: [rails,transation,业务，处理]
 ---
 ## rails中的业务处理Active Record Transactions
 <a href="http://api.rubyonrails.org/classes/ActiveRecord/Transactions.html">Transactions</a> are protective blocks where SQL statements are only permanent if they can all succeed as one atomic action. The classic example is a transfer between two accounts where you can only have a deposit if the withdrawal succeeded and vice versa.

@@ -3,8 +3,8 @@ layout: post
 title: "你应该知道的django博客引擎【翻译】"
 date: 2011-10-25 09:56
 comments: true
-categories: ["django"]
-tags: ["blog", "django", "engine"]
+categories: [django]
+tags: [blog,django,engine]
 ---
 ## 你应该知道的django博客引擎【翻译】
 <div>

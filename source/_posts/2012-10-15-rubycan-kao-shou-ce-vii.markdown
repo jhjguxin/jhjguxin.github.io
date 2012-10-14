@@ -3,8 +3,8 @@ layout: post
 title: "ruby参考手册VII "
 date: 2012-03-01 00:07
 comments: true
-categories: ["ruby"]
-tags: ["ruby"]
+categories: [ruby]
+tags: [ruby]
 ---
 ## ruby参考手册VII 
 Ruby FAQ

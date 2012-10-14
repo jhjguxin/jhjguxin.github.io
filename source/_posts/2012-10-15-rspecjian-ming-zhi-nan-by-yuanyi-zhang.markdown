@@ -3,8 +3,8 @@ layout: post
 title: "RSpec简明指南 By Yuanyi ZHANG"
 date: 2012-03-09 18:05
 comments: true
-categories: ["rails", "ruby"]
-tags: ["guide", "RSpec", "tutorial"]
+categories: [rails,ruby]
+tags: [guide,RSpec,tutorial]
 ---
 ## RSpec简明指南 By Yuanyi ZHANG
 这是<a href="http://blog.davidchelimsky.net/">David Chelimsky</a>写的一篇RSpec简明指南，原文在<a href="http://blog.davidchelimsky.net/articles/2007/05/14/an-introduction-to-rspec-part-i">这里</a>。

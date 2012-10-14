@@ -3,8 +3,8 @@ layout: post
 title: "ruby-debug in 30 seconds (we don't need no stinkin' GUI!) "
 date: 2011-12-27 17:38
 comments: true
-categories: ["ruby"]
-tags: ["breakpoint", "debug", "rails", "ruby", "shell", "vim"]
+categories: [ruby]
+tags: [breakpoint,debug,rails,ruby,shell,vim]
 ---
 ## ruby-debug in 30 seconds (we don't need no stinkin' GUI!) 
 <code>Many people (including me) have complained about the lack of a good GUI debugger for Ruby. Now that some are finally getting usable, I've found I actually prefer IRB-style ruby-debug to a GUI.</code>

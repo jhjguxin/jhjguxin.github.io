@@ -3,8 +3,8 @@ layout: post
 title: "使用ruby解析纯真IP库-qqwry.dat"
 date: 2012-05-20 15:40
 comments: true
-categories: ["rails", "ruby"]
-tags: ["ip", "qqwry.dat", "ruby"]
+categories: [rails,ruby]
+tags: [ip,qqwry.dat,ruby]
 ---
 ## 使用ruby解析纯真IP库-qqwry.dat
 在写一个地区相关的节能时，需要用到根据IP判断地区的功能，就想着找一个能够解析IP到地址的库。找了一下资料，国内用的比较多的IP库是早年就开始流行到现在的纯真IP库（QQrwy.dat），至于用ruby来解析纯真IP库的，则没找到几个，文章是不少，不过引用的几乎都是同样的代码，那个是比较早的ruby版本了，在1.9.2下跑的话，会有问题，我小改了一下，发现还是会有些问题，于是索性自己写一个吧。

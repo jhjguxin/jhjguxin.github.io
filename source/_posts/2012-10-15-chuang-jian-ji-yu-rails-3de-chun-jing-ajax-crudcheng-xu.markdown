@@ -3,8 +3,8 @@ layout: post
 title: "创建基于Rails 3的纯净Ajax CRUD程序"
 date: 2012-06-06 22:50
 comments: true
-categories: ["rails", "ruby"]
-tags: ["ajax", "jquery", "rails", "ror"]
+categories: [rails,ruby]
+tags: [ajax,jquery,rails,ror]
 ---
 ## 创建基于Rails 3的纯净Ajax CRUD程序
 Rails 3利用scaffold可以很容易地创建CRUD程序，但那是多页面的，现在很多场景需要使用Ajax在一个页面上实现CRUD。这对Rails 来说也是很简单的，下面就来创建一个符合Rails风格的Ajax CRUD程序。整个过程大概15分钟，建议先把整个代码照应敲一遍，然后再慢慢理解。

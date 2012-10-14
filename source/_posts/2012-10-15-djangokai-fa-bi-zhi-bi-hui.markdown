@@ -3,8 +3,8 @@ layout: post
 title: "Django开发必知必会"
 date: 2011-12-15 21:27
 comments: true
-categories: ["django", "python"]
-tags: ["developer", "django", "nodes", "python"]
+categories: [django,python]
+tags: [developer,django,nodes,python]
 ---
 ## Django开发必知必会
 <div id="cnblogs_post_body">

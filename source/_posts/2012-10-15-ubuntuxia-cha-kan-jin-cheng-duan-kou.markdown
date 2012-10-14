@@ -3,8 +3,8 @@ layout: post
 title: "ubuntu下查看进程端口 "
 date: 2012-02-16 15:08
 comments: true
-categories: ["未分类"]
-tags: ["port", "ubuntu"]
+categories: [未分类]
+tags: [port,ubuntu]
 ---
 ## ubuntu下查看进程端口 
 # 查看所有打开的端口及服务名（注意这里显示的服务名只是标准端口对应的服务名，可能并不准确）

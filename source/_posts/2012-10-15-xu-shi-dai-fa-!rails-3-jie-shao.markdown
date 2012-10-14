@@ -3,7 +3,7 @@ layout: post
 title: "蓄势待发！Rails 3 介绍"
 date: 2011-11-03 14:30
 comments: true
-categories: ["未分类"]
+categories: [未分类]
 tags: []
 ---
 ## 蓄势待发！Rails 3 介绍

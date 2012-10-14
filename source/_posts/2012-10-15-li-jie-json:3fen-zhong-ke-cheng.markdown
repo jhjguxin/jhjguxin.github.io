@@ -3,8 +3,8 @@ layout: post
 title: "理解JSON：3分钟课程"
 date: 2011-12-28 18:57
 comments: true
-categories: ["专业", "网文"]
-tags: ["json"]
+categories: [专业,网文]
+tags: [json]
 ---
 ## 理解JSON：3分钟课程
 如果你跟我一样(我担心你就是)，那么，到目前为止，这应该是你对JSON的经验：

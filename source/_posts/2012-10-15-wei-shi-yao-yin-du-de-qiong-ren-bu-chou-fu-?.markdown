@@ -3,8 +3,8 @@ layout: post
 title: "为什么印度的穷人不仇富？"
 date: 2011-10-26 10:01
 comments: true
-categories: ["未分类"]
-tags: ["仇富", "穷人"]
+categories: [未分类]
+tags: [仇富,穷人]
 ---
 ## 为什么印度的穷人不仇富？
 <strong><img src="http://image.club.china.com/twhb/1011/2011/10/24/1319391465914_1863.jpg" alt="" /></strong>-----从而产生为什么我们社会的穷人会仇富的感慨！

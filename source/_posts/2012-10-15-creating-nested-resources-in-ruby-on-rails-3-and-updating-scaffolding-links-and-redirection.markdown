@@ -3,8 +3,8 @@ layout: post
 title: "Creating nested resources in ruby on rails 3 and updating scaffolding links and redirection"
 date: 2012-07-09 12:26
 comments: true
-categories: ["rails"]
-tags: ["nested", "rails", "resources"]
+categories: [rails]
+tags: [nested,rails,resources]
 ---
 ## Creating nested resources in ruby on rails 3 and updating scaffolding links and redirection
 In this article, I'll walk through a basic Rails (3.2.x) setup for creating a nested resource for two models. Nested resources work well when you want to build out URL structure between two related models, and still maintain a RESTful convention. This code assumes you are running RVM to manage Ruby/Gem versions, and Git for version control.

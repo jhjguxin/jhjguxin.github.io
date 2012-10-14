@@ -3,8 +3,8 @@ layout: post
 title: "find_city"
 date: 2012-05-25 15:45
 comments: true
-categories: ["ruby"]
-tags: ["city", "sina"]
+categories: [ruby]
+tags: [city,sina]
 ---
 ## find_city
 1. base on sina api

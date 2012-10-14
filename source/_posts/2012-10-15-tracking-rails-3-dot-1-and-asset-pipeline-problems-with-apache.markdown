@@ -3,8 +3,8 @@ layout: post
 title: "Tracking Rails 3.1 and asset pipeline problems with Apache "
 date: 2012-02-10 14:30
 comments: true
-categories: ["rails"]
-tags: ["apache", "asset", "rails"]
+categories: [rails]
+tags: [apache,asset,rails]
 ---
 ## Tracking Rails 3.1 and asset pipeline problems with Apache 
 ubuneu install apache module

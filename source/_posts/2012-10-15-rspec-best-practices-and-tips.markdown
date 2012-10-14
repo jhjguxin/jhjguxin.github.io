@@ -3,8 +3,8 @@ layout: post
 title: "RSpec best practices and tips"
 date: 2012-02-26 16:30
 comments: true
-categories: ["rails", "ruby"]
-tags: ["practices", "rails", "RSpec", "ruby", "tips"]
+categories: [rails,ruby]
+tags: [practices,rails,RSpec,ruby,tips]
 ---
 ## RSpec best practices and tips
 After a year using RSpec, I’m happy to share “(My) RSpec Best Practices and Tips”. Let’s make your specs easier to maintain, less verbose, more structured and covering more cases!

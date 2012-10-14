@@ -3,8 +3,8 @@ layout: post
 title: "通过mongodump和mongorestore实现Mongodb备份和恢复 --by chenzhou123520"
 date: 2012-10-08 22:29
 comments: true
-categories: ["DB"]
-tags: ["mongo", "MongoDB", "mongodump", "mongorestore", "nosql", "备份", "恢复"]
+categories: [DB]
+tags: [mongo,MongoDB,mongodump,mongorestore,nosql,备份,恢复]
 ---
 ## 通过mongodump和mongorestore实现Mongodb备份和恢复 --by chenzhou123520
 from <a href="http://chenzhou123520.iteye.com/blog/1630993">http://chenzhou123520.iteye.com/blog/1630993</a>

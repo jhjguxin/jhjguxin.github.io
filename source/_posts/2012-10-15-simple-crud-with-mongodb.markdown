@@ -3,8 +3,8 @@ layout: post
 title: "Simple CRUD with MongoDB "
 date: 2012-07-27 12:34
 comments: true
-categories: ["DB", "ruby"]
-tags: ["CRUD", "MongoDB"]
+categories: [DB,ruby]
+tags: [CRUD,MongoDB]
 ---
 ## Simple CRUD with MongoDB 
 When I meet a new technology, I like to experience it "just as it comes". I'm happy at the command line and I like to type actual commands and see man pages before I use any wrappers or helper tools. So when I met <a href="http://www.mongodb.org/">MongoDB</a> for the first time, I did exactly that. This post shows those first steps of creating a database, and inserting, reading, deleting and updating data.

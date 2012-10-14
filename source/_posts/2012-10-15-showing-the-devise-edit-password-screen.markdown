@@ -3,8 +3,8 @@ layout: post
 title: "Showing the devise edit password screen"
 date: 2012-01-07 01:54
 comments: true
-categories: ["rails", "ruby"]
-tags: ["devise", "edit", "password", "rails", "ruby"]
+categories: [rails,ruby]
+tags: [devise,edit,password,rails,ruby]
 ---
 ## Showing the devise edit password screen
 In my rails 3 app using devise, I want to provide a link for users to edit their password.

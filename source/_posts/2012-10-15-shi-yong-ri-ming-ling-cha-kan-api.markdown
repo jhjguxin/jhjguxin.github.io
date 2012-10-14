@@ -3,8 +3,8 @@ layout: post
 title: "使用 ri 命令查看 API"
 date: 2012-01-18 12:02
 comments: true
-categories: ["未分类"]
-tags: ["doc", "rails", "ruby"]
+categories: [未分类]
+tags: [doc,rails,ruby]
 ---
 ## 使用 ri 命令查看 API
 <div>

@@ -3,8 +3,8 @@ layout: post
 title: "acer 4738G 系列机型 激活OEM windows7的BIOS 1.12附win7 SP1下载地址"
 date: 2011-10-28 13:44
 comments: true
-categories: ["网文"]
-tags: ["acer", "oem", "sp1", "win7"]
+categories: [网文]
+tags: [acer,oem,sp1,win7]
 ---
 ## acer 4738G 系列机型 激活OEM windows7的BIOS 1.12附win7 SP1下载地址
 <a href="http://hiimg.com/zh/image/show/7HqreCq4yu/1.jpg" target="_blank"><img src="http://hiimg.com/image/direct/7HqreCq4yu/1.jpg" alt="" width="600" height="448" /></a>

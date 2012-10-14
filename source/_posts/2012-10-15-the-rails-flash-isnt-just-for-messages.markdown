@@ -3,8 +3,8 @@ layout: post
 title: "The Rails flash isn't just for messages"
 date: 2012-08-24 00:04
 comments: true
-categories: ["rails", "ruby", "web"]
-tags: ["Analytics", "events", "flash", "Google", "message", "rails"]
+categories: [rails,ruby,web]
+tags: [Analytics,events,flash,Google,message,rails]
 ---
 ## The Rails flash isn't just for messages
 <a href="http://guides.rubyonrails.org/action_controller_overview.html#the-flash">The Rails flash</a> is typically used for short messages:

@@ -3,8 +3,8 @@ layout: post
 title: "数据迁移（rake ）"
 date: 2012-05-21 14:05
 comments: true
-categories: ["rails", "ruby"]
-tags: ["migrate", "rails", "sql"]
+categories: [rails,ruby]
+tags: [migrate,rails,sql]
 ---
 ## 数据迁移（rake ）
 <div id="blog_content">

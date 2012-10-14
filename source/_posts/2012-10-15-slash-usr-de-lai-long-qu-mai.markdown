@@ -3,8 +3,8 @@ layout: post
 title: "/usr 的来龙去脉"
 date: 2011-12-28 18:21
 comments: true
-categories: ["网文"]
-tags: ["linux", "usr"]
+categories: [网文]
+tags: [linux,usr]
 ---
 ## /usr 的来龙去脉
 在 linux 文件结构中，有一个很神奇的目录 —— /usr。之前一直没有怎么关注过它，反正程序都是安装在里边的，也没有什么值得追根溯源的东西。直到有一天 <a href="http://cnbeta.com/articles/160791.htm">fedora 要简化整个文件系统体系</a>，看到讨论才想到，usr 到底是什么的缩写呢，它又是怎么来的呢？

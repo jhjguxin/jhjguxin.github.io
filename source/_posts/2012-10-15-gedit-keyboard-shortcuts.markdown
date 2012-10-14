@@ -3,8 +3,8 @@ layout: post
 title: "Gedit Keyboard Shortcuts"
 date: 2012-04-13 16:13
 comments: true
-categories: ["专业"]
-tags: ["gedit", "shortcuts"]
+categories: [专业]
+tags: [gedit,shortcuts]
 ---
 ## Gedit Keyboard Shortcuts
 Shortcut keys enable you to perform tasks more quickly than if you use a mouse. The following tables list all of Gedit's shortcut keys. These are in the <a href="http://live.gnome.org/Gedit/Manual">Gedit user manual</a>as of version 2.18.

@@ -3,8 +3,8 @@ layout: post
 title: "Active Record Validations and Callbacks 活动记录验证和回调"
 date: 2011-11-24 13:38
 comments: true
-categories: ["rails"]
-tags: ["guide", "rails", "ruby"]
+categories: [rails]
+tags: [guide,rails,ruby]
 ---
 ## Active Record Validations and Callbacks 活动记录验证和回调
 <h2>Active Record Validations and Callbacks <span style="font-family: WenQuanYi Micro Hei;">活动记录验证和回调</span></h2>

@@ -3,8 +3,8 @@ layout: post
 title: "bundle install and rbx-require-relative"
 date: 2012-01-31 12:02
 comments: true
-categories: ["rails", "ruby"]
-tags: ["bundle", "rails", "ruby"]
+categories: [rails,ruby]
+tags: [bundle,rails,ruby]
 ---
 ## bundle install and rbx-require-relative
 # To use debugger

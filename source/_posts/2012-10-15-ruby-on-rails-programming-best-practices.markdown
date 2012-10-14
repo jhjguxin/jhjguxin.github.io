@@ -3,8 +3,8 @@ layout: post
 title: "Ruby on Rails – Programming Best Practices"
 date: 2012-05-04 13:44
 comments: true
-categories: ["rails"]
-tags: ["Practices，DRY"]
+categories: [rails]
+tags: [Practices，DRY]
 ---
 ## Ruby on Rails – Programming Best Practices
 <strong>Don't Repeat Yourself</strong>

@@ -3,8 +3,8 @@ layout: post
 title: "Ruby 异常处理 begin ...end"
 date: 2012-02-09 14:24
 comments: true
-categories: ["rails", "ruby"]
-tags: ["Exceptions", "rails", "ruby"]
+categories: [rails,ruby]
+tags: [Exceptions,rails,ruby]
 ---
 ## Ruby 异常处理 begin ...end
 在java中，异常的捕捉是在try ... catch当中进行，而ruby则是在begin ... end代码块中进行异常的捕捉，在该代码块中使用rescue关键字进行捕捉异常类型，注意哦，这个是关键字，而不是方法。

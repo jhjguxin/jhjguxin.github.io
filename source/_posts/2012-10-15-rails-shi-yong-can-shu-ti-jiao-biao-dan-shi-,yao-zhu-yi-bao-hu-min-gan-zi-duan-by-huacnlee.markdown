@@ -3,8 +3,8 @@ layout: post
 title: "Rails 使用参数提交表单时，要注意保护敏感字段 by huacnlee"
 date: 2012-03-06 12:53
 comments: true
-categories: ["rails", "ruby"]
-tags: ["ActiveRecord", "rails", "安全", "漏洞", "破解"]
+categories: [rails,ruby]
+tags: [ActiveRecord,rails,安全,漏洞,破解]
 ---
 ## Rails 使用参数提交表单时，要注意保护敏感字段 by huacnlee
 刚接触 Rails 的人都会对 Rails form 实际特别喜爱，因为它让我们省时省力，就算遇到有100多个字段的表单，也能够几下就做出来了，因为在服务端不用再去对每个字段分别写文本框与字段的赋值。

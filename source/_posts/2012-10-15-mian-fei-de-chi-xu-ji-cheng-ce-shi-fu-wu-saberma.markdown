@@ -3,8 +3,8 @@ layout: post
 title: "免费的持续集成测试服务 --saberma"
 date: 2012-04-03 23:18
 comments: true
-categories: ["专业"]
-tags: ["travis-ci", "持续集成测试"]
+categories: [专业]
+tags: [travis-ci,持续集成测试]
 ---
 ## 免费的持续集成测试服务 --saberma
 <a href="https://github.com/saberma/shopqi">ShopQi</a> 大部分的功能都是被自动化测试覆盖的，每次代码提交之前如果都要在本地把所有测试跑一遍所花费的时间也不少。所以我们需要有一个服务器，代码提交后自动触发运行所有测试用例。

@@ -3,8 +3,8 @@ layout: post
 title: "使用 RSpec 进行行为驱动测试"
 date: 2012-02-24 10:37
 comments: true
-categories: ["rails", "ruby"]
-tags: ["rails", "RSpec", "ruby", "TDD"]
+categories: [rails,ruby]
+tags: [rails,RSpec,ruby,TDD]
 ---
 ## 使用 RSpec 进行行为驱动测试
 Bruce Tate, CTO, WellGood LLC

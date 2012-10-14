@@ -3,8 +3,8 @@ layout: post
 title: "Logs Are Streams, Not Files"
 date: 2012-06-07 21:55
 comments: true
-categories: ["linux", "rails", "ruby"]
-tags: ["daemons", "logs", "server"]
+categories: [linux,rails,ruby]
+tags: [daemons,logs,server]
 ---
 ## Logs Are Streams, Not Files
 Server daemons (such as PostgreSQL or Nginx) and applications (such as a Rails or Django app) sometimes offer a configuration parameter for a path to the program’s logfile. This can lead us to think of logs as files.

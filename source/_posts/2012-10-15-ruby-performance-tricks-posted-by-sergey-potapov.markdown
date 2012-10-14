@@ -3,8 +3,8 @@ layout: post
 title: "Ruby Performance Tricks --Posted by Sergey Potapov"
 date: 2012-09-05 08:58
 comments: true
-categories: ["ruby"]
-tags: ["accessor", "concatenation", "exception", "performance", "reader", "ruby", "string", "variable", "writer"]
+categories: [ruby]
+tags: [accessor,concatenation,exception,performance,reader,ruby,string,variable,writer]
 ---
 ## Ruby Performance Tricks --Posted by Sergey Potapov
 <a href="http://greyblake.com/blog/2012/09/02/ruby-perfomance-tricks/">http://greyblake.com/blog/2012/09/02/ruby-perfomance-tricks/</a>

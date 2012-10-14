@@ -3,8 +3,8 @@ layout: post
 title: "10 Cool Premium jQuery Countdown Scripts"
 date: 2012-04-17 10:57
 comments: true
-categories: ["专业"]
-tags: ["Countdown", "jquery", "倒计时"]
+categories: [专业]
+tags: [Countdown,jquery,倒计时]
 ---
 ## 10 Cool Premium jQuery Countdown Scripts
 Today’s post is a collection of 10 cool “premium” <strong>jQuery countdown scripts</strong> that you’d definitely find useful for your webpages at some point in time. Enjoy.

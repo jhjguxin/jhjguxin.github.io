@@ -39,10 +39,10 @@ def load_xml_data(data_file = nil)
       categories =  []
       tags =  []
       element.elements.each("category"){|element| categories << element.text if element.attributes["domain"].eql? "category"}.compact
-      categories.join(",")
+      categories = categories.join(",")
 
       element.elements.each("category"){|element| tags << element.text if element.attributes["domain"].eql? "post_tag"}.compact
-      tags.join(",")
+      tags = tags.join(",")
 
       #puts "\n+++++++++++++++++++++++++++++++++"
       #puts "_____categories____"
@@ -123,8 +123,8 @@ def create_new_post(params = {})
     post.puts "title: \"#{title.gsub(/&/,'&amp;')}\""
     post.puts "date: #{date.strftime('%Y-%m-%d %H:%M')}"
     post.puts "comments: #{comments}"
-    post.puts "categories: #{categories}"
-    post.puts "tags: #{tags}"
+    post.puts "categories: [#{categories}]"
+    post.puts "tags: [#{tags}]"
     post.puts "---\n"
     post.puts "#{content}"
   end

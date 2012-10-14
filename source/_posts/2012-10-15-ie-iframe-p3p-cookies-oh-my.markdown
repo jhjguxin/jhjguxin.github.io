@@ -3,8 +3,8 @@ layout: post
 title: "IE, iframe, P3P, Cookies, oh my"
 date: 2012-09-13 22:53
 comments: true
-categories: ["rails", "ruby", "web"]
-tags: ["Cookies", "IE", "iframe", "P3P"]
+categories: [rails,ruby,web]
+tags: [Cookies,IE,iframe,P3P]
 ---
 ## IE, iframe, P3P, Cookies, oh my
 测试新浪微游戏接口时，发现一个问题：当使用IE浏览器的时候，rails的session无法保存。之前在自己开发服务器上测试时，验证过IE和Firefox都能正常使用session的，觉得很是奇怪。

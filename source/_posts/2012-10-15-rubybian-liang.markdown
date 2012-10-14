@@ -3,8 +3,8 @@ layout: post
 title: "ruby变量"
 date: 2012-03-21 16:51
 comments: true
-categories: ["ruby"]
-tags: ["ruby，变量"]
+categories: [ruby]
+tags: [ruby，变量]
 ---
 ## ruby变量
 变量，实例变量，类变量，甚至还有"常量"其实都只是对象引用。它们引用对象，但是它们并不是对象本身。因此，它们可以被动态地改变，甚至引用另一种不同类型的对象。

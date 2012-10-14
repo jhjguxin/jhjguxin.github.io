@@ -3,8 +3,8 @@ layout: post
 title: "Rails 3.1 Engines – Mountable or Full? – Part 2"
 date: 2012-04-09 18:40
 comments: true
-categories: ["rails", "ruby"]
-tags: ["engine", "mountable", "rails"]
+categories: [rails,ruby]
+tags: [engine,mountable,rails]
 ---
 ## Rails 3.1 Engines – Mountable or Full? – Part 2
 <div>

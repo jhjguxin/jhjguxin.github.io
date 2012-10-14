@@ -3,8 +3,8 @@ layout: post
 title: "File Uploading using Rails"
 date: 2011-12-20 15:55
 comments: true
-categories: ["rails", "ruby"]
-tags: ["file", "rails", "ruby", "upload"]
+categories: [rails,ruby]
+tags: [file,rails,ruby,upload]
 ---
 ## File Uploading using Rails
 You may have a requirement in which you want your site visitors to upload a file on your server. Rails makes it very easy to handle this requirement. Now we will proceed with a simple and small Rails project.

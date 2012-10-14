@@ -69,7 +69,7 @@ def create_new_post(params = {})
   puts "set posts_dir"
   `mkdir -p "#{source_dir}/#{posts_dir}"`
 
-  filename = "#{source_dir}/#{posts_dir}/#{date.strftime('%Y-%m-%d')}-#{title.to_url}.#{new_post_ext}"
+  filename = "#{source_dir}/#{posts_dir}/#{Time.now.strftime('%Y-%m-%d')}-#{title.to_url}.#{new_post_ext}"
   if File.exist?(filename)
     abort("rake aborted!") if ask("#{filename} already exists. Do you want to overwrite?", ['y', 'n']) == 'n'
   end
