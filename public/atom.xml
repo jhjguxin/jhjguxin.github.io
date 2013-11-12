@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Francis's Octopress Blog]]></title>
-  <link href="http://jhjguxin.github.com/atom.xml" rel="self"/>
-  <link href="http://jhjguxin.github.com/"/>
-  <updated>2013-10-15T15:25:32+08:00</updated>
-  <id>http://jhjguxin.github.com/</id>
+  <link href="http://jhjguxin.github.io/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:04:06+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
   <author>
     <name><![CDATA[Francis Jiang]]></name>
     <email><![CDATA[864248765@qq.com]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[通过mongodump和mongorestore实现Mongodb备份和恢复 --by chenzhou123520]]></title>
-    <link href="http://jhjguxin.github.com/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/"/>
+    <link href="http://jhjguxin.github.io/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/"/>
     <updated>2012-10-08T22:29:00+08:00</updated>
-    <id>http://jhjguxin.github.com/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520</id>
+    <id>http://jhjguxin.github.io/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520</id>
     <content type="html"><![CDATA[<h2>通过mongodump和mongorestore实现Mongodb备份和恢复 &#8211;by chenzhou123520</h2>
 
 <p>from <a href="http://chenzhou123520.iteye.com/blog/1630993">http://chenzhou123520.iteye.com/blog/1630993</a></p>
@@ -211,9 +211,9 @@ Tue Aug 14 01:18:17 { key: { _id: 1 }, ns: &quot;test.system.users&quot;, name: 
   
   <entry>
     <title type="html"><![CDATA[Ruby on Rails 4.0 Release Notes]]></title>
-    <link href="http://jhjguxin.github.com/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes/"/>
+    <link href="http://jhjguxin.github.io/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes/"/>
     <updated>2012-10-06T19:46:00+08:00</updated>
-    <id>http://jhjguxin.github.com/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes</id>
+    <id>http://jhjguxin.github.io/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes</id>
     <content type="html"><![CDATA[<h2>Ruby on Rails 4.0 Release Notes</h2>
 
 <h1>sources:</h1>
@@ -911,9 +911,9 @@ User.new.allowed_access        # =&gt; NoMethodError</pre>
   
   <entry>
     <title type="html"><![CDATA[Rails Active Record Named Scopes]]></title>
-    <link href="http://jhjguxin.github.com/blog/2012/10/06/rails-active-record-named-scopes/"/>
+    <link href="http://jhjguxin.github.io/blog/2012/10/06/rails-active-record-named-scopes/"/>
     <updated>2012-10-06T18:56:00+08:00</updated>
-    <id>http://jhjguxin.github.com/blog/2012/10/06/rails-active-record-named-scopes</id>
+    <id>http://jhjguxin.github.io/blog/2012/10/06/rails-active-record-named-scopes</id>
     <content type="html"><![CDATA[<h2>Rails Active Record Named Scopes</h2>
 
 <p><a href="http://api.rubyonrails.org/classes/ActiveRecord/Scoping.html">Active Record Named Scopes</a></p>
@@ -1178,9 +1178,9 @@ fruits = fruits.limit(10) if limited?</pre>
   
   <entry>
     <title type="html"><![CDATA[晒晒我们的开源项目 ITEYE开源代码]]></title>
-    <link href="http://jhjguxin.github.com/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/"/>
+    <link href="http://jhjguxin.github.io/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/"/>
     <updated>2012-09-27T08:34:00+08:00</updated>
-    <id>http://jhjguxin.github.com/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma</id>
+    <id>http://jhjguxin.github.io/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma</id>
     <content type="html"><![CDATA[<h2>晒晒我们的开源项目 ITEYE开源代码</h2>
 
 <p>我们的研发团队是一支mini型研发团队，目前共有研发人员13人。由于网站产品维护的历史原因，这13人的研发团队分为4支小组，分别是：Ruby研发小组5人；PHP研发小组4人；.net研发小组2人，Java搜索小组2人。</p>
@@ -1220,9 +1220,9 @@ Rails的ActiveRecord自身没有带强大的对象缓存功能，这是AR的一�
   
   <entry>
     <title type="html"><![CDATA[Single sign-on 单点登录 sso]]></title>
-    <link href="http://jhjguxin.github.com/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/"/>
+    <link href="http://jhjguxin.github.io/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/"/>
     <updated>2012-09-26T08:35:00+08:00</updated>
-    <id>http://jhjguxin.github.com/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso</id>
+    <id>http://jhjguxin.github.io/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso</id>
     <content type="html"><![CDATA[<h2>Single sign-on 单点登录 sso</h2>
 
 <p>from wiki</p>
@@ -1248,9 +1248,9 @@ Rails的ActiveRecord自身没有带强大的对象缓存功能，这是AR的一�
   
   <entry>
     <title type="html"><![CDATA[Sharing A Devise User Session Across Subdomains With Rails 3]]></title>
-    <link href="http://jhjguxin.github.com/blog/2012/09/15/sharing-a-devise-user-session-across-subdomains-with-rails-3/"/>
+    <link href="http://jhjguxin.github.io/blog/2012/09/15/sharing-a-devise-user-session-across-subdomains-with-rails-3/"/>
     <updated>2012-09-15T16:21:00+08:00</updated>
-    <id>http://jhjguxin.github.com/blog/2012/09/15/sharing-a-devise-user-session-across-subdomains-with-rails-3</id>
+    <id>http://jhjguxin.github.io/blog/2012/09/15/sharing-a-devise-user-session-across-subdomains-with-rails-3</id>
     <content type="html"><![CDATA[<h2>Sharing A Devise User Session Across Subdomains With Rails 3</h2>
 
 <pre>to andersen
@@ -1312,9 +1312,9 @@ Francis.J(864248765) 14:08:37
   
   <entry>
     <title type="html"><![CDATA[IE, iframe, P3P, Cookies, oh my]]></title>
-    <link href="http://jhjguxin.github.com/blog/2012/09/13/ie-iframe-p3p-cookies-oh-my/"/>
+    <link href="http://jhjguxin.github.io/blog/2012/09/13/ie-iframe-p3p-cookies-oh-my/"/>
     <updated>2012-09-13T22:53:00+08:00</updated>
-    <id>http://jhjguxin.github.com/blog/2012/09/13/ie-iframe-p3p-cookies-oh-my</id>
+    <id>http://jhjguxin.github.io/blog/2012/09/13/ie-iframe-p3p-cookies-oh-my</id>
     <content type="html"><![CDATA[<h2>IE, iframe, P3P, Cookies, oh my</h2>
 
 <p>测试新浪微游戏接口时，发现一个问题：当使用IE浏览器的时候，rails的session无法保存。之前在自己开发服务器上测试时，验证过IE和Firefox都能正常使用session的，觉得很是奇怪。</p>
@@ -1441,9 +1441,9 @@ IIS站点管理器允许你给所有输出的内容都加上任意HTTP Header，
   
   <entry>
     <title type="html"><![CDATA[在 Cloud Foundry 上使用 JRuby for Rails 应用程序]]></title>
-    <link href="http://jhjguxin.github.com/blog/2012/09/10/zai-cloud-foundry-shang-shi-yong-jruby-for-rails-ying-yong-cheng-xu/"/>
+    <link href="http://jhjguxin.github.io/blog/2012/09/10/zai-cloud-foundry-shang-shi-yong-jruby-for-rails-ying-yong-cheng-xu/"/>
     <updated>2012-09-10T22:28:00+08:00</updated>
-    <id>http://jhjguxin.github.com/blog/2012/09/10/zai-cloud-foundry-shang-shi-yong-jruby-for-rails-ying-yong-cheng-xu</id>
+    <id>http://jhjguxin.github.io/blog/2012/09/10/zai-cloud-foundry-shang-shi-yong-jruby-for-rails-ying-yong-cheng-xu</id>
     <content type="html"><![CDATA[<h2>在 Cloud Foundry 上使用 JRuby for Rails 应用程序</h2>
 
 <p align="left">[译注]本文翻译自Cloud Foundry英文博客站点，原文题为“<a href="http://blog.cloudfoundry.com/post/13481011043/deploying-jruby-on-rails-applications-on-cloud-foundry"><strong>Using JRuby for Rails Applications on Cloud Foundry</strong></a>”，文章发表时间是 2012 年 4 月 19 日。</p>
@@ -1799,9 +1799,9 @@ IIS站点管理器允许你给所有输出的内容都加上任意HTTP Header，
   
   <entry>
     <title type="html"><![CDATA[new-post]]></title>
-    <link href="http://jhjguxin.github.com/blog/2012/09/07/new-post/"/>
+    <link href="http://jhjguxin.github.io/blog/2012/09/07/new-post/"/>
     <updated>2012-09-07T23:37:00+08:00</updated>
-    <id>http://jhjguxin.github.com/blog/2012/09/07/new-post</id>
+    <id>http://jhjguxin.github.io/blog/2012/09/07/new-post</id>
     <content type="html"><![CDATA[<h2></h2>
 
 <h2></h2>
@@ -1811,9 +1811,9 @@ IIS站点管理器允许你给所有输出的内容都加上任意HTTP Header，
   
   <entry>
     <title type="html"><![CDATA[你可能错过的 Rails 技巧 --Posted by bigcircle]]></title>
-    <link href="http://jhjguxin.github.com/blog/2012/09/07/ni-ke-neng-cuo-guo-de-rails-ji-qiao-posted-by-bigcircle/"/>
+    <link href="http://jhjguxin.github.io/blog/2012/09/07/ni-ke-neng-cuo-guo-de-rails-ji-qiao-posted-by-bigcircle/"/>
     <updated>2012-09-07T23:29:00+08:00</updated>
-    <id>http://jhjguxin.github.com/blog/2012/09/07/ni-ke-neng-cuo-guo-de-rails-ji-qiao-posted-by-bigcircle</id>
+    <id>http://jhjguxin.github.io/blog/2012/09/07/ni-ke-neng-cuo-guo-de-rails-ji-qiao-posted-by-bigcircle</id>
     <content type="html"><![CDATA[<h2>你可能错过的 Rails 技巧 &#8211;Posted by bigcircle</h2>
 
 <p>记得前段时间 RailsConf2012 之后看过一个不错的pdf，<a href="https://speakerdeck.com/u/jeg2/p/10-things-you-didnt-know-rails-could-do">10 things you didn’t know rails could do</a></p>
@@ -2894,9 +2894,9 @@ end</pre>
   
   <entry>
     <title type="html"><![CDATA[Ruby Performance Tricks --Posted by Sergey Potapov]]></title>
-    <link href="http://jhjguxin.github.com/blog/2012/09/05/ruby-performance-tricks-posted-by-sergey-potapov/"/>
+    <link href="http://jhjguxin.github.io/blog/2012/09/05/ruby-performance-tricks-posted-by-sergey-potapov/"/>
     <updated>2012-09-05T08:58:00+08:00</updated>
-    <id>http://jhjguxin.github.com/blog/2012/09/05/ruby-performance-tricks-posted-by-sergey-potapov</id>
+    <id>http://jhjguxin.github.io/blog/2012/09/05/ruby-performance-tricks-posted-by-sergey-potapov</id>
     <content type="html"><![CDATA[<h2>Ruby Performance Tricks &#8211;Posted by Sergey Potapov</h2>
 
 <p><a href="http://greyblake.com/blog/2012/09/02/ruby-perfomance-tricks/">http://greyblake.com/blog/2012/09/02/ruby-perfomance-tricks/</a></p>
@@ -3263,9 +3263,9 @@ dynamic method           0.150000   0.000000   0.150000 (  0.156537)</pre>
   
   <entry>
     <title type="html"><![CDATA[37signals Earns Millions Each Year. Its CEO’s Model? His Cleaning Lady]]></title>
-    <link href="http://jhjguxin.github.com/blog/2012/09/03/37signals-earns-millions-each-year-its-ceos-model-his-cleaning-lady/"/>
+    <link href="http://jhjguxin.github.io/blog/2012/09/03/37signals-earns-millions-each-year-its-ceos-model-his-cleaning-lady/"/>
     <updated>2012-09-03T22:55:00+08:00</updated>
-    <id>http://jhjguxin.github.com/blog/2012/09/03/37signals-earns-millions-each-year-its-ceos-model-his-cleaning-lady</id>
+    <id>http://jhjguxin.github.io/blog/2012/09/03/37signals-earns-millions-each-year-its-ceos-model-his-cleaning-lady</id>
     <content type="html"><![CDATA[<h2>37signals Earns Millions Each Year. Its CEO’s Model? His Cleaning Lady</h2>
 
 <p>&nbsp;</p>
@@ -3332,9 +3332,9 @@ She’s on her own, she cleans people’s homes, she’s incredibly nice. She br
   
   <entry>
     <title type="html"><![CDATA[Google Chrome Keyboard and mouse shortcuts]]></title>
-    <link href="http://jhjguxin.github.com/blog/2012/08/30/google-chrome-keyboard-and-mouse-shortcuts/"/>
+    <link href="http://jhjguxin.github.io/blog/2012/08/30/google-chrome-keyboard-and-mouse-shortcuts/"/>
     <updated>2012-08-30T11:10:00+08:00</updated>
-    <id>http://jhjguxin.github.com/blog/2012/08/30/google-chrome-keyboard-and-mouse-shortcuts</id>
+    <id>http://jhjguxin.github.io/blog/2012/08/30/google-chrome-keyboard-and-mouse-shortcuts</id>
     <content type="html"><![CDATA[<h2>Google Chrome Keyboard and mouse shortcuts</h2>
 
 <h3> Keyboard and mouse shortcuts</h3>
@@ -3714,9 +3714,9 @@ She’s on her own, she cleans people’s homes, she’s incredibly nice. She br
   
   <entry>
     <title type="html"><![CDATA[Advanced Caching: Part 1 - Caching Strategies]]></title>
-    <link href="http://jhjguxin.github.com/blog/2012/08/29/advanced-caching-part-1-caching-strategies/"/>
+    <link href="http://jhjguxin.github.io/blog/2012/08/29/advanced-caching-part-1-caching-strategies/"/>
     <updated>2012-08-29T23:15:00+08:00</updated>
-    <id>http://jhjguxin.github.com/blog/2012/08/29/advanced-caching-part-1-caching-strategies</id>
+    <id>http://jhjguxin.github.io/blog/2012/08/29/advanced-caching-part-1-caching-strategies</id>
     <content type="html"><![CDATA[<h2>Advanced Caching: Part 1 - Caching Strategies</h2>
 
 <p>First, let&#8217;s start with a brief overview of the different types of caching. We&#8217;ll start from 50,000ft and work our way down.</p>
@@ -4213,9 +4213,9 @@ Find a problem or have a question about this post? <a href="http://twitter.com/
   
   <entry>
     <title type="html"><![CDATA[Rails counter cache]]></title>
-    <link href="http://jhjguxin.github.com/blog/2012/08/27/rails-counter-cache/"/>
+    <link href="http://jhjguxin.github.io/blog/2012/08/27/rails-counter-cache/"/>
     <updated>2012-08-27T00:44:00+08:00</updated>
-    <id>http://jhjguxin.github.com/blog/2012/08/27/rails-counter-cache</id>
+    <id>http://jhjguxin.github.io/blog/2012/08/27/rails-counter-cache</id>
     <content type="html"><![CDATA[<h2>Rails counter cache</h2>
 
 <p>这次就是讲用_count字段来缓存has_many的计数 </p>
@@ -4327,9 +4327,9 @@ end</pre>
   
   <entry>
     <title type="html"><![CDATA[Rails里的Magic Column Names]]></title>
-    <link href="http://jhjguxin.github.com/blog/2012/08/27/railsli-de-magic-column-names/"/>
+    <link href="http://jhjguxin.github.io/blog/2012/08/27/railsli-de-magic-column-names/"/>
     <updated>2012-08-27T00:37:00+08:00</updated>
-    <id>http://jhjguxin.github.com/blog/2012/08/27/railsli-de-magic-column-names</id>
+    <id>http://jhjguxin.github.io/blog/2012/08/27/railsli-de-magic-column-names</id>
     <content type="html"><![CDATA[<h2>Rails里的Magic Column Names</h2>
 
 <p>Active Record有一些富有“魔力”的列名:</p>
@@ -4362,9 +4362,9 @@ acts_as_tree时用来表示该行的parent的id</p>
   
   <entry>
     <title type="html"><![CDATA[The Rails flash isn't just for messages]]></title>
-    <link href="http://jhjguxin.github.com/blog/2012/08/24/the-rails-flash-isnt-just-for-messages/"/>
+    <link href="http://jhjguxin.github.io/blog/2012/08/24/the-rails-flash-isnt-just-for-messages/"/>
     <updated>2012-08-24T00:04:00+08:00</updated>
-    <id>http://jhjguxin.github.com/blog/2012/08/24/the-rails-flash-isnt-just-for-messages</id>
+    <id>http://jhjguxin.github.io/blog/2012/08/24/the-rails-flash-isnt-just-for-messages</id>
     <content type="html"><![CDATA[<h2>The Rails flash isn&#8217;t just for messages</h2>
 
 <p><a href="http://guides.rubyonrails.org/action_controller_overview.html#the-flash">The Rails flash</a> is typically used for short messages:</p>
@@ -4581,9 +4581,9 @@ end</pre>
   
   <entry>
     <title type="html"><![CDATA[A Practical Guide to Use Spine.JS in Real World App.]]></title>
-    <link href="http://jhjguxin.github.com/blog/2012/08/21/a-practical-guide-to-use-spine-dot-js-in-real-world-app/"/>
+    <link href="http://jhjguxin.github.io/blog/2012/08/21/a-practical-guide-to-use-spine-dot-js-in-real-world-app/"/>
     <updated>2012-08-21T13:13:00+08:00</updated>
-    <id>http://jhjguxin.github.com/blog/2012/08/21/a-practical-guide-to-use-spine-dot-js-in-real-world-app</id>
+    <id>http://jhjguxin.github.io/blog/2012/08/21/a-practical-guide-to-use-spine-dot-js-in-real-world-app</id>
     <content type="html"><![CDATA[<h2>A Practical Guide to Use Spine.JS in Real World App.</h2>
 
 <p>To give users the best possible fluid experience, we designed <a href="http://pragmatic.ly/">Pragmatic.ly</a> and complied with the <a title="Single Page Application" href="http://en.wikipedia.org/wiki/Single-page_application" target="_blank">single page application</a> standard. We believe that could make users focus on building product rather than spending time on project management itself. A wide range of technology solutions are available to make a single page application. Current trends suggest moving core application from server to client side and keeping server load at minimum for better performance by pure data APIs. <a href="http://pragmatic.ly/">Pragmatic.ly</a> took on the challange to cater to this need by developing server side in Rails, Spine.js at client side.</p>
@@ -4963,9 +4963,9 @@ end</pre>
   
   <entry>
     <title type="html"><![CDATA[Conditional comments in html]]></title>
-    <link href="http://jhjguxin.github.com/blog/2012/08/20/conditional-comments-in-html/"/>
+    <link href="http://jhjguxin.github.io/blog/2012/08/20/conditional-comments-in-html/"/>
     <updated>2012-08-20T11:31:00+08:00</updated>
-    <id>http://jhjguxin.github.com/blog/2012/08/20/conditional-comments-in-html</id>
+    <id>http://jhjguxin.github.io/blog/2012/08/20/conditional-comments-in-html</id>
     <content type="html"><![CDATA[<h2>Conditional comments in html</h2>
 
 <p>Conditional comments only work in IE, and are thus excellently suited to give special instructions meant only for IE. They are supported from IE 5 onwards.</p>
@@ -5075,9 +5075,9 @@ According to the conditional comment this is not IE&lt;br /&gt;
   
   <entry>
     <title type="html"><![CDATA[Journey Through The JavaScript MVC Jungle -- By Addy Osmani]]></title>
-    <link href="http://jhjguxin.github.com/blog/2012/08/16/journey-through-the-javascript-mvc-jungle-by-addy-osmani/"/>
+    <link href="http://jhjguxin.github.io/blog/2012/08/16/journey-through-the-javascript-mvc-jungle-by-addy-osmani/"/>
     <updated>2012-08-16T00:51:00+08:00</updated>
-    <id>http://jhjguxin.github.com/blog/2012/08/16/journey-through-the-javascript-mvc-jungle-by-addy-osmani</id>
+    <id>http://jhjguxin.github.io/blog/2012/08/16/journey-through-the-javascript-mvc-jungle-by-addy-osmani</id>
     <content type="html"><![CDATA[<h2>Journey Through The JavaScript MVC Jungle &#8211; By Addy Osmani</h2>
 
 <p>When writing a Web application from scratch, it’s easy to feel like we can get by simply by relying on a <a href="https://developer.mozilla.org/en/DOM/About_the_Document_Object_Model">DOM</a> manipulation library (like <a href="http://jquery.com/">jQuery</a>) and a handful of utility plugins. The problem with this is that it doesn’t take long to get lost in a nested pile of jQuery callbacks and DOM elements without any real structure in place for our applications.</p>
