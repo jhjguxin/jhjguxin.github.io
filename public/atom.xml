@@ -4,7 +4,7 @@
   <title><![CDATA[Francis's Octopress Blog]]></title>
   <link href="http://jhjguxin.github.io/atom.xml" rel="self"/>
   <link href="http://jhjguxin.github.io/"/>
-  <updated>2013-11-12T19:04:06+08:00</updated>
+  <updated>2013-11-12T19:23:30+08:00</updated>
   <id>http://jhjguxin.github.io/</id>
   <author>
     <name><![CDATA[Francis Jiang]]></name>
@@ -18,9 +18,9 @@
     <link href="http://jhjguxin.github.io/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/"/>
     <updated>2012-10-08T22:29:00+08:00</updated>
     <id>http://jhjguxin.github.io/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520</id>
-    <content type="html"><![CDATA[<h2>通过mongodump和mongorestore实现Mongodb备份和恢复 &#8211;by chenzhou123520</h2>
+    <content type="html"><![CDATA[<h2>通过mongodump和mongorestore实现Mongodb备份和恢复 &mdash;by chenzhou123520</h2>
 
-<p>from <a href="http://chenzhou123520.iteye.com/blog/1630993">http://chenzhou123520.iteye.com/blog/1630993</a></p>
+<p>from <a href="http://chenzhou123520.iteye.com/blog/1630993"><a href="http://chenzhou123520.iteye.com/blog/1630993">http://chenzhou123520.iteye.com/blog/1630993</a></a></p>
 
 <p>Mongodb自带了mongodump和mongorestore这两个工具来实现对数据的备份和恢复。</p>
 
@@ -219,9 +219,9 @@ Tue Aug 14 01:18:17 { key: { _id: 1 }, ns: &quot;test.system.users&quot;, name: 
 <h1>sources:</h1>
 
 
-<p><a href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md">https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md</a></p>
+<p><a href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md"><a href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md">https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md</a></a></p>
 
-<p><a href="http://edgeguides.rubyonrails.org/4_0_release_notes.html">http://edgeguides.rubyonrails.org/4_0_release_notes.html</a></p>
+<p><a href="http://edgeguides.rubyonrails.org/4_0_release_notes.html"><a href="http://edgeguides.rubyonrails.org/4_0_release_notes.html">http://edgeguides.rubyonrails.org/4_0_release_notes.html</a></a></p>
 
 <h1>Ruby on Rails 4.0 Release Notes</h1>
 
@@ -248,7 +248,7 @@ Tue Aug 14 01:18:17 { key: { _id: 1 }, ns: &quot;test.system.users&quot;, name: 
 
 <p>TODO. This is a WIP guide.</p>
 
-<p>If you&#8217;re upgrading an existing application, it&#8217;s a great idea to have good test coverage before going in. You should also first upgrade to Rails 3.2 in case you haven&#8217;t and make sure your application still runs as expected before attempting an update to Rails 4.0. Then take heed of the following changes:</p>
+<p>If you&rsquo;re upgrading an existing application, it&rsquo;s a great idea to have good test coverage before going in. You should also first upgrade to Rails 3.2 in case you haven&rsquo;t and make sure your application still runs as expected before attempting an update to Rails 4.0. Then take heed of the following changes:</p>
 
 <h3><a name="rails-40-requires-at-least-ruby-193" href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md#rails-40-requires-at-least-ruby-193"></a>Rails 4.0 requires at least Ruby 1.9.3</h3>
 
@@ -288,19 +288,19 @@ Tue Aug 14 01:18:17 { key: { _id: 1 }, ns: &quot;test.system.users&quot;, name: 
 <h3><a name="vendoring-gems" href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md#vendoring-gems"></a>Vendoring Gems</h3>
 
 
-<p>Rails now uses a <code>Gemfile</code> in the application root to determine the gems you require for your application to start. This <code>Gemfile</code> is processed by the <a href="https://github.com/carlhuda/bundler">Bundler</a> gem, which then installs all your dependencies. It can even install all the dependencies locally to your application so that it doesn&#8217;t depend on the system gems.</p>
+<p>Rails now uses a <code>Gemfile</code> in the application root to determine the gems you require for your application to start. This <code>Gemfile</code> is processed by the <a href="https://github.com/carlhuda/bundler">Bundler</a> gem, which then installs all your dependencies. It can even install all the dependencies locally to your application so that it doesn&rsquo;t depend on the system gems.</p>
 
 <p>More information: <a href="http://gembundler.com/">Bundler homepage</a></p>
 
 <h3><a name="living-on-the-edge" href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md#living-on-the-edge"></a>Living on the Edge</h3>
 
 
-<p><code>Bundler</code> and <code>Gemfile</code> makes freezing your Rails application easy as pie with the new dedicated <code>bundle</code> command. If you want to bundle straight from the Git repository, you can pass the <code>--edge</code> flag:</p>
+<p><code>Bundler</code> and <code>Gemfile</code> makes freezing your Rails application easy as pie with the new dedicated <code>bundle</code> command. If you want to bundle straight from the Git repository, you can pass the <code>&mdash;edge</code> flag:</p>
 
 <pre>&lt;code&gt;$ rails new myapp --edge &lt;/code&gt;</pre>
 
 
-<p>If you have a local checkout of the Rails repository and want to generate an application using that, you can pass the <code>--dev</code> flag:</p>
+<p>If you have a local checkout of the Rails repository and want to generate an application using that, you can pass the <code>&mdash;dev</code> flag:</p>
 
 <pre>&lt;code&gt;$ ruby /path/to/rails/railties/bin/rails new myapp --dev &lt;/code&gt;</pre>
 
@@ -1031,7 +1031,7 @@ end</pre>
 
 <p><a href="http://api.rubyonrails.org/classes/ActiveRecord/Scoping/Named/ClassMethods.html">activerecord/lib/active_record/scoping/named.rb</a></p>
 
-<p><code>scope(name, scope_options = {})</code> Adds a class method for retrieving and querying objects. A scope represents a narrowing of a database query, such as <code>where(:color =&gt; :red).select('shirts.*').includes(:washing_instructions)</code>.</p>
+<p><code>scope(name, scope_options = {})</code> Adds a class method for retrieving and querying objects. A scope represents a narrowing of a database query, such as <code>where(:color =&gt; :red).select(&lsquo;shirts.*&rsquo;).includes(:washing_instructions)</code>.</p>
 
 <div>
 <pre>class Shirt &lt; ActiveRecord::Base
@@ -1041,7 +1041,7 @@ end</pre>
 </div>
 
 
-<p>The above calls to scope define class methods <code>Shirt.red</code> and <code>Shirt.dry_clean_only</code>. <code>Shirt.red</code>, in effect, represents the query <code>Shirt.where(:color =&gt; 'red')</code>.</p>
+<p>The above calls to scope define class methods <code>Shirt.red</code> and <code>Shirt.dry_clean_only</code>. <code>Shirt.red</code>, in effect, represents the query <code>Shirt.where(:color =&gt; &lsquo;red&rsquo;)</code>.</p>
 
 <p>Note that this is simply ‘syntactic sugar’ for defining an actual class method:</p>
 
@@ -1054,7 +1054,7 @@ end</pre>
 </div>
 
 
-<p>Unlike <code>Shirt.find(...)</code>, however, the object returned by <code>Shirt.red</code> is not an Array; it resembles the association object constructed by a has_many declaration. For instance, you can invoke <code>Shirt.red.first</code>, <code>Shirt.red.count</code>,<code>Shirt.red.where(:size =&gt; 'small')</code>. Also, just as with the association objects, named scopes act like an Array, implementing Enumerable; <code>Shirt.red.each(&amp;block)</code>, <code>Shirt.red.first</code>, and <code>Shirt.red.inject(memo, &amp;block)</code> all behave as if<code>Shirt.red</code> really was an Array.</p>
+<p>Unlike <code>Shirt.find(&hellip;)</code>, however, the object returned by <code>Shirt.red</code> is not an Array; it resembles the association object constructed by a has_many declaration. For instance, you can invoke <code>Shirt.red.first</code>, <code>Shirt.red.count</code>,<code>Shirt.red.where(:size =&gt; &lsquo;small&rsquo;)</code>. Also, just as with the association objects, named scopes act like an Array, implementing Enumerable; <code>Shirt.red.each(&amp;block)</code>, <code>Shirt.red.first</code>, and <code>Shirt.red.inject(memo, &amp;block)</code> all behave as if<code>Shirt.red</code> really was an Array.</p>
 
 <p>These named scopes are composable. For instance, <code>Shirt.red.dry_clean_only</code> will produce all shirts that are both red and dry clean only. Nested finds and calculations also work with these compositions: <code>Shirt.red.dry_clean_only.count</code> returns the number of garments for which these criteria obtain. Similarly with <code>Shirt.red.dry_clean_only.average(:thread_count)</code>.</p>
 
@@ -1078,7 +1078,7 @@ end</pre>
 </div>
 
 
-<p>In this example, <code>Shirt.colored('puce')</code> finds all puce shirts.</p>
+<p>In this example, <code>Shirt.colored(&lsquo;puce&rsquo;)</code> finds all puce shirts.</p>
 
 <p>On Ruby 1.9 you can use the ‘stabby lambda’ syntax:</p>
 
@@ -1189,30 +1189,30 @@ fruits = fruits.limit(10) if limited?</pre>
 
 <p>以下简要介绍一下我们已经开源的项目，今后我们还会努力开源更多的东西和大家交流和分享：</p>
 
-<p>1、Ansj中文分词 - 开源的高准确率Java中文分词器</p>
+<p>1、Ansj中文分词 &ndash; 开源的高准确率Java中文分词器</p>
 
-<p>项目Github地址：<a href="https://github.com/ansjsun/ansj_seg" target="_blank">https://github.com/ansjsun/ansj_seg</a>
+<p>项目Github地址：<a href="https://github.com/ansjsun/ansj_seg" target="_blank"><a href="https://github.com/ansjsun/ansj_seg">https://github.com/ansjsun/ansj_seg</a></a>
 这是基于大名鼎鼎中科院的Ictclas中文分词算法编写的Java实现版本，比常用的开源mmseg4j的分词准确率高。目前我们自己站内的搜索将逐渐从mmseg4j算法替换成Ansj中文分词算法。</p>
 
-<p>2、ServiceFramework - 开源的羽量级Java Web服务框架</p>
+<p>2、ServiceFramework &ndash; 开源的羽量级Java Web服务框架</p>
 
-<p>项目Github地址：<a href="https://github.com/allwefantasy/ServiceFramework" target="_blank">https://github.com/allwefantasy/ServiceFramework</a>
+<p>项目Github地址：<a href="https://github.com/allwefantasy/ServiceFramework" target="_blank"><a href="https://github.com/allwefantasy/ServiceFramework">https://github.com/allwefantasy/ServiceFramework</a></a>
 我们基于Java的开源搜索框架lucene编写了网站的分布式搜索和Tag文章分类服务。因为需要向前端的Web应用程序提供搜索和Tag服务接口API，所以我们编写了这个羽量级的Java框架软件。它的优点就是羽量级，自身集成了Jetty服务器，MVC，IoC和ORM，让你只需要编写非常少的代码，就可以快速将你的业务逻辑组件以Web API的方式提供服务。</p>
 
-<p>3、ExportBlog - 开源的通用博客导出工具</p>
+<p>3、ExportBlog &ndash; 开源的通用博客导出工具</p>
 
-<p>项目Github地址：<a href="https://github.com/sqzhuyi/ExportBlog" target="_blank">https://github.com/sqzhuyi/ExportBlog</a>
-这是一个基于.net Winforms编写的通用博客导出工具，支持导出网站包括：CSDN、ITEYE、博客园、新浪、搜狐、和讯、ChinaUnix、网易、51CTO、开源中国、百度空间、QQ空间等等。导出格式支持CHM、PDF、HTML、TXT和EPUB 5种格式文档。详细介绍：<a href="http://blog.csdn.net/sq_zhuyi/article/details/7924776" target="_blank">http://blog.csdn.net/sq_zhuyi/article/details/7924776</a></p>
+<p>项目Github地址：<a href="https://github.com/sqzhuyi/ExportBlog" target="_blank"><a href="https://github.com/sqzhuyi/ExportBlog">https://github.com/sqzhuyi/ExportBlog</a></a>
+这是一个基于.net Winforms编写的通用博客导出工具，支持导出网站包括：CSDN、ITEYE、博客园、新浪、搜狐、和讯、ChinaUnix、网易、51CTO、开源中国、百度空间、QQ空间等等。导出格式支持CHM、PDF、HTML、TXT和EPUB 5种格式文档。详细介绍：<a href="http://blog.csdn.net/sq_zhuyi/article/details/7924776" target="_blank"><a href="http://blog.csdn.net/sq_zhuyi/article/details/7924776">http://blog.csdn.net/sq_zhuyi/article/details/7924776</a></a></p>
 
-<p>4、Secode_level_cache - 开源的Rails对象缓存插件</p>
+<p>4、Secode_level_cache &ndash; 开源的Rails对象缓存插件</p>
 
-<p>项目Github地址：<a href="https://github.com/csdn-dev/second_level_cache" target="_blank">https://github.com/csdn-dev/second_level_cache</a>
+<p>项目Github地址：<a href="https://github.com/csdn-dev/second_level_cache" target="_blank"><a href="https://github.com/csdn-dev/second_level_cache">https://github.com/csdn-dev/second_level_cache</a></a>
 Rails的ActiveRecord自身没有带强大的对象缓存功能，这是AR的一个重大的遗憾。早在2008年开始，我们就借鉴了Java强大的ORM框架Hibernate的二级对象缓存编写了这个Rails的AR对象缓存插件，并且一直作为JavaEye网站缓存优化的秘密武器来使用，取得了非常理想的效果。
 现在我们将这个插件从Rails2.x的版本升级到了3.x版本，并且抽取成了一个通用插件，开始应用于新的Rails3.2的项目之上。有志于AR对象缓存优化的ruby程序员不容错过。</p>
 
 <p>5、limiter － 网站反爬虫和DOS攻击的利器</p>
 
-<p>项目Github地址：<a href="https://github.com/csdn-dev/limiter" target="_blank">https://github.com/csdn-dev/limiter</a>
+<p>项目Github地址：<a href="https://github.com/csdn-dev/limiter" target="_blank"><a href="https://github.com/csdn-dev/limiter">https://github.com/csdn-dev/limiter</a></a>
 早年的JavaEye网站曾经深受DOS攻击和爬虫海量抓取造成的负载过高的困扰，我曾经和这个问题进行了为期几年不懈的斗争，并且在总结几年斗争经验后写了一篇总结性博客文章：<a href="http://robbin.iteye.com/blog/451014" target="_blank">互联网网站的反爬虫策略浅析</a> 。当时我基于这个反爬虫策略编写了JavaEye网站的智能防火墙插件，取得了良好的效果。
 现在我们将这个插件从JavaEye的源代码中剥离出来，抽取成一个通用的rackware，便于应用于普通的Rails3.x的项目当中。</p>
 ]]></content>
@@ -1242,7 +1242,7 @@ Rails的ActiveRecord自身没有带强大的对象缓存功能，这是AR的一�
 
 <p>现在普遍使用 oauth 来实现 多个系统的授权 认证</p>
 
-<p><a href="https://github.com/songkick/oauth2-provider">https://github.com/songkick/oauth2-provider</a></p>
+<p><a href="https://github.com/songkick/oauth2-provider"><a href="https://github.com/songkick/oauth2-provider">https://github.com/songkick/oauth2-provider</a></a></p>
 ]]></content>
   </entry>
   
@@ -1323,7 +1323,7 @@ Francis.J(864248765) 14:08:37
 
 <p>解决方法一：修改IE的默认Cookie设置，设置IE隐私设置中的高级隐私设置，勾选“总是允许回话Cookie”，这样session的值就能正常保存了。不过这样肯定不是最好的解决办法，对大多数用户来说，这样做不合理。</p>
 
-<p>解决方法二：参考方法来自： <a href="http://www.sympact.net/2008/07/rails-and-ifram.html" target="_blank">http://www.sympact.net/2008/07/rails-and-ifram.html</a> ，文中描述了具体原因，是因为IFrame中打开的链接和主页面的链接不在同一个域，所以IE默认会认为是不可信任的，则不允许使用Cookie。解决办 法正如文中所示，在controller中的before_filter中增加一个方法，此方法中设置响应的http相应头中增加P3P参数，问题即可解 决。
+<p>解决方法二：参考方法来自： <a href="http://www.sympact.net/2008/07/rails-and-ifram.html" target="_blank"><a href="http://www.sympact.net/2008/07/rails-and-ifram.html">http://www.sympact.net/2008/07/rails-and-ifram.html</a></a> ，文中描述了具体原因，是因为IFrame中打开的链接和主页面的链接不在同一个域，所以IE默认会认为是不可信任的，则不允许使用Cookie。解决办 法正如文中所示，在controller中的before_filter中增加一个方法，此方法中设置响应的http相应头中增加P3P参数，问题即可解 决。
 大致代码如下：</p>
 
 <pre class="brush: rails; gutter: true"></pre>
@@ -1352,9 +1352,9 @@ end</pre>
 
 <p>IE doesn’t allow you to set cookies when your site is in an iframe unless your site has set P3P headers. Also, ordering matters – the P3P header must be set <em>before</em> the cookie is set.</p>
 
-<p>If you’re using ruby, this gem works pretty well: <a href="https://github.com/hoopla/rack-p3p">https://github.com/hoopla/rack-p3p</a></p>
+<p>If you’re using ruby, this gem works pretty well: <a href="https://github.com/hoopla/rack-p3p"><a href="https://github.com/hoopla/rack-p3p">https://github.com/hoopla/rack-p3p</a></a></p>
 
-<p>Further reading: <a href="http://stackoverflow.com/questions/389456/cookie-blocked-not-saved-in-iframe-in-internet-explorer">http://stackoverflow.com/questions/389456/cookie-blocked-not-saved-in-iframe-in-internet-explorer</a></p>
+<p>Further reading: <a href="http://stackoverflow.com/questions/389456/cookie-blocked-not-saved-in-iframe-in-internet-explorer"><a href="http://stackoverflow.com/questions/389456/cookie-blocked-not-saved-in-iframe-in-internet-explorer">http://stackoverflow.com/questions/389456/cookie-blocked-not-saved-in-iframe-in-internet-explorer</a></a></p>
 
 <p>All the articles I read about setting headers, etags, etc were all really old. Hopefully, if you’re using rails you found this article. Just install the gem and add the line from the README to your application.rb – no monkey patching. Good luck.</p>
 
@@ -1363,7 +1363,7 @@ end</pre>
 
 <p>Same problem here with a rails application launched in an iframe I get:</p>
 
-<p>&#8220;the change you wanted was rejected&#8221;</p>
+<p>&ldquo;the change you wanted was rejected&rdquo;</p>
 
 <p>In log:</p>
 
@@ -1371,7 +1371,7 @@ end</pre>
 
 <p>Seems that the problem occur in IE when you are developing in an iframe situation where the master page is at a different domain than the inner page. (es: iframed Facebook applications)</p>
 
-<p>This is because IE&#8217;s default &#8220;medium&#8221; privacy setting has an issue with cookies in that situation.</p>
+<p>This is because IE&rsquo;s default &ldquo;medium&rdquo; privacy setting has an issue with cookies in that situation.</p>
 
 <p>A possible solution is to set a P3P header (try to google: p3p iframe internet explorer) Example, in application_controller.rb:</p>
 
@@ -1814,7 +1814,7 @@ IIS站点管理器允许你给所有输出的内容都加上任意HTTP Header，
     <link href="http://jhjguxin.github.io/blog/2012/09/07/ni-ke-neng-cuo-guo-de-rails-ji-qiao-posted-by-bigcircle/"/>
     <updated>2012-09-07T23:29:00+08:00</updated>
     <id>http://jhjguxin.github.io/blog/2012/09/07/ni-ke-neng-cuo-guo-de-rails-ji-qiao-posted-by-bigcircle</id>
-    <content type="html"><![CDATA[<h2>你可能错过的 Rails 技巧 &#8211;Posted by bigcircle</h2>
+    <content type="html"><![CDATA[<h2>你可能错过的 Rails 技巧 &mdash;Posted by bigcircle</h2>
 
 <p>记得前段时间 RailsConf2012 之后看过一个不错的pdf，<a href="https://speakerdeck.com/u/jeg2/p/10-things-you-didnt-know-rails-could-do">10 things you didn’t know rails could do</a></p>
 
@@ -1842,7 +1842,7 @@ run TheSmallestRailsApp ||= Class.new(Rails::Application) {
 }</pre>
 
 
-<p>2 - 提醒功能 TODO</p>
+<p>2 &ndash; 提醒功能 TODO</p>
 
 <pre>class UsersController &lt; ApplicationController
   # TODO:  Make it possible to create new users.
@@ -1893,14 +1893,14 @@ app/models/article.rb:
   * [ 4]Add that code from your blog here.</pre>
 
 
-<p>3 - 沙箱模式执行 rails c</p>
+<p>3 &ndash; 沙箱模式执行 rails c</p>
 
 <pre>rails c --sandbox</pre>
 
 
 <p>沙箱模式会有回滚事务机制，对数据库的操作在退出之前都会自动回滚到之前未修改的数据</p>
 
-<p>4 - 在 rails c 控制台中使用 rails helper 方法</p>
+<p>4 &ndash; 在 rails c 控制台中使用 rails helper 方法</p>
 
 <pre>$ rails c
 Loading development environment (Rails 3.2.3)
@@ -1910,7 +1910,7 @@ Loading development environment (Rails 3.2.3)
 =&gt; &quot;3 days&quot;</pre>
 
 
-<p>5 - 开发模式用 thin 代替 webrick</p>
+<p>5 &ndash; 开发模式用 thin 代替 webrick</p>
 
 <pre>group :development do
   gem &#039;thin&#039;
@@ -1919,7 +1919,7 @@ end
 rails s thin / thin start</pre>
 
 
-<p>6 - 允许自定义配置</p>
+<p>6 &ndash; 允许自定义配置</p>
 
 <pre> - lib/custom/railtie.rb
 
@@ -1941,7 +1941,7 @@ rails s thin / thin start</pre>
  end</pre>
 
 
-<p>7 - keep funny</p>
+<p>7 &ndash; keep funny</p>
 
 <p>作者给出了个介绍 ruby 以及一些相关 blog的网站 <a href="http://www.rubydramas.com/">rubydramas</a>，搞笑的是这个网站右上角标明</p>
 
@@ -1970,7 +1970,7 @@ rails s thin / thin start</pre>
 end</pre>
 
 
-<p>9 - 给 migration 添加索引</p>
+<p>9 &ndash; 给 migration 添加索引</p>
 
 <pre>rails g resource user name:index email:uniq token:string{6} bio:text</pre>
 
@@ -1988,7 +1988,7 @@ end</pre>
 end</pre>
 
 
-<p>10 - 添加关联关系</p>
+<p>10 &ndash; 添加关联关系</p>
 
 <pre>rails g resource article user:references subject body:text</pre>
 
@@ -2014,7 +2014,7 @@ end</pre>
 end</pre>
 
 
-<p>11 - 显示数据迁移记录</p>
+<p>11 &ndash; 显示数据迁移记录</p>
 
 <pre>rake db:migrate:status</pre>
 
@@ -2030,7 +2030,7 @@ end</pre>
   down    20120414161355  Create comments</pre>
 
 
-<p>12 - 导入 csv 文件</p>
+<p>12 &ndash; 导入 csv 文件</p>
 
 <p>csv 文件内容如下</p>
 
@@ -2056,7 +2056,7 @@ namespace :users do
 end</pre>
 
 
-<p>13 - 数据库中储存 csv</p>
+<p>13 &ndash; 数据库中储存 csv</p>
 
 <pre>class Article &lt;  ActiveRecord::Base
   require &#039;csv&#039;
@@ -2079,7 +2079,7 @@ User.find(user.id).preferences # =&gt; { &quot;background&quot; =&gt; &quot;blac
 
 <p>这个例子中将 CSVSerializer to_csv序列化之后储存在 categories 这个文本类型字段中</p>
 
-<p>14 - 用 pluck 查询</p>
+<p>14 &ndash; 用 pluck 查询</p>
 
 <pre>$ rails c
 loading development environment(Rails 3.2.3)
@@ -2105,7 +2105,7 @@ loading development environment(Rails 3.2.3)
 end</pre>
 
 
-<p>15 - 使用 group count</p>
+<p>15 &ndash; 使用 group count</p>
 
 <p>创建 article 关联 model event</p>
 
@@ -2121,7 +2121,7 @@ group(:triggle).count 表示统计 triggle group 之后的数量，也可以用 
 =&amp;gt; #&lt;article id:1=&quot;&quot;&gt;&amp;gt;&amp;gt; {edit:3, view:10}.each do |trigger, count| ?&amp;gt; count.times do ?&amp;gt; Event.new(trigger: trigger).tap{ |e| e.article= article; e.save! } ?&amp;gt; end =&amp;gt; {:edit =&amp;gt; 3, :view =&amp;gt; 10} &amp;gt;&amp;gt; Event.count =&amp;gt; 13 &amp;gt;&amp;gt; Event.group(:trigger).count =&amp;gt; {&quot;edit&quot; =&amp;gt; 3, &quot;view&quot; =&amp;gt; 10}&lt;/article&gt;</pre>
 
 
-<p>16 - 覆盖关联关系</p>
+<p>16 &ndash; 覆盖关联关系</p>
 
 <pre>class Car &lt; ActiveRecord::Base
   belongs_to :owner
@@ -2136,7 +2136,7 @@ end</pre>
 
 <p>car更改 owner 时，如果有了 new_owner，就把原 owner 赋给 previous_owner，注意要加上 super</p>
 
-<p>17 - 构造示例数据</p>
+<p>17 &ndash; 构造示例数据</p>
 
 <pre>$ rails c
 Loading development environment (Rails 3.2.3)
@@ -2154,7 +2154,7 @@ Loading development environment (Rails 3.2.3)
 
 <p>伪造一条记录，并不是数据库中的真实数据，也不会把原有数据覆盖</p>
 
-<p>18 - PostgreSQL 中使用无限制的 string</p>
+<p>18 &ndash; PostgreSQL 中使用无限制的 string</p>
 
 <p>去掉适配器中对 string 长度的限制，这个应该是 PostgreSQL 数据库的特性</p>
 
@@ -2186,7 +2186,7 @@ Loading development environment (Rails 3.2.3)
 =&gt; 10000</pre>
 
 
-<p>19 - PostgreSQL 中使用全文搜</p>
+<p>19 &ndash; PostgreSQL 中使用全文搜</p>
 
 <pre>rails g resource article subject body:text</pre>
 
@@ -2227,7 +2227,7 @@ Loading development environment (Rails 3.2.3)
 =&amp;gt; #&lt;article id:=&quot;&quot; 1=&quot;&quot;&gt;&amp;gt;&amp;gt; Article.create!(body: &quot;A stemmed search.&quot;) =&amp;gt; #&lt;article id:=&quot;&quot; 2=&quot;&quot;&gt;&amp;gt;&amp;gt; Article.create!(body: &quot;You won&#039;t find me!&quot;) =&amp;gt; #&lt;article id:=&quot;&quot; 3=&quot;&quot;&gt;&amp;gt;&amp;gt; Article.search(&quot;search&quot;).map { |a| a.subject || a.body } =&amp;gt; [&quot;Full Text Search&quot;, &quot;A stemmed search.&quot;] &amp;gt;&amp;gt; Article.search(&quot;stemming&quot;).map { |a| a.subject || a.body } =&amp;gt; [&quot;A stemmed search.&quot;]&lt;/article&gt;&lt;/article&gt;&lt;/article&gt;</pre>
 
 
-<p>21 - 每个用户使用不同的数据库</p>
+<p>21 &ndash; 每个用户使用不同的数据库</p>
 
 <pre>- user_database.rb
 
@@ -2320,7 +2320,7 @@ end</pre>
 
 <p>中场休息时，去找了下 RailsConf 2012 的视频看了看，刚好看到关于 <a href="http://confreaks.com/videos/889-railsconf2012-ten-things-you-didn-t-know-rails-could-do">这篇</a> 的介绍，片子还挺长，41分钟，演讲者长相和声音都很不符合大家对 Rails 的认知，大家有兴趣的可以去听听</p>
 
-<p>21 - 自动写文件</p>
+<p>21 &ndash; 自动写文件</p>
 
 <pre>class Comment &lt; ActiveRecord::Base
   # ...
@@ -2338,7 +2338,7 @@ end</pre>
 
 <p>找了下 Api 是 Rails 对 Ruby 基础类的扩展</p>
 
-<p>22 - 合并嵌套 Hash</p>
+<p>22 &ndash; 合并嵌套 Hash</p>
 
 <pre>$ rails c
 Loading development environment (Rails 3.2.3)
@@ -2350,7 +2350,7 @@ Loading development environment (Rails 3.2.3)
 
 <p>主要是用到了 deep_merge 合并相同的 key</p>
 
-<p>23 - Hash except</p>
+<p>23 &ndash; Hash except</p>
 
 <pre>$ rails c
 Loading development environment (Rails 3.2.3)
@@ -2362,7 +2362,7 @@ Loading development environment (Rails 3.2.3)
 
 <p>这个方法经常会用到，可能用的人也很多</p>
 
-<p>24 - add defaults to Hash</p>
+<p>24 &ndash; add defaults to Hash</p>
 
 <pre>$ rails c
 Loading development environment (Rails 3.2.3)
@@ -2386,19 +2386,19 @@ Loading development environment (Rails 3.2.3)
 end</pre>
 
 
-<p>25 - String.value? 方法</p>
+<p>25 &ndash; String.value? 方法</p>
 
 <p>看下面的几个例子</p>
 
 <p>$ rails c
 Loading development environment (Rails 3.2.3)
 &gt;&gt; env = Rails.env
-=&gt; &#8220;development&#8221;
+=&gt; &ldquo;development&rdquo;
 &gt;&gt; env.development?
 =&gt; true
 &gt;&gt; env.test?
 =&gt; false
-&gt;&gt; &#8220;magic&#8221;.inquiry.magic?
+&gt;&gt; &ldquo;magic&rdquo;.inquiry.magic?
 =&gt; true
 &gt;&gt; article = Article.first
 =&gt; #</p>
@@ -2449,7 +2449,7 @@ end</pre>
 
 <p><img src="http://www.rubyinside.com/wp-content/uploads/2006/05/dhh.png" alt="" /></p>
 
-<p>27 - 隐藏注释</p>
+<p>27 &ndash; 隐藏注释</p>
 
 <pre>
 &lt;h1&gt;Home Page&lt;/h1&gt;
@@ -2460,7 +2460,7 @@ end</pre>
 </pre>
 
 
-<p>这个一下没看懂。。试了下项目里面的代码，原来是隐藏的意思。。 28 - 理解更短的 erb 语法</p>
+<p>这个一下没看懂。。试了下项目里面的代码，原来是隐藏的意思。。 28 &ndash; 理解更短的 erb 语法</p>
 
 <pre># ...
 module Blog
@@ -2483,7 +2483,7 @@ end</pre>
 % end</pre>
 
 
-<p>29 - 用 block 避免视图层赋值</p>
+<p>29 &ndash; 用 block 避免视图层赋值</p>
 
 <blockquote>
 <pre></pre>
@@ -2554,7 +2554,7 @@ end</pre>
 </blockquote>
 
 
-<p>30 - 同时生成多个标签</p>
+<p>30 &ndash; 同时生成多个标签</p>
 
 <blockquote>
 <pre>&lt;h1&gt;Articles&lt;/h1&gt;
@@ -2587,7 +2587,7 @@ end</pre>
 <h6 id="inspire-theme-songs-about-your-work-">这4条都在这个系列中，作者可能也是从这学来的吧</h6>
 
 
-<p>31 - Render Any Object</p>
+<p>31 &ndash; Render Any Object</p>
 
 <pre>class Event &lt; ActiveRecord::Base
   # ...
@@ -2605,7 +2605,7 @@ end</pre>
 ActionPack uses this to find a suitable partial to represent the object.</pre>
 
 
-<p>32 - 生成 group option</p>
+<p>32 &ndash; 生成 group option</p>
 
 <pre> %w[One Two Three],
   &quot;Group B&quot; =&gt; %w[One Two Three]
@@ -2703,7 +2703,7 @@ end</pre>
 
 <p>这个例子也在开头提到的那篇博文里面，感兴趣可以去自己研究下</p>
 
-<p>36 - 给 Sinatra 添加路由</p>
+<p>36 &ndash; 给 Sinatra 添加路由</p>
 
 <pre>- Gemfile
 
@@ -2737,7 +2737,7 @@ end</pre>
 
 <p>这个也没有试验，不清楚具体用法，sinatra 平时也基本不用</p>
 
-<p>37 - 导出CSV流</p>
+<p>37 &ndash; 导出CSV流</p>
 
 <pre>class ArticlesController &lt; ApplicationController
   def index
@@ -2815,7 +2815,7 @@ Time.now.strftime(&quot;%H:%M:%S&quot;)
 =&gt;[{:words=&gt;{&quot;Lorem&quot;=&gt;1, &quot;ipsum&quot;=&gt;1, ...}, &quot;15:24:26&quot;]</pre>
 
 
-<p>39 - 用 Rails 生成静态站点</p>
+<p>39 &ndash; 用 Rails 生成静态站点</p>
 
 <p>修改 config/environment/development.rb</p>
 
@@ -2897,9 +2897,9 @@ end</pre>
     <link href="http://jhjguxin.github.io/blog/2012/09/05/ruby-performance-tricks-posted-by-sergey-potapov/"/>
     <updated>2012-09-05T08:58:00+08:00</updated>
     <id>http://jhjguxin.github.io/blog/2012/09/05/ruby-performance-tricks-posted-by-sergey-potapov</id>
-    <content type="html"><![CDATA[<h2>Ruby Performance Tricks &#8211;Posted by Sergey Potapov</h2>
+    <content type="html"><![CDATA[<h2>Ruby Performance Tricks &mdash;Posted by Sergey Potapov</h2>
 
-<p><a href="http://greyblake.com/blog/2012/09/02/ruby-perfomance-tricks/">http://greyblake.com/blog/2012/09/02/ruby-perfomance-tricks/</a></p>
+<p><a href="http://greyblake.com/blog/2012/09/02/ruby-perfomance-tricks/"><a href="http://greyblake.com/blog/2012/09/02/ruby-perfomance-tricks/">http://greyblake.com/blog/2012/09/02/ruby-perfomance-tricks/</a></a></p>
 
 <p>I did some benchmarks to find out which alternatives to write code work faster. I wanna share it with you. All benchmarks are made against ruby 1.9.3p194 MRI.</p>
 
@@ -3717,54 +3717,54 @@ She’s on her own, she cleans people’s homes, she’s incredibly nice. She br
     <link href="http://jhjguxin.github.io/blog/2012/08/29/advanced-caching-part-1-caching-strategies/"/>
     <updated>2012-08-29T23:15:00+08:00</updated>
     <id>http://jhjguxin.github.io/blog/2012/08/29/advanced-caching-part-1-caching-strategies</id>
-    <content type="html"><![CDATA[<h2>Advanced Caching: Part 1 - Caching Strategies</h2>
+    <content type="html"><![CDATA[<h2>Advanced Caching: Part 1 &ndash; Caching Strategies</h2>
 
-<p>First, let&#8217;s start with a brief overview of the different types of caching. We&#8217;ll start from 50,000ft and work our way down.</p>
+<p>First, let&rsquo;s start with a brief overview of the different types of caching. We&rsquo;ll start from 50,000ft and work our way down.</p>
 
 <p>HTTP Caching: Uses HTTP headers (Last-Modified, ETag, If-Modified-Since, If-None-Match, Cache-Control) to determine if the browser can use a locally stored version of the response or if it needs to request a fresh copy from the origin server. Rails makes it easy to use HTTP caching, however the cache is managed outside your application. You may have notice the config.cache_control and Rack::Cache, Rack::ETag, Rack::ConditionalGet middlewares. These are used for HTTP caching.</p>
 
-<p>Page Caching: PRAISE THE GODS if you actually can use page caching in your application. Page caching is the holy grail. Save the entire thing. Don&#8217;t hit the stack &amp; give some prerendered stuff back. Great for worthless applications without authentication and other highly dynamic aspects. This essentially works like HTTP caching, but the response will always contain the entire page. With page caching the application is skipping the work.</p>
+<p>Page Caching: PRAISE THE GODS if you actually can use page caching in your application. Page caching is the holy grail. Save the entire thing. Don&rsquo;t hit the stack &amp; give some prerendered stuff back. Great for worthless applications without authentication and other highly dynamic aspects. This essentially works like HTTP caching, but the response will always contain the entire page. With page caching the application is skipping the work.</p>
 
 <p>Action Caching: Essentially the same as page caching, except all the before filters are run allowing you to check authentication and other stuff that may have prevented the request form rendering.</p>
 
 <p>Fragment Caching: Store parts of views in the cache. Usually for caching partials or large bits of HTML that are independent from other parts. IE, a list of top stories or something like that.</p>
 
-<p>Rails.cache: All cached content except cached pages are stored in the Rails.cache. We&#8217;ll use this fact that later. You can cache arbitrary content in the Rails cache. You may cache a large complicated query that you don&#8217;t want to wait to reinstantiate a ton of ActiveRecord::Base objects.</p>
+<p>Rails.cache: All cached content except cached pages are stored in the Rails.cache. We&rsquo;ll use this fact that later. You can cache arbitrary content in the Rails cache. You may cache a large complicated query that you don&rsquo;t want to wait to reinstantiate a ton of ActiveRecord::Base objects.</p>
 
 <p>Under the Hood
-All the caching layers are built on top of the next one. Page caching and HTTP caching are different because they do not use Rails.cache The cache is essentially a key-value store. Different things can be persisted. Strings are most common (for HTML fragments). More complicated objects can be persisted as well. Let&#8217;s go through some examples of manually using the cache to store things. I am using memcached with dalli for all these examples. Dalli is the default memcached driver.</p>
+All the caching layers are built on top of the next one. Page caching and HTTP caching are different because they do not use Rails.cache The cache is essentially a key-value store. Different things can be persisted. Strings are most common (for HTML fragments). More complicated objects can be persisted as well. Let&rsquo;s go through some examples of manually using the cache to store things. I am using memcached with dalli for all these examples. Dalli is the default memcached driver.</p>
 
 <h1>Rails.cache.write takes two values: key and a value</h1>
 
-<blockquote><p>Rails.cache.write &#8216;foo&#8217;, &#8216;bar&#8217;
+<blockquote><p>Rails.cache.write &lsquo;foo&rsquo;, &lsquo;bar&rsquo;
 => true</p></blockquote>
 
 <h1>We can read an object back</h1>
 
-<blockquote><p>Rails.cache.read &#8216;foo&#8217;
-=> &#8220;bar&#8221;</p></blockquote>
+<blockquote><p>Rails.cache.read &lsquo;foo&rsquo;
+=> &ldquo;bar&rdquo;</p></blockquote>
 
 <h1>We can store a complicated object as well</h1>
 
-<blockquote><p>hash = { :this => { :is => &#8216;a hash&#8217; }}
-Rails.cache.write &#8216;complicated-object&#8217;, object
-Rails.cache.read &#8216;complicated-object&#8217;
-=> {:this=>{:is=>&#8221;a hash&#8221;}}</p></blockquote>
+<blockquote><p>hash = { :this => { :is => &lsquo;a hash&rsquo; }}
+Rails.cache.write &lsquo;complicated-object&rsquo;, object
+Rails.cache.read &lsquo;complicated-object&rsquo;
+=> {:this=>{:is=>&ldquo;a hash&rdquo;}}</p></blockquote>
 
-<h1>If we want something that doesn&#8217;t exist, we get nil</h1>
+<h1>If we want something that doesn&rsquo;t exist, we get nil</h1>
 
-<blockquote><p>Rails.cache.read &#8216;we-havent-cached-this-yet&#8217;
+<blockquote><p>Rails.cache.read &lsquo;we-havent-cached-this-yet&rsquo;
 => nil</p></blockquote>
 
-<h1>&#8220;Fetch&#8221; is the most common pattern. You give it a key and a block</h1>
+<h1>&ldquo;Fetch&rdquo; is the most common pattern. You give it a key and a block</h1>
 
-<h1>to execute to store if the cache misses. The blocks&#8217;s return value is</h1>
+<h1>to execute to store if the cache misses. The blocks&rsquo;s return value is</h1>
 
 <h1>then written to the cache. The block is not executed if there is a</h1>
 
 <h1>hit.</h1>
 
-<blockquote><p>Rails.cache.fetch &#8216;huge-array&#8217; do</p>
+<blockquote><p>Rails.cache.fetch &lsquo;huge-array&rsquo; do</p>
 
 <pre><code>huge_array = Array.new
 1000000.times { |i| huge_array &lt;&lt; i }
@@ -3773,7 +3773,7 @@ huge_array # retrun value is stored in cache
 
 <p>  end
 => [huge array] # took some time to generate
-Rails.cache.read &#8216;huge-array&#8217;
+Rails.cache.read &lsquo;huge-array&rsquo;
 => [huge array] # but returned instantly</p></blockquote>
 
 <h1>You can also delete everything from the cache</h1>
@@ -3783,10 +3783,10 @@ Rails.cache.read &#8216;huge-array&#8217;
 Those are the basics of interacting with the Rails cache. The rails cache is a wrapper around whatever functionality is provided by the underlying storage system. Now we are ready to move up a layer.</p></blockquote>
 
 <p>Understanding Fragment Caching
-Fragment caching is taking rendered HTML fragments and storing them in the cache. Rails provides a cache view helper for this. Its most basic form takes no arguments besides a block. Whatever is rendered during the block will be written back to the cache. The basic principle behind fragment caching is that it takes much less time fetch pre-rendered HTML from the cache, then it takes to generate a fresh copy. This is appallingly true. If you haven&#8217;t noticed, view generation can be very costly. If you have cachable content and are not using fragment caching then you need to implement this right away! Let&#8217;s say you have generated a basic scaffold for a post:</p>
+Fragment caching is taking rendered HTML fragments and storing them in the cache. Rails provides a cache view helper for this. Its most basic form takes no arguments besides a block. Whatever is rendered during the block will be written back to the cache. The basic principle behind fragment caching is that it takes much less time fetch pre-rendered HTML from the cache, then it takes to generate a fresh copy. This is appallingly true. If you haven&rsquo;t noticed, view generation can be very costly. If you have cachable content and are not using fragment caching then you need to implement this right away! Let&rsquo;s say you have generated a basic scaffold for a post:</p>
 
 <p>$ rails g scaffold post title:string content:text author:string
-Let&#8217;s start with the most common use case: caching information specific to one thing. IE: One post. Here is a show view:</p>
+Let&rsquo;s start with the most common use case: caching information specific to one thing. IE: One post. Here is a show view:</p>
 
 <!-- nothing fancy going on here -->
 
@@ -3800,9 +3800,9 @@ Let&#8217;s start with the most common use case: caching information specific to
   <b>Content:</b>
   &lt;%= @post.content %>
 </p>
-Let&#8217;s say we wanted to cache fragment. Simply wrap it in cache and Rails will do it.</p>
+Let&rsquo;s say we wanted to cache fragment. Simply wrap it in cache and Rails will do it.</p>
 
-<p>&lt;%= cache &#8220;post-#{@post.id}&#8221; do %>
+<p>&lt;%= cache &ldquo;post-#{@post.id}&rdquo; do %>
   <p></p>
 
 <pre><code>&lt;b&gt;Title:&lt;/b&gt;
@@ -3819,11 +3819,11 @@ Let&#8217;s say we wanted to cache fragment. Simply wrap it in cache and Rails w
 
 <p>  </p>
 &lt;% end %>
-The first argument is the key for this fragment. The rendered HTML is stored with this key: views/posts-1. Wait what? Where did that &#8216;views&#8217; come from? The cache view helper automatically prepends &#8216;views&#8217; to all keys. This is important later. When you first load the page you&#8217;ll see this in the log:</p>
+The first argument is the key for this fragment. The rendered HTML is stored with this key: views/posts-1. Wait what? Where did that &lsquo;views&rsquo; come from? The cache view helper automatically prepends &lsquo;views&rsquo; to all keys. This is important later. When you first load the page you&rsquo;ll see this in the log:</p>
 
 <p>Exist fragment? views/post-2 (1.6ms)
 Write fragment views/post-2 (0.9ms)
-You can see the key and the operations. Rails is checking to see if the specific key exists. It will fetch or write it. In this case, it has not been stored so it is written. When you reload the page, you&#8217;ll see a cache hit:</p>
+You can see the key and the operations. Rails is checking to see if the specific key exists. It will fetch or write it. In this case, it has not been stored so it is written. When you reload the page, you&rsquo;ll see a cache hit:</p>
 
 <p>Exist fragment? views/post-2 (0.6ms)
 Read fragment views/post-2 (0.0ms)
@@ -3833,16 +3833,16 @@ There we go. We got HTML from the cache instead of rendering it. Look at the res
 Completed 200 OK in 16ms (Views: 9.7ms | ActiveRecord: 0.1ms)
 Very small differences in this case. 2ms different in view generation. This is a very simple example, but it can make a world of difference in more complicated situations.</p>
 
-<p>You are probably asking the question: &#8220;What happens when the post changes?&#8221; This is an excellent question! What well if the post changes, the cached content will not be correct. It is up to us to remove stuff from the cache or figure out a way to get new content from the cache. Let&#8217;s assume that our blog posts now have comments. What happens when a comment is created? How can handle this?</p>
+<p>You are probably asking the question: &ldquo;What happens when the post changes?&rdquo; This is an excellent question! What well if the post changes, the cached content will not be correct. It is up to us to remove stuff from the cache or figure out a way to get new content from the cache. Let&rsquo;s assume that our blog posts now have comments. What happens when a comment is created? How can handle this?</p>
 
-<p>This is a very simple problem. What if we could figure out a solution to this problem: How can we create a cache miss when the associated object changes? We&#8217;ve already demonstrated how we can explicitly set a cache key. What if we made a key that&#8217;s dependent on the time the object was last updated? We can create a key composed of the record&#8217;s ID and its updated_at timestamp! This way the cache key will change as the content changes and we will not have to expire things manually. (We&#8217;ll come back to sweepers later). Let&#8217;s change our cache key to this:</p>
+<p>This is a very simple problem. What if we could figure out a solution to this problem: How can we create a cache miss when the associated object changes? We&rsquo;ve already demonstrated how we can explicitly set a cache key. What if we made a key that&rsquo;s dependent on the time the object was last updated? We can create a key composed of the record&rsquo;s ID and its updated_at timestamp! This way the cache key will change as the content changes and we will not have to expire things manually. (We&rsquo;ll come back to sweepers later). Let&rsquo;s change our cache key to this:</p>
 
-<p>&lt;% cache &#8220;post-#{@post.id}&#8221;, @post.updated_at.to_i do %>
-Now we can see we have a new cache key that&#8217;s dependent on the object&#8217;s timestamp. Check out the rails log:</p>
+<p>&lt;% cache &ldquo;post-#{@post.id}&rdquo;, @post.updated_at.to_i do %>
+Now we can see we have a new cache key that&rsquo;s dependent on the object&rsquo;s timestamp. Check out the rails log:</p>
 
 <p>Exist fragment? views/post-2/1304291241 (0.5ms)
 Write fragment views/post-2/1304291241 (0.4ms)
-Cool! Now let&#8217;s make it so creating a comment updates the post&#8217;s timestamp:</p>
+Cool! Now let&rsquo;s make it so creating a comment updates the post&rsquo;s timestamp:</p>
 
 <p>class Comment &lt; ActiveRecord::Base
   belongs_to :post, :touch => true
@@ -3853,24 +3853,24 @@ Now all comments will touch the post and change the updated_at timestamp. You ca
 
 <p>Exist fragment? views/post-2/1304292445 (0.4ms)
 Write fragment views/post-2/1304292445 (0.4ms)
-This concept is known as: auto expiring cache keys. You create a composite key with the normal key and a time stamp. This will create some memory build up as objects are updated and no longer fresh. Here&#8217;s an example. You have that fragment. It is cached. Then someone updates the post. You now have two versions of the fragment cached. If there are 10 updates, then there are 10 different versions. Luckily for you, this is not a problem for memcached! Memcached uses a LRU replacement policy. LRU stands for Least Recently Used. That means the key that hasn&#8217;t been requested in the longest time will be replaced by newer content when needed. For example, assume your cache can only hold 10 posts. The next update will create a new key and hence new content. Version 0 will be deleted and version 11 will be stored in the cache. The total amount of memory is cycled between things that are requested. There are two things to consider in this approach. 1: You will not be able to ensure that content is kept in the cache as long as possible. 2. You will never have to worry about expiring things manually as long as timestamps are updated in the model layer. I&#8217;ve found it is orders of magnitude easier to add a few :touch => true&#8217;s to my relationships than it is to maintain sweepers. More on sweepers later. We must continue exploring cache keys.</p>
+This concept is known as: auto expiring cache keys. You create a composite key with the normal key and a time stamp. This will create some memory build up as objects are updated and no longer fresh. Here&rsquo;s an example. You have that fragment. It is cached. Then someone updates the post. You now have two versions of the fragment cached. If there are 10 updates, then there are 10 different versions. Luckily for you, this is not a problem for memcached! Memcached uses a LRU replacement policy. LRU stands for Least Recently Used. That means the key that hasn&rsquo;t been requested in the longest time will be replaced by newer content when needed. For example, assume your cache can only hold 10 posts. The next update will create a new key and hence new content. Version 0 will be deleted and version 11 will be stored in the cache. The total amount of memory is cycled between things that are requested. There are two things to consider in this approach. 1: You will not be able to ensure that content is kept in the cache as long as possible. 2. You will never have to worry about expiring things manually as long as timestamps are updated in the model layer. I&rsquo;ve found it is orders of magnitude easier to add a few :touch => true&rsquo;s to my relationships than it is to maintain sweepers. More on sweepers later. We must continue exploring cache keys.</p>
 
 <p>Rails uses auto-expiring cache keys by default. The problem is they are not mentioned at all the documentation or in the guides. There is one very handy method: ActiveRecord::Base.cache_key. This will generate a key like this: posts/2-20110501232725. This is the exact same thing we did ourselves. This method is very important because depending on what type of arguments you pass into the cache method, a different key is generated. For the time being, this code is functionally equal to our previous examples.</p>
 
 <p>&lt;%= cache @post do %>
 The cache helper takes different forms for arguments. Here are some examples:</p>
 
-<p>cache &#8216;explicit-key&#8217;      # views/explicit-key
+<p>cache &lsquo;explicit-key&rsquo;      # views/explicit-key
 cache @post               # views/posts/2-1283479827349
-cache [@post, &#8216;sidebar&#8217;]  # views/posts/2-2348719328478/sidebar
+cache [@post, &lsquo;sidebar&rsquo;]  # views/posts/2-2348719328478/sidebar
 cache [@post, @comment]   # views/posts/2-2384193284878/comments/1-2384971487
 cache :hash => :of_things # views/localhost:3000/posts/2?hash_of_things
-If an Array is the first arguments, Rails will use cache key expansion to generate a string key. This means calling doing logic on each object then joining each result together with a &#8216;/&#8217;. Essentially, if the object responds to cache_key, it will use that. Else it will do various things. Here&#8217;s the source for expand_cache_key:</p>
+If an Array is the first arguments, Rails will use cache key expansion to generate a string key. This means calling doing logic on each object then joining each result together with a &lsquo;/&rsquo;. Essentially, if the object responds to cache_key, it will use that. Else it will do various things. Here&rsquo;s the source for expand_cache_key:</p>
 
 <p>def self.expand_cache_key(key, namespace = nil)
-  expanded_cache_key = namespace ? &#8220;#{namespace}/&#8221; : &#8220;&#8221;</p>
+  expanded_cache_key = namespace ? &ldquo;#{namespace}/&rdquo; : &ldquo;&rdquo;</p>
 
-<p>  prefix = ENV[&#8220;RAILS_CACHE_ID&#8221;] || ENV[&#8220;RAILS_APP_VERSION&#8221;]
+<p>  prefix = ENV[&ldquo;RAILS_CACHE_ID&rdquo;] || ENV[&ldquo;RAILS_APP_VERSION&rdquo;]
   if prefix</p>
 
 <pre><code>expanded_cache_key &lt;&lt; "#{prefix}/"
@@ -3895,20 +3895,20 @@ end.to_s
 
 <p>  expanded_cache_key
 end
-This is where all the magic happens. Our simple fragment caching example could easily be converted into an idea like this: The post hasn&#8217;t changed, so cache the entire result of /posts/1. You can do with this action caching or page caching.</p>
+This is where all the magic happens. Our simple fragment caching example could easily be converted into an idea like this: The post hasn&rsquo;t changed, so cache the entire result of /posts/1. You can do with this action caching or page caching.</p>
 
 <p>Moving on to Action Caching
-Action caching is an around filter for specific controller actions. It is different from page caching since before filters are run and may prevent access to certain pages. For example, you may only want to cache if the user is logged in. If the user is not logged in they should be redirected to the log in page. This is different than page caching. Page caching bypasses the rails stack completely. Most web applications of legitimate complexity cannot use page caching. Action caching is the next logical step for most web applications. Let&#8217;s break the idea down: If the post hasn&#8217;t changed, return the entire cached page as the HTTP response, else render the show view, cache it, and return that as the HTTP response. Or in code:</p>
+Action caching is an around filter for specific controller actions. It is different from page caching since before filters are run and may prevent access to certain pages. For example, you may only want to cache if the user is logged in. If the user is not logged in they should be redirected to the log in page. This is different than page caching. Page caching bypasses the rails stack completely. Most web applications of legitimate complexity cannot use page caching. Action caching is the next logical step for most web applications. Let&rsquo;s break the idea down: If the post hasn&rsquo;t changed, return the entire cached page as the HTTP response, else render the show view, cache it, and return that as the HTTP response. Or in code:</p>
 
-<h1>Note: you cannot run this code! This is just an example of what&#8217;s</h1>
+<h1>Note: you cannot run this code! This is just an example of what&rsquo;s</h1>
 
-<h1>happening under the covers using concepts we&#8217;ve already covered.</h1>
+<h1>happening under the covers using concepts we&rsquo;ve already covered.</h1>
 
-<p>Rails.cache.fetch &#8216;views/localhost:3000/posts/1&#8217; do
+<p>Rails.cache.fetch &lsquo;views/localhost:3000/posts/1&rsquo; do
   @post = Post.find params[:id]
   render :show
 end
-Declaring action caching is easy. Here&#8217;s how you can cache the show action:</p>
+Declaring action caching is easy. Here&rsquo;s how you can cache the show action:</p>
 
 <p>class PostsController &lt; ApplicationController</p>
 
@@ -3921,45 +3921,45 @@ Declaring action caching is easy. Here&#8217;s how you can cache the show action
 
 <p>  end
 end
-Now refresh the page and look at what&#8217;s been cached.</p>
+Now refresh the page and look at what&rsquo;s been cached.</p>
 
-<p>Started GET &#8220;/posts/2&#8221; for 127.0.0.1 at 2011-05-01 16:54:43 -0700
+<p>Started GET &ldquo;/posts/2&rdquo; for 127.0.0.1 at 2011-05-01 16:54:43 -0700
   Processing by PostsController#show as HTML
-  Parameters: {&#8220;id&#8221;=>&#8221;2&#8221;}
+  Parameters: {&ldquo;id&rdquo;=>&ldquo;2&rdquo;}
 Read fragment views/localhost:3000/posts/2 (0.5ms)
 Rendered posts/show.html.erb within layouts/application (6.1ms)
 Write fragment views/localhost:3000/posts/2 (0.5ms)
 Completed 200 OK in 16ms (Views: 8.6ms | ActiveRecord: 0.1ms)
 Now that the show action for post #2 is cached, refresh the page and see what happens.</p>
 
-<p>Started GET &#8220;/posts/2&#8221; for 127.0.0.1 at 2011-05-01 16:55:27 -0700
+<p>Started GET &ldquo;/posts/2&rdquo; for 127.0.0.1 at 2011-05-01 16:55:27 -0700
   Processing by PostsController#show as HTML
-  Parameters: {&#8220;id&#8221;=>&#8221;2&#8221;}
+  Parameters: {&ldquo;id&rdquo;=>&ldquo;2&rdquo;}
 Read fragment views/localhost:3000/posts/2 (0.6ms)
 Completed 200 OK in 1ms
-Damn. 16ms vs 1ms. You can see the difference! You can also see Rails reading that cache key. The cache key is generated from the url with action caching. Action caching is a combination of a before and around filter. The around filter is used to capture the output and the before filter is used to check to see if it&#8217;s been cached. It works like this:</p>
+Damn. 16ms vs 1ms. You can see the difference! You can also see Rails reading that cache key. The cache key is generated from the url with action caching. Action caching is a combination of a before and around filter. The around filter is used to capture the output and the before filter is used to check to see if it&rsquo;s been cached. It works like this:</p>
 
 <p>Execute before filter to check to see if cache key exists?
-Key exists? - Read from cache and return HTTP Response. This triggers a render and prevents any further code from being executed.
-No key? - Call all controller and view code. Cache output using Rails.cache and return HTTP response.
-Now you are probably asking the same question as before: &#8220;What do we do when the post changes?&#8221; We do the same thing as before: we create a composite key with a string and a time stamp. The question now is, how do we generate a special key using action caching?</p>
+Key exists? &ndash; Read from cache and return HTTP Response. This triggers a render and prevents any further code from being executed.
+No key? &ndash; Call all controller and view code. Cache output using Rails.cache and return HTTP response.
+Now you are probably asking the same question as before: &ldquo;What do we do when the post changes?&rdquo; We do the same thing as before: we create a composite key with a string and a time stamp. The question now is, how do we generate a special key using action caching?</p>
 
 <p>Action caching generates a key from the current url. You can pass extra options using the :cache_path option. Whatever is in this value is passed into url_for using the current parameters. Remember in the view cache key examples what happened when we passed in a hash? We get a much different key than before:</p>
 
 <p>views/localhost:3000/posts/2?hash_of_things
-Rails generated a URL based key instead of the standard views key. This is because you may different servers. This ensures that each server has it&#8217;s own cache key. IE, server one does not collide with server two. We could generate our own url for this resource by doing something like this:</p>
+Rails generated a URL based key instead of the standard views key. This is because you may different servers. This ensures that each server has it&rsquo;s own cache key. IE, server one does not collide with server two. We could generate our own url for this resource by doing something like this:</p>
 
 <p>url_for(@post, :tag => @post.updated_at.to_i)
 This will generate this url:</p>
 
-<p>http://localhost:3000/posts/1?tag=234897123978
+<p><a href="http://localhost:3000/posts/1?tag=234897123978">http://localhost:3000/posts/1?tag=234897123978</a>
 Notice the ?tag=23481329847. This is a hack that aims to stop browsers from using HTTP caching on specific urls. If the URL has changed (timestamp changes) then the browser knows it must request a fresh copy. Rails 2 used to do this for assets like CSS and JS. Things have changed with the asset pipeline.</p>
 
-<p>Here&#8217;s an example of generating a proper auto expring key for use with action caching.</p>
+<p>Here&rsquo;s an example of generating a proper auto expring key for use with action caching.</p>
 
 <p>caches_action :show, :cache_path => proc { |c|
   # c is the instance of the controller. Since action caching
-  # is declared at the class level, we don&#8217;t have access to instance
+  # is declared at the class level, we don&rsquo;t have access to instance
   # variables. If cache_path is a proc, it will be evaluated in the
   # the context of the current controller. This is the same idea
   # as validations with the :if and :unless options
@@ -3969,52 +3969,52 @@ Notice the ?tag=23481329847. This is a hack that aims to stop browsers from usin
   post = Post.find c.params[:id]
   { :tag => post.updated_at.to_i }
 end
-This calls url_for with the parameters already assigned by it through the router and whatever is returned by the block. Now if you refresh the page, you&#8217;ll have this:</p>
+This calls url_for with the parameters already assigned by it through the router and whatever is returned by the block. Now if you refresh the page, you&rsquo;ll have this:</p>
 
-<p>Started GET &#8220;/posts/2&#8221; for 127.0.0.1 at 2011-05-01 17:11:22 -0700
+<p>Started GET &ldquo;/posts/2&rdquo; for 127.0.0.1 at 2011-05-01 17:11:22 -0700
   Processing by PostsController#show as HTML
-  Parameters: {&#8220;id&#8221;=>&#8221;2&#8221;}
+  Parameters: {&ldquo;id&rdquo;=>&ldquo;2&rdquo;}
 Read fragment views/localhost:3000/posts/2?tag=1304292445 (0.5ms)
 Rendered posts/show.html.erb within layouts/application (1.7ms)
 Write fragment views/localhost:3000/posts/2?tag=1304292445 (0.5ms)
 Completed 200 OK in 16ms (Views: 4.4ms | ActiveRecord: 0.1ms)
-And volia! Now we have an expiring cache key for our post! Let&#8217;s dig a little deeper. We know the key. Let&#8217;s look into the cache and see what it actually is! You can see the key from the log. Look it up in the cache.</p>
+And volia! Now we have an expiring cache key for our post! Let&rsquo;s dig a little deeper. We know the key. Let&rsquo;s look into the cache and see what it actually is! You can see the key from the log. Look it up in the cache.</p>
 
-<blockquote><p>Rails.cache.read &#8216;views/localhost:3000/posts/2?tag=1304292445&#8217;
-=> &#8220;&lt;!DOCTYPE html>\n<html>\n<head>&#8230;..&#8221;
-It&#8217;s just a straight HTML string. Easy to use and return as the body. This method works well for singular resources. How can we handle the index action? I&#8217;ve created 10,000 posts. It takes a good amount of time to render that page on my computer. It takes over 10 seconds. The question is, how can we cache this? We could use the most recently updated post for the time stamp. That way, when one post is updated, it will move to the top and create a new cache key. Here is the code without any action caching:</p></blockquote>
+<blockquote><p>Rails.cache.read &lsquo;views/localhost:3000/posts/2?tag=1304292445&rsquo;
+=> &ldquo;&lt;!DOCTYPE html>\n<html>\n<head>&hellip;..&rdquo;
+It&rsquo;s just a straight HTML string. Easy to use and return as the body. This method works well for singular resources. How can we handle the index action? I&rsquo;ve created 10,000 posts. It takes a good amount of time to render that page on my computer. It takes over 10 seconds. The question is, how can we cache this? We could use the most recently updated post for the time stamp. That way, when one post is updated, it will move to the top and create a new cache key. Here is the code without any action caching:</p></blockquote>
 
-<p>Started GET &#8220;/posts&#8221; for 127.0.0.1 at 2011-05-01 17:18:11 -0700
+<p>Started GET &ldquo;/posts&rdquo; for 127.0.0.1 at 2011-05-01 17:18:11 -0700
   Processing by PostsController#index as HTML
-  Post Load (54.1ms)  SELECT &#8220;posts&#8221;.* FROM &#8220;posts&#8221; ORDER BY updated_at DESC LIMIT 1
+  Post Load (54.1ms)  SELECT &ldquo;posts&rdquo;.* FROM &ldquo;posts&rdquo; ORDER BY updated_at DESC LIMIT 1
 Read fragment views/localhost:3000/posts?tag=1304292445 (1.5ms)
 Rendered posts/index.html.erb within layouts/application (9532.3ms)
 Write fragment views/localhost:3000/posts?tag=1304292445 (36.7ms)
 Completed 200 OK in 10088ms (Views: 9535.6ms | ActiveRecord: 276.2ms)
 Now with action caching:</p>
 
-<p>Started GET &#8220;/posts&#8221; for 127.0.0.1 at 2011-05-01 17:20:47 -0700
+<p>Started GET &ldquo;/posts&rdquo; for 127.0.0.1 at 2011-05-01 17:20:47 -0700
   Processing by PostsController#index as HTML
 Read fragment views/localhost:3000/posts?tag=1304295632 (1.0ms)
 Completed 200 OK in 11ms
-Here&#8217;s the code for action caching:</p>
+Here&rsquo;s the code for action caching:</p>
 
 <p>caches_action :index, :cache_path => proc {|c|
-  { :tag => Post.maximum(&#8216;updated_at&#8217;) }
+  { :tag => Post.maximum(&lsquo;updated_at&rsquo;) }
 }
-We&#8217;ll come back to this situation later. This is a better way to do this. Points to the reader if they know the problem.</p>
+We&rsquo;ll come back to this situation later. This is a better way to do this. Points to the reader if they know the problem.</p>
 
 <p>These are simple examples designed to show you who can create auto expiring keys for different situations. At this point we have not had to expire any thing ourselves! The keys have done it all for us. However, there are some times when you want more precise control over how things exist in the cache. Enter Sweepers.</p>
 
 <p>Sweepers
-Sweepers are HTTP request dependent observers. They are loaded into controllers and observe models the same way standard observers do. However there is one very important different. They are only used during HTTP requests. This means if you have things being created outside the context of HTTP requests sweepers will do you no good. For example, say you have a background process running that syncs with an external system. Creating a new model will not make it to any sweeper. So, if you have anything cached. It is up to you to expire it. Everything I&#8217;ve demonstrated so far can be done with sweepers.</p>
+Sweepers are HTTP request dependent observers. They are loaded into controllers and observe models the same way standard observers do. However there is one very important different. They are only used during HTTP requests. This means if you have things being created outside the context of HTTP requests sweepers will do you no good. For example, say you have a background process running that syncs with an external system. Creating a new model will not make it to any sweeper. So, if you have anything cached. It is up to you to expire it. Everything I&rsquo;ve demonstrated so far can be done with sweepers.</p>
 
-<p>Each cache<em>* method has an opposite expire</em>* method. Here&#8217;s the mapping:</p>
+<p>Each cache<em>* method has an opposite expire</em>* method. Here&rsquo;s the mapping:</p>
 
 <p>caches_page , expire_page
 caches_action , expire_action
 cache , expire_fragment
-Their arguments work the same with using cache key expansion to find a key to read or delete. Depending on the complexity of your application, it may be easy to use sweepers or it may be impossible. It&#8217;s easy to use sweepers with these examples. We only need to tie into the save event. For example, when a update or delete happens we need to expire the cache for that specific post. When a create, update, or delete happens we need to expire the index action. Here&#8217;s what the sweeper would look like:</p>
+Their arguments work the same with using cache key expansion to find a key to read or delete. Depending on the complexity of your application, it may be easy to use sweepers or it may be impossible. It&rsquo;s easy to use sweepers with these examples. We only need to tie into the save event. For example, when a update or delete happens we need to expire the cache for that specific post. When a create, update, or delete happens we need to expire the index action. Here&rsquo;s what the sweeper would look like:</p>
 
 <p>class PostSweeper &lt; ActionController::Caching::Sweeper
   observe Post</p>
@@ -4035,20 +4035,20 @@ end</p>
 <p>class PostsController &lt; ApplicationController
   cache_sweeper :post_sweeper
 end
-I will not go into much depth on sweepers because they are the only thing covered in the rails caching guide. The work, but I feel they are clumsy for complex applications. Let&#8217;s say you have comments for posts. What do you do when a comment is created for a post? Well, you have to either create a comment sweeper or load the post sweeper into the comments controller. You can do either. However, depending on the complexity of your model layer, it may quickly become infeasible to do cache expiration with sweepers. For example, let say you have a Customer. A customer has 15 different types of associated things. Do you want to put the sweeper into 15 different controllers? You can, but you may forget to at some point.</p>
+I will not go into much depth on sweepers because they are the only thing covered in the rails caching guide. The work, but I feel they are clumsy for complex applications. Let&rsquo;s say you have comments for posts. What do you do when a comment is created for a post? Well, you have to either create a comment sweeper or load the post sweeper into the comments controller. You can do either. However, depending on the complexity of your model layer, it may quickly become infeasible to do cache expiration with sweepers. For example, let say you have a Customer. A customer has 15 different types of associated things. Do you want to put the sweeper into 15 different controllers? You can, but you may forget to at some point.</p>
 
-<p>The real problem with sweepers is that they cannot be used once your application works outside of HTTP requests. They can also be clumsy. I personally feel it&#8217;s much easier to create auto expiring cache keys and only uses sweepers when I want to tie into very specific events. I&#8217;d also argue that any well designed system does not need sweepers (or at least in very minimally).</p>
+<p>The real problem with sweepers is that they cannot be used once your application works outside of HTTP requests. They can also be clumsy. I personally feel it&rsquo;s much easier to create auto expiring cache keys and only uses sweepers when I want to tie into very specific events. I&rsquo;d also argue that any well designed system does not need sweepers (or at least in very minimally).</p>
 
-<p>Now you should have a good grasp on how the Rails caching methods work. We&#8217;ve covered how fragment caching uses the current view to generate a cache key. We introduced the concept of auto expiring cache keys using ActiveRecord#cache_key to automatically expire cached content. We introduced action caching and how it uses url_for to generate a cache key. Then we covered how you can pass things into url_for to generate a time stamped key to expire actions automatically. Now that we understand these lower levels we can move up to page caching and HTTP caching.</p>
+<p>Now you should have a good grasp on how the Rails caching methods work. We&rsquo;ve covered how fragment caching uses the current view to generate a cache key. We introduced the concept of auto expiring cache keys using ActiveRecord#cache_key to automatically expire cached content. We introduced action caching and how it uses url_for to generate a cache key. Then we covered how you can pass things into url_for to generate a time stamped key to expire actions automatically. Now that we understand these lower levels we can move up to page caching and HTTP caching.</p>
 
 <p>Page Caching
-Page caching bypasses the entire application by serving up a file in /public from disk. It is different from action or fragment caching for a two reasons: content is not stored in memory and content is stored directly on the disk. You use page caching the same way you use action caching. This means you can use sweepers and and all the other things associated with them. Here&#8217;s how it works.</p>
+Page caching bypasses the entire application by serving up a file in /public from disk. It is different from action or fragment caching for a two reasons: content is not stored in memory and content is stored directly on the disk. You use page caching the same way you use action caching. This means you can use sweepers and and all the other things associated with them. Here&rsquo;s how it works.</p>
 
 <p>Webserver accepts an incoming request: GET /posts
 File exists: /public/posts.html
 posts.html is returned
 Your application code is never called.
-Since pages are written like public assets they are served as such. You will expliclity have to expire them. Warning! Forgetting to expire pages will cause you greif because you application code will not be called. Here&#8217;s an example of page caching:</p>
+Since pages are written like public assets they are served as such. You will expliclity have to expire them. Warning! Forgetting to expire pages will cause you greif because you application code will not be called. Here&rsquo;s an example of page caching:</p>
 
 <p>PostsController &lt; ApplicationController
   caches_page :index</p>
@@ -4061,19 +4061,19 @@ Since pages are written like public assets they are served as such. You will exp
 <p>  end
 When the server receives a request to GET /posts it will write the response from the application to /public/posts.html. The .html part is the format for that request. For example you can use page caching with JSON. GET /posts.json would generate /public/posts.json.</p>
 
-<p>Page caching is basically poor man&#8217;s HTTP caching without any real benefits. HTTP caching is more useful.</p>
+<p>Page caching is basically poor man&rsquo;s HTTP caching without any real benefits. HTTP caching is more useful.</p>
 
-<p>I&#8217;ve not covered page caching in much depth because it&#8217;s very likely that if you&#8217;re reading this page caching is not applicable to your application. The Rails guides cover page caching in decent fashion. Follow up there if you need more information.</p>
+<p>I&rsquo;ve not covered page caching in much depth because it&rsquo;s very likely that if you&rsquo;re reading this page caching is not applicable to your application. The Rails guides cover page caching in decent fashion. Follow up there if you need more information.</p>
 
 <p>HTTP Caching
-HTTP caching is the most complex and powerful caching strategy you can use. With great power comes great responsiblity. HTTP caching works at the protocol level. You can configure HTTP caching so the browser doesn&#8217;t even need to contact your server at all. There are many ways HTTP caching can be configured. I will not cover them all here. I will give you an overview on how the system works and cover some common use cases.</p>
+HTTP caching is the most complex and powerful caching strategy you can use. With great power comes great responsiblity. HTTP caching works at the protocol level. You can configure HTTP caching so the browser doesn&rsquo;t even need to contact your server at all. There are many ways HTTP caching can be configured. I will not cover them all here. I will give you an overview on how the system works and cover some common use cases.</p>
 
 <p>How It Works
-HTTP caching works at the protocol level. It uses a combination of headers and response codes to indicate weather the user agent should make a request or use a locally stored copy instead. The invalidation or expiring is based on ETags and Last-Modified timestamps. ETag stands for &#8220;entity tag&#8221;. It&#8217;s a unique fingerprint for this request. It&#8217;s usually a checksum of the respnose body. Origin servers (computers sending the source content) can set either of these fields along with a Cache-Control header. The Cache-Control header tells the user agent what it can do with this response. It answers questions like: how long can I cache this for and am I allowed to cache it? When the user agent needs to make a request again it sends the ETag and/or the Last-Modified date to the origin server. The origin server decides based on the ETag and/or Last-Modified date if the user agent can use the cached copy or if it should use new content. If the server says use the cached content it will return status 304: Not Modified (aka fresh). If not it should return a 200 (cache is stale) and the new content which can be cached.</p>
+HTTP caching works at the protocol level. It uses a combination of headers and response codes to indicate weather the user agent should make a request or use a locally stored copy instead. The invalidation or expiring is based on ETags and Last-Modified timestamps. ETag stands for &ldquo;entity tag&rdquo;. It&rsquo;s a unique fingerprint for this request. It&rsquo;s usually a checksum of the respnose body. Origin servers (computers sending the source content) can set either of these fields along with a Cache-Control header. The Cache-Control header tells the user agent what it can do with this response. It answers questions like: how long can I cache this for and am I allowed to cache it? When the user agent needs to make a request again it sends the ETag and/or the Last-Modified date to the origin server. The origin server decides based on the ETag and/or Last-Modified date if the user agent can use the cached copy or if it should use new content. If the server says use the cached content it will return status 304: Not Modified (aka fresh). If not it should return a 200 (cache is stale) and the new content which can be cached.</p>
 
-<p>Let&#8217;s use curl to see how this works out:</p>
+<p>Let&rsquo;s use curl to see how this works out:</p>
 
-<p>$ curl -I http://www.example.com
+<p>$ curl -I <a href="http://www.example.com">http://www.example.com</a>
 HTTP/1.1 200 OK
 Cache-Control: max-age=0, private, must-revalidate
 Content-length: 822
@@ -4083,11 +4083,11 @@ Last-Modified: Mon, 09 Jul 2012 21:22:11 GMT
 Status: 200 OK
 Vary: Accept-Encoding
 Connection: keep-alive
-The Cache-Control header is a tricky thing. There are many many ways it can be configured. Here&#8217;s the two easiest ways to break it down: private means only the final user agent can store the response. Public means any server can cache this content. (You know requests may go through many proxies right?). You can specify an age or TTL. This is how long it can be cached for. Then there is another common situation: Don&#8217;t check with the server or do check with the server. This particular Cache-Control header means: this is a private (think per user cache) and check with the server everytime before using it.</p>
+The Cache-Control header is a tricky thing. There are many many ways it can be configured. Here&rsquo;s the two easiest ways to break it down: private means only the final user agent can store the response. Public means any server can cache this content. (You know requests may go through many proxies right?). You can specify an age or TTL. This is how long it can be cached for. Then there is another common situation: Don&rsquo;t check with the server or do check with the server. This particular Cache-Control header means: this is a private (think per user cache) and check with the server everytime before using it.</p>
 
-<p>We can trigger a cache hit by sending the apporiate headers with the next request. This response only has a Last-Modified date. We can send this date for the server to compare. Send this value in the If-Modified-Since header. If the content hasn&#8217;t changed since that date the server should return a 304. Here&#8217;s an example using curl:</p>
+<p>We can trigger a cache hit by sending the apporiate headers with the next request. This response only has a Last-Modified date. We can send this date for the server to compare. Send this value in the If-Modified-Since header. If the content hasn&rsquo;t changed since that date the server should return a 304. Here&rsquo;s an example using curl:</p>
 
-<p>$ curl -I -H &#8220;If-Modified-Since: Mon, 09 Jul 2012 21:22:11 GMT&#8221; http://www.example.com
+<p>$ curl -I -H &ldquo;If-Modified-Since: Mon, 09 Jul 2012 21:22:11 GMT&rdquo; <a href="http://www.example.com">http://www.example.com</a>
 HTTP/1.1 304 Not Modified
 Cache-Control: max-age=0, private, must-revalidate
 Date: Mon, 09 Jul 2012 22:55:53 GMT
@@ -4095,7 +4095,7 @@ Status: 304 Not Modified
 Connection: keep-alive
 This response has no body. It simply tells the user agent to use the locally stored version. We could change the date and get a different response.</p>
 
-<p>$ curl -I -H &#8220;If-Modified-Since: Sun, 08 Jul 2012 21:22:11 GMT&#8221; http://www.example.com
+<p>$ curl -I -H &ldquo;If-Modified-Since: Sun, 08 Jul 2012 21:22:11 GMT&rdquo; <a href="http://www.example.com">http://www.example.com</a>
 HTTP/1.1 200 OK
 Cache-Control: max-age=0, private, must-revalidate
 Content-length: 822
@@ -4107,7 +4107,7 @@ Vary: Accept-Encoding
 Connection: keep-alive
 Caches determine freshness based on the If-None-Match and/or If-Modified-Since date. Using our existing 304 response we can supply a random etag to trigger a cache miss:</p>
 
-<p>$ curl -I -H &#8216;If-None-Match: &#8220;foo&#8221;&#8217; -H &#8220;If-Modified-Since: Mon, 09 Jul 2012 21:22:11 GMT&#8221; http://www.example.com
+<p>$ curl -I -H &lsquo;If-None-Match: &ldquo;foo&rdquo;&rsquo; -H &ldquo;If-Modified-Since: Mon, 09 Jul 2012 21:22:11 GMT&rdquo; <a href="http://www.example.com">http://www.example.com</a>
 HTTP/1.1 304 Not Modified
 Cache-Control: max-age=0, private, must-revalidate
 Date: Mon, 09 Jul 2012 22:55:53 GMT
@@ -4118,15 +4118,15 @@ Etags are sent using the If-None-Match header. Now that we understand the basics
 <p>Rack::Cache
 HTTP caching is implemented in the webserver itself or at the application level. It is implemented at the application level in Rails. Rack::Cache is a middleware that sits at the top of the stack and intercepts requests. It will pass requests down to your app and store their contents. Or will it call down to your app and see what ETag and/or timestamps it returns for validation purposes. Rack::Cache acts as a proxy cache. This means it must respect caching rules described in the Cache-Control headers coming out of your app. This means it cannot cache private content but it can cache public content. Cachable content is stored in memcached. Rails configures this automatically.</p>
 
-<p>I&#8217;ll cover one use case to illustrate how code flows through middleware stack to the actual app code and back up. Let&#8217;s use a private per user cache example. Here&#8217;s the cache control header: max-age-0, private, must-revalidate. Pretend this is some JSON API.</p>
+<p>I&rsquo;ll cover one use case to illustrate how code flows through middleware stack to the actual app code and back up. Let&rsquo;s use a private per user cache example. Here&rsquo;s the cache control header: max-age-0, private, must-revalidate. Pretend this is some JSON API.</p>
 
 <p>The client sends initial request to /api/tweets.json
 Rack::Cache sees the request and ignores it since there is no caching information along with it.
 Application code is called. It returns a 200 response with a date and the some Cache-Control header.
 The client makes another request to /api/tweets.json with an If-Modified-Since header matching the date from the previous request.
-Rack::Cache sees that his request has cache information associated with it. It checks to see how it should handle this request. According to the Cache-Control header it has expired and needs to be checked to see if it&#8217;s ok to use. Rack::Cache calls the application code.
+Rack::Cache sees that his request has cache information associated with it. It checks to see how it should handle this request. According to the Cache-Control header it has expired and needs to be checked to see if it&rsquo;s ok to use. Rack::Cache calls the application code.
 Application returns a response with the same date.
-Rack::Cache recieves the response, compares the dates and determines that it&#8217;s a hit. Rack::Cache sends a 304 back.
+Rack::Cache recieves the response, compares the dates and determines that it&rsquo;s a hit. Rack::Cache sends a 304 back.
 The client uses response body from request in step 1.
 HTTP Caching in Rails
 Rails makes it easy to implement HTTP caching inside your controllers. Rails provides two methods: stale? and fresh_when. They both do the same thing but in opposite ways. I prefer to use stale? because it makes more sense to me. stale? reminds more of Rails.cache.fetch so I stick with that. stale? works like this: checks to see if the incoming request ETag and/or Last-Modified date matches. If they match it calls head :not_modified. If not it can call a black of code to render a response. Here is an example:</p>
@@ -4140,7 +4140,7 @@ Rails makes it easy to implement HTTP caching inside your controllers. Rails pro
 
 <p>  end
 end
-Using stale? with an ActiveRecord object will automatically set the ETag and Last-Modified headers. The Etag is set to a MD5 hash of the objects cache_key method. The Last-Modified date is set to the object&#8217;s updated_at method. The Cache-Control header is set to max-age=0, private, must-revalidate by default. All these values can be changed by passing in options to stale? or fresh_when. The methods take three options: :etag, :last_modified, and :public. Here are some more examples:</p>
+Using stale? with an ActiveRecord object will automatically set the ETag and Last-Modified headers. The Etag is set to a MD5 hash of the objects cache_key method. The Last-Modified date is set to the object&rsquo;s updated_at method. The Cache-Control header is set to max-age=0, private, must-revalidate by default. All these values can be changed by passing in options to stale? or fresh_when. The methods take three options: :etag, :last_modified, and :public. Here are some more examples:</p>
 
 <h1>allow proxy caches to store this result</h1>
 
@@ -4148,7 +4148,7 @@ Using stale? with an ActiveRecord object will automatically set the ETag and Las
   respond_with @post
 end</p>
 
-<h1>Let&#8217;s stay your posts are frozen and have no modifications</h1>
+<h1>Let&rsquo;s stay your posts are frozen and have no modifications</h1>
 
 <p>stale? @post, :etag => @post.posted_at do
   respond_with @post
@@ -4365,7 +4365,7 @@ acts_as_tree时用来表示该行的parent的id</p>
     <link href="http://jhjguxin.github.io/blog/2012/08/24/the-rails-flash-isnt-just-for-messages/"/>
     <updated>2012-08-24T00:04:00+08:00</updated>
     <id>http://jhjguxin.github.io/blog/2012/08/24/the-rails-flash-isnt-just-for-messages</id>
-    <content type="html"><![CDATA[<h2>The Rails flash isn&#8217;t just for messages</h2>
+    <content type="html"><![CDATA[<h2>The Rails flash isn&rsquo;t just for messages</h2>
 
 <p><a href="http://guides.rubyonrails.org/action_controller_overview.html#the-flash">The Rails flash</a> is typically used for short messages:</p>
 
@@ -4590,7 +4590,7 @@ end</pre>
 
 <p><strong>Why Spine.JS</strong></p>
 
-<p>There are many different JavaScript MVC frameworks such as <a title="Backbone.js" href="http://backbonejs.org/" target="_blank">Backbone.js</a>, <a title="Spine.js" href="http://spinejs.com/" target="_blank">Spine.js</a>, <a title="Knockout.js" href="http://knockoutjs.com/" target="_blank">Knockout.js</a>,<a title="Ember.js" href="http://emberjs.com/" target="_blank">Ember.js</a>, etc. There are too many choices and when I started Pragmatic.ly, I was struggling with the problem of which one I should pick up. Instead of wasting time on choosing I did a quick review by comparing the documents and then decided to choose Spine.js to start with. With months of development so far, I&#8217;m glad that Spine.js works pretty well and below are the great benefits I have found in using Spine.js.</p>
+<p>There are many different JavaScript MVC frameworks such as <a title="Backbone.js" href="http://backbonejs.org/" target="_blank">Backbone.js</a>, <a title="Spine.js" href="http://spinejs.com/" target="_blank">Spine.js</a>, <a title="Knockout.js" href="http://knockoutjs.com/" target="_blank">Knockout.js</a>,<a title="Ember.js" href="http://emberjs.com/" target="_blank">Ember.js</a>, etc. There are too many choices and when I started Pragmatic.ly, I was struggling with the problem of which one I should pick up. Instead of wasting time on choosing I did a quick review by comparing the documents and then decided to choose Spine.js to start with. With months of development so far, I&rsquo;m glad that Spine.js works pretty well and below are the great benefits I have found in using Spine.js.</p>
 
 <ul>
     <li><em>Simple and lightweight</em>. It&#8217;s easy to dive into the core and extend as you need to.</li>
@@ -4676,7 +4676,7 @@ end</pre>
 
 <p>&nbsp;</p>
 
-<p>So basically it&#8217;s controllers, models and views.</p>
+<p>So basically it&rsquo;s controllers, models and views.</p>
 
 <p><strong>Controllers</strong></p>
 
@@ -4717,7 +4717,7 @@ end</pre>
 
 <p>We split the page into multiple blocks and each block is a Spine Controller. Talking the above example, LeftIterationsController is the Controller to manage the iterations list in the left sidebar.</p>
 
-<p>Then what&#8217;s the other kind? The answer is <em>Routes</em>! We extract the routes to the dedicated controllers now. It will setup the routes and respond to the <em>navigation</em> event. Then it will prepare the data and trigger the event to let another controller handle it to render templates. For example,</p>
+<p>Then what&rsquo;s the other kind? The answer is <em>Routes</em>! We extract the routes to the dedicated controllers now. It will setup the routes and respond to the <em>navigation</em> event. Then it will prepare the data and trigger the event to let another controller handle it to render templates. For example,</p>
 
 <p>&nbsp;</p>
 
@@ -4749,7 +4749,7 @@ end</pre>
 
 <p><strong>Models</strong></p>
 
-<p>Models manage data for the application. It&#8217;s very similar to Rails models. I just want to mention one thing though - as we moved the logic from server side to client side, there was no need to translate 1:1 on the client side. Instead, encapsulate the data into model which is suitable for the page based on the user.</p>
+<p>Models manage data for the application. It&rsquo;s very similar to Rails models. I just want to mention one thing though &ndash; as we moved the logic from server side to client side, there was no need to translate 1:1 on the client side. Instead, encapsulate the data into model which is suitable for the page based on the user.</p>
 
 <p>&nbsp;</p>
 
@@ -4776,7 +4776,7 @@ end</pre>
 
 <p><strong>Views</strong></p>
 
-<p>Views are about building and maintaining the DOM elements. Views in Spine are very simple and don&#8217;t have the built-in UI binding. So most of the time you should let Controller observe the Model and get notified when the model changes, then update the view accordingly.</p>
+<p>Views are about building and maintaining the DOM elements. Views in Spine are very simple and don&rsquo;t have the built-in UI binding. So most of the time you should let Controller observe the Model and get notified when the model changes, then update the view accordingly.</p>
 
 <p>By doing all the view rendering client-side, you should use JavaScript templating solution to define templates for views as markup containing tempalte variables. There are a number of good candidates, such as <a title="Mustache" href="http://mustache.github.com/" target="_blank">Mustache</a>, <a title="jQuery Template" href="http://api.jquery.com/category/plugins/templates" target="_blank">jQuery.tmpl</a> and <a title="Eco" href="https://github.com/sstephenson/eco" target="_blank">Eco</a>.</p>
 
@@ -4884,7 +4884,7 @@ end</pre>
 
 <p><strong>Problems</strong></p>
 
-<p>So that&#8217;s how we use Spine.js to power Pragmatic.ly. It works very well but still have some limitations.</p>
+<p>So that&rsquo;s how we use Spine.js to power Pragmatic.ly. It works very well but still have some limitations.</p>
 
 <ul>
     <li>By default, you can only monitor the whole Model change event and update the view accordingly. For example, even the username is not changed, you still have to update the views containing that data. There is a &#8220;change:field&#8221; event in Backbone.js which allow you only to update the view when that field of data changed. I like that. So I made a plugin to support that. Check the Gist out.
@@ -4953,11 +4953,11 @@ end</pre>
 
 <p><strong>About Pragmatic.ly</strong></p>
 
-<p><a title="Fast &amp; easy to use project management tool &amp; real-time collaboration" href="https://pragmatic.ly/">Pragmatic.ly</a> is a fast and easy to use project management tool featuring real time collaboration. It&#8217;s an elegant project management service built for developers with love.</p>
+<p><a title="Fast &amp; easy to use project management tool &amp; real-time collaboration" href="https://pragmatic.ly/">Pragmatic.ly</a> is a fast and easy to use project management tool featuring real time collaboration. It&rsquo;s an elegant project management service built for developers with love.</p>
 
 <p>&nbsp;</p>
 
-<p>Now that you&#8217;ve read so far, you should follow me <a title="yedingding's twitter" href="https://twitter.com/yedingding" target="_blank">@yedingding</a>!</p>
+<p>Now that you&rsquo;ve read so far, you should follow me <a title="yedingding's twitter" href="https://twitter.com/yedingding" target="_blank">@yedingding</a>!</p>
 ]]></content>
   </entry>
   
@@ -4994,7 +4994,7 @@ Special instructions for IE 6 here
 <h4 id="link2">Test</h4>
 
 
-<p>Below are a few conditional comments that reveal the IE version you&#8217;re using.</p>
+<p>Below are a few conditional comments that reveal the IE version you&rsquo;re using.</p>
 
 <p>According to the conditional comment this is not IE</p>
 
@@ -5055,9 +5055,9 @@ According to the conditional comment this is not IE&lt;br /&gt;
 
 <p>Are conditional comments <a href="http://www.quirksmode.org/css/csshacks.html">CSS hacks</a>? Strictly speaking, yes, since they can serve to give special style instructions to some browsers. However, they do not rely on one browser bug to solve another one, as all true CSS hacks do. Besides, they can be used for more than CSS hacks only (though that rarely happens).</p>
 
-<p>Since conditional comments are not based on a browser hack but on a deliberate feature I believe they are safe to use. Sure, other browsers could implement conditional comments, too (though as yet none have done so), but they&#8217;re unlikely to react to the specific query <code>&lt;!--[if IE]&gt;</code>.</p>
+<p>Since conditional comments are not based on a browser hack but on a deliberate feature I believe they are safe to use. Sure, other browsers could implement conditional comments, too (though as yet none have done so), but they&rsquo;re unlikely to react to the specific query <code>&lt;!&mdash;[if IE]&gt;</code>.</p>
 
-<p>I use conditional comments, though sparingly. First I see if I can find a real CSS solution to an Explorer Windows problem. If I can&#8217;t, though, I don&#8217;t hesitate to use them.</p>
+<p>I use conditional comments, though sparingly. First I see if I can find a real CSS solution to an Explorer Windows problem. If I can&rsquo;t, though, I don&rsquo;t hesitate to use them.</p>
 
 <h3 id="link5">Comment tag</h3>
 
@@ -5078,7 +5078,7 @@ According to the conditional comment this is not IE&lt;br /&gt;
     <link href="http://jhjguxin.github.io/blog/2012/08/16/journey-through-the-javascript-mvc-jungle-by-addy-osmani/"/>
     <updated>2012-08-16T00:51:00+08:00</updated>
     <id>http://jhjguxin.github.io/blog/2012/08/16/journey-through-the-javascript-mvc-jungle-by-addy-osmani</id>
-    <content type="html"><![CDATA[<h2>Journey Through The JavaScript MVC Jungle &#8211; By Addy Osmani</h2>
+    <content type="html"><![CDATA[<h2>Journey Through The JavaScript MVC Jungle &mdash; By Addy Osmani</h2>
 
 <p>When writing a Web application from scratch, it’s easy to feel like we can get by simply by relying on a <a href="https://developer.mozilla.org/en/DOM/About_the_Document_Object_Model">DOM</a> manipulation library (like <a href="http://jquery.com/">jQuery</a>) and a handful of utility plugins. The problem with this is that it doesn’t take long to get lost in a nested pile of jQuery callbacks and DOM elements without any real structure in place for our applications.</p>
 

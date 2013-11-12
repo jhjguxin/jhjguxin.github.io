@@ -21,10 +21,11 @@
   <link rel="canonical" href="http://jhjguxin.github.io/blog/2012/01/29/posttest">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="/javascripts/ender.js"></script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <link href="/atom.xml" rel="alternate" title="Francis's Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
@@ -110,8 +111,8 @@
 <p>Liquid is a template engine which was written with very specific requirements:</p>
 
 <ul>
-<li>It has to have beautiful and simple markup. Template engines which don&#8217;t produce good looking markup are no fun to use.</li>
-<li>It needs to be non evaling and secure. Liquid templates are made so that users can edit them. You don&#8217;t want to run code on your server which your users wrote.</li>
+<li>It has to have beautiful and simple markup. Template engines which don&rsquo;t produce good looking markup are no fun to use.</li>
+<li>It needs to be non evaling and secure. Liquid templates are made so that users can edit them. You don&rsquo;t want to run code on your server which your users wrote.</li>
 <li>It has to be stateless. Compile and render steps have to be seperate so that the expensive parsing and compiling can be done once and later on you can just render it passing in a hash with local variables and objects.</li>
 </ul>
 
@@ -119,11 +120,11 @@
 <h2>Why you should use Liquid</h2>
 
 <ul>
-<li>You want to allow your users to edit the appearance of your application but don&#8217;t want them to run <strong>insecure code on your server</strong>.</li>
+<li>You want to allow your users to edit the appearance of your application but don&rsquo;t want them to run <strong>insecure code on your server</strong>.</li>
 <li>You want to render templates directly from the database</li>
 <li>You like smarty (PHP) style template engines</li>
 <li>You need a template engine which does HTML just as well as emails</li>
-<li>You don&#8217;t like the markup of your current templating engine</li>
+<li>You don&rsquo;t like the markup of your current templating engine</li>
 </ul>
 
 
@@ -157,7 +158,7 @@ For standard use you can just pass it the content of a file and call render with
 
 <h1>Template Data</h1>
 
-<p>Jekyll traverses your site looking for files to process. Any files with [[YAML Front Matter]] are subject to processing. For each of these files, Jekyll makes a variety of data available to the pages via the &#8221; templating system&#8221;:http://wiki.github.com/shopify//-for-designers. The following is a reference of the available data.</p>
+<p>Jekyll traverses your site looking for files to process. Any files with [[YAML Front Matter]] are subject to processing. For each of these files, Jekyll makes a variety of data available to the pages via the &ldquo; templating system&rdquo;:<a href="http://wiki.github.com/shopify//-for-designers.">http://wiki.github.com/shopify//-for-designers.</a> The following is a reference of the available data.</p>
 
 <p>h2. Global</p>
 
@@ -172,10 +173,10 @@ For standard use you can just pass it the content of a file and call render with
 <p>| <em>Variable</em> | <em>Description</em> |
 | @site.time@ | The current Time (when you run the jekyll command). |
 | @site.posts@ | A reverse chronological list of all Posts. |
-| @site.related_posts@ |If the page being processed is a Post, this contains a list of up to ten related Posts. By default, these are low quality but fast to compute. For high quality but slow to compute results, run the jekyll command with the @&#8211;lsi@ (latent semantic indexing) option. |
+| @site.related_posts@ |If the page being processed is a Post, this contains a list of up to ten related Posts. By default, these are low quality but fast to compute. For high quality but slow to compute results, run the jekyll command with the @&mdash;lsi@ (latent semantic indexing) option. |
 | @site.categories.CATEGORY@ | The list of all Posts in category @CATEGORY@. |
 | @site.tags.TAG@ | The list of all Posts with tag @TAG@. |
-| @site.[CONFIGURATION_DATA]@ | As of <em>0.5.2</em>, all data inside of your @<em>config.yml@ is now available through the @site@ variable. So for example, if you have @url: http://mysite.com@ in your configuration file, then in your posts and pages it can be used like so: <code>http://jhjguxin.github.io</code>. Jekyll does not parse a changed @</em>config.yml@ in @auto@ mode, you have to restart jekyll. |</p>
+| @site.[CONFIGURATION_DATA]@ | As of <em>0.5.2</em>, all data inside of your @<em>config.yml@ is now available through the @site@ variable. So for example, if you have @url: <a href="http://mysite.com@">http://mysite.com@</a> in your configuration file, then in your posts and pages it can be used like so: <code><a href="http://jhjguxin.github.io">http://jhjguxin.github.io</a></code>. Jekyll does not parse a changed @</em>config.yml@ in @auto@ mode, you have to restart jekyll. |</p>
 
 <p>h2. Page</p>
 
@@ -183,16 +184,16 @@ For standard use you can just pass it the content of a file and call render with
 | @page.url@ | The URL of the Page without the domain. e.g. @/es/index.html@ |
 | @page.content@ | The un-rendered content of the Page. |</p>
 
-<p>Note: Any custom front matter that you specify will be available under @page@. For example, if you specify @custom_css: true@ in a page&#8217;s front matter, that value will be available in templates as @page.custom_css@</p>
+<p>Note: Any custom front matter that you specify will be available under @page@. For example, if you specify @custom_css: true@ in a page&rsquo;s front matter, that value will be available in templates as @page.custom_css@</p>
 
 <p>h2. Post</p>
 
 <p>| <em>Variable</em> | <em>Description</em> |
 | @post.title@ | The title of the Post. |
 | @post.url@ | The URL of the Post without the domain. e.g. @/2008/12/14/my-post.html@ |
-| @post.date@ | The Date assigned to the Post. This can be overridden in a post&#8217;s front matter by specifying a new date/time in the format @YYYY-MM-DD HH:MM:SS@ |
+| @post.date@ | The Date assigned to the Post. This can be overridden in a post&rsquo;s front matter by specifying a new date/time in the format @YYYY-MM-DD HH:MM:SS@ |
 | @post.id@ | An identifier unique to the Post (useful in RSS feeds). e.g. @/2008/12/14/my-post@ |
-| @post.categories@ | The list of categories to which this post belongs. Categories are derived from the directory structure above the ==<em>posts== directory. For example, a post at @/work/code/</em>posts/2008-12-24-closures.textile@ would have this field set to @[&#8216;work&#8217;, &#8216;code&#8217;]@. These can also be specified in the [[YAML Front Matter]] |
+| @post.categories@ | The list of categories to which this post belongs. Categories are derived from the directory structure above the ==<em>posts== directory. For example, a post at @/work/code/</em>posts/2008-12-24-closures.textile@ would have this field set to @[&lsquo;work&rsquo;, &lsquo;code&rsquo;]@. These can also be specified in the [[YAML Front Matter]] |
 | @post.tags@ | The list of tags to which this post belongs. These can be specified in the [[YAML Front Matter]] |
 | @post.content@ | The rendered content of the Post. |</p>
 
@@ -244,7 +245,7 @@ For standard use you can just pass it the content of a file and call render with
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://jhjguxin.github.io/blog/2012/01/29/posttest/" data-via="jhjguxin" data-counturl="http://jhjguxin.github.io/blog/2012/01/29/posttest/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://jhjguxin.github.io/blog/2012/01/29/posttest/" data-via="jhjguxin" data-counturl="http://jhjguxin.github.io/blog/2012/01/29/posttest/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -258,7 +259,7 @@ For standard use you can just pass it the content of a file and call render with
         <a class="basic-alignment left" href="/blog/2012/01/18/shi-yong-ri-ming-ling-cha-kan-api/" title="Previous Post: 使用 ri 命令查看 API">&laquo; 使用 ri 命令查看 API</a>
       
       
-        <a class="basic-alignment right" href="/blog/2012/01/30/cn-guide-for-push-to-github-pages/" title="next Post: CN guide for push to github pages">CN guide for push to github pages &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2012/01/30/cn-guide-for-push-to-github-pages/" title="Next Post: CN guide for push to github pages">CN guide for push to github pages &raquo;</a>
       
     </p>
   </footer>
@@ -273,7 +274,7 @@ For standard use you can just pass it the content of a file and call render with
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/">通过mongodump和mongorestore实现Mongodb备份和恢复 --by chenzhou123520</a>
+        <a href="/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/">通过mongodump和mongorestore实现Mongodb备份和恢复 --by Chenzhou123520</a>
       </li>
     
       <li class="post">
@@ -289,22 +290,22 @@ For standard use you can just pass it the content of a file and call render with
       </li>
     
       <li class="post">
-        <a href="/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/">Single sign-on 单点登录 sso</a>
+        <a href="/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/">Single Sign-on 单点登录 Sso</a>
       </li>
     
   </ul>
 </section>
 
 <section>
-  <h1>Github Repos</h1>
+  <h1>GitHub Repos</h1>
   <ul id="gh_repos">
     <li class="loading">Status updating...</li>
   </ul>
   
-  <a href="https://github.com/jhjguxin">@jhjguxin</a> on Github
+  <a href="https://github.com/jhjguxin">@jhjguxin</a> on GitHub
   
   <script type="text/javascript">
-    $.domReady(function(){
+    $(document).ready(function(){
         if (!window.jXHR){
             var jxhr = document.createElement('script');
             jxhr.type = 'text/javascript';
@@ -322,23 +323,6 @@ For standard use you can just pass it the content of a file and call render with
     });
   </script>
   <script src="/javascripts/github.js" type="text/javascript"> </script>
-</section>
-
-
-<section>
-  <h1>Latest Tweets</h1>
-  <ul id="tweets">
-    <li class="loading">Status updating...</li>
-  </ul>
-  <script type="text/javascript">
-    $.domReady(function(){
-      getTwitterFeed("jhjguxin", 4, false);
-    });
-  </script>
-  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
-  
-    <a href="http://twitter.com/jhjguxin" class="twitter-follow-button" data-show-count="false">Follow @jhjguxin</a>
-  
 </section>
 
 
@@ -378,7 +362,7 @@ For standard use you can just pass it the content of a file and call render with
       var twitterWidgets = document.createElement('script');
       twitterWidgets.type = 'text/javascript';
       twitterWidgets.async = true;
-      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
       document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
     })();
   </script>
