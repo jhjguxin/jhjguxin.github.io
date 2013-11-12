@@ -1,0 +1,505 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Rails 3.1 Engines – Mountable or Full? – Part 1 - Francis's Octopress Blog</title>
+  <meta name="author" content="Francis Jiang">
+
+  
+  <meta name="description" content="Rails 3.1 Engines – Mountable or Full? – Part 1 I decided to create my first rails engine about a week or so ago.  I figured this was a great way to &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jhjguxin.github.io/blog/2012/04/09/rails-3-dot-1-engines-mountable-or-full-part-1">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Francis's Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-25901353-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Francis's Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jhjguxin.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/readme">Readme</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Rails 3.1 Engines – Mountable or Full? – Part 1</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-09T18:39:00+08:00" pubdate data-updated="true">Apr 9<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>Rails 3.1 Engines – Mountable or Full? – Part 1</h2>
+
+<div>
+
+I decided to create my <a href="https://www.github.com/astjohn/cornerstone" target="_blank">first rails engine</a> about a week or so ago.  I figured this was a great way to learn Rails 3.1 and the new engine generator; however, I quickly ran into a problem.  Do I want a mountable or full engine?  <a title="http://stackoverflow.com/questions/6118905/rails-3-1-engine-vs-mountable-app" href="http://stackoverflow.com/questions/6118905/rails-3-1-engine-vs-mountable-app" target="_blank">What’s the difference anyway?</a>  At the time, a quick google search showed that not many people really knew. The Rails <a href="https://github.com/rails/rails/blob/master/railties/lib/rails/engine.rb">code comments</a> are great, but after reading them, I was still a bit confused.  For those of you out there in the same boat, here’s my attempt at highlighting some of the differences.
+<h2>Full Engines</h2>
+<h3>Engine Details</h3>
+To generate a full engine, run <code>rails plugin new myengine --full</code> on the console. This will generate the engine’s basic structure.
+
+The first thing I noticed was that the typical assets associated with a normal Rails application were not generated; <em>application.js</em> and <em>application.css</em> were not created. In fact, the application controller was completely omitted, alluding that perhaps a full engine is feared toward supplementing a parent application only. As far as routing goes, the engine’s route looked like this:
+<div>
+<div id="highlighter_57643">
+<div><a href="http://www.astjohn.ca/2011/08/06/rails-31-engines-mountable-or-full-part-1/#">?</a></div>
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>1</div>
+<div>2</div>
+<div>3</div>
+<div>4</div></td>
+<td>
+<div>
+<div><code># my_engine/config/routes.rb </code></div>
+<div><code> </code></div>
+<div><code>Rails.application.routes.draw </code><code>do</code></div>
+<div><code>end</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+… and the dummy application’s routes file looked like this:
+<div>
+<div id="highlighter_162083">
+<div><a href="http://www.astjohn.ca/2011/08/06/rails-31-engines-mountable-or-full-part-1/#">?</a></div>
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>1</div>
+<div>2</div>
+<div>3</div>
+<div>4</div>
+<div>5</div></td>
+<td>
+<div>
+<div><code># my_engine/test/dummy/config/routes.rb </code></div>
+<div><code> </code></div>
+<div><code>Dummy::Application.routes.draw </code></div>
+<div><code>  </code><code># route stuff </code></div>
+<div><code>end</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+Another item that was missing from the basic application structure was the database folder. For engine configuration, a full engine is not namespaced, so the <em>engine.rb</em> file was essentially blank.
+<div>
+<div id="highlighter_367735">
+<div><a href="http://www.astjohn.ca/2011/08/06/rails-31-engines-mountable-or-full-part-1/#">?</a></div>
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>1</div>
+<div>2</div>
+<div>3</div>
+<div>4</div>
+<div>5</div>
+<div>6</div></td>
+<td>
+<div>
+<div><code># my_engine/lib/my_engine/engine.rb </code></div>
+<div><code> </code></div>
+<div><code>module</code> <code>MyEngine </code></div>
+<div><code>  </code><code>class</code> <code>Engine &lt; Rails::Engine </code></div>
+<div><code>  </code><code>end</code></div>
+<div><code>end</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+Now, the <a title="https://github.com/rails/rails/blob/master/railties/lib/rails/engine.rb" href="https://github.com/rails/rails/blob/master/railties/lib/rails/engine.rb" target="_blank">rails comments</a> state that engines allow you to add a “subset of functionality to an existing Rails application.” Since the full engine is missing an application controller, it seems that its purpose is to plug into an existing application without namespacing to add functionality to the parent application. To test this theory, I generated a new application and referenced my engine in the parent application’s Gemfile.
+<h3>Routing</h3>
+Since the engine is not namespaced, the engine’s routes are incorporated into the parent application’s routes directly. To test this, I created a model within the engine called “Post”, along with the migration, controller, and helper to match. To create the migration, I also had to build the <em>my_engine/db/migrate/</em> folder, which was not created when I generated the engine. Running <code>rake routes</code> within the parent application resulted in the following:
+<div>
+<div id="highlighter_215592">
+<div><a href="http://www.astjohn.ca/2011/08/06/rails-31-engines-mountable-or-full-part-1/#">?</a></div>
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>1</div>
+<div>2</div>
+<div>3</div>
+<div>4</div>
+<div>5</div>
+<div>6</div>
+<div>7</div></td>
+<td>
+<div>
+<div><code>    </code><code>posts </code><code>GET</code>    <code>/posts(.</code><code>:format</code><code>)          {</code><code>:action</code><code>=&gt;</code><code>"index"</code><code>, </code><code>:controller</code><code>=&gt;</code><code>"posts"</code><code>} </code></div>
+<div><code>          </code><code>POST</code>   <code>/posts(.</code><code>:format</code><code>)          {</code><code>:action</code><code>=&gt;</code><code>"create"</code><code>, </code><code>:controller</code><code>=&gt;</code><code>"posts"</code><code>} </code></div>
+<div><code> </code><code>new_post </code><code>GET</code>    <code>/posts/</code><code>new</code><code>(.</code><code>:format</code><code>)      {</code><code>:action</code><code>=&gt;</code><code>"new"</code><code>, </code><code>:controller</code><code>=&gt;</code><code>"posts"</code><code>} </code></div>
+<div><code>edit_post </code><code>GET</code>    <code>/posts/</code><code>:id</code><code>/edit(.</code><code>:format</code><code>) {</code><code>:action</code><code>=&gt;</code><code>"edit"</code><code>, </code><code>:controller</code><code>=&gt;</code><code>"posts"</code><code>} </code></div>
+<div><code>     </code><code>post </code><code>GET</code>    <code>/posts/</code><code>:id</code><code>(.</code><code>:format</code><code>)      {</code><code>:action</code><code>=&gt;</code><code>"show"</code><code>, </code><code>:controller</code><code>=&gt;</code><code>"posts"</code><code>} </code></div>
+<div><code>          </code><code>PUT</code>    <code>/posts/</code><code>:id</code><code>(.</code><code>:format</code><code>)      {</code><code>:action</code><code>=&gt;</code><code>"update"</code><code>, </code><code>:controller</code><code>=&gt;</code><code>"posts"</code><code>} </code></div>
+<div><code>          </code><code>DELETE</code> <code>/posts/</code><code>:id</code><code>(.</code><code>:format</code><code>)      {</code><code>:action</code><code>=&gt;</code><code>"destroy"</code><code>, </code><code>:controller</code><code>=&gt;</code><code>"posts"</code><code>}</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+As you can see, the Post routes from the engine were included directly into the parent application.
+
+After running <code>rake my_engine:install:migrations</code> and <code>rake db:migrate</code> in the parent application, I was ready to test how the engine’s controllers and helpers would integrate. In my engine, I had a simple view template:
+<div>
+<div id="highlighter_606207">
+<div><a href="http://www.astjohn.ca/2011/08/06/rails-31-engines-mountable-or-full-part-1/#">?</a></div>
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>1</div>
+<div>2</div>
+<div>3</div></td>
+<td>
+<div>
+<div><code># my_engine/app/views/posts/index.html.erb </code></div>
+<div><code> </code></div>
+<div><code>&lt;p&gt;Hi There!&lt;/p&gt;</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+Of course, navigating to <em>/posts</em> in the parent application showed an almost blank page with the words “Hi There!” The controller actions and views from the engine were incorporated into the parent application.
+
+One helpful feature of engines is the fact that their controller methods and views can be overridden simply by placing similar files within the parent application. For example, I created a new view template for the Post index action within the parent application that looked like this:
+<div>
+<div id="highlighter_860835">
+<div><a href="http://www.astjohn.ca/2011/08/06/rails-31-engines-mountable-or-full-part-1/#">?</a></div>
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>1</div>
+<div>2</div>
+<div>3</div></td>
+<td>
+<div>
+<div><code># parent_app/app/views/posts/index.html.erb </code></div>
+<div><code> </code></div>
+<div><code>&lt;p&gt;Good Bye!&lt;/p&gt;</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+Now visiting <em>/posts</em> in the parent application shows “Good Bye!” That’s great, but what about the engine’s helpers? I tested that functionality by adding a method to the Post helper back inside the engine.
+<div>
+<div id="highlighter_870319">
+<div><a href="http://www.astjohn.ca/2011/08/06/rails-31-engines-mountable-or-full-part-1/#">?</a></div>
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>1</div>
+<div>2</div>
+<div>3</div>
+<div>4</div>
+<div>5</div>
+<div>6</div>
+<div>7</div>
+<div>8</div>
+<div>9</div></td>
+<td>
+<div>
+<div><code># my_engine/app/helpers/posts_helper.rb </code></div>
+<div><code> </code></div>
+<div><code>module</code> <code>PostsHelper </code></div>
+<div><code> </code></div>
+<div><code>  </code><code>def</code> <code>test </code></div>
+<div><code>    </code><code>raw(</code><code>"&lt;p&gt;hello world&lt;/p&gt;"</code><code>) </code></div>
+<div><code>  </code><code>end</code></div>
+<div><code> </code></div>
+<div><code>end</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+I then changed the parent application’s view template to use the helper.
+<div>
+<div id="highlighter_258772">
+<div><a href="http://www.astjohn.ca/2011/08/06/rails-31-engines-mountable-or-full-part-1/#">?</a></div>
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>1</div>
+<div>2</div>
+<div>3</div>
+<div>4</div></td>
+<td>
+<div>
+<div><code># parent_app/app/views/posts/index.html.erb </code></div>
+<div><code> </code></div>
+<div><code>&lt;p&gt;Good Bye!&lt;/p&gt; </code></div>
+<div><code>&lt;%= test %&gt;</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+This time, visiting the page again in the parent application resulted in the words “Good Bye!” and “hello world.” Therefore, the engine’s helper methods were directly exposed to the parent application, allowing the parent to use them.
+<h3>Summary</h3>
+In summary, it seems as though full engines are best suited to augment a parent application. The engine routes, controllers, models, helpers, etc. are exposed to the parent application which allows for easy access, but could result in namespace conflicts.
+
+It looks like this post is getting a bit lengthy so I’ll stop it here and talk about mountable engines soon.
+
+</div>
+
+
+<p>&nbsp;</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Francis Jiang</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-09T18:39:00+08:00" pubdate data-updated="true">Apr 9<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://jhjguxin.github.io/blog/2012/04/09/rails-3-dot-1-engines-mountable-or-full-part-1/" data-via="jhjguxin" data-counturl="http://jhjguxin.github.io/blog/2012/04/09/rails-3-dot-1-engines-mountable-or-full-part-1/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/04/06/windows-shell-jiao-ben-yu-fa/" title="Previous Post: windows Shell 脚本语法">&laquo; windows Shell 脚本语法</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/04/09/rails-3-dot-1-engines-mountable-or-full-part-2/" title="Next Post: Rails 3.1 Engines – Mountable or Full? – Part 2">Rails 3.1 Engines – Mountable or Full? – Part 2 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/">通过mongodump和mongorestore实现Mongodb备份和恢复 --by Chenzhou123520</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes/">Ruby on Rails 4.0 Release Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/rails-active-record-named-scopes/">Rails Active Record Named Scopes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/">晒晒我们的开源项目 ITEYE开源代码</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/">Single Sign-on 单点登录 Sso</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/jhjguxin">@jhjguxin</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'jhjguxin',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Francis Jiang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

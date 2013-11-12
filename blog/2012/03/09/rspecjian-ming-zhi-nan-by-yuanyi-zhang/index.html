@@ -1,0 +1,526 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>RSpec简明指南 By Yuanyi ZHANG - Francis's Octopress Blog</title>
+  <meta name="author" content="Francis Jiang">
+
+  
+  <meta name="description" content="RSpec简明指南 By Yuanyi ZHANG 这是David Chelimsky写的一篇RSpec简明指南，原文在这里。 简介 要了解RSpec，我们首先需要了解什么是行为驱动开发（Behaviour Driven Development，简称BDD），BDD是一种融合了可接受性测试驱动计划 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jhjguxin.github.io/blog/2012/03/09/rspecjian-ming-zhi-nan-by-yuanyi-zhang">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Francis's Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-25901353-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Francis's Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jhjguxin.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/readme">Readme</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">RSpec简明指南 by Yuanyi ZHANG</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-09T18:05:00+08:00" pubdate data-updated="true">Mar 9<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>RSpec简明指南 By Yuanyi ZHANG</h2>
+
+<p>这是<a href="http://blog.davidchelimsky.net/">David Chelimsky</a>写的一篇RSpec简明指南，原文在<a href="http://blog.davidchelimsky.net/articles/2007/05/14/an-introduction-to-rspec-part-i">这里</a>。</p>
+
+<p><span style="font-size: large;"><strong>简介</strong></span></p>
+
+<p>要了解RSpec，我们首先需要了解什么是行为驱动开发（Behaviour Driven Development，简称BDD），BDD是一种融合了可接受性测试驱动计划（Acceptance Test Driven Planning），域驱动设计（Domain Driven Design）以及测试驱动开发（Test Driven Development，简称TDD）的敏捷开发模型。RSpec为BDD开发提供TDD支持。</p>
+
+<p>你可以简单的将RSpec看作一个传统的单元测试框架，但我们更愿意将它看成是一种领域特定语言（Domain Specific Language，以下简称DSL），它的主要作用就是描述我们对系统执行某个样例(example)的期望行为(behavior)。</p>
+
+<p>这篇指南遵从TDD思想，但是我们将使用行为（behavior）和样例（example）来代替测试例（test case）和测试方法（test method），想知道我们为什么采用这样的术语，请参看<a href="http://dannorth.net/tags/agile/bdd/">Dan North</a>, <a href="http://daveastels.com/articles/2005/07/05/a-new-look-at-test-driven-development">Dave Astels</a>, 以及 <a href="http://exampler.com/">Brian Marick</a> 的相关文章。</p>
+
+<p><span style="font-size: large;"><strong>安装</strong></span></p>
+
+<p>目前RSpec的最新版本是1.0.5，需要Ruby184以上版本，可以通过下面这条命令安装：</p>
+
+<p><code># gem install rspec</code></p>
+
+<p><span style="font-size: large;"><strong>准备工作</strong></span></p>
+
+<p>整篇指南都围绕一个例子展开，因此在开始前，你最好先为这个例子建个目录：</p>
+
+<p><code>$ mkdir rspec_tutorial
+$ cd rspec_tutorial</code></p>
+
+<p><span style="font-size: large;"><strong>开始</strong></span></p>
+
+<p>我们首先要了解的是RSpec DSL的”describe”与”it”方法，这两个方法有很多其它的名字（但是我们不推荐使用它们），我们之所以使用这样的命名，只是想让你站在行为（behavior）而不是结构（structure）的角度进行思考。</p>
+
+<p>创建名为user_spec.rb的文件：</p>
+
+<p><code>describe User do
+end</code></p>
+
+<p>describe方法创建一个Behavior实例，所以你可以将”describe User”理解为”描述用户的行为（describe the behaviour of the User class）”，或许这个方法叫做“
+describe_the_behaviour_of”会更合适些，但这实在太冗长了，所以我们决定只选取第一个单词describe来作为这个方法的名字。</p>
+
+<p>现在你可以在shell中试试这条命令：</p>
+
+<p><code>$ spec user_spec.rb</code></p>
+
+<p>spec命令有很多选项，但大部分超出了本指南的范围，如果你感兴趣，可以只输入spec而不带任何参数来查看帮助信息。</p>
+
+<p>让我们接着回到上面那条命令，它应该会产生下面的输出：</p>
+
+<p><code>./user_spec.rb:1: uninitialized constant User (NameError)</code></p>
+
+<p>这是因为我们还没有创建User类，也就是说我们要描述的东西不存在，因此我们需要再创建一个user.rb来定义我们所要描述的对象：</p>
+
+<p><code>class User
+end</code></p>
+
+<p>并在user_spec.rb中包含它：</p>
+
+<p><code>require &lsquo;user&rsquo;
+describe User do
+end</code></p>
+
+<p>现在再次运行spec命令：</p>
+
+<p><code>$ spec user_spec.rb
+Finished in 6.0e-06 seconds
+0 examples, 0 failures</code></p>
+
+<p>这个输出是说我们还没有定义样例，所以现在我们就来定义一个：</p>
+
+<p><code>describe User do
+  it &ldquo;should be in any roles assigned to it&rdquo; do
+  end
+end</code></p>
+
+<p>it方法返回一个Example实例，因此我们可以将it方法理解成“用户行为的一个样例”。</p>
+
+<p>再次运行spec：</p>
+
+<p><code>$ spec user_spec.rb &mdash;format specdoc
+User
+&ndash; should be in any roles assigned to it
+Finished in 0.022865 seconds
+1 example, 0 failures</code></p>
+
+<p>specdoc参数格式化行为（describe方法创建的对象）以及样例（it方法创建的对象）的名字然后输出，这种格式来自于TestDox，一个为JUnit测试例及方法提供相似报告的工具。</p>
+
+<p>现在我们开始增加Ruby代码：</p>
+
+<p><code>describe User do
+  it &ldquo;should be in any roles assigned to it&rdquo; do
+    user.should be_in_role(&ldquo;assigned role&rdquo;)
+  end
+end</code></p>
+
+<p>这句话的意思是User应该能够胜任所有分配给他的角色，那么事实是这样么？让我们运行spec试试看：</p>
+
+<p><code>$ spec user_spec.rb &mdash;format specdoc
+User
+&ndash; should be in any roles assigned to it (ERROR &ndash; 1)
+1)
+NameError in ‘User should be in any roles assigned to it’
+undefined local variable or method `user’ for #&lt;#:0×14ecdd8&gt;
+./user_spec.rb:6:
+Finished in 0.017956 seconds
+1 example, 1 failure</code></p>
+
+<p>又出错了，是的，但在继续之前，让我们先仔细看看这段出错信息：</p>
+
+<ul>
+    <li>“ERROR -1)”告诉我们”should be in any roles assigned to it”这个样例出错了</li>
+    <li>“1)”则为我们详细描述了这个错误，当样例很多时，你就会发现这个编号非常有用</li>
+</ul>
+
+
+<p>还有一点需要注意：这段信息没有给出RSpec代码的backtrace，如果你需要它，可以通过–backtrace选项来获取。</p>
+
+<p>下面，我们继续我们的例子，上面的错误是因为我们没有创建User对象，那我们就创建一个：</p>
+
+<p><code>describe User do
+  it &ldquo;should be in any roles assigned to it&rdquo; do
+    user = User.new
+    user.should be_in_role(&ldquo;assigned role&rdquo;)
+  end
+end</code></p>
+
+<p><code>$ spec user_spec.rb &mdash;format specdoc
+User
+&ndash; should be in any roles assigned to it (ERROR &ndash; 1)
+1)
+NoMethodError in ‘User should be in any roles assigned to it’
+undefined method `in_role?’ for #
+./user_spec.rb:7:
+Finished in 0.020779 seconds
+1 example, 1 failure</code></p>
+
+<p>还是失败，不过这次是因为User对象缺少role_in?方法，修改user.rb:</p>
+
+<p><code>class User
+  def in_role?(role)
+  end</code></p>
+
+<p><code>$ spec user_spec.rb &mdash;format specdoc
+User
+&ndash; should be in any roles assigned to it (FAILED &ndash; 1)
+1)
+‘User should be in any roles assigned to it’ FAILED
+expected in_role?(”assigned role”) to return true, got nil
+./user_spec.rb:7:
+Finished in 0.0172110000000001 seconds
+1 example, 1 failure</code></p>
+
+<p>虽然又失败了，但我们的第一个目标其实已经达到了，我们得到了一段更有意义的错误描述”User should be in any roles assigned to it”。</p>
+
+<p>让这段代码避免失败很简单：</p>
+
+<p><code>class User
+  def in_role?(role)
+    true
+  end</code></p>
+
+<p><code>$ spec user_spec.rb &mdash;format specdoc
+User
+&ndash; should be in any roles assigned to it
+Finished in 0.018173 seconds
+1 example, 0 failures</code></p>
+
+<p>现在终于通过了，但是让我们再来看看这段代码：</p>
+
+<p><code>describe User do
+  it &ldquo;should be in any roles assigned to it&rdquo; do
+    user = User.new
+    user.should be_in_role(&ldquo;assigned role&rdquo;)
+  end
+end</code></p>
+
+<p>我们可以将这个样例理解成“用户应该接受所有分配给他的角色”，但问题是我们还没有分给他角色呢？</p>
+
+<p><code>describe User do
+  it &ldquo;should be in any roles assigned to it&rdquo; do
+    user = User.new
+    user.assign_role(&ldquo;assigned role&rdquo;)
+    user.should be_in_role(&ldquo;assigned role&rdquo;)
+  end
+end</code></p>
+
+<p>这段代码又会引发一个错误，因为User并没有assign_role这个方法：</p>
+
+<p><code>class User
+  def in_role?(role)
+    true
+  end
+  def assign_role(role)
+  end
+end</code></p>
+
+<p><code>$ spec user_spec.rb &mdash;format specdoc
+User
+&ndash; should be in any roles assigned to it
+Finished in 0.018998 seconds
+1 example, 0 failures</code></p>
+
+<p>样例再次通过，但是我们的任务还没结束，只要你再回头看看我们目前的代码，就会发现这个User的行为与我们的目标还有距离。</p>
+
+<p>现在，我们只是解决了“用户必须接受所有分配给他的角色”，但是还有一个问题就是”用户不应该接受没有分配给他的角色“。所以我们需要为用户行为再增加一个样例：</p>
+
+<p><code>describe User do
+  it &ldquo;should be in any roles assigned to it&rdquo; do
+    user = User.new
+    user.assign_role(&ldquo;assigned role&rdquo;)
+    user.should be_in_role(&ldquo;assigned role&rdquo;)
+  end
+  it “should NOT be in any roles not assigned to it” do
+    user = User.new
+    user.should_not be_in_role(”unassigned role”)
+  end
+end</code></p>
+
+<p><code>$ spec user_spec.rb &mdash;format specdoc
+User
+&ndash; should be in any roles assigned to it
+&ndash; should NOT be in any roles not assigned to it (FAILED &ndash; 1)
+1)
+‘User should NOT be in any roles not assigned to it’ FAILED
+expected in_role?(”unassigned role”) to return false, got true
+./user_spec.rb:12:
+Finished in 0.019014 seconds
+2 examples, 1 failure</code></p>
+
+<p>失败了，用户接受了没有分给他的角色，这需要我们对User的实现做些改动：</p>
+
+<p><code>class User
+  def in_role?(role)
+    role == &ldquo;assigned role&rdquo;
+  end
+  def assign_role(role)
+  end
+end</code></p>
+
+<p>现在，一切都搞定了，但是我们的代码与样例有些重复（它们都使用了”assigned role”），因此，有必要对User类进行重构：</p>
+
+<p><code>class User
+  def in_role?(role)
+    role == @role
+  end
+  def assign_role(role)
+    @role = role
+  end
+end</code></p>
+
+<p>随后，让我们再来测试一下：</p>
+
+<p><code>$ spec user_spec.rb &mdash;format specdoc
+User
+&ndash; should be in any roles assigned to it
+&ndash; should NOT be in any roles not assigned to it
+Finished in 0.018199 seconds
+2 examples, 0 failures</code></p>
+
+<p>事情就这么结束了么？你可能还有些疑惑，因为我们甚至可以将一个数字分配给用户，但这与”用户应该接受任何分配给他的角色”是吻合的，所以，这时候我们应该征求下我们的客户的意见，“每个用户在同一时间只能担当一个角色吗？”，如果客户的回答是Yes，那么很幸运，我们不需要对我们的代码进行改动，而只需对样例的描述进行一些修改，但如果客户的回答是No，那我们恐怕还得再做些工作。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Francis Jiang</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-09T18:05:00+08:00" pubdate data-updated="true">Mar 9<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://jhjguxin.github.io/blog/2012/03/09/rspecjian-ming-zhi-nan-by-yuanyi-zhang/" data-via="jhjguxin" data-counturl="http://jhjguxin.github.io/blog/2012/03/09/rspecjian-ming-zhi-nan-by-yuanyi-zhang/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/03/06/mass-assignment-vulnerability-how-to-force-dev-define-attr-accesible-by-homakov/" title="Previous Post: Mass assignment vulnerability - how to force dev. define attr_accesible? by homakov">&laquo; Mass assignment vulnerability - how to force dev. define attr_accesible? by homakov</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/03/15/tomdoc-for-ruby-version-1-dot-0-0-rc1/" title="Next Post: TomDoc for Ruby - Version 1.0.0-rc1">TomDoc for Ruby - Version 1.0.0-rc1 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/">通过mongodump和mongorestore实现Mongodb备份和恢复 --by Chenzhou123520</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes/">Ruby on Rails 4.0 Release Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/rails-active-record-named-scopes/">Rails Active Record Named Scopes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/">晒晒我们的开源项目 ITEYE开源代码</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/">Single Sign-on 单点登录 Sso</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/jhjguxin">@jhjguxin</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'jhjguxin',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Francis Jiang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

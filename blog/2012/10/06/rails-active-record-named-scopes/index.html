@@ -1,0 +1,529 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Rails Active Record Named Scopes - Francis's Octopress Blog</title>
+  <meta name="author" content="Francis Jiang">
+
+  
+  <meta name="description" content="Rails Active Record Named Scopes Active Record Named Scopes Instance Public methods with_scope(scope = {}, action = :merge, &amp;block) with_scope  &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jhjguxin.github.io/blog/2012/10/06/rails-active-record-named-scopes">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Francis's Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-25901353-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Francis's Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jhjguxin.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/readme">Readme</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Rails Active Record Named Scopes</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-06T18:56:00+08:00" pubdate data-updated="true">Oct 6<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>Rails Active Record Named Scopes</h2>
+
+<p><a href="http://api.rubyonrails.org/classes/ActiveRecord/Scoping.html">Active Record Named Scopes</a></p>
+
+<p><a href="http://api.rubyonrails.org/classes/ActiveRecord/Scoping/ClassMethods.html">Instance Public methods</a></p>
+
+<p><code>with_scope(scope = {}, action = :merge, &amp;block)</code> <code>with_scope</code> lets you apply options to inner block incrementally. It takes a hash and the keys must be <code>:find</code> or <code>:create</code>. <code>:find</code> parameter is Relation while <code>:create</code> parameters are an attributes hash.</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  def self.create_with_scope
+    with_scope(:find =&gt; where(:blog_id =&gt; 1), :create =&gt; { :blog_id =&gt; 1 }) do
+      find(1) # =&gt; SELECT * from articles WHERE blog_id = 1 AND id = 1
+      a = create(1)
+      a.blog_id # =&gt; 1
+    end
+  end
+end</pre>
+</div>
+
+
+<p>In nested scopings, all previous parameters are overwritten by the innermost rule, with the exception of where, includes, and joins operations in Relation, which are merged.</p>
+
+<p>joins operations are uniqued so multiple scopes can join in the same table without table aliasing problems. If you need to join multiple tables, but still want one of the tables to be uniqued, use the array of strings format for your joins.</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  def self.find_with_scope
+    with_scope(:find =&gt; where(:blog_id =&gt; 1).limit(1), :create =&gt; { :blog_id =&gt; 1 }) do
+      with_scope(:find =&gt; limit(10)) do
+        all # =&gt; SELECT * from articles WHERE blog_id = 1 LIMIT 10
+      end
+      with_scope(:find =&gt; where(:author_id =&gt; 3)) do
+        all # =&gt; SELECT * from articles WHERE blog_id = 1 AND author_id = 3 LIMIT 1
+      end
+    end
+  end
+end</pre>
+</div>
+
+
+<p><strong>You can ignore any previous scopings</strong> by using the <code>with_exclusive_scope</code> method.</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  def self.find_with_exclusive_scope
+    with_scope(:find =&gt; where(:blog_id =&gt; 1).limit(1)) do
+      with_exclusive_scope(:find =&gt; limit(10)) do
+        all # =&gt; SELECT * from articles LIMIT 10
+      end
+    end
+  end
+end</pre>
+</div>
+
+
+<p><strong>Note:</strong> the <code>:find</code> scope also has effect on update and deletion methods, like update_all and delete_all.</p>
+
+<p><a href="http://api.rubyonrails.org/classes/ActiveRecord/Scoping/Default/ClassMethods.html">default_scope</a></p>
+
+<p><code>default_scope(scope = {})</code> Use this macro in your model to set a default scope for all operations on the model.</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  default_scope where(:published =&gt; true)
+end
+
+Article.all # =&gt; SELECT * FROM articles WHERE published = true</pre>
+</div>
+
+
+<p>The <code>default_scope</code> is also applied while creating/building a record. It is not applied while updating a record.</p>
+
+<div>
+<pre>Article.new.published    # =&gt; true
+Article.create.published # =&gt; true</pre>
+</div>
+
+
+<p>You can also use <code>default_scope</code> with a block, in order to have it lazily evaluated:</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  default_scope { where(:published_at =&gt; Time.now - 1.week) }
+end</pre>
+</div>
+
+
+<p>(You can also pass any object which responds to call to the <code>default_scope</code> macro, and it will be called when building the default scope.)</p>
+
+<p>If you use multiple <code>default_scope</code> declarations in your model then they will be merged together:</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  default_scope where(:published =&gt; true)
+  default_scope where(:rating =&gt; &#039;G&#039;)
+end
+
+Article.all # =&gt; SELECT * FROM articles WHERE published = true AND rating = &#039;G&#039;</pre>
+</div>
+
+
+<p>This is also the case with inheritance and module includes where the parent or module defines a <code>default_scope</code> and the child or including class defines a second one.</p>
+
+<p>If you need to do more complex things with a default scope, you can alternatively define it as a class method:</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  def self.default_scope
+    # Should return a scope, you can call &#039;super&#039; here etc.
+  end
+end</pre>
+</div>
+
+
+<p><a href="http://api.rubyonrails.org/classes/ActiveRecord/Scoping/Named/ClassMethods.html">activerecord/lib/active_record/scoping/named.rb</a></p>
+
+<p><code>scope(name, scope_options = {})</code> Adds a class method for retrieving and querying objects. A scope represents a narrowing of a database query, such as <code>where(:color =&gt; :red).select(&lsquo;shirts.*&rsquo;).includes(:washing_instructions)</code>.</p>
+
+<div>
+<pre>class Shirt &lt; ActiveRecord::Base
+  scope :red, where(:color =&gt; &#039;red&#039;)
+  scope :dry_clean_only, joins(:washing_instructions).where(&#039;washing_instructions.dry_clean_only = ?&#039;, true)
+end</pre>
+</div>
+
+
+<p>The above calls to scope define class methods <code>Shirt.red</code> and <code>Shirt.dry_clean_only</code>. <code>Shirt.red</code>, in effect, represents the query <code>Shirt.where(:color =&gt; &lsquo;red&rsquo;)</code>.</p>
+
+<p>Note that this is simply ‘syntactic sugar’ for defining an actual class method:</p>
+
+<div>
+<pre>class Shirt &lt; ActiveRecord::Base
+  def self.red
+    where(:color =&gt; &#039;red&#039;)
+  end
+end</pre>
+</div>
+
+
+<p>Unlike <code>Shirt.find(&hellip;)</code>, however, the object returned by <code>Shirt.red</code> is not an Array; it resembles the association object constructed by a has_many declaration. For instance, you can invoke <code>Shirt.red.first</code>, <code>Shirt.red.count</code>,<code>Shirt.red.where(:size =&gt; &lsquo;small&rsquo;)</code>. Also, just as with the association objects, named scopes act like an Array, implementing Enumerable; <code>Shirt.red.each(&amp;block)</code>, <code>Shirt.red.first</code>, and <code>Shirt.red.inject(memo, &amp;block)</code> all behave as if<code>Shirt.red</code> really was an Array.</p>
+
+<p>These named scopes are composable. For instance, <code>Shirt.red.dry_clean_only</code> will produce all shirts that are both red and dry clean only. Nested finds and calculations also work with these compositions: <code>Shirt.red.dry_clean_only.count</code> returns the number of garments for which these criteria obtain. Similarly with <code>Shirt.red.dry_clean_only.average(:thread_count)</code>.</p>
+
+<p>All scopes are available as class methods on the <code>ActiveRecord::Base</code> descendant upon which the scopes were defined. But they are also available to has_many associations. If,</p>
+
+<div>
+<pre>class Person &lt; ActiveRecord::Base
+  has_many :shirts
+end</pre>
+</div>
+
+
+<p>then <code>elton.shirts.red.dry_clean_only</code> will return all of Elton’s red, dry clean only shirts.</p>
+
+<p>Named scopes can also be procedural:</p>
+
+<div>
+<pre>class Shirt &lt; ActiveRecord::Base
+  scope :colored, lambda { |color| where(:color =&gt; color) }
+end</pre>
+</div>
+
+
+<p>In this example, <code>Shirt.colored(&lsquo;puce&rsquo;)</code> finds all puce shirts.</p>
+
+<p>On Ruby 1.9 you can use the ‘stabby lambda’ syntax:</p>
+
+<div>
+<pre>scope :colored, -&gt;(color) { where(:color =&gt; color) }</pre>
+</div>
+
+
+<p>Note that scopes defined with scope will be evaluated when they are defined, rather than when they are used. For example, the following would be incorrect:</p>
+
+<div>
+<pre>class Post &lt; ActiveRecord::Base
+  scope :recent, where(&#039;published_at &gt;= ?&#039;, Time.current - 1.week)
+end</pre>
+</div>
+
+
+<p><strong>The example above would be ‘frozen’ to the <code>Time.current</code> value when the Post class was defined</strong>, and so the resultant SQL query would always be the same. The correct way to do this would be via a lambda, which will re-evaluate the scope each time it is called:</p>
+
+<div>
+<pre>class Post &lt; ActiveRecord::Base
+  scope :recent, lambda { where(&#039;published_at &gt;= ?&#039;, Time.current - 1.week) }
+end</pre>
+</div>
+
+
+<p>Named scopes can also have extensions, just as with has_many declarations:</p>
+
+<div>
+<pre>class Shirt &lt; ActiveRecord::Base
+  scope :red, where(:color =&gt; &#039;red&#039;) do
+    def dom_id
+      &#039;red_shirts&#039;
+    end
+  end
+end</pre>
+</div>
+
+
+<p>Scopes can also be used while creating/building a record.</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  scope :published, where(:published =&gt; true)
+end
+
+Article.published.new.published    # =&gt; true
+Article.published.create.published # =&gt; true</pre>
+</div>
+
+
+<p>Class methods on your model are automatically available on scopes. Assuming the following setup:</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  scope :published, where(:published =&gt; true)
+  scope :featured, where(:featured =&gt; true)
+
+  def self.latest_article
+    order(&#039;published_at desc&#039;).first
+  end
+
+  def self.titles
+    map(&amp;:title)
+  end
+
+end</pre>
+</div>
+
+
+<p>We are able to call the methods like this:</p>
+
+<div>
+<pre>Article.published.featured.latest_article
+Article.featured.titles</pre>
+</div>
+
+
+<p><code>scoped(options = nil)</code> Returns an anonymous scope.</p>
+
+<div>
+<pre>posts = Post.scoped
+posts.size # Fires &quot;select count(*) from  posts&quot; and returns the count
+posts.each {|p| puts p.name } # Fires &quot;select * from posts&quot; and loads post objects
+
+fruits = Fruit.scoped
+fruits = fruits.where(:color =&gt; &#039;red&#039;) if options[:red_only]
+fruits = fruits.limit(10) if limited?</pre>
+</div>
+
+
+<p>Anonymous scopes tend to be useful when procedurally generating complex queries, where passing intermediate values (scopes) around as first-class objects is convenient.</p>
+
+<p><strong>You can define a scope that applies to all finders using <code>ActiveRecord::Base.default_scope</code></strong>.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Francis Jiang</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-06T18:56:00+08:00" pubdate data-updated="true">Oct 6<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://jhjguxin.github.io/blog/2012/10/06/rails-active-record-named-scopes/" data-via="jhjguxin" data-counturl="http://jhjguxin.github.io/blog/2012/10/06/rails-active-record-named-scopes/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/" title="Previous Post: 晒晒我们的开源项目 ITEYE开源代码">&laquo; 晒晒我们的开源项目 ITEYE开源代码</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes/" title="Next Post: Ruby on Rails 4.0 Release Notes">Ruby on Rails 4.0 Release Notes &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/">通过mongodump和mongorestore实现Mongodb备份和恢复 --by Chenzhou123520</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes/">Ruby on Rails 4.0 Release Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/rails-active-record-named-scopes/">Rails Active Record Named Scopes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/">晒晒我们的开源项目 ITEYE开源代码</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/">Single Sign-on 单点登录 Sso</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/jhjguxin">@jhjguxin</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'jhjguxin',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Francis Jiang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

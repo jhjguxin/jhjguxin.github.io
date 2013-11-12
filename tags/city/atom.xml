@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: city | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/tags/city/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[find_city]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/05/25/find-city/"/>
+    <updated>2012-05-25T15:45:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/05/25/find-city</id>
+    <content type="html"><![CDATA[<h2>find_city</h2>
+
+<ol>
+<li>base on sina api</li>
+</ol>
+
+
+<p>&nbsp;</p>
+
+<p>&nbsp;
+<code>require &lsquo;json&rsquo;</p>
+
+<p>class FindCity
+  CityHash = JSON.parse <code>curl http://api.t.sina.com.cn/provinces.json</code>
+  def initialize</p>
+
+<pre><code>@cityhash=CityHash
+@municipality=[6,11,12,50,81,82]
+</code></pre>
+
+<p>  end
+  def getcity(province_id=nil, city_id=nil)</p>
+
+<pre><code>province_id.to_i
+city_id.to_i
+if @municipality.include? province_id
+  @cityhash["provinces"].each do |provinces|
+    if provinces["id"] == province_id
+      return provinces["name"]
+    end
+  end
+else
+  @cityhash["provinces"].each do |provinces|
+    if provinces["id"] == province_id
+      provinces["citys"].each do |city|
+        return city[city_id.to_s] if city[city_id.to_s]
+      end
+    end
+  end
+end
+return nil
+</code></pre>
+
+<p>  end
+end</p>
+
+<p>if <strong>FILE</strong>==$0
+  #<strong><strong><strong><strong><strong><strong><strong><strong><em>*******以下测试代码</em></strong></strong></strong></strong></strong></strong></strong></strong>
+  time_start = Time.now
+  city = FindCity.new
+  list=[[6,2],[11,1],[43,2]]</p>
+
+<p>  list.each do |l|</p>
+
+<pre><code>puts city.getcity l[0],l[1]
+</code></pre>
+
+<p>  end</p>
+
+<p>  puts &ldquo;total time:#{Time.now-time_start}&rdquo;
+end</code></p>
+]]></content>
+  </entry>
+  
+</feed>

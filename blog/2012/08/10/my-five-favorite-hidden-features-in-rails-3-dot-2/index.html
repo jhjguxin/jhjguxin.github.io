@@ -1,0 +1,433 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>My five favorite “hidden” features in Rails 3.2 - Francis's Octopress Blog</title>
+  <meta name="author" content="Francis Jiang">
+
+  
+  <meta name="description" content="My five favorite “hidden” features in Rails 3.2 Rails 3.2 is out with great features on spotlight: faster development reloading, faster router and &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jhjguxin.github.io/blog/2012/08/10/my-five-favorite-hidden-features-in-rails-3-dot-2">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Francis's Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-25901353-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Francis's Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jhjguxin.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/readme">Readme</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">My Five Favorite “hidden” Features in Rails 3.2</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-10T23:23:00+08:00" pubdate data-updated="true">Aug 10<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>My five favorite “hidden” features in Rails 3.2</h2>
+
+<p>Rails 3.2 is out with <a title="Rails 3.2.rc1 announced" href="http://weblog.rubyonrails.org/2011/12/20/rails-3-2-rc1-faster-dev-mode-routing-explain-queries-tagged-logger-store">great features on spotlight</a>: faster development reloading, faster router and explain queries. However, every Rails release ships with minor features that do not get that much attention but still would be a great fit to your application. This blog post is about my five favorites “hidden” features of Rails 3.2.</p>
+
+<h3>1) Smarter <code>content_tag_for</code></h3>
+
+
+<p><a href="https://github.com/rails/rails/pull/2816">This feature written by Prem Sichanugrist</a> provides a very simple but welcome clean up to your views. Both <code>content_tag_for</code> and <code>div_for</code> now accepts an array of records and automatically loop over each record. Therefore, instead of writing this:</p>
+
+<div>
+<div>
+<pre>  @posts.each do |post|
+    content_tag_for(:li, post) do
+      ...
+    end
+  end</pre>
+</div>
+</div>
+
+
+<p>You can simply write:</p>
+
+<div>
+<div>
+<pre>  content_tag_for(:li, @posts) do |post|
+    ...
+  end</pre>
+</div>
+</div>
+
+
+<h3>2) Smarter migration generators</h3>
+
+
+<p>It is funny how some parts of Rails as old as the migration generators continue receiving improvements day after day. Rails 3.1 already added a feature that automatically generate indexes for associations, by simply invoking:</p>
+
+<p>&nbsp;</p>
+
+<pre>rails g scaffold Comment post:references title:string body:text</pre>
+
+
+<p>&nbsp;</p>
+
+<p>With the above, Rails will detect that post is a reference and it will automatically 1) add a <code>post_id</code>integer column, 2) add an association to your model and 3) add an index to that column.</p>
+
+<p>Right after 3.1 came out, I have pushed another small feature to the migration generator that simply makes the type attribute default to string. Therefore, you no longer need to write:</p>
+
+<p>&nbsp;</p>
+
+<pre>rails g scaffold Person name:string email:string</pre>
+
+
+<p>&nbsp;</p>
+
+<p>You could simply write:</p>
+
+<p>&nbsp;</p>
+
+<pre>rails g scaffold Person name email</pre>
+
+
+<p>&nbsp;</p>
+
+<p>Oddly enough, the idea for this feature came when I was preparing a presentation and the scaffold command could not fit in a slide (the so-called Presentation Driven Development). Anyhow, this small addition would not be enough to make to the best five “hidden” features of Rails 3.2. That’s when Dmitrii Samoilov comes in.</p>
+
+<p><a href="https://github.com/rails/rails/pull/2555">Dmitrii sent a pull request</a> that allows you to specify which columns should have an (unique) index. So one could write:</p>
+
+<p>&nbsp;</p>
+
+<pre>rails g scaffold Person name:index email:uniq</pre>
+
+
+<p>&nbsp;</p>
+
+<p>And the generator will automatically generate an index for name and an unique index for e-mail. There are other features there as well, so don’t forget to checkout the CHANGELOG.</p>
+
+<h3>3) Flexible exception handling</h3>
+
+
+<p>When Rails 3.0 came out, one of the features that people suddenly missed was the ability to better handle exceptions. The issue was: since Rails 3 became a lot more Rack “fluent”, we had to move some features to the middleware stack and this forced us to move the whole exceptions handling as well. Rails 3.2 attempts to bring some customization back to the game by allowing you to set your own exceptions rack application that is invoked when a failure happens. For instance, you could set the exceptions application to your own router in your<code>config/application.rb</code>:</p>
+
+<div>
+<div>
+<pre>config.exceptions_app = self.routes</pre>
+</div>
+</div>
+
+
+<p>Now, every time there is an exception, your router is going to be invoked. Therefore, to render custom 404 pages, you could simply add to your router:</p>
+
+<div>
+<div>
+<pre>match "/404", :to =&gt; "errors#not_found"</pre>
+</div>
+</div>
+
+
+<p>And implement the logic in the controller as you wish! However, there are a few things to keep in mind if you go down this road:</p>
+
+<ol>
+    <li>You need to use <code>match</code> in your routes and not <code>get/post/put/delete</code> because such exceptions can happen in any HTTP request;</li>
+    <li>You won’t be able to see your custom exceptions in development unless you set<code>config.consider_all_requests_local</code> to false in your <code>config/environments/development.rb</code>. The reason is, if the request is considered local, Rails will always favor to show the debug exceptions page;</li>
+    <li>You can always access the original exception in the controller at<code>env["action_dispatch.exception"]</code>;</li>
+    <li>It is not possible to set cookies, the session nor the flash after an exception happens. They all were already serialized back to the client;</li>
+    <li>Finally, the default exceptions application used by Rails that simply renders a page in<code>public/STATUS.html</code> is available here: <a href="https://github.com/rails/rails/blob/master/actionpack/lib/action_dispatch/middleware/public_exceptions.rb">action_dispatch/middleware/public_exceptions.rb</a></li>
+</ol>
+
+
+<p>Remember that whatever you do in the errors controller, it should not be anything “fancy”. Keep it simple because something already went wrong with your application!</p>
+
+<h3>4) Custom partial paths</h3>
+
+
+<p>In order to render a partial for a given model, Rails 3.0 retrieved the partial name by calling:<code>model.class.model_name.partial_path</code>. <a href="https://github.com/rails/rails/commit/bf812074fd55e7dcfa426d6c9bfd4d8d68922194">Grant Hutchins &amp; Peter Jaros noticed that this was not very flexible</a> because the class was responsible to define the partial path and therefore they decided to move this responsibility to the instance. In order to better understand how you can use this feature, let’s consider the following practical example.</p>
+
+<p>Imagine your application have an activity feed and each activity in the feed has a certain type. Usually, each type is rendered differently. For example, if you consider a to-do-list application, activities could be both “marking a list as favorite” or “marking a task as done”. Usually, applications solve this by looping for each item and rendering its respective partial, something like this:</p>
+
+<div>
+<div>
+<pre>@activities.each do |activity|
+  render :partial =&gt; "activities/#{activity.kind}",
+    :locals =&gt; { :activity =&gt;  activity }
+end</pre>
+</div>
+</div>
+
+
+<p>Now, you can solve this problem by defining <code>to_partial_path</code> in the model (the method<code>to_partial_path</code> is part of the ActiveModel API and can be implemented in any object. The example above implements it in the model for convenience, but it could be a presenter, another ORM, etc):</p>
+
+<div>
+<div>
+<pre>class Activity &lt; ActiveRecord::Base
+  def to_partial_path() "activities/#{kind}" end
+end</pre>
+</div>
+</div>
+
+
+<p>And then invoking:</p>
+
+<div>
+<div>
+<pre>render :partial =&gt; @activities, :as =&gt; :activity</pre>
+</div>
+</div>
+
+
+<p>This will now work on Rails 3.2 because even though all activities are of the same class, each instance is actually responsible for telling Rails which partial should be rendered.</p>
+
+<p>The difference here is not only in brevity, but also in performance. Although the first snippet works fine, it is slow. In the scenario where only one kind of activity happened, the first snippet will go through the render stack 30 times and lookup the same template in your filesystem 30 times. If you read <a title="Crafting Rails Applications" href="http://pragprog.com/book/jvrails/crafting-rails-applications">Crafting Rails Applications</a> you know that this lookup is cached, but even though it would certainly be faster if we didn’t have to do this 30 times, but once.</p>
+
+<p>That’s where <code>render :collection</code> or <code>render :partial</code> with an array comes in. In such cases Rails will retrieve all templates up front skipping duplicates, and this new feature allows us to take advantage of it even if the partial lookup is dynamic. So, in the scenario where all the activities are of the same kind, the template lookup will happen just once and no longer 30 times. In other words, best case scenario becomes <code>O(1)</code>, worst case scenario is still <code>O(n)</code>.</p>
+
+<h3>5) Filtered chain logging is back</h3>
+
+
+<p>Another very small change that will make development more pleasant is that Rails will now log “Filter chain halted as CALLBACK_NAME rendered or redirected” every time a before/around/after filter in your controller halts the request. This was the case in Rails 2.3 but somehow got lost when Rails 3 came out. It is one of those small things you don’t know how much you missed until you see it again!</p>
+
+<p>And what is your favorite Rails 3.2 “hidden” feature? Don’t forget to take a good look at the CHANGELOGs and check out many others improvements!</p>
+
+<p>&nbsp;</p>
+
+<p>Tags: <a href="http://blog.plataformatec.com.br/tag/crafting-rails-applications/" rel="tag">crafting rails applications</a>, <a href="http://blog.plataformatec.com.br/tag/exception-handling/" rel="tag">exception handling</a>, <a href="http://blog.plataformatec.com.br/tag/rails-3-2/" rel="tag">rails 3.2</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Francis Jiang</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-10T23:23:00+08:00" pubdate data-updated="true">Aug 10<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://jhjguxin.github.io/blog/2012/08/10/my-five-favorite-hidden-features-in-rails-3-dot-2/" data-via="jhjguxin" data-counturl="http://jhjguxin.github.io/blog/2012/08/10/my-five-favorite-hidden-features-in-rails-3-dot-2/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/07/27/rails-date-select-fields-hidden-and/" title="Previous Post: Rails date_select fields hidden and ">&laquo; Rails date_select fields hidden and </a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/08/16/journey-through-the-javascript-mvc-jungle-by-addy-osmani/" title="Next Post: Journey Through The JavaScript MVC Jungle -- By Addy Osmani">Journey Through The JavaScript MVC Jungle -- By Addy Osmani &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/">通过mongodump和mongorestore实现Mongodb备份和恢复 --by Chenzhou123520</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes/">Ruby on Rails 4.0 Release Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/rails-active-record-named-scopes/">Rails Active Record Named Scopes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/">晒晒我们的开源项目 ITEYE开源代码</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/">Single Sign-on 单点登录 Sso</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/jhjguxin">@jhjguxin</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'jhjguxin',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Francis Jiang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

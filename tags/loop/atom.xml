@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: loop | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/tags/loop/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Ruby-------- loop ]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/03/02/ruby-loop/"/>
+    <updated>2012-03-02T10:52:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/03/02/ruby-loop</id>
+    <content type="html"><![CDATA[<h2>Ruby&mdash;&mdash;&mdash;&mdash; loop</h2>
+
+<p><code></p>
+
+<pre>
+class ForLoop
+  
+  def callFor 
+    for i in 1..3
+      print "index = #{i}\n"
+    end
+  end
+  
+  def callWhile
+    a = 1
+    a *= 2 while a < 10
+    puts a
+    
+    a -= 2 until a < 0
+    puts a
+  end
+  
+  def callWhile2
+    a = 1
+    a += 1  while a < 5
+    puts a
+  #  print "index = #{a}\n"
+  end
+
+  def time
+    3.times do
+      print "Ho! "
+    end
+  end
+  
+  def upto
+     1.upto(3) do |x|
+      puts x
+    end
+  end
+  
+  def step
+    0.step(10, 2) do |x|
+      puts x
+    end
+  end
+
+  def each 
+    [1, 2, 3, 4, 5].each do |x|
+      puts x
+    end
+  end
+  
+  def callFor2  # seems similar as each
+    for n in [5, 4, 3, 2, 1]
+      puts n
+    end
+  end
+  
+  def callLoop
+     i = 0
+     loop do
+      i += 1
+      puts i
+      next if not i > 3
+      puts "i > 3"
+      redo if i >= 6 and i <= 9
+      puts "i < 6 or i > 9"
+      break if i == 10 
+    end
+  end
+  
+end
+
+instance = ForLoop.new
+instance.callFor
+print "----------\n"
+instance.callWhile2
+print "----------\n"
+instance.time
+print "\n----------\n"
+instance.upto
+print "----------\n"
+instance.step
+print "----------\n"
+instance.each
+print "----------\n"
+instance.callFor2
+print "----------\n"
+instance.callLoop
+
+# output
+#index = 1
+#index = 2
+#index = 3
+#----------
+#5
+#----------
+#Ho! Ho! Ho! 
+#----------
+#1
+#2
+#3
+#----------
+#0
+#2
+#4
+#6
+#8
+#10
+#----------
+#1
+#2
+#3
+#4
+#5
+#----------
+#5
+#4
+#3
+#2
+#1
+#----------
+#1
+#2
+#3
+#4
+#i > 3
+#i < 6 or i > 9
+#5
+#i > 3
+#i < 6 or i > 9
+#6
+#i > 3
+#7
+#i > 3
+#8
+#i > 3
+#9
+#i > 3
+#10
+#i > 3
+#i < 6 or i > 9
+</pre>
+
+
+<p></code></p>
+]]></content>
+  </entry>
+  
+</feed>

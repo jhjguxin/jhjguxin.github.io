@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: doc | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/tags/doc/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[TomDoc for Ruby - Version 1.0.0-rc1]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/03/15/tomdoc-for-ruby-version-1-dot-0-0-rc1/"/>
+    <updated>2012-03-15T10:54:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/03/15/tomdoc-for-ruby-version-1-dot-0-0-rc1</id>
+    <content type="html"><![CDATA[<h2>TomDoc for Ruby &ndash; Version 1.0.0-rc1</h2>
+
+<p>Purpose
+TomDoc is a code documentation specification that helps you write precise documentation that is nice to read in plain text, yet structured enough to be automatically extracted and processed by a machine.</p>
+
+<p>The key words &ldquo;MUST&rdquo;, &ldquo;MUST NOT&rdquo;, &ldquo;REQUIRED&rdquo;, &ldquo;SHALL&rdquo;, &ldquo;SHALL NOT&rdquo;, &ldquo;SHOULD&rdquo;, &ldquo;SHOULD NOT&rdquo;, &ldquo;RECOMMENDED&rdquo;, &ldquo;MAY&rdquo;, and &ldquo;OPTIONAL&rdquo; in this document are to be interpreted as described in RFC 2119.</p>
+
+<p>Method Documentation
+A quick example will serve to best illustrate the TomDoc method documentation format:</p>
+
+<h1>Public: Duplicate some text an arbitrary number of times.</h1>
+
+<p>#</p>
+
+<h1>text  &ndash; The String to be duplicated.</h1>
+
+<h1>count &ndash; The Integer number of times to duplicate the text.</h1>
+
+<p>#</p>
+
+<h1>Examples</h1>
+
+<p>#</p>
+
+<h1>multiplex(&lsquo;Tom&rsquo;, 4)</h1>
+
+<h1># => &lsquo;TomTomTomTom&rsquo;</h1>
+
+<p>#</p>
+
+<h1>Returns the duplicated String.</h1>
+
+<p>def multiplex(text, count)
+  text * count
+end
+TomDoc for a specific method consists of a block of single comment markers (#) that appears directly above the method. There SHOULD NOT be a blank line between the comment block and the method definition. A TomDoc method block consists of five optional sections: a description section, an arguments section, a yields section, an examples section, a returns section, and a signature section. Lines that contain text MUST be separated from the comment marker by a single space. Lines that do not contain text SHOULD consist of just a comment marker (no trailing spaces).</p>
+
+<p>The Description Section
+The description section SHOULD be in plain sentences. Each sentence SHOULD end with a period. Good descriptions explain what the code does at a high level. Make sure to explain any unexpected behavior that the method may have, or any pitfalls that the user may experience. Paragraphs SHOULD be separated with blank lines. Code within the description section should be indented three spaces from the starting comment symbol. Lines SHOULD be wrapped at 80 characters.</p>
+
+<p>To describe the status of a method, you SHOULD use one of several prefixes:</p>
+
+<p>Public: Indicates that the method is part of the project&rsquo;s public API. This annotation is designed to let developers know which methods are considered stable. You SHOULD use this to document the public API of your project. This information can then be used along with Semantic Versioning to inform decisions on when major, minor, and patch versions should be incremented.</p>
+
+<h1>Public: Initialize a new Widget.</h1>
+
+<p>Internal: Indicates that the method is part of the project&rsquo;s internal API. These are methods that are intended to be called from other classes within the project but not intended for public consumption. For example:</p>
+
+<h1>Internal: Normalize the filename.</h1>
+
+<p>Deprecated: Indicates that the method is deprecated and will be removed in a future version. You SHOULD use this to document methods that were Public but will be removed at the next major version.</p>
+
+<h1>Deprecated: Resize an object to the given dimensions.</h1>
+
+<p>An example description that includes all of these elements might look something like the following.</p>
+
+<h1>Public: Format some data with the given format. Possible format</h1>
+
+<h1>identifiers include:</h1>
+
+<p>#</p>
+
+<h1>%i   &ndash; Output the Integer i.</h1>
+
+<h1>%f.n &ndash; Output a Float f with n decimal places rounded.</h1>
+
+<p>#</p>
+
+<h1>The format String may include any text. To escape a percent sign, prefix</h1>
+
+<h1>it with a backslash:</h1>
+
+<p>#</p>
+
+<h1>&ldquo;The sale price was %f.n\% off retail.&rdquo;</h1>
+
+<p>The Arguments Section
+The arguments section consists of a list of arguments. Each list item MUST be comprised of the name of the argument, a dash, and an explanation of the argument in plain sentences. The expected type (or types) of each argument SHOULD be clearly indicated in the explanation. When you specify a type, use the proper classname of the type (for instance, use &lsquo;String&rsquo; instead of &lsquo;string&rsquo; to refer to a String type). If the argument has other constraints (e.g. duck-typed method requirements), simply state those requirements. The dashes following each argument name SHOULD be lined up in a single column. Lines SHOULD be wrapped at 80 columns. If an explanation is longer than that, additional lines MUST be indented at least two spaces but SHOULD be indented to match the indentation of the explanation. For example:</p>
+
+<h1>element &ndash; The Symbol representation of the element. The Symbol should</h1>
+
+<h1>contain only lowercase ASCII alpha characters.</h1>
+
+<p>An argument that is String-like might look like this:</p>
+
+<h1>actor &ndash; An object that responds to to_s. Represents the actor that</h1>
+
+<h1>will be output in the log.</h1>
+
+<p>All arguments are assumed to be required. If an argument is optional, you MUST specify the default value:</p>
+
+<h1>host &ndash; The String hostname to bind (default: &lsquo;0.0.0.0&rsquo;).</h1>
+
+<p>For hash arguments, you SHOULD enumerate each valid option in a way similar to how normal arguments are defined:</p>
+
+<h1>options &ndash; The Hash options used to refine the selection (default: {}):</h1>
+
+<h1>:color  &ndash; The String color to restrict by (optional).</h1>
+
+<h1>:weight &ndash; The Float weight to restrict by. The weight should</h1>
+
+<h1>be specified in grams (optional).</h1>
+
+<p>Ruby allows for some interesting argument capabilities. In those cases, try to explain what&rsquo;s going on as best as possible. Examples are a good way to demonstrate how methods should be invoked. For example:</p>
+
+<h1>Print a log line to STDOUT. You can customize the output by specifying</h1>
+
+<h1>a block.</h1>
+
+<p>#</p>
+
+<h1>msgs  &ndash; Zero or more String messages that will be printed to the log</h1>
+
+<h1>separated by spaces.</h1>
+
+<h1>block &ndash; An optional block that can be used to customize the date format.</h1>
+
+<h1>If it is present, it will be sent a Time object representing</h1>
+
+<h1>the current time. Your block should return a String version of</h1>
+
+<h1>the time, formatted however you please.</h1>
+
+<p>#</p>
+
+<h1>Examples</h1>
+
+<p>#</p>
+
+<h1>log(&ldquo;An error occurred.&rdquo;)</h1>
+
+<p>#</p>
+
+<h1>log(&ldquo;No such file&rdquo;, &ldquo;/var/log/server.log&rdquo;) do |time|</h1>
+
+<h1>time.strftime(&ldquo;%Y-%m-%d %H:%M:%S&rdquo;)</h1>
+
+<h1>end</h1>
+
+<p>#</p>
+
+<h1>Returns nothing.</h1>
+
+<p>def log(*msgs, &amp;block)
+  &hellip;
+end
+The Yields Section
+The yields section is used to specify what is sent to the implicitly given block. The section MUST start with the word &ldquo;Yields&rdquo; and SHOULD contain a description and type of the yielded object. For example:</p>
+
+<h1>Yields the Integer index of the iteration.</h1>
+
+<p>Lines SHOULD be wrapped at 80 columns. Wrapped lines MUST be indented under the above line by at least two spaces.</p>
+
+<p>The Examples Section
+The examples section MUST start with the word &ldquo;Examples&rdquo; on a line by itself. The next line SHOULD be blank. The following lines SHOULD be indented by two spaces (three spaces from the initial comment marker) and contain code that shows off how to call the method and (optional) examples of what it returns. Everything under the &ldquo;Examples&rdquo; line should be considered code, so make sure you comment out lines that show return values. For example:</p>
+
+<h1>Examples</h1>
+
+<p>#</p>
+
+<h1>multiplex(&lsquo;x&rsquo;, 4)</h1>
+
+<h1># => &lsquo;xxxx&rsquo;</h1>
+
+<p>#</p>
+
+<h1>multiplex(&lsquo;apple&rsquo;, 2)</h1>
+
+<h1># => &lsquo;appleapple&rsquo;</h1>
+
+<p>The Returns/Raises Section
+The returns section should explain in plain sentences what is returned from the method. The line MUST begin with &ldquo;Returns&rdquo;. If only a single thing is returned, state the nature and type of the value. For example:</p>
+
+<h1>Returns the duplicated String.</h1>
+
+<p>If several different types may be returned, list all of them. For example:</p>
+
+<h1>Returns the given element Symbol or nil if none was found.</h1>
+
+<p>If the return value of the method is not intended to be used, then you should simply state:</p>
+
+<h1>Returns nothing.</h1>
+
+<p>If the method raises exceptions that the caller may be interested in, add additional lines that explain each exception and under what conditions it may be encountered. The lines MUST begin with &ldquo;Raises&rdquo;. For example:</p>
+
+<h1>Returns nothing.</h1>
+
+<h1>Raises Errno::ENOENT if the file cannot be found.</h1>
+
+<h1>Raises Errno::EACCES if the file cannot be accessed.</h1>
+
+<p>Lines SHOULD be wrapped at 80 columns. Wrapped lines MUST be indented under the above line by at least two spaces. For example:</p>
+
+<h1>Returns the atomic mass of the element as a Float. The value is in</h1>
+
+<h1>unified atomic mass units.</h1>
+
+<p>The Signature Section
+The signature section allows you specify the nature of methods that are dynamically created at runtime.</p>
+
+<p>The section MUST start with the word &ldquo;Signature&rdquo; on a line by itself. The next line SHOULD be blank. The following lines SHOULD be indented by two spaces (three spaces from the initial comment marker) and contain special code that shows the method signature(s). For complex dynamic signatures, you SHOULD name and demarcate signature variables with &lt;> for required parts and [] for optional parts. Use &hellip; for repeating elements. If there are dynamic elements to the signature, document them in the same was as the Arguments section, but leave out any type declarations. Documentation for metaprogrammed methods may exist independent of any actual code, or it may appear above the code that creates the methods. Use your best judgment.</p>
+
+<h1>Signature</h1>
+
+<p>#</p>
+
+<h1>find_by_<field><a href="args"><em>and</em><field>&hellip;</a></h1>
+
+<p>#</p>
+
+<h1>field &ndash; A field name.</h1>
+
+<p>Because metaprogrammed methods may be difficult to decipher, it&rsquo;s best to include an examples section to demonstrate proper usage. For example:</p>
+
+<h1>Public: Find Records by a specific field name and value. This method</h1>
+
+<h1>will be available for each field defined on the record.</h1>
+
+<p>#</p>
+
+<h1>args &ndash; The value or Array of values of the field(s) to find by.</h1>
+
+<p>#</p>
+
+<h1>Examples</h1>
+
+<p>#</p>
+
+<h1>find_by_name_and_email(&ldquo;Tom&rdquo;, &ldquo;<a href="&#109;&#x61;&#x69;&#x6c;&#116;&#x6f;&#x3a;&#116;&#x6f;&#x6d;&#64;&#109;&#x6f;&#106;&#111;&#109;&#98;&#111;&#x2e;&#99;&#x6f;&#109;">&#116;&#x6f;&#109;&#64;&#109;&#x6f;&#x6a;&#x6f;&#109;&#x62;&#x6f;&#x2e;&#x63;&#x6f;&#109;</a>&rdquo;)</h1>
+
+<p>#</p>
+
+<h1>Returns an Array of matching Records.</h1>
+
+<p>#</p>
+
+<h1>Signature</h1>
+
+<p>#</p>
+
+<h1>find_by_<field><a href="args"><em>and</em><field>&hellip;</a></h1>
+
+<p>#</p>
+
+<h1>field &ndash; A field name.</h1>
+
+<p>Class/Module Documentation
+TomDoc for classes and modules follows the same form as Method Documentation but only contains the Description and Examples sections.</p>
+
+<h1>Public: Various methods useful for performing mathematical operations.</h1>
+
+<h1>All methods are module methods and should be called on the Math module.</h1>
+
+<p>#</p>
+
+<h1>Examples</h1>
+
+<p>#</p>
+
+<h1>Math.square_root(9)</h1>
+
+<h1># => 3</h1>
+
+<p>module Math
+  &hellip;
+end
+Just like methods, classes may be marked as Public, Internal, or Deprecated depending on their intended use.</p>
+
+<p>Constants Documentation
+Constants should be documented with freeform comments. The type of the constant and any important constraints should be stated.</p>
+
+<h1>Public: Integer number of seconds to wait before connection timeout.</h1>
+
+<p>CONNECTION_TIMEOUT = 60
+Just like methods, constants may be marked as Public, Internal, or Deprecated depending on their intended use.</p>
+
+<p>Special Considerations
+Constructor
+A Ruby class&rsquo;s initialize method does not have a significant return value. You MAY exclude the returns section. A larger description of the purpose of this class should be done at the Class level.</p>
+
+<h1>Public: Initialize a Widget.</h1>
+
+<p>#</p>
+
+<h1>name &ndash; A String naming the widget.</h1>
+
+<p>def initialize(name)
+  &hellip;
+end
+Attributes
+Ruby&rsquo;s built in attr_reader, attr_writer, and attr_accessor require a bit more consideration. With TomDoc you SHOULD document each of these method generators separately. Because each part of a method documentation section is optional, you can write concise yet unambiguous docs.</p>
+
+<p>Here is an example TomDoc for attr_reader.</p>
+
+<h1>Public: Returns the String name of the user.</h1>
+
+<p>attr_reader :name
+Here is an example TomDoc for attr_writer.</p>
+
+<h1>Public: Sets the String name of the user.</h1>
+
+<p>attr_writer :name
+For attr_accessor you can use an overloaded shorthand that documents the getter and setter simultaneously:</p>
+
+<h1>Public: Gets/Sets the String name of the user.</h1>
+
+<p>attr_accessor :name</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[使用 ri 命令查看 API]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/01/18/shi-yong-ri-ming-ling-cha-kan-api/"/>
+    <updated>2012-01-18T12:02:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/01/18/shi-yong-ri-ming-ling-cha-kan-api</id>
+    <content type="html"><![CDATA[<h2>使用 ri 命令查看 API</h2>
+
+<div>
+
+经常去 APIDOCK.COM 查询标准 API，今天访问时忽然变得很慢，忽然想起 Ruby 有自己的 Rdoc，是不是能自己生成一个本地的文档呢。
+
+隐约记得有两种方法查看本地文档，一个是使用 ri 命令，一个是用 Rdoc 生成 Html 格式的文件在浏览器中查询。ri 文档基于 Rdoc 来生成。我更喜欢使用命令行格式的，不过直接 ri 了一下，只有几个 gem 的文档，没有 Ruby 核心和标准库的。我用的是 rvm，rvm 安装 rubies 后并不会自动生成 rdoc，还需要手动生成。
+<h2>删除 gem 文档</h2>
+因为 <code>ri method</code> 会列出所有包含 method 的 gem，为了不让输出显得凌乱，需要把默认的 gem 的 doc 全部去掉，这些 gem 很多只是为了解决依赖自动下载的并不常用，也不需要。先贴一下 gem 环境
+<div>
+<div id="highlighter_16375">
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>
+<div><code>abc@abc-desktop:~$ gem </code><code>env</code></div>
+<div><code>RubyGems Environment: </code></div>
+<div><code>  </code><code>- RUBYGEMS VERSION: 1.6.2 </code></div>
+<div><code>  </code><code>- RUBY VERSION: 1.9.2 (2011-02-18 patchlevel 180) [i686-linux] </code></div>
+<div><code>  </code><code>- INSTALLATION DIRECTORY: </code><code>/home/abc/</code><code>.rvm</code><code>/gems/ruby-1</code><code>.9.2-p180 </code></div>
+<div><code>  </code><code>- RUBY EXECUTABLE: </code><code>/home/abc/</code><code>.rvm</code><code>/rubies/ruby-1</code><code>.9.2-p180</code><code>/bin/ruby</code></div>
+<div><code>  </code><code>- EXECUTABLE DIRECTORY: </code><code>/home/abc/</code><code>.rvm</code><code>/gems/ruby-1</code><code>.9.2-p180</code><code>/bin</code></div>
+<div><code>  </code><code>- RUBYGEMS PLATFORMS: </code></div>
+<div><code>    </code><code>- ruby </code></div>
+<div><code>    </code><code>- x86-linux </code></div>
+<div><code>  </code><code>- GEM PATHS: </code></div>
+<div><code>     </code><code>- </code><code>/home/abc/</code><code>.rvm</code><code>/gems/ruby-1</code><code>.9.2-p180 </code></div>
+<div><code>     </code><code>- </code><code>/home/abc/</code><code>.rvm</code><code>/gems/ruby-1</code><code>.9.2-p180@global </code></div>
+<div><code>  </code><code>- GEM CONFIGURATION: </code></div>
+<div><code>     </code><code>- :update_sources =&gt; </code><code>true</code></div>
+<div><code>     </code><code>- :verbose =&gt; </code><code>true</code></div>
+<div><code>     </code><code>- :benchmark =&gt; </code><code>false</code></div>
+<div><code>     </code><code>- :backtrace =&gt; </code><code>false</code></div>
+<div><code>     </code><code>- :bulk_threshold =&gt; 1000 </code></div>
+<div><code>  </code><code>- REMOTE SOURCES: </code></div>
+<div><code>     </code><code>- http:</code><code>//rubygems</code><code>.org/</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+进入 GEM PATHS 即 ~/.rvm/gems/ruby-1.9.2-p180/doc 中执行 <code>rm -rf</code> 删除掉所有文档。
+
+gem 安装时选择 <code>gem install <em>gemname</em> --no-ri --no-rdoc</code> 可以避免生成文档，如果不想每次麻烦输入，执行 <code>echo 'install: --no-rdoc --no-ri' &gt; ~/.gemrc</code> 新建并写入配置文件即可。
+
+rvm 的 gem 默认会从 ~/.vimrc 以及 $ruby_path/etc/gemrc 下读取配置文件。后者可以通过 IRB 中执行 <code>Gem::ConfigFile::SYSTEM_WIDE_CONFIG_FILE</code> 查看。
+<h2>安装 Rdoc/ri 文档</h2>
+删除 gem 文档后，使用 <code>rvm doc generate</code> 生成当前版本 Ruby 的文档，涵盖核心类和标准库。生成的 Html 文档会存放在 /.rvm/docs 下。
+
+命令 ri 的使用示例：
+<div>
+<div id="highlighter_187585">
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>
+<div><code>ri Array</code><code>#sort </code></div>
+<div><code>ri IO.readlines </code></div>
+<div><code>ri String </code></div>
+<div><code>ri gsub </code></div>
+<div><code>ri File::</code><code>dirname</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+还可以加入一些常用的 gem 的文档，比如 nokogiri，<code>gem rdoc nokogiri -v 1.5.0</code>
+<div>标签： <a href="http://jhjguxin.hwcrazy.com/tag/doc/">doc</a> <a href="http://jhjguxin.hwcrazy.com/tag/rails/">rails</a> <a href="http://jhjguxin.hwcrazy.com/tag/ruby/">ruby</a></div>
+</div>
+
+]]></content>
+  </entry>
+  
+</feed>

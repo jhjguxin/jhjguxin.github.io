@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: rake | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/tags/rake/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[rails学习笔记: rake  相关命令]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/02/15/railsxue-xi-bi-ji-rake-xiang-guan-ming-ling/"/>
+    <updated>2012-02-15T18:23:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/02/15/railsxue-xi-bi-ji-rake-xiang-guan-ming-ling</id>
+    <content type="html"><![CDATA[<h2>rails学习笔记: rake  相关命令</h2>
+
+<p>命令行
+rake db：*****
+script/generate model task name:string priority:integer <br/>
+script/generate migration add_description_to_task description:string <br/>
+script/generate migration remove_description_from_task description:string</p>
+
+<p>类似的概念里有叫做“迁移 (migration)”的东西，Rails的世界里，指的是改变数据库的结构（schema）。这个通过db/migrate目录下面的 Ruby 脚本执行。</p>
+
+<p>另一方面，db/seeds.rb 也向数据库插入数据。例如，在希望从开始状态准备初期管理者帐户的情况下使用。</p>
+
+<p>在此之前这样的代码只在迁移脚本内描述，我想对此感觉不方便的不止我一个人。</p>
+
+<p>db/seeds.rb 是像下面的例子一样的普通的 Rails 脚本：</p>
+
+<p>Administrator.create(:name => &lsquo;root&rsquo;, :password => &lsquo;&rsquo;)专用的 Rake 任务 db:seeds 也具备。</p>
+
+<p>数据类型
+引用</p>
+
+<h1>:string, :text, :integer, :float,:decimal, :datetime, :timestamp, :time, :date,</h1>
+
+<h1>:binary, :boolean</h1>
+
+<p>与db有关的rake任务</p>
+
+<p>db:charset 检索当前环境下数据库的字符设置 <br/>
+db:collation 检索当前环境下数据库的校对 <br/>
+db:create 用config\database.yml中的定义创建当前 RAILS_ENV 项目环境下的数据库 <br/>
+db:create:all 用config\database.yml中的定义创建所有数据库 <br/>
+db:drop 删除当前 RAILS_ENV项目环境中的数据库 <br/>
+db:drop:all 删除所有在 config\database.yml中定义的数据库 <br/>
+db:reset 从db\schema.rb中为当前环境重建数据库（先删后建）. <br/>
+db:rollback 回滚(清华出版社一本SQLSERVER书的名词[很奇怪为什么不直接用滚回])数据库到前一个版本. 指定回滚到哪一步要用 STEP=n 参数 <br/>
+db:version 检索当前模式下的版本</p>
+
+<p>备份数据库
+rake db:backup:create 根据database.yml的信息备份数据库
+rake db:backup:destroy 默认删除一天前的备份数据
+rake db:backup:rebuild 默认恢复最新的备份数据</p>
+
+<p>注意：这里设置的备份目录是db的backup目录，可以修改</p>
+
+<p>添加索引
+引用</p>
+
+<p>add_index :acls, [&ldquo;action_id&rdquo;,&ldquo;group_id&rdquo;],:unique=>true
+add_index :acls, :action_id</p>
+
+<p>drop all tables 删除全部表
+rake db:migrate VERSION=0</p>
+
+<p>指定恢复/删除：
+rake db:migrate:down/up VERSION = version_of_migrati</p>
+
+<p>定义数字精确度
+t.integer :total_price, :precision=>8,:scale=>2,:default=>0</p>
+
+<p>========================================================================================================================================================
+rake db:abort_if_pending_migrations  # Raises an error if there are pending migrations
+rake db:charset                      # Retrieves the charset for the current environment&rsquo;s database
+rake db:collation                    # Retrieves the collation for the current environment&rsquo;s database
+rake db:create                       # Create the database defined in config/database.yml for the current RAILS_ENV
+rake db:create:all                   # Create all the local databases defined in config/database.yml
+rake db:drop                         # Drops the database for the current RAILS_ENV
+rake db:drop:all                     # Drops all the local databases defined in config/database.yml
+rake db:fixtures:identify            # Search for a fixture given a LABEL or ID.
+rake db:fixtures:load                # Load fixtures into the current environment&rsquo;s database.
+rake db:migrate                      # Migrate the database through scripts in db/migrate.
+rake db:migrate:down                 # Runs the &ldquo;down&rdquo; for a given migration VERSION.
+rake db:migrate:redo                 # Rollbacks the database one migration and re migrate up.
+rake db:migrate:reset                # Resets your database using your migrations for the current environment
+rake db:migrate:up                   # Runs the &ldquo;up&rdquo; for a given migration VERSION.
+rake db:reset                        # Drops and recreates the database from db/schema.rb for the current environment.
+rake db:rollback                     # Rolls the schema back to the previous version.
+rake db:schema:dump                  # Create a db/schema.rb file that can be portably used against any DB supported by AR
+rake db:schema:load                  # Load a schema.rb file into the database
+rake db:sessions:clear               # Clear the sessions table
+rake db:sessions:create              # Creates a sessions migration for use with CGI::Session::ActiveRecordStore
+rake db:structure:dump               # Dump the database structure to a SQL file
+rake db:test:clone                   # Recreate the test database from the current environment&rsquo;s database schema
+rake db:test:clone_structure         # Recreate the test databases from the development structure
+rake db:test:load                    # Recreate the test database from the current schema.rb
+rake db:test:prepare                 # Check for pending migrations and load the test schema
+rake db:test:purge                   # Empty the test database
+rake db:version                      # Retrieves the current schema version number
+rake doc:app                         # Build the app HTML Files
+rake doc:clobber_app                 # Remove rdoc products
+rake doc:clobber_plugins             # Remove plugin documentation
+rake doc:clobber_rails               # Remove rdoc products
+rake doc:guides                      # Generate Rails guides
+rake doc:plugins                     # Generate documentation for all installed plugins
+rake doc:rails                       # Build the rails HTML Files
+rake doc:reapp                       # Force a rebuild of the RDOC files
+rake doc:rerails                     # Force a rebuild of the RDOC files
+rake gems                            # List the gems that this rails application depends on
+rake gems:build                      # Build any native extensions for unpacked gems
+rake gems:install                    # Installs all required gems for this application.
+rake gems:refresh_specs              # Regenerate gem specifications in correct format.
+rake gems:unpack                     # Unpacks the specified gem into vendor/gems.
+rake gems:unpack:dependencies        # Unpacks the specified gems and its dependencies into vendor/gems
+rake log:clear                       # Truncates all <em>.log files in log/ to zero bytes
+rake notes                           # Enumerate all annotations
+rake notes:custom                    # Enumerate a custom annotation, specify with ANNOTATION=WTFHAX
+rake notes:fixme                     # Enumerate all FIXME annotations
+rake notes:optimize                  # Enumerate all OPTIMIZE annotations
+rake notes:todo                      # Enumerate all TODO annotations
+rake rails:freeze:edge               # Lock to latest Edge Rails, for a specific release use RELEASE=1.2.0
+rake rails:freeze:gems               # Lock this application to the current gems (by unpacking them into vendor/rails)
+rake rails:unfreeze                  # Unlock this application from freeze of gems or edge and return to a fluid use of system gems
+rake rails:update                    # Update both configs, scripts and public/javascripts from Rails
+rake rails:update:configs            # Update config/boot.rb from your current rails install
+rake rails:update:javascripts        # Update your javascripts from your current rails install
+rake rails:update:scripts            # Add new scripts to the application script/ directory
+rake routes                          # Print out all defined routes in match order, with names.
+rake secret                          # Generate a crytographically secure secret key.
+rake stats                           # Report code statistics (KLOCs, etc) from the application
+rake test                            # Run all unit, functional and integration tests
+rake test:benchmark                  # Run tests for benchmarkdb:test:prepare / Benchmark the performance tests
+rake test:functionals                # Run tests for functionalsdb:test:prepare / Run the functional tests in test/functional
+rake test:integration                # Run tests for integrationdb:test:prepare / Run the integration tests in test/integration
+rake test:plugins                    # Run tests for pluginsenvironment / Run the plugin tests in vendor/plugins/</em>/**/test (or specify with PLUGIN=name)
+rake test:profile                    # Run tests for profiledb:test:prepare / Profile the performance tests
+rake test:recent                     # Run tests for recentdb:test:prepare / Test recent changes
+rake test:uncommitted                # Run tests for uncommitteddb:test:prepare / Test changes since last checkin (only Subversion and Git)
+rake test:units                      # Run tests for unitsdb:test:prepare / Run the unit tests in test/unit
+rake time:zones:all                  # Displays names of all time zones recognized by the Rails TimeZone class, grouped by offset.
+rake time:zones:local                # Displays names of time zones recognized by the Rails TimeZone class with the same offset as the system local time
+rake time:zones:us                   # Displays names of US time zones recognized by the Rails TimeZone class, grouped by offset.
+rake tmp:cache:clear                 # Clears all files and directories in tmp/cache
+rake tmp:clear                       # Clear session, cache, and socket files from tmp/
+rake tmp:create                      # Creates tmp directories for sessions, cache, and sockets
+rake tmp:pids:clear                  # Clears all files in tmp/pids
+rake tmp:sessions:clear              # Clears all files in tmp/sessions
+rake tmp:sockets:clear               # Clears all files in tmp/sockets</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Rails Rake指南]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/02/13/rails-rakezhi-nan/"/>
+    <updated>2012-02-13T13:47:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/02/13/rails-rakezhi-nan</id>
+    <content type="html"><![CDATA[<h2>Rails Rake指南</h2>
+
+<p>这是Rails Envy网站的一篇Rake指南，你可以在这里找到原文。</p>
+
+<p>作为RoR开发者，你对Rake一定不会陌生，你可能用它来完成你的单元测试，也可能是迁移数据库，但是你真正理解这些Rake任务到底是怎么运作的吗？你有尝试过创建你自己的Rake任务吗？</p>
+
+<p>在这篇文章中，我们将会介绍Rake的由来，以及如何在Rails中使用它，通过这篇文章的学习，你将掌握如何使用Rake创建你自己的任务。</p>
+
+<p>为什么要有Rake</p>
+
+<p>要理解Rake，我们首先得来了解一下Rake的历史悠远的祖先：Make。因此我们需要暂且回到解释型语言产生之前的久远年代，在那个时代，所有代码都需 要被编译，然后才能够被执行，所以当你从Internet下载到一个相当庞大的程序后，一般来说，除了源代码，程序包中还会包含一个类似 “install_me.sh”的Shell脚本，它会负责帮你完成源代码的编译，并生成最终的可执行文件。</p>
+
+<p>这看起来很完美，不是吗？对用户来说可能如此，但对于开发者来说，这却是个相当粗笨的方法，因为即使你只是修改了一个文件中的一小段代码，”install_me.sh”也必须将所有的源代码都重新编译一遍，才能生成最终的可执行文件。</p>
+
+<p>因此，针对这个问题，Bell实验室的Stuart Feldman创造了Make：</p>
+
+<p>Make可以识别自上次编译之后那些文件发生了改变，从而在下次编译时只对这些发生改变的文件进行编译，而忽略那些没有变化的文件，从而大大降低了程序的编译时间。
+Make同时支持依赖关系追踪，也就是你可以告诉编译器，文件A依赖于文件B，因此当文件B发生改变后，文件A也会被重新编译，并且如果编译文件A时，文件B还没有被编译，那么Make会告诉编译器应该先编译文件B。
+Make 实际上是一个跟ls和dir差不多的可执行文件，只不过你需要提供一个Makefile文件给它作为输入，Makefile中对每个需要编译的文件及它们 的依赖关系进行定义，Makefile的语法类似于Shell脚本，但又有些不同，这里我们不需要关心Makefile的语法。</p>
+
+<p>随着Make的语言中立性，任何语言的程序都可以使用它来作为构建（build）系统，事实上，在Rake产生之前，许多Ruby项目也是采用Make作为构建系统的。</p>
+
+<p>你可能会奇怪：“Ruby程序并不需要被编译，为何还要使用Make呢？”，是的，Ruby的确不需要编译，事实上，Ruby程序员使用Make是出于以下两个原因：</p>
+
+<p>创 建任务，对于大型程序来说，编译完成并不意味着可以了事，往往你需要编写一大堆的脚本来控制它的运行，或者查看它的运行状态等等，这种情况下，你就可以创 建一个Makefile来管理所有这些任务，然后你就可以使用诸如“make stupid”，“make clever”来分别运行糊涂和聪明任务了。
+依 赖关系追踪，当你开始写一个库的时候，你可能会发现，越来越的的任务存在重复，比如”migrate“和”shema: dump“就都需要连接数据库，这时你就可以抽象出一个”connect_to_db”任务，并设置”migrate”和”shema: dump”任务都依赖于”connect_to_db”，这样当你单独运行”migrate”或者”shema:dump”任务时， “connect_to_db”任务都会被首先调用，如果你同时运行这两个任务，那么”connect_to_db”任务只会被执行一次。
+Rake是怎么来的？</p>
+
+<p>很多年以前，当 Jim Weirich还在为一个Java项目工作时，他最初的选择也是Makefile，但是很快他意识到：要是能够在Makefile中嵌入Ruby代码，那会是多么的方便呀，于是，Rake就这么产生了。</p>
+
+<p>Rake支持任务创建，任务依赖关系追踪，以及文件编译时间识别。最后一个功能对Ruby程序员应该用不到，但如果你同时还是一个C程序员，那么你可以尝试使用Rake来替代Make。</p>
+
+<p>Rake如何工作</p>
+
+<p>让我们通过一个例子来说明吧，假设我今天很郁闷，想要借酒消愁，这个过程涉及以下几个任务：</p>
+
+<p>买酒
+买下酒菜
+搞掂它们
+假设使用Rake来管理这3个任务，那么我首先需要创建一个Rakefile文件：</p>
+
+<p>task :purchaseAlcohol do
+  puts &ldquo;来瓶五粮液&rdquo;
+end
+task :mixDrink do
+  puts &ldquo;上盘花生米&rdquo;
+end
+task :getSmashed do
+  puts &ldquo;老板, 啥时学的分身术, 很强嘛?&rdquo;
+end</p>
+
+<p>然后我就可以从Rakefile文件所在的目录来完成这些任务了：</p>
+
+<p>$ rake purchaseAlcohol
+来瓶五粮液
+$ rake mixDrink
+上盘花生米
+$ rake getSmashed
+老板, 啥时学的分身术, 很强嘛?</p>
+
+<p>很简单吧！但是有些问题，我可不想还没喝酒吃东西就看到老板的分身，这会被人当作精神不正常。</p>
+
+<p>如何组织任务的依赖关系</p>
+
+<p>很简单：</p>
+
+<p>task :purchaseAlcohol do
+  puts &ldquo;来瓶五粮液&rdquo;
+end
+task :mixDrink => :purchaseAlcohol do
+  puts &ldquo;上盘花生米&rdquo;
+end
+task :getSmashed => :mixDrink do
+  puts &ldquo;老板, 啥时学的分身术, 很强嘛?&rdquo;
+end</p>
+
+<p>搞掂，现在再试试：</p>
+
+<p>$ rake purchaseAlcohol
+来瓶五粮液
+$ rake mixDrink
+来瓶五粮液
+上盘花生米
+$ rake getSmashed
+来瓶五粮液
+上盘花生米
+老板, 啥时学的分身术, 很强嘛?</p>
+
+<p>就像你看到的，现在我想要醉必须得先喝点酒吃点花生才行，不过一个人喝酒总归有些无聊，所以我想喊些哥们一起来喝，但是我又懒得跟他们解释为啥突然喊他们来喝酒（本人平时比较吝啬），我想到一个偷懒的办法，给他们看文档，但是究竟该怎么为我的Rake任务生成文档呢？</p>
+
+<p>为Rake任务生成文档
+再简单不过了：</p>
+
+<p>desc &ldquo;工作郁闷，想喝点酒&rdquo;
+task :purchaseAlcohol do
+  puts &ldquo;来瓶五粮液&rdquo;
+end
+desc &ldquo;得有点下酒菜&rdquo;
+task :mixDrink => :purchaseAlcohol do
+  puts &ldquo;来盘花生米&rdquo;
+end
+desc &ldquo;开喝，不醉不归&rdquo;
+task :getSmashed => :mixDrink do
+  puts &ldquo;老板, 啥时学的分身术, 很强嘛?&rdquo;
+end</p>
+
+<p>就像你看到的，我的每个任务都有了一个desc字段，现在我和我的朋友们就可以通过rake -T或者rake –task来查看每个任务的文档了：</p>
+
+<p>$ rake &mdash;tasks
+rake getSmashed # 开喝，不醉不归
+rake mixDrink # 得有点下酒菜
+rake purchaseAlcohol # 工作郁闷，想喝点酒</p>
+
+<p>Rake命名空间</p>
+
+<p>一旦养成了工作郁闷就喝酒的好习惯之后，你很快就会发现，自己成了个酒鬼，因此你不得不写一大堆Rake任务来集结你的狐朋狗友们，这时你就会发现命名空间的重要性：</p>
+
+<p>namespace :alcoholic do
+  desc &ldquo;工作郁闷，想喝点酒&rdquo;
+  task :purchaseAlcohol do</p>
+
+<pre><code>puts "来瓶五粮液"
+</code></pre>
+
+<p>  end
+  desc &ldquo;得有点下酒菜&rdquo;
+  task :mixDrink => :purchaseAlcohol do</p>
+
+<pre><code>puts "来盘花生米"
+</code></pre>
+
+<p>  end
+  desc &ldquo;开喝，不醉不归&rdquo;
+  task :getSmashed => :mixDrink do</p>
+
+<pre><code>puts "老板, 啥时学的分身术, 很强嘛?"
+</code></pre>
+
+<p>  end
+end
+namespace :girlfriend do
+  desc &ldquo;那个，喝点红酒吧&rdquo;
+  task :purchaseAlcohol do</p>
+
+<pre><code>puts "来瓶干红"
+</code></pre>
+
+<p>  end
+end</p>
+
+<p>命名空间允许你将你的任务进行分类，你可以在一个Rakefile内创建多个命名空间，现在输入rake –tasks你会得到如下输出：</p>
+
+<p>rake alcoholic:getSmashed # 开喝，不醉不归
+rake alcoholic:mixDrink # 得有点下酒菜
+rake alcoholic:purchaseAlcohol # 工作郁闷，想喝点酒
+rake girlfriend:purchaseAlcohol # 那个，喝点红酒吧</p>
+
+<p>有用的任务</p>
+
+<p>上面都是扯淡，毕竟人生除了喝酒还有更重要的事情等着我们去做，下面，我们来干点正经事，假设我们需要完成这样一个任务，给定一组目录，如果不存在，就创建它们，我创建的Rake任务如下：</p>
+
+<p>desc &ldquo;Create blank directories if they don&rsquo;t already exist&rdquo;
+task(:create_directories) do
+  # The folders I need to create
+  shared_folders = [&ldquo;icons&rdquo;,&ldquo;images&rdquo;,&ldquo;groups&rdquo;]</p>
+
+<pre><code>for folder in shared_folders
+# Check to see if it exists
+if File.exists?(folder)
+  puts "#{folder} exists"
+else
+  puts "#{folder} doesn't exist so we're creating"
+  Dir.mkdir "#{folder}"
+end
+</code></pre>
+
+<p>  end
+end</p>
+
+<p>默认情况下，Rake具有所有File Utils包的功能，当然你也可以通过引用其他库来做任何你想做的事情，那么下一个问题就是：我应该如何在Rails中使用Rake呢？</p>
+
+<p>在Rails中使用Rake</p>
+
+<p>每个Rails应用本身都在带有许多预定义的Rake任务，你可以通过在你的Rails应用的根目录下执行rake –tasks来查看可用的rake任务，别以后了，现在就试试吧，我等你！</p>
+
+<p>要创建新的Rake任务，你只需打开你的Rails应用的lib/tasks目录，并将你的Rakefile命名为”somethins.rake”即可，它会自动被主Rakefile引用，然后你就可以在主目录下调用你的rake任务了，让我们继续上面那个例子：</p>
+
+<p>utils.rake</p>
+
+<p>namespace :utils do
+  desc &ldquo;Create blank directories if they don&rsquo;t already exist&rdquo;
+ task(:create_directories) do
+  # The folders I need to create
+  shared_folders = [&ldquo;icons&rdquo;,&ldquo;images&rdquo;,&ldquo;groups&rdquo;]
+  for folder in shared_folders
+   # Check to see if it exists
+   if File.exists?(&ldquo;#{RAILS_ROOT}/public/#{folder}&rdquo;)</p>
+
+<pre><code>puts "#{RAILS_ROOT}/public/#{folder} exists"
+</code></pre>
+
+<p>   else</p>
+
+<pre><code>puts "#{RAILS_ROOT}/public/#{folder} doesn't exist so we're creating"
+Dir.mkdir "#{RAILS_ROOT}/public/#{folder}"
+</code></pre>
+
+<p>   end
+  end
+ end
+end</p>
+
+<p>再次执行rake –tasks，你会看到如下结果</p>
+
+<p>&hellip;&hellip;
+rake tmp:pids:clear # Clears all files in tmp/pids
+rake tmp:sessions:clear # Clears all files in tmp/sessions
+rake tmp:sockets:clear # Clears all files in tmp/sockets
+rake utils:create_directories # Create blank directories if they
+don&rsquo;t already exist</p>
+
+<p>从Rake任务中可以访问rails model吗？</p>
+
+<p>是的，当然可以，这是我使用Rake最主要的用途：运行一些需要手动执行的任务，或者是需要脱离Rails定期运行的任务，下面是一个简单的例子：</p>
+
+<p>namespace :utils do
+  desc &ldquo;Finds soon to expire subscriptions and emails users&rdquo;
+  task(:send_expire_soon_emails => :environment) do</p>
+
+<pre><code># Find users to email
+for user in User.members_soon_to_expire
+  puts "Emailing #{user.name}"
+  UserNotifier.deliver_expire_soon_notification(user)
+end
+</code></pre>
+
+<p>  end
+end</p>
+
+<p>实在是很简单，你只需要在你的任务之前执行”=> :environment“就可以了。</p>
+
+<p>如果需要在开发模式执行这个任务，直接敲”rake utils:send_expire_soon_emails”就可以了，如果是产品模式，敲”rake RAILS_ENV=production utils:send_expire_soon_emails”，现在如果我想让这个任务每天晚上运行一次，那么，我只需要在cronjob文件中加入下面这行就可以了：</p>
+
+<p>0 0 * * * cd /var/www/apps/rails_app/ &amp;&amp; /usr/local/bin/rake RAILS_ENV=production utils:send_expire_soon_emails</p>
+
+<p>还有更多的例子吗？</p>
+
+<pre>
+<code>namespace :sunspot do
+  namespace :solr do
+    desc 'Start the Solr instance'
+    task :start => :environment do
+      case RUBY_PLATFORM
+      when /w(in)?32$/, /java$/
+        abort("This command is not supported on #{RUBY_PLATFORM}. " +
+              "Use rake sunspot:solr:run to run Solr in the foreground.")
+      end
+
+      if defined?(Sunspot::Rails::Server)
+        Sunspot::Rails::Server.new.start
+      else
+        Sunspot::Solr::Server.new.start
+      end
+
+      puts "Successfully started Solr ..."
+    end
+
+    desc 'Run the Solr instance in the foreground'
+    task :run => :environment do
+      if defined?(Sunspot::Rails::Server)
+        Sunspot::Rails::Server.new.run
+      else
+        Sunspot::Solr::Server.new.run
+      end
+    end
+
+    desc 'Stop the Solr instance'
+    task :stop => :environment do
+      case RUBY_PLATFORM
+      when /w(in)?32$/, /java$/
+        abort("This command is not supported on #{RUBY_PLATFORM}. " +
+              "Use rake sunspot:solr:run to run Solr in the foreground.")
+      end
+
+      if defined?(Sunspot::Rails::Server)
+        Sunspot::Rails::Server.new.stop
+      else
+        Sunspot::Solr::Server.new.stop
+      end
+
+      puts "Successfully stopped Solr ..."
+    end
+
+    # for backwards compatibility
+    task :reindex => :"sunspot:reindex"
+  end
+end</code>
+</pre>
+
+
+<p>不用担心，只要你有时间，并且愿意看，例子大把：</p>
+
+<p>These brand new rake tasks in Edge Rails create and reset your databases for you. Neato!
+Craig Ambrose wrote a Rake task to do database backups, which you can use.
+Adam Greene put together a set of Rake tasks that allow you to backup all your data to Amazon S3
+Jay Fields made a good point when he talked about testing rake tasks
+Err the blog talks about a new way of setting the RAILS_ENV and teaches how to use rake to boot you into a Mysql shell (be sure to read the comments if you browse this one).
+Last, but not least, there’s the Rake Bookshelf Books and Martin Fowler’s Using the Rake Build Language tutorial . Both of these are pretty thorough, but also a little dated</p>
+]]></content>
+  </entry>
+  
+</feed>

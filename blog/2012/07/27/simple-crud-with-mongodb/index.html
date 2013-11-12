@@ -1,0 +1,371 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Simple CRUD with MongoDB  - Francis's Octopress Blog</title>
+  <meta name="author" content="Francis Jiang">
+
+  
+  <meta name="description" content="Simple CRUD with MongoDB When I meet a new technology, I like to experience it &ldquo;just as it comes&rdquo;. I&rsquo;m happy at the command line &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jhjguxin.github.io/blog/2012/07/27/simple-crud-with-mongodb">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Francis's Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-25901353-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Francis's Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jhjguxin.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/readme">Readme</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Simple CRUD With MongoDB</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-27T12:34:00+08:00" pubdate data-updated="true">Jul 27<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>Simple CRUD with MongoDB</h2>
+
+<p>When I meet a new technology, I like to experience it &ldquo;just as it comes&rdquo;. I&rsquo;m happy at the command line and I like to type actual commands and see man pages before I use any wrappers or helper tools. So when I met <a href="http://www.mongodb.org/">MongoDB</a> for the first time, I did exactly that. This post shows those first steps of creating a database, and inserting, reading, deleting and updating data.</p>
+
+<p><em>Before we begin, you should install mongo. This is painless and for me, on ubuntu, <code>sudo aptitude install mongodb</code> did the trick.</em></p>
+
+<h3>Some Terminology</h3>
+
+
+<p>Here are some translations from the RDBMS equivalent wording:</p>
+
+<ul>
+    <li>&#8220;database&#8221; is still &#8220;database&#8221;</li>
+    <li>&#8220;table&#8221; becomes &#8220;collection&#8221;</li>
+    <li>&#8220;row&#8221; becomes &#8220;record&#8221;</li>
+    <li>try to forget the word &#8220;column&#8221;, we don&#8217;t have those</li>
+</ul>
+
+
+<h3>Let&#8217;s Begin</h3>
+
+
+<p><strong>Creating a Database</strong></p>
+
+<p>You don&rsquo;t really create a database with mongo, you just kind of start using it. Once you put something in there, it exists. I&rsquo;m going to name my new database <code>pets</code>.</p>
+
+<pre>use pets</pre>
+
+
+<p><strong>Adding Data</strong></p>
+
+<p>To do anything in mongo, you start your command with <code>db</code> which refers to the database you&rsquo;re using. The different parts of the command are separated by dots. To insert data you use a command like <code>db.[collection].save()</code> and feed in the data to save. The format of the data is JSON-esque &ndash; I read JSON but I don&rsquo;t really write it, however I found it became familiar pretty quickly. To insert some data, you can do:</p>
+
+<pre>&gt; db.animals.save({'animal':'cat', 'name':'fluffy', 'type':'long-haired', 'owner':'Anna'});
+&gt; db.animals.save({'animal':'dog', 'type':'spaniel', 'name':'toffee', 'colour':'toffee', 'owner':'Ben'});
+&gt; db.animals.save({'owner':'Ben', 'animal':'cat', 'name':'ginger', 'collar':true});</pre>
+
+
+<p><strong>Fetching Data</strong></p>
+
+<p>Did anything happen? We can check, using <code>db.[collection].find()</code> - this will give us everything in the collection, a bit like <code>select * from [table]</code> does in SQL.</p>
+
+<pre>&gt; db.animals.find();
+{ "_id" : ObjectId("4ebb8fd68f7aaffc5d287383"), "animal" : "cat", "name" : "fluffy", "type" : "long-haired", "owner" : "Anna" }
+{ "_id" : ObjectId("4ebb90048f7aaffc5d287384"), "animal" : "dog", "type" : "spaniel", "name" : "toffee", "colour" : "toffee", "owner" : "Ben" }
+{ "_id" : ObjectId("4ebb90768f7aaffc5d287385"), "owner" : "Ben", "animal" : "cat", "name" : "ginger", "collar" : true }</pre>
+
+
+<p>We definitely have data! We can also filter this down, the equivalent of adding a &ldquo;where&rdquo; clause, for example, let&rsquo;s only see cats:</p>
+
+<pre>&gt; db.animals.find({'animal':'cat'});
+{ "_id" : ObjectId("4ebb8fd68f7aaffc5d287383"), "animal" : "cat", "name" : "fluffy", "type" : "long-haired", "owner" : "Anna" }
+{ "_id" : ObjectId("4ebb90768f7aaffc5d287385"), "owner" : "Ben", "animal" : "cat", "name" : "ginger", "collar" : true }</pre>
+
+
+<p>You can add multiple constraints here, how about cats belonging to Ben?</p>
+
+<pre>&gt; db.animals.find({'animal':'cat', 'owner':'Ben'});
+{ "_id" : ObjectId("4ebb90768f7aaffc5d287385"), "owner" : "Ben", "animal" : "cat", "name" : "ginger", "collar" : true }</pre>
+
+
+<p>If any of the records don&rsquo;t have the field you&rsquo;re searching on, they won&rsquo;t appear in the results. We&rsquo;re not tied to a rigid structure of columns so you can just throw in whichever data seems useful at the time, and search on whatever is there. We can also search on whether we have the field at all, for example, animals where we know what colour they are:</p>
+
+<pre>&gt; db.animals.find({colour: {$exists: true}});
+{ "_id" : ObjectId("4ebb90048f7aaffc5d287384"), "animal" : "dog", "type" : "spaniel", "name" : "toffee", "colour" : "toffee", "owner" : "Ben" }</pre>
+
+
+<p><strong>Updating Data</strong></p>
+
+<p>This confused me for a long time, as mongo does have an <code>update()</code> function, which you can use to update one or many records in a particular way. What I found I really wanted though was to use the <code>save()</code> method again, because if the record has an identifier that exists, mongo will update it, otherwise it will insert it as we saw above. So we can just grab a record and change it, then save it:</p>
+
+<pre>&gt; db.animals.find({'animal':'dog'});
+{ "_id" : ObjectId("4ebb90048f7aaffc5d287384"), "animal" : "dog", "type" : "spaniel", "name" : "toffee", "colour" : "toffee", "owner" : "Ben" }
+db.animals.save({ "_id" : ObjectId("4ebb90048f7aaffc5d287384"), "animal" : "dog", "breed" : "spaniel", "name" : "toffee", "colour" : "toffee", "owner" : "Ben" });</pre>
+
+
+<p>I realised that calling a spaniel a &ldquo;type&rdquo; of dog would be better expressed as being a &ldquo;breed&rdquo;, so I simply changed that record and mongo updated it for me. The <code>update() </code>statement is better for working on sets of records &ndash; for example if we decide Ben should be using his Sunday name:</p>
+
+<pre>&gt; db.animals.update({'owner':'Ben'}, {$set: {'owner':'Benjamin'}}, false, true);</pre>
+
+
+<p>There&rsquo;s a lot going on here, so let&rsquo;s look at the pieces step-by-step. The <a href="http://www.mongodb.org/display/DOCS/Updating">documentation</a> describes the update function as:</p>
+
+<pre>db.collection.update( criteria, objNew, upsert, multi )</pre>
+
+
+<p>The first part, the <em>criteria</em> is the same as we would use for the <code>find()</code> method. The next argument is what we&rsquo;re changing. I&rsquo;m just setting one field to a given value, so I used the <code>$set</code> modifier (modifiers are an art in themselves, this post is rambling on already so I&rsquo;ll write about those another day if you&rsquo;re interested). The next argument is the <em>upsert</em>, which is whether to insert a new record if we didn&rsquo;t find any matches &ndash; I want to update existing records, not insert anything, so I set this to false. Finally the <em>multi</em> flag tells mongo to update ALL the records it can find that match the<em>criteria</em>, if this is false it will stop after one (lazy thing!).</p>
+
+<p><strong>Deleting Data</strong></p>
+
+<p>If you&rsquo;ve come this far then I&rsquo;m impressed, and deleting is the easy part so we&rsquo;re almost there! Exactly like the <code>find()</code>and <code>update()</code> commands, we just supply a criteria to the <code>remove()</code> command. This could be either one of the fields, as we used already, or the object ID itself, like this:</p>
+
+<pre>&gt; db.animals.remove({_id: ObjectId("4ebb90768f7aaffc5d287385")});</pre>
+
+
+<p>As with all things mongo, you won&rsquo;t get any feedback about whether it worked, since most of the time we&rsquo;re using this on systems so fast there isn&rsquo;t time for niceties, but if you try to <code>find()</code> this record now, you won&rsquo;t be able to.</p>
+
+<h3>MongoDB</h3>
+
+
+<p>There&rsquo;s so much that&rsquo;s exciting about mongo, the sheer size and speed of this data store, the support for map reduce, the sharding support &hellip; I could go on. However you still need to be able to have a quick word with your database and check what data it has, maybe tweak something, and I hope that these mongo examples will serve as a quick reference for anyone who needs them, including me of course! I like databases, APIs and command line, so working with mongo is kind of magical for me, are you working with it? I&rsquo;d love to hear how others are getting on and what other tips I need to know, so leave a comment and share, please!</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Francis Jiang</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-27T12:34:00+08:00" pubdate data-updated="true">Jul 27<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/db/'>DB</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://jhjguxin.github.io/blog/2012/07/27/simple-crud-with-mongodb/" data-via="jhjguxin" data-counturl="http://jhjguxin.github.io/blog/2012/07/27/simple-crud-with-mongodb/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/07/10/ruby-on-rails-use-endless-loop-when-server-starts/" title="Previous Post: ruby-on-rails-use-endless-loop-when-server-starts">&laquo; ruby-on-rails-use-endless-loop-when-server-starts</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/07/27/rails-date-select-fields-hidden-and/" title="Next Post: Rails date_select fields hidden and ">Rails date_select fields hidden and  &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/">通过mongodump和mongorestore实现Mongodb备份和恢复 --by Chenzhou123520</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes/">Ruby on Rails 4.0 Release Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/rails-active-record-named-scopes/">Rails Active Record Named Scopes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/">晒晒我们的开源项目 ITEYE开源代码</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/">Single Sign-on 单点登录 Sso</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/jhjguxin">@jhjguxin</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'jhjguxin',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Francis Jiang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

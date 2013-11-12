@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: precompiled | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/tags/precompiled/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[rails 3.1.0 ActionView::Template::Errror (application.css isn't precompiled)]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/02/23/rails-3-dot-1-0-actionview-template-errror-application-dot-css-isnt-precompiled/"/>
+    <updated>2012-02-23T16:30:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/02/23/rails-3-dot-1-0-actionview-template-errror-application-dot-css-isnt-precompiled</id>
+    <content type="html"><![CDATA[<h2>rails 3.1.0 ActionView::Template::Errror (application.css isn&rsquo;t precompiled)</h2>
+
+<p>I made a basic rails app with a simple pages controller with an index function and when I load the page I get:</p>
+
+<p>ActionView::Template::Error (application.css isn&rsquo;t precompiled):
+app/views/layouts/application.html.erb:5:in `_app_views_layouts_application_html</p>
+
+<p>By default Rails assumes that you have your files precompiled in the production environment, if you want use live compiling (compile your assets during runtime) in production you must set the config.assets.compile to true.</p>
+
+<p> Demo</p>
+
+<h1>config/environments/production.rb</h1>
+
+<p>&hellip;
+config.assets.compile = true
+&hellip;
+You can use this option to fallback to Sprockets when you are using precompiled assets but there are any missing precompiled files.</p>
+
+<p>If config.assets.compile option is set to false and there are missing precompiled files you will get an &ldquo;AssetNoPrecompiledError&rdquo; indicating the name of the missing file.</p>
+
+<p><strong>You will get better performance in production if you set config.assets.compile to false in production.rb and precompile your assets. You can precompile with this rake task:</strong></p>
+
+<p>bundle exec rake assets:precompile</p>
+]]></content>
+  </entry>
+  
+</feed>

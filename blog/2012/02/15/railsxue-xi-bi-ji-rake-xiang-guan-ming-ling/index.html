@@ -1,0 +1,408 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>rails学习笔记: rake  相关命令 - Francis's Octopress Blog</title>
+  <meta name="author" content="Francis Jiang">
+
+  
+  <meta name="description" content="rails学习笔记: rake 相关命令 命令行
+rake db：*****
+script/generate model task name:string priority:integer script/generate migration add_description_to_task &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jhjguxin.github.io/blog/2012/02/15/railsxue-xi-bi-ji-rake-xiang-guan-ming-ling">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Francis's Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-25901353-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Francis's Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jhjguxin.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/readme">Readme</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Rails学习笔记: Rake 相关命令</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-15T18:23:00+08:00" pubdate data-updated="true">Feb 15<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>rails学习笔记: rake  相关命令</h2>
+
+<p>命令行
+rake db：*****
+script/generate model task name:string priority:integer <br/>
+script/generate migration add_description_to_task description:string <br/>
+script/generate migration remove_description_from_task description:string</p>
+
+<p>类似的概念里有叫做“迁移 (migration)”的东西，Rails的世界里，指的是改变数据库的结构（schema）。这个通过db/migrate目录下面的 Ruby 脚本执行。</p>
+
+<p>另一方面，db/seeds.rb 也向数据库插入数据。例如，在希望从开始状态准备初期管理者帐户的情况下使用。</p>
+
+<p>在此之前这样的代码只在迁移脚本内描述，我想对此感觉不方便的不止我一个人。</p>
+
+<p>db/seeds.rb 是像下面的例子一样的普通的 Rails 脚本：</p>
+
+<p>Administrator.create(:name => &lsquo;root&rsquo;, :password => &lsquo;&rsquo;)专用的 Rake 任务 db:seeds 也具备。</p>
+
+<p>数据类型
+引用</p>
+
+<h1>:string, :text, :integer, :float,:decimal, :datetime, :timestamp, :time, :date,</h1>
+
+<h1>:binary, :boolean</h1>
+
+<p>与db有关的rake任务</p>
+
+<p>db:charset 检索当前环境下数据库的字符设置 <br/>
+db:collation 检索当前环境下数据库的校对 <br/>
+db:create 用config\database.yml中的定义创建当前 RAILS_ENV 项目环境下的数据库 <br/>
+db:create:all 用config\database.yml中的定义创建所有数据库 <br/>
+db:drop 删除当前 RAILS_ENV项目环境中的数据库 <br/>
+db:drop:all 删除所有在 config\database.yml中定义的数据库 <br/>
+db:reset 从db\schema.rb中为当前环境重建数据库（先删后建）. <br/>
+db:rollback 回滚(清华出版社一本SQLSERVER书的名词[很奇怪为什么不直接用滚回])数据库到前一个版本. 指定回滚到哪一步要用 STEP=n 参数 <br/>
+db:version 检索当前模式下的版本</p>
+
+<p>备份数据库
+rake db:backup:create 根据database.yml的信息备份数据库
+rake db:backup:destroy 默认删除一天前的备份数据
+rake db:backup:rebuild 默认恢复最新的备份数据</p>
+
+<p>注意：这里设置的备份目录是db的backup目录，可以修改</p>
+
+<p>添加索引
+引用</p>
+
+<p>add_index :acls, [&ldquo;action_id&rdquo;,&ldquo;group_id&rdquo;],:unique=>true
+add_index :acls, :action_id</p>
+
+<p>drop all tables 删除全部表
+rake db:migrate VERSION=0</p>
+
+<p>指定恢复/删除：
+rake db:migrate:down/up VERSION = version_of_migrati</p>
+
+<p>定义数字精确度
+t.integer :total_price, :precision=>8,:scale=>2,:default=>0</p>
+
+<p>========================================================================================================================================================
+rake db:abort_if_pending_migrations  # Raises an error if there are pending migrations
+rake db:charset                      # Retrieves the charset for the current environment&rsquo;s database
+rake db:collation                    # Retrieves the collation for the current environment&rsquo;s database
+rake db:create                       # Create the database defined in config/database.yml for the current RAILS_ENV
+rake db:create:all                   # Create all the local databases defined in config/database.yml
+rake db:drop                         # Drops the database for the current RAILS_ENV
+rake db:drop:all                     # Drops all the local databases defined in config/database.yml
+rake db:fixtures:identify            # Search for a fixture given a LABEL or ID.
+rake db:fixtures:load                # Load fixtures into the current environment&rsquo;s database.
+rake db:migrate                      # Migrate the database through scripts in db/migrate.
+rake db:migrate:down                 # Runs the &ldquo;down&rdquo; for a given migration VERSION.
+rake db:migrate:redo                 # Rollbacks the database one migration and re migrate up.
+rake db:migrate:reset                # Resets your database using your migrations for the current environment
+rake db:migrate:up                   # Runs the &ldquo;up&rdquo; for a given migration VERSION.
+rake db:reset                        # Drops and recreates the database from db/schema.rb for the current environment.
+rake db:rollback                     # Rolls the schema back to the previous version.
+rake db:schema:dump                  # Create a db/schema.rb file that can be portably used against any DB supported by AR
+rake db:schema:load                  # Load a schema.rb file into the database
+rake db:sessions:clear               # Clear the sessions table
+rake db:sessions:create              # Creates a sessions migration for use with CGI::Session::ActiveRecordStore
+rake db:structure:dump               # Dump the database structure to a SQL file
+rake db:test:clone                   # Recreate the test database from the current environment&rsquo;s database schema
+rake db:test:clone_structure         # Recreate the test databases from the development structure
+rake db:test:load                    # Recreate the test database from the current schema.rb
+rake db:test:prepare                 # Check for pending migrations and load the test schema
+rake db:test:purge                   # Empty the test database
+rake db:version                      # Retrieves the current schema version number
+rake doc:app                         # Build the app HTML Files
+rake doc:clobber_app                 # Remove rdoc products
+rake doc:clobber_plugins             # Remove plugin documentation
+rake doc:clobber_rails               # Remove rdoc products
+rake doc:guides                      # Generate Rails guides
+rake doc:plugins                     # Generate documentation for all installed plugins
+rake doc:rails                       # Build the rails HTML Files
+rake doc:reapp                       # Force a rebuild of the RDOC files
+rake doc:rerails                     # Force a rebuild of the RDOC files
+rake gems                            # List the gems that this rails application depends on
+rake gems:build                      # Build any native extensions for unpacked gems
+rake gems:install                    # Installs all required gems for this application.
+rake gems:refresh_specs              # Regenerate gem specifications in correct format.
+rake gems:unpack                     # Unpacks the specified gem into vendor/gems.
+rake gems:unpack:dependencies        # Unpacks the specified gems and its dependencies into vendor/gems
+rake log:clear                       # Truncates all <em>.log files in log/ to zero bytes
+rake notes                           # Enumerate all annotations
+rake notes:custom                    # Enumerate a custom annotation, specify with ANNOTATION=WTFHAX
+rake notes:fixme                     # Enumerate all FIXME annotations
+rake notes:optimize                  # Enumerate all OPTIMIZE annotations
+rake notes:todo                      # Enumerate all TODO annotations
+rake rails:freeze:edge               # Lock to latest Edge Rails, for a specific release use RELEASE=1.2.0
+rake rails:freeze:gems               # Lock this application to the current gems (by unpacking them into vendor/rails)
+rake rails:unfreeze                  # Unlock this application from freeze of gems or edge and return to a fluid use of system gems
+rake rails:update                    # Update both configs, scripts and public/javascripts from Rails
+rake rails:update:configs            # Update config/boot.rb from your current rails install
+rake rails:update:javascripts        # Update your javascripts from your current rails install
+rake rails:update:scripts            # Add new scripts to the application script/ directory
+rake routes                          # Print out all defined routes in match order, with names.
+rake secret                          # Generate a crytographically secure secret key.
+rake stats                           # Report code statistics (KLOCs, etc) from the application
+rake test                            # Run all unit, functional and integration tests
+rake test:benchmark                  # Run tests for benchmarkdb:test:prepare / Benchmark the performance tests
+rake test:functionals                # Run tests for functionalsdb:test:prepare / Run the functional tests in test/functional
+rake test:integration                # Run tests for integrationdb:test:prepare / Run the integration tests in test/integration
+rake test:plugins                    # Run tests for pluginsenvironment / Run the plugin tests in vendor/plugins/</em>/**/test (or specify with PLUGIN=name)
+rake test:profile                    # Run tests for profiledb:test:prepare / Profile the performance tests
+rake test:recent                     # Run tests for recentdb:test:prepare / Test recent changes
+rake test:uncommitted                # Run tests for uncommitteddb:test:prepare / Test changes since last checkin (only Subversion and Git)
+rake test:units                      # Run tests for unitsdb:test:prepare / Run the unit tests in test/unit
+rake time:zones:all                  # Displays names of all time zones recognized by the Rails TimeZone class, grouped by offset.
+rake time:zones:local                # Displays names of time zones recognized by the Rails TimeZone class with the same offset as the system local time
+rake time:zones:us                   # Displays names of US time zones recognized by the Rails TimeZone class, grouped by offset.
+rake tmp:cache:clear                 # Clears all files and directories in tmp/cache
+rake tmp:clear                       # Clear session, cache, and socket files from tmp/
+rake tmp:create                      # Creates tmp directories for sessions, cache, and sockets
+rake tmp:pids:clear                  # Clears all files in tmp/pids
+rake tmp:sessions:clear              # Clears all files in tmp/sessions
+rake tmp:sockets:clear               # Clears all files in tmp/sockets</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Francis Jiang</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-15T18:23:00+08:00" pubdate data-updated="true">Feb 15<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://jhjguxin.github.io/blog/2012/02/15/railsxue-xi-bi-ji-rake-xiang-guan-ming-ling/" data-via="jhjguxin" data-counturl="http://jhjguxin.github.io/blog/2012/02/15/railsxue-xi-bi-ji-rake-xiang-guan-ming-ling/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/02/14/rvmxia-an-zhuang-gembian-yi-shi-bai-linecache19/" title="Previous Post: rvm下安装gem编译失败 linecache19">&laquo; rvm下安装gem编译失败 linecache19</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/02/16/ubuntuxia-cha-kan-jin-cheng-duan-kou/" title="Next Post: ubuntu下查看进程端口 ">ubuntu下查看进程端口  &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/">通过mongodump和mongorestore实现Mongodb备份和恢复 --by Chenzhou123520</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes/">Ruby on Rails 4.0 Release Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/rails-active-record-named-scopes/">Rails Active Record Named Scopes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/">晒晒我们的开源项目 ITEYE开源代码</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/">Single Sign-on 单点登录 Sso</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/jhjguxin">@jhjguxin</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'jhjguxin',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Francis Jiang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

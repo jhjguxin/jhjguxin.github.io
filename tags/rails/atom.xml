@@ -1,0 +1,995 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: rails | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/tags/rails/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Rails Active Record Named Scopes]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/10/06/rails-active-record-named-scopes/"/>
+    <updated>2012-10-06T18:56:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/10/06/rails-active-record-named-scopes</id>
+    <content type="html"><![CDATA[<h2>Rails Active Record Named Scopes</h2>
+
+<p><a href="http://api.rubyonrails.org/classes/ActiveRecord/Scoping.html">Active Record Named Scopes</a></p>
+
+<p><a href="http://api.rubyonrails.org/classes/ActiveRecord/Scoping/ClassMethods.html">Instance Public methods</a></p>
+
+<p><code>with_scope(scope = {}, action = :merge, &amp;block)</code> <code>with_scope</code> lets you apply options to inner block incrementally. It takes a hash and the keys must be <code>:find</code> or <code>:create</code>. <code>:find</code> parameter is Relation while <code>:create</code> parameters are an attributes hash.</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  def self.create_with_scope
+    with_scope(:find =&gt; where(:blog_id =&gt; 1), :create =&gt; { :blog_id =&gt; 1 }) do
+      find(1) # =&gt; SELECT * from articles WHERE blog_id = 1 AND id = 1
+      a = create(1)
+      a.blog_id # =&gt; 1
+    end
+  end
+end</pre>
+</div>
+
+
+<p>In nested scopings, all previous parameters are overwritten by the innermost rule, with the exception of where, includes, and joins operations in Relation, which are merged.</p>
+
+<p>joins operations are uniqued so multiple scopes can join in the same table without table aliasing problems. If you need to join multiple tables, but still want one of the tables to be uniqued, use the array of strings format for your joins.</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  def self.find_with_scope
+    with_scope(:find =&gt; where(:blog_id =&gt; 1).limit(1), :create =&gt; { :blog_id =&gt; 1 }) do
+      with_scope(:find =&gt; limit(10)) do
+        all # =&gt; SELECT * from articles WHERE blog_id = 1 LIMIT 10
+      end
+      with_scope(:find =&gt; where(:author_id =&gt; 3)) do
+        all # =&gt; SELECT * from articles WHERE blog_id = 1 AND author_id = 3 LIMIT 1
+      end
+    end
+  end
+end</pre>
+</div>
+
+
+<p><strong>You can ignore any previous scopings</strong> by using the <code>with_exclusive_scope</code> method.</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  def self.find_with_exclusive_scope
+    with_scope(:find =&gt; where(:blog_id =&gt; 1).limit(1)) do
+      with_exclusive_scope(:find =&gt; limit(10)) do
+        all # =&gt; SELECT * from articles LIMIT 10
+      end
+    end
+  end
+end</pre>
+</div>
+
+
+<p><strong>Note:</strong> the <code>:find</code> scope also has effect on update and deletion methods, like update_all and delete_all.</p>
+
+<p><a href="http://api.rubyonrails.org/classes/ActiveRecord/Scoping/Default/ClassMethods.html">default_scope</a></p>
+
+<p><code>default_scope(scope = {})</code> Use this macro in your model to set a default scope for all operations on the model.</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  default_scope where(:published =&gt; true)
+end
+
+Article.all # =&gt; SELECT * FROM articles WHERE published = true</pre>
+</div>
+
+
+<p>The <code>default_scope</code> is also applied while creating/building a record. It is not applied while updating a record.</p>
+
+<div>
+<pre>Article.new.published    # =&gt; true
+Article.create.published # =&gt; true</pre>
+</div>
+
+
+<p>You can also use <code>default_scope</code> with a block, in order to have it lazily evaluated:</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  default_scope { where(:published_at =&gt; Time.now - 1.week) }
+end</pre>
+</div>
+
+
+<p>(You can also pass any object which responds to call to the <code>default_scope</code> macro, and it will be called when building the default scope.)</p>
+
+<p>If you use multiple <code>default_scope</code> declarations in your model then they will be merged together:</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  default_scope where(:published =&gt; true)
+  default_scope where(:rating =&gt; &#039;G&#039;)
+end
+
+Article.all # =&gt; SELECT * FROM articles WHERE published = true AND rating = &#039;G&#039;</pre>
+</div>
+
+
+<p>This is also the case with inheritance and module includes where the parent or module defines a <code>default_scope</code> and the child or including class defines a second one.</p>
+
+<p>If you need to do more complex things with a default scope, you can alternatively define it as a class method:</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  def self.default_scope
+    # Should return a scope, you can call &#039;super&#039; here etc.
+  end
+end</pre>
+</div>
+
+
+<p><a href="http://api.rubyonrails.org/classes/ActiveRecord/Scoping/Named/ClassMethods.html">activerecord/lib/active_record/scoping/named.rb</a></p>
+
+<p><code>scope(name, scope_options = {})</code> Adds a class method for retrieving and querying objects. A scope represents a narrowing of a database query, such as <code>where(:color =&gt; :red).select(&lsquo;shirts.*&rsquo;).includes(:washing_instructions)</code>.</p>
+
+<div>
+<pre>class Shirt &lt; ActiveRecord::Base
+  scope :red, where(:color =&gt; &#039;red&#039;)
+  scope :dry_clean_only, joins(:washing_instructions).where(&#039;washing_instructions.dry_clean_only = ?&#039;, true)
+end</pre>
+</div>
+
+
+<p>The above calls to scope define class methods <code>Shirt.red</code> and <code>Shirt.dry_clean_only</code>. <code>Shirt.red</code>, in effect, represents the query <code>Shirt.where(:color =&gt; &lsquo;red&rsquo;)</code>.</p>
+
+<p>Note that this is simply ‘syntactic sugar’ for defining an actual class method:</p>
+
+<div>
+<pre>class Shirt &lt; ActiveRecord::Base
+  def self.red
+    where(:color =&gt; &#039;red&#039;)
+  end
+end</pre>
+</div>
+
+
+<p>Unlike <code>Shirt.find(&hellip;)</code>, however, the object returned by <code>Shirt.red</code> is not an Array; it resembles the association object constructed by a has_many declaration. For instance, you can invoke <code>Shirt.red.first</code>, <code>Shirt.red.count</code>,<code>Shirt.red.where(:size =&gt; &lsquo;small&rsquo;)</code>. Also, just as with the association objects, named scopes act like an Array, implementing Enumerable; <code>Shirt.red.each(&amp;block)</code>, <code>Shirt.red.first</code>, and <code>Shirt.red.inject(memo, &amp;block)</code> all behave as if<code>Shirt.red</code> really was an Array.</p>
+
+<p>These named scopes are composable. For instance, <code>Shirt.red.dry_clean_only</code> will produce all shirts that are both red and dry clean only. Nested finds and calculations also work with these compositions: <code>Shirt.red.dry_clean_only.count</code> returns the number of garments for which these criteria obtain. Similarly with <code>Shirt.red.dry_clean_only.average(:thread_count)</code>.</p>
+
+<p>All scopes are available as class methods on the <code>ActiveRecord::Base</code> descendant upon which the scopes were defined. But they are also available to has_many associations. If,</p>
+
+<div>
+<pre>class Person &lt; ActiveRecord::Base
+  has_many :shirts
+end</pre>
+</div>
+
+
+<p>then <code>elton.shirts.red.dry_clean_only</code> will return all of Elton’s red, dry clean only shirts.</p>
+
+<p>Named scopes can also be procedural:</p>
+
+<div>
+<pre>class Shirt &lt; ActiveRecord::Base
+  scope :colored, lambda { |color| where(:color =&gt; color) }
+end</pre>
+</div>
+
+
+<p>In this example, <code>Shirt.colored(&lsquo;puce&rsquo;)</code> finds all puce shirts.</p>
+
+<p>On Ruby 1.9 you can use the ‘stabby lambda’ syntax:</p>
+
+<div>
+<pre>scope :colored, -&gt;(color) { where(:color =&gt; color) }</pre>
+</div>
+
+
+<p>Note that scopes defined with scope will be evaluated when they are defined, rather than when they are used. For example, the following would be incorrect:</p>
+
+<div>
+<pre>class Post &lt; ActiveRecord::Base
+  scope :recent, where(&#039;published_at &gt;= ?&#039;, Time.current - 1.week)
+end</pre>
+</div>
+
+
+<p><strong>The example above would be ‘frozen’ to the <code>Time.current</code> value when the Post class was defined</strong>, and so the resultant SQL query would always be the same. The correct way to do this would be via a lambda, which will re-evaluate the scope each time it is called:</p>
+
+<div>
+<pre>class Post &lt; ActiveRecord::Base
+  scope :recent, lambda { where(&#039;published_at &gt;= ?&#039;, Time.current - 1.week) }
+end</pre>
+</div>
+
+
+<p>Named scopes can also have extensions, just as with has_many declarations:</p>
+
+<div>
+<pre>class Shirt &lt; ActiveRecord::Base
+  scope :red, where(:color =&gt; &#039;red&#039;) do
+    def dom_id
+      &#039;red_shirts&#039;
+    end
+  end
+end</pre>
+</div>
+
+
+<p>Scopes can also be used while creating/building a record.</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  scope :published, where(:published =&gt; true)
+end
+
+Article.published.new.published    # =&gt; true
+Article.published.create.published # =&gt; true</pre>
+</div>
+
+
+<p>Class methods on your model are automatically available on scopes. Assuming the following setup:</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  scope :published, where(:published =&gt; true)
+  scope :featured, where(:featured =&gt; true)
+
+  def self.latest_article
+    order(&#039;published_at desc&#039;).first
+  end
+
+  def self.titles
+    map(&amp;:title)
+  end
+
+end</pre>
+</div>
+
+
+<p>We are able to call the methods like this:</p>
+
+<div>
+<pre>Article.published.featured.latest_article
+Article.featured.titles</pre>
+</div>
+
+
+<p><code>scoped(options = nil)</code> Returns an anonymous scope.</p>
+
+<div>
+<pre>posts = Post.scoped
+posts.size # Fires &quot;select count(*) from  posts&quot; and returns the count
+posts.each {|p| puts p.name } # Fires &quot;select * from posts&quot; and loads post objects
+
+fruits = Fruit.scoped
+fruits = fruits.where(:color =&gt; &#039;red&#039;) if options[:red_only]
+fruits = fruits.limit(10) if limited?</pre>
+</div>
+
+
+<p>Anonymous scopes tend to be useful when procedurally generating complex queries, where passing intermediate values (scopes) around as first-class objects is convenient.</p>
+
+<p><strong>You can define a scope that applies to all finders using <code>ActiveRecord::Base.default_scope</code></strong>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Sharing A Devise User Session Across Subdomains With Rails 3]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/09/15/sharing-a-devise-user-session-across-subdomains-with-rails-3/"/>
+    <updated>2012-09-15T16:21:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/09/15/sharing-a-devise-user-session-across-subdomains-with-rails-3</id>
+    <content type="html"><![CDATA[<h2>Sharing A Devise User Session Across Subdomains With Rails 3</h2>
+
+<pre>to andersen
+  仔细测了一下 Askjane::Application.config.session_store :active_record_store, key: &#039;_askjane_session&#039;, :domain =&gt; &quot;.bbtang.com&quot;在 server上
+  是ok的（效果上也是能共享bbtang.com 和www.bbtang.com的会话的只要端口一致）就是不知道在本地如何因为本地一般不会设置host绑定域名(经测试答案是不能的)，如何（所以需要:all这个设置项）
+to 客服 和 jojo
+ 提一点 你们一些 首页源码的时候 不要把 域名加上去  注意 尼玛 端口不一致 也是不能share 会话的
+ 简而言之 你们写一些html静态源码的时候除非不在 bbtang.com的 项目上 没有必要加 域名的 这会加大 大家的成本（如果说端口不一致就会导致会话丢失，如果没有做多域名兼容也会导致会话丢失能免则免）
+over</pre>
+
+
+<pre></pre>
+
+
+<pre>Francis.J(864248765) 13:57:28
+https://github.com/rails/rails/issues/2483
+Francis.J(864248765) 13:57:55
+尼玛 rails 大爷又 踩雷了
+Francis.J(864248765) 13:59:42
+https://github.com/rails/rails/issues/2483
+Francis.J(864248765) 14:02:27
+https://github.com/rails/rails/pull/7316
+Francis.J(864248765) 14:08:37
+然后 我们看看 究竟用 :cookie_store + :domain =&gt; :all
+还是  :active_record_store + &quot;.bbtang.com&quot; (这里垮子域名估计不会很合适)
+还是 升一下 rails  用  :active_record_store + :domain =&gt; :all</pre>
+
+
+<p>Recently I’ve been working on a Rails application that supports subdomains. I’m using Devise for user authentication and need the user to choose a subdomain to use upon registration.</p>
+
+<p>Similar to the 37signals applications, I want a single sign-on to be persistent across subdomains. Since I didn’t have a clue where to begin with subdomains, I followed <a href="https://github.com/fortuity/rails3-subdomain-devise/wiki/Tutorial-%28Walkthrough%29">this tutorial</a> on my new Rails 3.1 beta 1 application. This tutorial worked like a charm and I omitted the friendly_id and tweaked a few things to my liking.</p>
+
+<p>The gist of it is simple. Create a User model like you would normally do with Devise. You add a Subdomain model that is linked to the Users (in my case I only wanted a single subdomain per user). Configuring the routes is pretty simple as you can simply create a constraint that will match the root and fire it off to the right action and let the rest fall through.</p>
+
+<p>The trick comes into sharing the session between domains. Browsers, of course, will separate out the cookies and store them by separated out by subdomain. What you want to do is edit your config/initializers/session_store.rb file to look like this</p>
+
+<div>
+<table>
+<tbody>
+<tr>
+<td>
+<pre>APPNAMEGOESHERE::Application.config.session_store :cookie_store, :key =&gt; &#039;_tourlyapp_session&#039;, :domain =&gt; &quot;lvh.me&quot;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+<p>The trick here is the <code>:domain</code> option. What this does is sets the level of the TLD (top level domain) and tells Rails how long the domain is. The part you want to watch out for here is that if you set <code>:domain =&gt; :all</code> like is recommend in some places, it simply won’t work unless you’re using localhost. <code>:all</code> defaults to a TLD length of 1, which means if you’re testing with Pow (myapp.dev) it won’t work either because that is a TLD of length 2.</p>
+
+<p>You might get weird things like halfway Devise sessions sharing, but only allowing you to create and destroy the session on the root domain. Using <code>:all</code> works great if you’re using localhost, but when I started using lvh.me:3000 for testing I had those problems (lvh.me stands for local vhost me and is a domain that simply points to localhost which makes for zero-config subdomain development. It’s super handy.).</p>
+
+<p>The best option might be to comment out this line and put it into your individual environment configurations. This way you can keep things configured easily as the <code>:all</code> option. Once you’ve got your domain string added everything should work like a charm.</p>
+
+<p><strong>BONUS PROTIP: </strong>The normal route variables you see used end with _path. These don’t include the domain and therefore ignore the :subdomain option you pass into them. <code>url_for</code>, on the other hand, does support subdomains so you should get into the habit of using root_url instead of root_path and so on.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Advanced Caching: Part 1 - Caching Strategies]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/08/29/advanced-caching-part-1-caching-strategies/"/>
+    <updated>2012-08-29T23:15:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/08/29/advanced-caching-part-1-caching-strategies</id>
+    <content type="html"><![CDATA[<h2>Advanced Caching: Part 1 &ndash; Caching Strategies</h2>
+
+<p>First, let&rsquo;s start with a brief overview of the different types of caching. We&rsquo;ll start from 50,000ft and work our way down.</p>
+
+<p>HTTP Caching: Uses HTTP headers (Last-Modified, ETag, If-Modified-Since, If-None-Match, Cache-Control) to determine if the browser can use a locally stored version of the response or if it needs to request a fresh copy from the origin server. Rails makes it easy to use HTTP caching, however the cache is managed outside your application. You may have notice the config.cache_control and Rack::Cache, Rack::ETag, Rack::ConditionalGet middlewares. These are used for HTTP caching.</p>
+
+<p>Page Caching: PRAISE THE GODS if you actually can use page caching in your application. Page caching is the holy grail. Save the entire thing. Don&rsquo;t hit the stack &amp; give some prerendered stuff back. Great for worthless applications without authentication and other highly dynamic aspects. This essentially works like HTTP caching, but the response will always contain the entire page. With page caching the application is skipping the work.</p>
+
+<p>Action Caching: Essentially the same as page caching, except all the before filters are run allowing you to check authentication and other stuff that may have prevented the request form rendering.</p>
+
+<p>Fragment Caching: Store parts of views in the cache. Usually for caching partials or large bits of HTML that are independent from other parts. IE, a list of top stories or something like that.</p>
+
+<p>Rails.cache: All cached content except cached pages are stored in the Rails.cache. We&rsquo;ll use this fact that later. You can cache arbitrary content in the Rails cache. You may cache a large complicated query that you don&rsquo;t want to wait to reinstantiate a ton of ActiveRecord::Base objects.</p>
+
+<p>Under the Hood
+All the caching layers are built on top of the next one. Page caching and HTTP caching are different because they do not use Rails.cache The cache is essentially a key-value store. Different things can be persisted. Strings are most common (for HTML fragments). More complicated objects can be persisted as well. Let&rsquo;s go through some examples of manually using the cache to store things. I am using memcached with dalli for all these examples. Dalli is the default memcached driver.</p>
+
+<h1>Rails.cache.write takes two values: key and a value</h1>
+
+<blockquote><p>Rails.cache.write &lsquo;foo&rsquo;, &lsquo;bar&rsquo;
+=> true</p></blockquote>
+
+<h1>We can read an object back</h1>
+
+<blockquote><p>Rails.cache.read &lsquo;foo&rsquo;
+=> &ldquo;bar&rdquo;</p></blockquote>
+
+<h1>We can store a complicated object as well</h1>
+
+<blockquote><p>hash = { :this => { :is => &lsquo;a hash&rsquo; }}
+Rails.cache.write &lsquo;complicated-object&rsquo;, object
+Rails.cache.read &lsquo;complicated-object&rsquo;
+=> {:this=>{:is=>&ldquo;a hash&rdquo;}}</p></blockquote>
+
+<h1>If we want something that doesn&rsquo;t exist, we get nil</h1>
+
+<blockquote><p>Rails.cache.read &lsquo;we-havent-cached-this-yet&rsquo;
+=> nil</p></blockquote>
+
+<h1>&ldquo;Fetch&rdquo; is the most common pattern. You give it a key and a block</h1>
+
+<h1>to execute to store if the cache misses. The blocks&rsquo;s return value is</h1>
+
+<h1>then written to the cache. The block is not executed if there is a</h1>
+
+<h1>hit.</h1>
+
+<blockquote><p>Rails.cache.fetch &lsquo;huge-array&rsquo; do</p>
+
+<pre><code>huge_array = Array.new
+1000000.times { |i| huge_array &lt;&lt; i }
+huge_array # retrun value is stored in cache
+</code></pre>
+
+<p>  end
+=> [huge array] # took some time to generate
+Rails.cache.read &lsquo;huge-array&rsquo;
+=> [huge array] # but returned instantly</p></blockquote>
+
+<h1>You can also delete everything from the cache</h1>
+
+<blockquote><p>Rails.cache.clear
+=> [true]
+Those are the basics of interacting with the Rails cache. The rails cache is a wrapper around whatever functionality is provided by the underlying storage system. Now we are ready to move up a layer.</p></blockquote>
+
+<p>Understanding Fragment Caching
+Fragment caching is taking rendered HTML fragments and storing them in the cache. Rails provides a cache view helper for this. Its most basic form takes no arguments besides a block. Whatever is rendered during the block will be written back to the cache. The basic principle behind fragment caching is that it takes much less time fetch pre-rendered HTML from the cache, then it takes to generate a fresh copy. This is appallingly true. If you haven&rsquo;t noticed, view generation can be very costly. If you have cachable content and are not using fragment caching then you need to implement this right away! Let&rsquo;s say you have generated a basic scaffold for a post:</p>
+
+<p>$ rails g scaffold post title:string content:text author:string
+Let&rsquo;s start with the most common use case: caching information specific to one thing. IE: One post. Here is a show view:</p>
+
+<!-- nothing fancy going on here -->
+
+
+<p><p>
+  <b>Title:</b>
+  &lt;%= @post.title %>
+</p></p>
+
+<p><p>
+  <b>Content:</b>
+  &lt;%= @post.content %>
+</p>
+Let&rsquo;s say we wanted to cache fragment. Simply wrap it in cache and Rails will do it.</p>
+
+<p>&lt;%= cache &ldquo;post-#{@post.id}&rdquo; do %>
+  <p></p>
+
+<pre><code>&lt;b&gt;Title:&lt;/b&gt;
+&lt;%= @post.title %&gt;
+</code></pre>
+
+<p>  </p></p>
+
+<p>  <p></p>
+
+<pre><code>&lt;b&gt;Content:&lt;/b&gt;
+&lt;%= @post.content %&gt;
+</code></pre>
+
+<p>  </p>
+&lt;% end %>
+The first argument is the key for this fragment. The rendered HTML is stored with this key: views/posts-1. Wait what? Where did that &lsquo;views&rsquo; come from? The cache view helper automatically prepends &lsquo;views&rsquo; to all keys. This is important later. When you first load the page you&rsquo;ll see this in the log:</p>
+
+<p>Exist fragment? views/post-2 (1.6ms)
+Write fragment views/post-2 (0.9ms)
+You can see the key and the operations. Rails is checking to see if the specific key exists. It will fetch or write it. In this case, it has not been stored so it is written. When you reload the page, you&rsquo;ll see a cache hit:</p>
+
+<p>Exist fragment? views/post-2 (0.6ms)
+Read fragment views/post-2 (0.0ms)
+There we go. We got HTML from the cache instead of rendering it. Look at the response times for the two requests:</p>
+
+<p>Completed 200 OK in 17ms (Views: 11.6ms | ActiveRecord: 0.1ms)
+Completed 200 OK in 16ms (Views: 9.7ms | ActiveRecord: 0.1ms)
+Very small differences in this case. 2ms different in view generation. This is a very simple example, but it can make a world of difference in more complicated situations.</p>
+
+<p>You are probably asking the question: &ldquo;What happens when the post changes?&rdquo; This is an excellent question! What well if the post changes, the cached content will not be correct. It is up to us to remove stuff from the cache or figure out a way to get new content from the cache. Let&rsquo;s assume that our blog posts now have comments. What happens when a comment is created? How can handle this?</p>
+
+<p>This is a very simple problem. What if we could figure out a solution to this problem: How can we create a cache miss when the associated object changes? We&rsquo;ve already demonstrated how we can explicitly set a cache key. What if we made a key that&rsquo;s dependent on the time the object was last updated? We can create a key composed of the record&rsquo;s ID and its updated_at timestamp! This way the cache key will change as the content changes and we will not have to expire things manually. (We&rsquo;ll come back to sweepers later). Let&rsquo;s change our cache key to this:</p>
+
+<p>&lt;% cache &ldquo;post-#{@post.id}&rdquo;, @post.updated_at.to_i do %>
+Now we can see we have a new cache key that&rsquo;s dependent on the object&rsquo;s timestamp. Check out the rails log:</p>
+
+<p>Exist fragment? views/post-2/1304291241 (0.5ms)
+Write fragment views/post-2/1304291241 (0.4ms)
+Cool! Now let&rsquo;s make it so creating a comment updates the post&rsquo;s timestamp:</p>
+
+<p>class Comment &lt; ActiveRecord::Base
+  belongs_to :post, :touch => true
+end
+Now all comments will touch the post and change the updated_at timestamp. You can see this in action by touch'ing a post.</p>
+
+<p>Post.find(1).touch</p>
+
+<p>Exist fragment? views/post-2/1304292445 (0.4ms)
+Write fragment views/post-2/1304292445 (0.4ms)
+This concept is known as: auto expiring cache keys. You create a composite key with the normal key and a time stamp. This will create some memory build up as objects are updated and no longer fresh. Here&rsquo;s an example. You have that fragment. It is cached. Then someone updates the post. You now have two versions of the fragment cached. If there are 10 updates, then there are 10 different versions. Luckily for you, this is not a problem for memcached! Memcached uses a LRU replacement policy. LRU stands for Least Recently Used. That means the key that hasn&rsquo;t been requested in the longest time will be replaced by newer content when needed. For example, assume your cache can only hold 10 posts. The next update will create a new key and hence new content. Version 0 will be deleted and version 11 will be stored in the cache. The total amount of memory is cycled between things that are requested. There are two things to consider in this approach. 1: You will not be able to ensure that content is kept in the cache as long as possible. 2. You will never have to worry about expiring things manually as long as timestamps are updated in the model layer. I&rsquo;ve found it is orders of magnitude easier to add a few :touch => true&rsquo;s to my relationships than it is to maintain sweepers. More on sweepers later. We must continue exploring cache keys.</p>
+
+<p>Rails uses auto-expiring cache keys by default. The problem is they are not mentioned at all the documentation or in the guides. There is one very handy method: ActiveRecord::Base.cache_key. This will generate a key like this: posts/2-20110501232725. This is the exact same thing we did ourselves. This method is very important because depending on what type of arguments you pass into the cache method, a different key is generated. For the time being, this code is functionally equal to our previous examples.</p>
+
+<p>&lt;%= cache @post do %>
+The cache helper takes different forms for arguments. Here are some examples:</p>
+
+<p>cache &lsquo;explicit-key&rsquo;      # views/explicit-key
+cache @post               # views/posts/2-1283479827349
+cache [@post, &lsquo;sidebar&rsquo;]  # views/posts/2-2348719328478/sidebar
+cache [@post, @comment]   # views/posts/2-2384193284878/comments/1-2384971487
+cache :hash => :of_things # views/localhost:3000/posts/2?hash_of_things
+If an Array is the first arguments, Rails will use cache key expansion to generate a string key. This means calling doing logic on each object then joining each result together with a &lsquo;/&rsquo;. Essentially, if the object responds to cache_key, it will use that. Else it will do various things. Here&rsquo;s the source for expand_cache_key:</p>
+
+<p>def self.expand_cache_key(key, namespace = nil)
+  expanded_cache_key = namespace ? &ldquo;#{namespace}/&rdquo; : &ldquo;&rdquo;</p>
+
+<p>  prefix = ENV[&ldquo;RAILS_CACHE_ID&rdquo;] || ENV[&ldquo;RAILS_APP_VERSION&rdquo;]
+  if prefix</p>
+
+<pre><code>expanded_cache_key &lt;&lt; "#{prefix}/"
+</code></pre>
+
+<p>  end</p>
+
+<p>  expanded_cache_key &lt;&lt;</p>
+
+<pre><code>if key.respond_to?(:cache_key)
+  key.cache_key
+elsif key.is_a?(Array)
+  if key.size &gt; 1
+    key.collect { |element| expand_cache_key(element) }.to_param
+  else
+    key.first.to_param
+  end
+elsif key
+  key.to_param
+end.to_s
+</code></pre>
+
+<p>  expanded_cache_key
+end
+This is where all the magic happens. Our simple fragment caching example could easily be converted into an idea like this: The post hasn&rsquo;t changed, so cache the entire result of /posts/1. You can do with this action caching or page caching.</p>
+
+<p>Moving on to Action Caching
+Action caching is an around filter for specific controller actions. It is different from page caching since before filters are run and may prevent access to certain pages. For example, you may only want to cache if the user is logged in. If the user is not logged in they should be redirected to the log in page. This is different than page caching. Page caching bypasses the rails stack completely. Most web applications of legitimate complexity cannot use page caching. Action caching is the next logical step for most web applications. Let&rsquo;s break the idea down: If the post hasn&rsquo;t changed, return the entire cached page as the HTTP response, else render the show view, cache it, and return that as the HTTP response. Or in code:</p>
+
+<h1>Note: you cannot run this code! This is just an example of what&rsquo;s</h1>
+
+<h1>happening under the covers using concepts we&rsquo;ve already covered.</h1>
+
+<p>Rails.cache.fetch &lsquo;views/localhost:3000/posts/1&rsquo; do
+  @post = Post.find params[:id]
+  render :show
+end
+Declaring action caching is easy. Here&rsquo;s how you can cache the show action:</p>
+
+<p>class PostsController &lt; ApplicationController</p>
+
+<p>  caches_action :show</p>
+
+<p>  def show</p>
+
+<pre><code># do stuff
+</code></pre>
+
+<p>  end
+end
+Now refresh the page and look at what&rsquo;s been cached.</p>
+
+<p>Started GET &ldquo;/posts/2&rdquo; for 127.0.0.1 at 2011-05-01 16:54:43 -0700
+  Processing by PostsController#show as HTML
+  Parameters: {&ldquo;id&rdquo;=>&ldquo;2&rdquo;}
+Read fragment views/localhost:3000/posts/2 (0.5ms)
+Rendered posts/show.html.erb within layouts/application (6.1ms)
+Write fragment views/localhost:3000/posts/2 (0.5ms)
+Completed 200 OK in 16ms (Views: 8.6ms | ActiveRecord: 0.1ms)
+Now that the show action for post #2 is cached, refresh the page and see what happens.</p>
+
+<p>Started GET &ldquo;/posts/2&rdquo; for 127.0.0.1 at 2011-05-01 16:55:27 -0700
+  Processing by PostsController#show as HTML
+  Parameters: {&ldquo;id&rdquo;=>&ldquo;2&rdquo;}
+Read fragment views/localhost:3000/posts/2 (0.6ms)
+Completed 200 OK in 1ms
+Damn. 16ms vs 1ms. You can see the difference! You can also see Rails reading that cache key. The cache key is generated from the url with action caching. Action caching is a combination of a before and around filter. The around filter is used to capture the output and the before filter is used to check to see if it&rsquo;s been cached. It works like this:</p>
+
+<p>Execute before filter to check to see if cache key exists?
+Key exists? &ndash; Read from cache and return HTTP Response. This triggers a render and prevents any further code from being executed.
+No key? &ndash; Call all controller and view code. Cache output using Rails.cache and return HTTP response.
+Now you are probably asking the same question as before: &ldquo;What do we do when the post changes?&rdquo; We do the same thing as before: we create a composite key with a string and a time stamp. The question now is, how do we generate a special key using action caching?</p>
+
+<p>Action caching generates a key from the current url. You can pass extra options using the :cache_path option. Whatever is in this value is passed into url_for using the current parameters. Remember in the view cache key examples what happened when we passed in a hash? We get a much different key than before:</p>
+
+<p>views/localhost:3000/posts/2?hash_of_things
+Rails generated a URL based key instead of the standard views key. This is because you may different servers. This ensures that each server has it&rsquo;s own cache key. IE, server one does not collide with server two. We could generate our own url for this resource by doing something like this:</p>
+
+<p>url_for(@post, :tag => @post.updated_at.to_i)
+This will generate this url:</p>
+
+<p><a href="http://localhost:3000/posts/1?tag=234897123978">http://localhost:3000/posts/1?tag=234897123978</a>
+Notice the ?tag=23481329847. This is a hack that aims to stop browsers from using HTTP caching on specific urls. If the URL has changed (timestamp changes) then the browser knows it must request a fresh copy. Rails 2 used to do this for assets like CSS and JS. Things have changed with the asset pipeline.</p>
+
+<p>Here&rsquo;s an example of generating a proper auto expring key for use with action caching.</p>
+
+<p>caches_action :show, :cache_path => proc { |c|
+  # c is the instance of the controller. Since action caching
+  # is declared at the class level, we don&rsquo;t have access to instance
+  # variables. If cache_path is a proc, it will be evaluated in the
+  # the context of the current controller. This is the same idea
+  # as validations with the :if and :unless options
+  #
+  # Remember, what is returned from this block will be passed in as
+  # extra parameters to the url_for method.
+  post = Post.find c.params[:id]
+  { :tag => post.updated_at.to_i }
+end
+This calls url_for with the parameters already assigned by it through the router and whatever is returned by the block. Now if you refresh the page, you&rsquo;ll have this:</p>
+
+<p>Started GET &ldquo;/posts/2&rdquo; for 127.0.0.1 at 2011-05-01 17:11:22 -0700
+  Processing by PostsController#show as HTML
+  Parameters: {&ldquo;id&rdquo;=>&ldquo;2&rdquo;}
+Read fragment views/localhost:3000/posts/2?tag=1304292445 (0.5ms)
+Rendered posts/show.html.erb within layouts/application (1.7ms)
+Write fragment views/localhost:3000/posts/2?tag=1304292445 (0.5ms)
+Completed 200 OK in 16ms (Views: 4.4ms | ActiveRecord: 0.1ms)
+And volia! Now we have an expiring cache key for our post! Let&rsquo;s dig a little deeper. We know the key. Let&rsquo;s look into the cache and see what it actually is! You can see the key from the log. Look it up in the cache.</p>
+
+<blockquote><p>Rails.cache.read &lsquo;views/localhost:3000/posts/2?tag=1304292445&rsquo;
+=> &ldquo;&lt;!DOCTYPE html>\n<html>\n<head>&hellip;..&rdquo;
+It&rsquo;s just a straight HTML string. Easy to use and return as the body. This method works well for singular resources. How can we handle the index action? I&rsquo;ve created 10,000 posts. It takes a good amount of time to render that page on my computer. It takes over 10 seconds. The question is, how can we cache this? We could use the most recently updated post for the time stamp. That way, when one post is updated, it will move to the top and create a new cache key. Here is the code without any action caching:</p></blockquote>
+
+<p>Started GET &ldquo;/posts&rdquo; for 127.0.0.1 at 2011-05-01 17:18:11 -0700
+  Processing by PostsController#index as HTML
+  Post Load (54.1ms)  SELECT &ldquo;posts&rdquo;.* FROM &ldquo;posts&rdquo; ORDER BY updated_at DESC LIMIT 1
+Read fragment views/localhost:3000/posts?tag=1304292445 (1.5ms)
+Rendered posts/index.html.erb within layouts/application (9532.3ms)
+Write fragment views/localhost:3000/posts?tag=1304292445 (36.7ms)
+Completed 200 OK in 10088ms (Views: 9535.6ms | ActiveRecord: 276.2ms)
+Now with action caching:</p>
+
+<p>Started GET &ldquo;/posts&rdquo; for 127.0.0.1 at 2011-05-01 17:20:47 -0700
+  Processing by PostsController#index as HTML
+Read fragment views/localhost:3000/posts?tag=1304295632 (1.0ms)
+Completed 200 OK in 11ms
+Here&rsquo;s the code for action caching:</p>
+
+<p>caches_action :index, :cache_path => proc {|c|
+  { :tag => Post.maximum(&lsquo;updated_at&rsquo;) }
+}
+We&rsquo;ll come back to this situation later. This is a better way to do this. Points to the reader if they know the problem.</p>
+
+<p>These are simple examples designed to show you who can create auto expiring keys for different situations. At this point we have not had to expire any thing ourselves! The keys have done it all for us. However, there are some times when you want more precise control over how things exist in the cache. Enter Sweepers.</p>
+
+<p>Sweepers
+Sweepers are HTTP request dependent observers. They are loaded into controllers and observe models the same way standard observers do. However there is one very important different. They are only used during HTTP requests. This means if you have things being created outside the context of HTTP requests sweepers will do you no good. For example, say you have a background process running that syncs with an external system. Creating a new model will not make it to any sweeper. So, if you have anything cached. It is up to you to expire it. Everything I&rsquo;ve demonstrated so far can be done with sweepers.</p>
+
+<p>Each cache<em>* method has an opposite expire</em>* method. Here&rsquo;s the mapping:</p>
+
+<p>caches_page , expire_page
+caches_action , expire_action
+cache , expire_fragment
+Their arguments work the same with using cache key expansion to find a key to read or delete. Depending on the complexity of your application, it may be easy to use sweepers or it may be impossible. It&rsquo;s easy to use sweepers with these examples. We only need to tie into the save event. For example, when a update or delete happens we need to expire the cache for that specific post. When a create, update, or delete happens we need to expire the index action. Here&rsquo;s what the sweeper would look like:</p>
+
+<p>class PostSweeper &lt; ActionController::Caching::Sweeper
+  observe Post</p>
+
+<p>  def after_create(post)</p>
+
+<pre><code>expire_action :index
+expire_action :show, :id =&gt; post
+# this is the same as the previous line
+expire_action :controller =&gt; :posts, :action =&gt; :show, :id =&gt; @post.id
+</code></pre>
+
+<p>  end
+end</p>
+
+<h1>then in the controller, load the sweeper</h1>
+
+<p>class PostsController &lt; ApplicationController
+  cache_sweeper :post_sweeper
+end
+I will not go into much depth on sweepers because they are the only thing covered in the rails caching guide. The work, but I feel they are clumsy for complex applications. Let&rsquo;s say you have comments for posts. What do you do when a comment is created for a post? Well, you have to either create a comment sweeper or load the post sweeper into the comments controller. You can do either. However, depending on the complexity of your model layer, it may quickly become infeasible to do cache expiration with sweepers. For example, let say you have a Customer. A customer has 15 different types of associated things. Do you want to put the sweeper into 15 different controllers? You can, but you may forget to at some point.</p>
+
+<p>The real problem with sweepers is that they cannot be used once your application works outside of HTTP requests. They can also be clumsy. I personally feel it&rsquo;s much easier to create auto expiring cache keys and only uses sweepers when I want to tie into very specific events. I&rsquo;d also argue that any well designed system does not need sweepers (or at least in very minimally).</p>
+
+<p>Now you should have a good grasp on how the Rails caching methods work. We&rsquo;ve covered how fragment caching uses the current view to generate a cache key. We introduced the concept of auto expiring cache keys using ActiveRecord#cache_key to automatically expire cached content. We introduced action caching and how it uses url_for to generate a cache key. Then we covered how you can pass things into url_for to generate a time stamped key to expire actions automatically. Now that we understand these lower levels we can move up to page caching and HTTP caching.</p>
+
+<p>Page Caching
+Page caching bypasses the entire application by serving up a file in /public from disk. It is different from action or fragment caching for a two reasons: content is not stored in memory and content is stored directly on the disk. You use page caching the same way you use action caching. This means you can use sweepers and and all the other things associated with them. Here&rsquo;s how it works.</p>
+
+<p>Webserver accepts an incoming request: GET /posts
+File exists: /public/posts.html
+posts.html is returned
+Your application code is never called.
+Since pages are written like public assets they are served as such. You will expliclity have to expire them. Warning! Forgetting to expire pages will cause you greif because you application code will not be called. Here&rsquo;s an example of page caching:</p>
+
+<p>PostsController &lt; ApplicationController
+  caches_page :index</p>
+
+<p>  def index</p>
+
+<pre><code># do stuff
+</code></pre>
+
+<p>  end
+When the server receives a request to GET /posts it will write the response from the application to /public/posts.html. The .html part is the format for that request. For example you can use page caching with JSON. GET /posts.json would generate /public/posts.json.</p>
+
+<p>Page caching is basically poor man&rsquo;s HTTP caching without any real benefits. HTTP caching is more useful.</p>
+
+<p>I&rsquo;ve not covered page caching in much depth because it&rsquo;s very likely that if you&rsquo;re reading this page caching is not applicable to your application. The Rails guides cover page caching in decent fashion. Follow up there if you need more information.</p>
+
+<p>HTTP Caching
+HTTP caching is the most complex and powerful caching strategy you can use. With great power comes great responsiblity. HTTP caching works at the protocol level. You can configure HTTP caching so the browser doesn&rsquo;t even need to contact your server at all. There are many ways HTTP caching can be configured. I will not cover them all here. I will give you an overview on how the system works and cover some common use cases.</p>
+
+<p>How It Works
+HTTP caching works at the protocol level. It uses a combination of headers and response codes to indicate weather the user agent should make a request or use a locally stored copy instead. The invalidation or expiring is based on ETags and Last-Modified timestamps. ETag stands for &ldquo;entity tag&rdquo;. It&rsquo;s a unique fingerprint for this request. It&rsquo;s usually a checksum of the respnose body. Origin servers (computers sending the source content) can set either of these fields along with a Cache-Control header. The Cache-Control header tells the user agent what it can do with this response. It answers questions like: how long can I cache this for and am I allowed to cache it? When the user agent needs to make a request again it sends the ETag and/or the Last-Modified date to the origin server. The origin server decides based on the ETag and/or Last-Modified date if the user agent can use the cached copy or if it should use new content. If the server says use the cached content it will return status 304: Not Modified (aka fresh). If not it should return a 200 (cache is stale) and the new content which can be cached.</p>
+
+<p>Let&rsquo;s use curl to see how this works out:</p>
+
+<p>$ curl -I <a href="http://www.example.com">http://www.example.com</a>
+HTTP/1.1 200 OK
+Cache-Control: max-age=0, private, must-revalidate
+Content-length: 822
+Content-Type: text/html
+Date: Mon, 09 Jul 2012 22:46:29 GMT
+Last-Modified: Mon, 09 Jul 2012 21:22:11 GMT
+Status: 200 OK
+Vary: Accept-Encoding
+Connection: keep-alive
+The Cache-Control header is a tricky thing. There are many many ways it can be configured. Here&rsquo;s the two easiest ways to break it down: private means only the final user agent can store the response. Public means any server can cache this content. (You know requests may go through many proxies right?). You can specify an age or TTL. This is how long it can be cached for. Then there is another common situation: Don&rsquo;t check with the server or do check with the server. This particular Cache-Control header means: this is a private (think per user cache) and check with the server everytime before using it.</p>
+
+<p>We can trigger a cache hit by sending the apporiate headers with the next request. This response only has a Last-Modified date. We can send this date for the server to compare. Send this value in the If-Modified-Since header. If the content hasn&rsquo;t changed since that date the server should return a 304. Here&rsquo;s an example using curl:</p>
+
+<p>$ curl -I -H &ldquo;If-Modified-Since: Mon, 09 Jul 2012 21:22:11 GMT&rdquo; <a href="http://www.example.com">http://www.example.com</a>
+HTTP/1.1 304 Not Modified
+Cache-Control: max-age=0, private, must-revalidate
+Date: Mon, 09 Jul 2012 22:55:53 GMT
+Status: 304 Not Modified
+Connection: keep-alive
+This response has no body. It simply tells the user agent to use the locally stored version. We could change the date and get a different response.</p>
+
+<p>$ curl -I -H &ldquo;If-Modified-Since: Sun, 08 Jul 2012 21:22:11 GMT&rdquo; <a href="http://www.example.com">http://www.example.com</a>
+HTTP/1.1 200 OK
+Cache-Control: max-age=0, private, must-revalidate
+Content-length: 822
+Content-Type: text/html
+Date: Mon, 09 Jul 2012 22:57:19 GMT
+Last-Modified: Mon, 09 Jul 2012 21:22:11 GMT
+Status: 200 OK
+Vary: Accept-Encoding
+Connection: keep-alive
+Caches determine freshness based on the If-None-Match and/or If-Modified-Since date. Using our existing 304 response we can supply a random etag to trigger a cache miss:</p>
+
+<p>$ curl -I -H &lsquo;If-None-Match: &ldquo;foo&rdquo;&rsquo; -H &ldquo;If-Modified-Since: Mon, 09 Jul 2012 21:22:11 GMT&rdquo; <a href="http://www.example.com">http://www.example.com</a>
+HTTP/1.1 304 Not Modified
+Cache-Control: max-age=0, private, must-revalidate
+Date: Mon, 09 Jul 2012 22:55:53 GMT
+Status: 304 Not Modified
+Connection: keep-alive
+Etags are sent using the If-None-Match header. Now that we understand the basics we can move onto higher level discussion.</p>
+
+<p>Rack::Cache
+HTTP caching is implemented in the webserver itself or at the application level. It is implemented at the application level in Rails. Rack::Cache is a middleware that sits at the top of the stack and intercepts requests. It will pass requests down to your app and store their contents. Or will it call down to your app and see what ETag and/or timestamps it returns for validation purposes. Rack::Cache acts as a proxy cache. This means it must respect caching rules described in the Cache-Control headers coming out of your app. This means it cannot cache private content but it can cache public content. Cachable content is stored in memcached. Rails configures this automatically.</p>
+
+<p>I&rsquo;ll cover one use case to illustrate how code flows through middleware stack to the actual app code and back up. Let&rsquo;s use a private per user cache example. Here&rsquo;s the cache control header: max-age-0, private, must-revalidate. Pretend this is some JSON API.</p>
+
+<p>The client sends initial request to /api/tweets.json
+Rack::Cache sees the request and ignores it since there is no caching information along with it.
+Application code is called. It returns a 200 response with a date and the some Cache-Control header.
+The client makes another request to /api/tweets.json with an If-Modified-Since header matching the date from the previous request.
+Rack::Cache sees that his request has cache information associated with it. It checks to see how it should handle this request. According to the Cache-Control header it has expired and needs to be checked to see if it&rsquo;s ok to use. Rack::Cache calls the application code.
+Application returns a response with the same date.
+Rack::Cache recieves the response, compares the dates and determines that it&rsquo;s a hit. Rack::Cache sends a 304 back.
+The client uses response body from request in step 1.
+HTTP Caching in Rails
+Rails makes it easy to implement HTTP caching inside your controllers. Rails provides two methods: stale? and fresh_when. They both do the same thing but in opposite ways. I prefer to use stale? because it makes more sense to me. stale? reminds more of Rails.cache.fetch so I stick with that. stale? works like this: checks to see if the incoming request ETag and/or Last-Modified date matches. If they match it calls head :not_modified. If not it can call a black of code to render a response. Here is an example:</p>
+
+<p>def show
+  @post = Post.find params[:id]
+  stale? @post do</p>
+
+<pre><code>respond_with @post
+</code></pre>
+
+<p>  end
+end
+Using stale? with an ActiveRecord object will automatically set the ETag and Last-Modified headers. The Etag is set to a MD5 hash of the objects cache_key method. The Last-Modified date is set to the object&rsquo;s updated_at method. The Cache-Control header is set to max-age=0, private, must-revalidate by default. All these values can be changed by passing in options to stale? or fresh_when. The methods take three options: :etag, :last_modified, and :public. Here are some more examples:</p>
+
+<h1>allow proxy caches to store this result</h1>
+
+<p>stale? @post, :public => true do
+  respond_with @post
+end</p>
+
+<h1>Let&rsquo;s stay your posts are frozen and have no modifications</h1>
+
+<p>stale? @post, :etag => @post.posted_at do
+  respond_with @post
+end
+Now you should understand how HTTTP caching works. Here are the important bits of code inside Rails showing it all works.</p>
+
+<h1>File actionpack/lib/action_controller/metal/conditional_get.rb, line 39</h1>
+
+<p>def fresh_when(record_or_options, additional_options = {})
+  if record_or_options.is_a? Hash</p>
+
+<pre><code>options = record_or_options
+options.assert_valid_keys(:etag, :last_modified, :public)
+</code></pre>
+
+<p>  else</p>
+
+<pre><code>record  = record_or_options
+options = { :etag =&gt; record, :last_modified =&gt; record.try(:updated_at) }.merge(additional_options)
+</code></pre>
+
+<p>  end</p>
+
+<p>  response.etag          = options[:etag]          if options[:etag]
+  response.last_modified = options[:last_modified] if options[:last_modified]
+  response.cache_control[:public] = true if options[:public]</p>
+
+<p>  head :not_modified if request.fresh?(response)
+end
+Here is the code for fresh?. This code should help you if you are confused on how resquests are validated. I found this code much easier to understand than the official spec.</p>
+
+<p>def fresh?(response)
+  last_modified = if_modified_since
+  etag          = if_none_match</p>
+
+<p>  return false unless last_modified || etag</p>
+
+<p>  success = true
+  success &amp;&amp;= not_modified?(response.last_modified) if last_modified
+  success &amp;&amp;= etag_matches?(response.etag) if etag
+  success
+end</p>
+
+<p><h2>Index</h2>
+<ol></p>
+
+<pre><code>&lt;li&gt;&lt;a href="http://www.broadcastingadam.com/2012/07/advanced_caching_part_1-caching_strategies"&gt;Caching Strategies&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.broadcastingadam.com/2012/07/advanced_caching_part_2-using_strategies"&gt;Using Strategies Effectively&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.broadcastingadam.com/2012/07/advanced_caching_part_3-static_assets"&gt;Handling Static Assets&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.broadcastingadam.com/2012/07/advanced_caching_part_4-stepping_outside_the_http_request"&gt;Stepping Outside the HTTP Request&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.broadcastingadam.com/2012/07/advanced_caching_part_5-tag_based_caching"&gt;Tag Based Caching&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.broadcastingadam.com/2012/07/advanced_caching_part_6-fast_json_apis"&gt;Fast JSON APIs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.broadcastingadam.com/2012/07/advanced_caching_part_7-tips_and_tricks"&gt;Tips and Tricks&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.broadcastingadam.com/2012/07/advanced_caching_part_8-conclusion"&gt;Conclusion&lt;/a&gt;&lt;/li&gt;
+</code></pre>
+
+<p></ol>
+<h3>Contact Me</h3>
+Find a problem or have a question about this post? <a href="http://twitter.com/adman65/">@adman65</a> on Twitter or Adman65 on #freenode. Find me in (#rubyonrails or #sproutcore). You can find my code on <a href="http://github.com/twinturbo/">GitHub</a> or hit me up on <a href="https://plus.google.com/u/0/116377228668850173159">Google+</a>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Rails counter cache]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/08/27/rails-counter-cache/"/>
+    <updated>2012-08-27T00:44:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/08/27/rails-counter-cache</id>
+    <content type="html"><![CDATA[<h2>Rails counter cache</h2>
+
+<p>这次就是讲用_count字段来缓存has_many的计数 </p>
+
+<p>看Project和Task的例子:</p>
+
+<div id="">
+<pre><h1>Projects</h1>
+
+<table>
+<% for project in @projects %>
+  <tr>
+    <td><%= link_to project.name, poject_path(project) %></td>
+    <td><small>(<%= pluralize project.tasks.size, 'task' %>)</small></td>
+  </tr>
+<% end %>
+</table>
+</pre>
+</div>
+
+
+<pre>上面的页面代码对所有的@projects显示tasks.size，看下log:</pre>
+
+
+<div id="">
+<pre>SQL (0.006385)  SELECT count(*) AS count_all FROM tasks WHERE (tasks.project_id = 326)
+SQL (0.000220)  SELECT count(*) AS count_all FROM tasks WHERE (tasks.project_id = 327)
+SQL (0.000383)  SELECT count(*) AS count_all FROM tasks WHERE (tasks.project_id = 328)
+SQL (0.000197)  SELECT count(*) AS count_all FROM tasks WHERE (tasks.project_id = 329)
+SQL (0.000215)  SELECT count(*) AS count_all FROM tasks WHERE (tasks.project_id = 330)</pre>
+</div>
+
+
+<pre>上面显示了对每个project都使用SQL来count tasks，我们采用eager loading看看能否改进性能:</pre>
+
+
+<div id="">
+<pre>class ProjectsController &lt; ApplicationController
+  def index
+    @projects = Project.find(:all, :include =&gt; :tasks)
+  end
+end</pre>
+</div>
+
+
+<pre>再来看看log:</pre>
+
+
+<div id="">
+<pre>Project Lood Incluing Associations (0.000954)  SELECT projects.'id' AS t0_r0, projects.'name' AS t0_r1, tasks.'id'
+AS t1_r0, tasks.'name' AS t1_r1, tasks.'project_id' AS t1_r2 FROM projects LEFT OUTER JOIN tasks ON tasks.project
+_id = projects.id</pre>
+</div>
+
+
+<pre>我们看到，使用eager loading确实只用一条SQL语句就完成工作，但是缺点是把tasks表所有的字段信息都取出来了，很多信息是 
+没有用的。 
+
+我们来看看更好的解决方案:</pre>
+
+
+<div id="">
+<pre>ruby script/generate migration add_tasks_count</pre>
+</div>
+
+
+<pre>我们新建一个migration，给projects表添加一个叫tasks_count的列:</pre>
+
+
+<div id="">
+<pre>class AddTasksCount &lt; ActiveRecord::Migration
+  def self.up
+    add_column :projects, :tasks_count, :integer, :default =&gt; 0
+
+    Project.reset_column_information
+    Project.find(:all).each do |p|
+      p.update_attribute :tasks_count, p.tasks.length
+    end
+  end
+
+  def self.down
+    remove_column :projects, :tasks_count
+  end
+end</pre>
+</div>
+
+
+<pre>我们还需要告诉Task类开启counter cache:</pre>
+
+
+<div id="">
+<div>
+<pre>class Task &lt; ActiveRecord::Base
+  belongs_to :projects, :counter_cache =&gt; true
+end</pre>
+</div>
+</div>
+
+
+<pre>好了，我们把ProjectsController的index方法改回lazy loading，刷新页面，再看看log:</pre>
+
+
+<div id="">
+<pre>Project Lood (0.000295)  SELECT * FROM projects</pre>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Rails里的Magic Column Names]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/08/27/railsli-de-magic-column-names/"/>
+    <updated>2012-08-27T00:37:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/08/27/railsli-de-magic-column-names</id>
+    <content type="html"><![CDATA[<h2>Rails里的Magic Column Names</h2>
+
+<p>Active Record有一些富有“魔力”的列名:</p>
+
+<p><strong>created_at， created_on， updated_at， updated_on</strong>
+在create或者update一行时Rails对<em>at形式的列用timestamp自动更新，对</em>on形式的列用date自动更新</p>
+
+<p><strong>lock_version</strong>
+如果一个表有lock_version这个列，则Rails会跟踪一行的版本号并执行乐观锁</p>
+
+<p><strong>type</strong>
+单表继承时跟踪一行的type</p>
+
+<p><strong>id</strong>
+表的默认主键名</p>
+
+<p><strong>xxx_id</strong>
+对以复数形式的xxx命名的表的引用的默认外键名</p>
+
+<p><strong>xxx_count</strong>
+对子表xxx维护一个计数器cache</p>
+
+<p><strong>position</strong>
+acts_as_list时用来表示一个list中该行的position</p>
+
+<p><strong>parent_id</strong>
+acts_as_tree时用来表示该行的parent的id</p>
+]]></content>
+  </entry>
+  
+</feed>

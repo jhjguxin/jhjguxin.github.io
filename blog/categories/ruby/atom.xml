@@ -1,0 +1,546 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: ruby | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/blog/categories/ruby/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Rails Active Record Named Scopes]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/10/06/rails-active-record-named-scopes/"/>
+    <updated>2012-10-06T18:56:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/10/06/rails-active-record-named-scopes</id>
+    <content type="html"><![CDATA[<h2>Rails Active Record Named Scopes</h2>
+
+<p><a href="http://api.rubyonrails.org/classes/ActiveRecord/Scoping.html">Active Record Named Scopes</a></p>
+
+<p><a href="http://api.rubyonrails.org/classes/ActiveRecord/Scoping/ClassMethods.html">Instance Public methods</a></p>
+
+<p><code>with_scope(scope = {}, action = :merge, &amp;block)</code> <code>with_scope</code> lets you apply options to inner block incrementally. It takes a hash and the keys must be <code>:find</code> or <code>:create</code>. <code>:find</code> parameter is Relation while <code>:create</code> parameters are an attributes hash.</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  def self.create_with_scope
+    with_scope(:find =&gt; where(:blog_id =&gt; 1), :create =&gt; { :blog_id =&gt; 1 }) do
+      find(1) # =&gt; SELECT * from articles WHERE blog_id = 1 AND id = 1
+      a = create(1)
+      a.blog_id # =&gt; 1
+    end
+  end
+end</pre>
+</div>
+
+
+<p>In nested scopings, all previous parameters are overwritten by the innermost rule, with the exception of where, includes, and joins operations in Relation, which are merged.</p>
+
+<p>joins operations are uniqued so multiple scopes can join in the same table without table aliasing problems. If you need to join multiple tables, but still want one of the tables to be uniqued, use the array of strings format for your joins.</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  def self.find_with_scope
+    with_scope(:find =&gt; where(:blog_id =&gt; 1).limit(1), :create =&gt; { :blog_id =&gt; 1 }) do
+      with_scope(:find =&gt; limit(10)) do
+        all # =&gt; SELECT * from articles WHERE blog_id = 1 LIMIT 10
+      end
+      with_scope(:find =&gt; where(:author_id =&gt; 3)) do
+        all # =&gt; SELECT * from articles WHERE blog_id = 1 AND author_id = 3 LIMIT 1
+      end
+    end
+  end
+end</pre>
+</div>
+
+
+<p><strong>You can ignore any previous scopings</strong> by using the <code>with_exclusive_scope</code> method.</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  def self.find_with_exclusive_scope
+    with_scope(:find =&gt; where(:blog_id =&gt; 1).limit(1)) do
+      with_exclusive_scope(:find =&gt; limit(10)) do
+        all # =&gt; SELECT * from articles LIMIT 10
+      end
+    end
+  end
+end</pre>
+</div>
+
+
+<p><strong>Note:</strong> the <code>:find</code> scope also has effect on update and deletion methods, like update_all and delete_all.</p>
+
+<p><a href="http://api.rubyonrails.org/classes/ActiveRecord/Scoping/Default/ClassMethods.html">default_scope</a></p>
+
+<p><code>default_scope(scope = {})</code> Use this macro in your model to set a default scope for all operations on the model.</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  default_scope where(:published =&gt; true)
+end
+
+Article.all # =&gt; SELECT * FROM articles WHERE published = true</pre>
+</div>
+
+
+<p>The <code>default_scope</code> is also applied while creating/building a record. It is not applied while updating a record.</p>
+
+<div>
+<pre>Article.new.published    # =&gt; true
+Article.create.published # =&gt; true</pre>
+</div>
+
+
+<p>You can also use <code>default_scope</code> with a block, in order to have it lazily evaluated:</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  default_scope { where(:published_at =&gt; Time.now - 1.week) }
+end</pre>
+</div>
+
+
+<p>(You can also pass any object which responds to call to the <code>default_scope</code> macro, and it will be called when building the default scope.)</p>
+
+<p>If you use multiple <code>default_scope</code> declarations in your model then they will be merged together:</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  default_scope where(:published =&gt; true)
+  default_scope where(:rating =&gt; &#039;G&#039;)
+end
+
+Article.all # =&gt; SELECT * FROM articles WHERE published = true AND rating = &#039;G&#039;</pre>
+</div>
+
+
+<p>This is also the case with inheritance and module includes where the parent or module defines a <code>default_scope</code> and the child or including class defines a second one.</p>
+
+<p>If you need to do more complex things with a default scope, you can alternatively define it as a class method:</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  def self.default_scope
+    # Should return a scope, you can call &#039;super&#039; here etc.
+  end
+end</pre>
+</div>
+
+
+<p><a href="http://api.rubyonrails.org/classes/ActiveRecord/Scoping/Named/ClassMethods.html">activerecord/lib/active_record/scoping/named.rb</a></p>
+
+<p><code>scope(name, scope_options = {})</code> Adds a class method for retrieving and querying objects. A scope represents a narrowing of a database query, such as <code>where(:color =&gt; :red).select(&lsquo;shirts.*&rsquo;).includes(:washing_instructions)</code>.</p>
+
+<div>
+<pre>class Shirt &lt; ActiveRecord::Base
+  scope :red, where(:color =&gt; &#039;red&#039;)
+  scope :dry_clean_only, joins(:washing_instructions).where(&#039;washing_instructions.dry_clean_only = ?&#039;, true)
+end</pre>
+</div>
+
+
+<p>The above calls to scope define class methods <code>Shirt.red</code> and <code>Shirt.dry_clean_only</code>. <code>Shirt.red</code>, in effect, represents the query <code>Shirt.where(:color =&gt; &lsquo;red&rsquo;)</code>.</p>
+
+<p>Note that this is simply ‘syntactic sugar’ for defining an actual class method:</p>
+
+<div>
+<pre>class Shirt &lt; ActiveRecord::Base
+  def self.red
+    where(:color =&gt; &#039;red&#039;)
+  end
+end</pre>
+</div>
+
+
+<p>Unlike <code>Shirt.find(&hellip;)</code>, however, the object returned by <code>Shirt.red</code> is not an Array; it resembles the association object constructed by a has_many declaration. For instance, you can invoke <code>Shirt.red.first</code>, <code>Shirt.red.count</code>,<code>Shirt.red.where(:size =&gt; &lsquo;small&rsquo;)</code>. Also, just as with the association objects, named scopes act like an Array, implementing Enumerable; <code>Shirt.red.each(&amp;block)</code>, <code>Shirt.red.first</code>, and <code>Shirt.red.inject(memo, &amp;block)</code> all behave as if<code>Shirt.red</code> really was an Array.</p>
+
+<p>These named scopes are composable. For instance, <code>Shirt.red.dry_clean_only</code> will produce all shirts that are both red and dry clean only. Nested finds and calculations also work with these compositions: <code>Shirt.red.dry_clean_only.count</code> returns the number of garments for which these criteria obtain. Similarly with <code>Shirt.red.dry_clean_only.average(:thread_count)</code>.</p>
+
+<p>All scopes are available as class methods on the <code>ActiveRecord::Base</code> descendant upon which the scopes were defined. But they are also available to has_many associations. If,</p>
+
+<div>
+<pre>class Person &lt; ActiveRecord::Base
+  has_many :shirts
+end</pre>
+</div>
+
+
+<p>then <code>elton.shirts.red.dry_clean_only</code> will return all of Elton’s red, dry clean only shirts.</p>
+
+<p>Named scopes can also be procedural:</p>
+
+<div>
+<pre>class Shirt &lt; ActiveRecord::Base
+  scope :colored, lambda { |color| where(:color =&gt; color) }
+end</pre>
+</div>
+
+
+<p>In this example, <code>Shirt.colored(&lsquo;puce&rsquo;)</code> finds all puce shirts.</p>
+
+<p>On Ruby 1.9 you can use the ‘stabby lambda’ syntax:</p>
+
+<div>
+<pre>scope :colored, -&gt;(color) { where(:color =&gt; color) }</pre>
+</div>
+
+
+<p>Note that scopes defined with scope will be evaluated when they are defined, rather than when they are used. For example, the following would be incorrect:</p>
+
+<div>
+<pre>class Post &lt; ActiveRecord::Base
+  scope :recent, where(&#039;published_at &gt;= ?&#039;, Time.current - 1.week)
+end</pre>
+</div>
+
+
+<p><strong>The example above would be ‘frozen’ to the <code>Time.current</code> value when the Post class was defined</strong>, and so the resultant SQL query would always be the same. The correct way to do this would be via a lambda, which will re-evaluate the scope each time it is called:</p>
+
+<div>
+<pre>class Post &lt; ActiveRecord::Base
+  scope :recent, lambda { where(&#039;published_at &gt;= ?&#039;, Time.current - 1.week) }
+end</pre>
+</div>
+
+
+<p>Named scopes can also have extensions, just as with has_many declarations:</p>
+
+<div>
+<pre>class Shirt &lt; ActiveRecord::Base
+  scope :red, where(:color =&gt; &#039;red&#039;) do
+    def dom_id
+      &#039;red_shirts&#039;
+    end
+  end
+end</pre>
+</div>
+
+
+<p>Scopes can also be used while creating/building a record.</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  scope :published, where(:published =&gt; true)
+end
+
+Article.published.new.published    # =&gt; true
+Article.published.create.published # =&gt; true</pre>
+</div>
+
+
+<p>Class methods on your model are automatically available on scopes. Assuming the following setup:</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  scope :published, where(:published =&gt; true)
+  scope :featured, where(:featured =&gt; true)
+
+  def self.latest_article
+    order(&#039;published_at desc&#039;).first
+  end
+
+  def self.titles
+    map(&amp;:title)
+  end
+
+end</pre>
+</div>
+
+
+<p>We are able to call the methods like this:</p>
+
+<div>
+<pre>Article.published.featured.latest_article
+Article.featured.titles</pre>
+</div>
+
+
+<p><code>scoped(options = nil)</code> Returns an anonymous scope.</p>
+
+<div>
+<pre>posts = Post.scoped
+posts.size # Fires &quot;select count(*) from  posts&quot; and returns the count
+posts.each {|p| puts p.name } # Fires &quot;select * from posts&quot; and loads post objects
+
+fruits = Fruit.scoped
+fruits = fruits.where(:color =&gt; &#039;red&#039;) if options[:red_only]
+fruits = fruits.limit(10) if limited?</pre>
+</div>
+
+
+<p>Anonymous scopes tend to be useful when procedurally generating complex queries, where passing intermediate values (scopes) around as first-class objects is convenient.</p>
+
+<p><strong>You can define a scope that applies to all finders using <code>ActiveRecord::Base.default_scope</code></strong>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[晒晒我们的开源项目 ITEYE开源代码]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/"/>
+    <updated>2012-09-27T08:34:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma</id>
+    <content type="html"><![CDATA[<h2>晒晒我们的开源项目 ITEYE开源代码</h2>
+
+<p>我们的研发团队是一支mini型研发团队，目前共有研发人员13人。由于网站产品维护的历史原因，这13人的研发团队分为4支小组，分别是：Ruby研发小组5人；PHP研发小组4人；.net研发小组2人，Java搜索小组2人。</p>
+
+<p>别看我们研发人员这么少，但是我们研发人员战斗力很强，我们维护和开发着十多条产品线。在我们开发自身产品的过程中，也积累了一些比较通用的组件，一些对大家来说有用的工具。因此从今年下半年开始，我们陆续将一些组件和工具开源出来，哪怕这些项目的质量并不是那么高，也希望能够给社区带来一点点自己的贡献。</p>
+
+<p>以下简要介绍一下我们已经开源的项目，今后我们还会努力开源更多的东西和大家交流和分享：</p>
+
+<p>1、Ansj中文分词 &ndash; 开源的高准确率Java中文分词器</p>
+
+<p>项目Github地址：<a href="https://github.com/ansjsun/ansj_seg" target="_blank"><a href="https://github.com/ansjsun/ansj_seg">https://github.com/ansjsun/ansj_seg</a></a>
+这是基于大名鼎鼎中科院的Ictclas中文分词算法编写的Java实现版本，比常用的开源mmseg4j的分词准确率高。目前我们自己站内的搜索将逐渐从mmseg4j算法替换成Ansj中文分词算法。</p>
+
+<p>2、ServiceFramework &ndash; 开源的羽量级Java Web服务框架</p>
+
+<p>项目Github地址：<a href="https://github.com/allwefantasy/ServiceFramework" target="_blank"><a href="https://github.com/allwefantasy/ServiceFramework">https://github.com/allwefantasy/ServiceFramework</a></a>
+我们基于Java的开源搜索框架lucene编写了网站的分布式搜索和Tag文章分类服务。因为需要向前端的Web应用程序提供搜索和Tag服务接口API，所以我们编写了这个羽量级的Java框架软件。它的优点就是羽量级，自身集成了Jetty服务器，MVC，IoC和ORM，让你只需要编写非常少的代码，就可以快速将你的业务逻辑组件以Web API的方式提供服务。</p>
+
+<p>3、ExportBlog &ndash; 开源的通用博客导出工具</p>
+
+<p>项目Github地址：<a href="https://github.com/sqzhuyi/ExportBlog" target="_blank"><a href="https://github.com/sqzhuyi/ExportBlog">https://github.com/sqzhuyi/ExportBlog</a></a>
+这是一个基于.net Winforms编写的通用博客导出工具，支持导出网站包括：CSDN、ITEYE、博客园、新浪、搜狐、和讯、ChinaUnix、网易、51CTO、开源中国、百度空间、QQ空间等等。导出格式支持CHM、PDF、HTML、TXT和EPUB 5种格式文档。详细介绍：<a href="http://blog.csdn.net/sq_zhuyi/article/details/7924776" target="_blank"><a href="http://blog.csdn.net/sq_zhuyi/article/details/7924776">http://blog.csdn.net/sq_zhuyi/article/details/7924776</a></a></p>
+
+<p>4、Secode_level_cache &ndash; 开源的Rails对象缓存插件</p>
+
+<p>项目Github地址：<a href="https://github.com/csdn-dev/second_level_cache" target="_blank"><a href="https://github.com/csdn-dev/second_level_cache">https://github.com/csdn-dev/second_level_cache</a></a>
+Rails的ActiveRecord自身没有带强大的对象缓存功能，这是AR的一个重大的遗憾。早在2008年开始，我们就借鉴了Java强大的ORM框架Hibernate的二级对象缓存编写了这个Rails的AR对象缓存插件，并且一直作为JavaEye网站缓存优化的秘密武器来使用，取得了非常理想的效果。
+现在我们将这个插件从Rails2.x的版本升级到了3.x版本，并且抽取成了一个通用插件，开始应用于新的Rails3.2的项目之上。有志于AR对象缓存优化的ruby程序员不容错过。</p>
+
+<p>5、limiter － 网站反爬虫和DOS攻击的利器</p>
+
+<p>项目Github地址：<a href="https://github.com/csdn-dev/limiter" target="_blank"><a href="https://github.com/csdn-dev/limiter">https://github.com/csdn-dev/limiter</a></a>
+早年的JavaEye网站曾经深受DOS攻击和爬虫海量抓取造成的负载过高的困扰，我曾经和这个问题进行了为期几年不懈的斗争，并且在总结几年斗争经验后写了一篇总结性博客文章：<a href="http://robbin.iteye.com/blog/451014" target="_blank">互联网网站的反爬虫策略浅析</a> 。当时我基于这个反爬虫策略编写了JavaEye网站的智能防火墙插件，取得了良好的效果。
+现在我们将这个插件从JavaEye的源代码中剥离出来，抽取成一个通用的rackware，便于应用于普通的Rails3.x的项目当中。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Single sign-on 单点登录 sso]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/"/>
+    <updated>2012-09-26T08:35:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso</id>
+    <content type="html"><![CDATA[<h2>Single sign-on 单点登录 sso</h2>
+
+<p>from wiki</p>
+
+<p><strong>Single sign-on</strong> (<strong>SSO</strong>) is a property of <a title="Access control" href="http://en.wikipedia.org/wiki/Access_control">access control</a> of multiple related, but independent <a title="Software" href="http://en.wikipedia.org/wiki/Software">software</a> systems. With this property a user <a title="Login" href="http://en.wikipedia.org/wiki/Login">logs in</a> once and gains access to all systems without being prompted to log in again at each of them. Conversely, <strong>Single sign-off</strong> is the property whereby a single action of signing out terminates access to multiple software systems.</p>
+
+<p>As different applications and resources support different <a title="Authentication" href="http://en.wikipedia.org/wiki/Authentication">authentication</a> mechanisms, single sign-on has to internally translate to and store different credentials compared to what is used for initial authentication.</p>
+
+<p>from baike</p>
+
+<p>单点登录（Single Sign On），简称为 SSO，是目前比较流行的企业业务整合的解决方案之一。SSO的定义是在多个应用系统中，用户只需要登录一次就可以访问所有相互信任的应用系统。</p>
+
+<div></div>
+
+
+<p>企业应用集成（EAI, Enterprise Application Integration）。企业应用集成可以在不同层面上进行：例如在数据存储层面上的“数据大集中”，在传输层面上的“通用数据交换平台”，在应用层面上的“业务流程整合”，和用户界面上的“通用企业门户”等等。事实上，还有一个层面上的集成变得越来越重要，那就是“身份认证”的整合，也就是“单点登录”。</p>
+
+<p>现在普遍使用 oauth 来实现 多个系统的授权 认证</p>
+
+<p><a href="https://github.com/songkick/oauth2-provider"><a href="https://github.com/songkick/oauth2-provider">https://github.com/songkick/oauth2-provider</a></a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Sharing A Devise User Session Across Subdomains With Rails 3]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/09/15/sharing-a-devise-user-session-across-subdomains-with-rails-3/"/>
+    <updated>2012-09-15T16:21:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/09/15/sharing-a-devise-user-session-across-subdomains-with-rails-3</id>
+    <content type="html"><![CDATA[<h2>Sharing A Devise User Session Across Subdomains With Rails 3</h2>
+
+<pre>to andersen
+  仔细测了一下 Askjane::Application.config.session_store :active_record_store, key: &#039;_askjane_session&#039;, :domain =&gt; &quot;.bbtang.com&quot;在 server上
+  是ok的（效果上也是能共享bbtang.com 和www.bbtang.com的会话的只要端口一致）就是不知道在本地如何因为本地一般不会设置host绑定域名(经测试答案是不能的)，如何（所以需要:all这个设置项）
+to 客服 和 jojo
+ 提一点 你们一些 首页源码的时候 不要把 域名加上去  注意 尼玛 端口不一致 也是不能share 会话的
+ 简而言之 你们写一些html静态源码的时候除非不在 bbtang.com的 项目上 没有必要加 域名的 这会加大 大家的成本（如果说端口不一致就会导致会话丢失，如果没有做多域名兼容也会导致会话丢失能免则免）
+over</pre>
+
+
+<pre></pre>
+
+
+<pre>Francis.J(864248765) 13:57:28
+https://github.com/rails/rails/issues/2483
+Francis.J(864248765) 13:57:55
+尼玛 rails 大爷又 踩雷了
+Francis.J(864248765) 13:59:42
+https://github.com/rails/rails/issues/2483
+Francis.J(864248765) 14:02:27
+https://github.com/rails/rails/pull/7316
+Francis.J(864248765) 14:08:37
+然后 我们看看 究竟用 :cookie_store + :domain =&gt; :all
+还是  :active_record_store + &quot;.bbtang.com&quot; (这里垮子域名估计不会很合适)
+还是 升一下 rails  用  :active_record_store + :domain =&gt; :all</pre>
+
+
+<p>Recently I’ve been working on a Rails application that supports subdomains. I’m using Devise for user authentication and need the user to choose a subdomain to use upon registration.</p>
+
+<p>Similar to the 37signals applications, I want a single sign-on to be persistent across subdomains. Since I didn’t have a clue where to begin with subdomains, I followed <a href="https://github.com/fortuity/rails3-subdomain-devise/wiki/Tutorial-%28Walkthrough%29">this tutorial</a> on my new Rails 3.1 beta 1 application. This tutorial worked like a charm and I omitted the friendly_id and tweaked a few things to my liking.</p>
+
+<p>The gist of it is simple. Create a User model like you would normally do with Devise. You add a Subdomain model that is linked to the Users (in my case I only wanted a single subdomain per user). Configuring the routes is pretty simple as you can simply create a constraint that will match the root and fire it off to the right action and let the rest fall through.</p>
+
+<p>The trick comes into sharing the session between domains. Browsers, of course, will separate out the cookies and store them by separated out by subdomain. What you want to do is edit your config/initializers/session_store.rb file to look like this</p>
+
+<div>
+<table>
+<tbody>
+<tr>
+<td>
+<pre>APPNAMEGOESHERE::Application.config.session_store :cookie_store, :key =&gt; &#039;_tourlyapp_session&#039;, :domain =&gt; &quot;lvh.me&quot;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+<p>The trick here is the <code>:domain</code> option. What this does is sets the level of the TLD (top level domain) and tells Rails how long the domain is. The part you want to watch out for here is that if you set <code>:domain =&gt; :all</code> like is recommend in some places, it simply won’t work unless you’re using localhost. <code>:all</code> defaults to a TLD length of 1, which means if you’re testing with Pow (myapp.dev) it won’t work either because that is a TLD of length 2.</p>
+
+<p>You might get weird things like halfway Devise sessions sharing, but only allowing you to create and destroy the session on the root domain. Using <code>:all</code> works great if you’re using localhost, but when I started using lvh.me:3000 for testing I had those problems (lvh.me stands for local vhost me and is a domain that simply points to localhost which makes for zero-config subdomain development. It’s super handy.).</p>
+
+<p>The best option might be to comment out this line and put it into your individual environment configurations. This way you can keep things configured easily as the <code>:all</code> option. Once you’ve got your domain string added everything should work like a charm.</p>
+
+<p><strong>BONUS PROTIP: </strong>The normal route variables you see used end with _path. These don’t include the domain and therefore ignore the :subdomain option you pass into them. <code>url_for</code>, on the other hand, does support subdomains so you should get into the habit of using root_url instead of root_path and so on.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[IE, iframe, P3P, Cookies, oh my]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/09/13/ie-iframe-p3p-cookies-oh-my/"/>
+    <updated>2012-09-13T22:53:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/09/13/ie-iframe-p3p-cookies-oh-my</id>
+    <content type="html"><![CDATA[<h2>IE, iframe, P3P, Cookies, oh my</h2>
+
+<p>测试新浪微游戏接口时，发现一个问题：当使用IE浏览器的时候，rails的session无法保存。之前在自己开发服务器上测试时，验证过IE和Firefox都能正常使用session的，觉得很是奇怪。</p>
+
+<p>通 过抓包发现，正常情况下，服务器端在响应客户端访问请求后，在返回的http头中会有Set-Cookies这样的参数，同时在接下来的客户端的http 请求头中，会加上Cookie这样的参数；上述不能正常保存session情况下的抓包分析发现，客户端的http请求头中浏览器没有设置Cookie参 数。</p>
+
+<p>解决方法一：修改IE的默认Cookie设置，设置IE隐私设置中的高级隐私设置，勾选“总是允许回话Cookie”，这样session的值就能正常保存了。不过这样肯定不是最好的解决办法，对大多数用户来说，这样做不合理。</p>
+
+<p>解决方法二：参考方法来自： <a href="http://www.sympact.net/2008/07/rails-and-ifram.html" target="_blank"><a href="http://www.sympact.net/2008/07/rails-and-ifram.html">http://www.sympact.net/2008/07/rails-and-ifram.html</a></a> ，文中描述了具体原因，是因为IFrame中打开的链接和主页面的链接不在同一个域，所以IE默认会认为是不可信任的，则不允许使用Cookie。解决办 法正如文中所示，在controller中的before_filter中增加一个方法，此方法中设置响应的http相应头中增加P3P参数，问题即可解 决。
+大致代码如下：</p>
+
+<pre class="brush: rails; gutter: true"></pre>
+
+
+<div id="LC1">[rails IE, IFRAME, P3P, COOKIES](<a href="https://gist.github.com/3719568">https://gist.github.com/3719568</a>)</div>
+
+
+<div id="LC10">
+<pre class="brush: rails; gutter: true">#userful gem [rack-p3p](https://github.com/hoopla/rack-p3p)
+# encoding: utf-8
+class ApplicationController &lt; ActionController::Base
+  protect_from_forgery
+  before_filter :set_p3p
+  def set_p3p
+    headers[&#039;P3P&#039;] = &quot;policyref=\&quot;/w3c/p3p.xml\&quot;, CP=\&quot;ALL DSP COR CURa ADMa DEVa TAIa OUR BUS IND UNI COM NAV INT\&quot;&quot;
+  end
+end</pre>
+</div>
+
+
+<div id="LC10"></div>
+
+
+<p>I was just banging my head against the wall trying to figure out why internet explorer wasn’t remembering my user’s sessions. Turns out it’s something that has bitten me in the past.</p>
+
+<p>IE doesn’t allow you to set cookies when your site is in an iframe unless your site has set P3P headers. Also, ordering matters – the P3P header must be set <em>before</em> the cookie is set.</p>
+
+<p>If you’re using ruby, this gem works pretty well: <a href="https://github.com/hoopla/rack-p3p"><a href="https://github.com/hoopla/rack-p3p">https://github.com/hoopla/rack-p3p</a></a></p>
+
+<p>Further reading: <a href="http://stackoverflow.com/questions/389456/cookie-blocked-not-saved-in-iframe-in-internet-explorer"><a href="http://stackoverflow.com/questions/389456/cookie-blocked-not-saved-in-iframe-in-internet-explorer">http://stackoverflow.com/questions/389456/cookie-blocked-not-saved-in-iframe-in-internet-explorer</a></a></p>
+
+<p>All the articles I read about setting headers, etags, etc were all really old. Hopefully, if you’re using rails you found this article. Just install the gem and add the line from the README to your application.rb – no monkey patching. Good luck.</p>
+
+<h2>rails IE frame ActionController::InvalidAuthenticityToken</h2>
+
+
+<p>Same problem here with a rails application launched in an iframe I get:</p>
+
+<p>&ldquo;the change you wanted was rejected&rdquo;</p>
+
+<p>In log:</p>
+
+<p>ActionController::InvalidAuthenticityToken<wbr></wbr></p>
+
+<p>Seems that the problem occur in IE when you are developing in an iframe situation where the master page is at a different domain than the inner page. (es: iframed Facebook applications)</p>
+
+<p>This is because IE&rsquo;s default &ldquo;medium&rdquo; privacy setting has an issue with cookies in that situation.</p>
+
+<p>A possible solution is to set a P3P header (try to google: p3p iframe internet explorer) Example, in application_controller.rb:</p>
+
+<pre>&lt;code&gt;before_filter  &lt;wbr&gt;:set_p3p
+
+def set_p3p
+ &lt;wbr&gt; response.headers[&quot;P3P&quot;]=&#039;CP=&quot;CAO PSA OUR&quot;&#039;
+end&lt;/wbr&gt;&lt;/wbr&gt;&lt;/code&gt;</pre>
+
+
+<p>&nbsp;</p>
+
+<h1 id="subject_tpc">php版站内应用在ie浏览器下获取到session值(失效)[已解决]</h1>
+
+
+<div>
+<div id="read_tpc">php版站内应用在ie浏览器下获取到session值(失效)
+首页授权证后保存的session在其它页面获取不到。例如：
+在站内应用的iframe下：
+a.php
+&lt;?php
+session_start();
+$_SESSION["user"]="abc";
+echo $_SESSION["user"];
+?&gt;
+&lt;a href="b.php"&gt;b.php&lt;/a&gt;
+
+b.php
+&lt;?php
+session_start();
+echo $_SESSION["user"];
+?&gt;
+
+运行a.php后正常显示abc，跳转到b.php显示为空。
+
+这问题纠缠了我很久了，不继地调试，直到今晚终于找到答案了：
+原来这也属于是跨域访问的问题。
+
+以下是解决方案：
+<strong>“用P3P header解决iframe跨域访问cookie/session”的问题</strong>
+理论很简单,而且模式也和大多请求返回状态的SSO差不多.但是有几个地方是要注意一下的.
+1.页面里的COOKIE不能是浏览器进程的COOKIE(包括验证票和不设置超时时间的COOKIE),否则跨域会取不到.这点做跨域COOKIE的人比较少提到.不过实际上留意下几家大学做的方案,有细微的提到他们的验证模块里的COOKIE是有设置超时时间的.
+2.当利用IFRAME时,记得要在相应的动态页的页头添加一下P3P的信息,否则IE会自觉的把IFRAME框里的COOKIE给阻止掉,产生问题.本身不保存自然就取不到了.这个其实是FRAMESET和COOKIE的问题,用FRAME或者IFRAME都会遇到.
+3.测试时输出TRACE,会减少很多测试的工作量.
+只需要设置 P3P HTTP Header，在隐含 iframe 里面跨域设置 cookie 就可以成功。他们所用的内容是：
+P3P: CP='CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR'
+
+ASP直接在头部加了头部申明，测试有效。
+&lt;%Response.AddHeader "P3P", "CP=CAO PSA OUR"%&gt;
+
+php的话，我没去试，应该是如下写法：
+header('P3P: CP=CAO PSA OUR');
+
+ASP.NET的话
+通过在代码上加Response.AddHeader("P3P", "CP=CAO PSA OUR")或者在Window服务中将ASP.NET State Service 启动。
+JSP:response.setHeader("P3P","CP=CAO PSA OUR")
+
+如何在静态页面加头信息 P3P: CP="CAO PSA OUR 来解决框架与cookie的问题?
+IIS站点管理器允许你给所有输出的内容都加上任意HTTP Header，你只要在Custom Header里面加上P3P: CP="CAO PSA OUR"
+就ok了
+
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+</feed>

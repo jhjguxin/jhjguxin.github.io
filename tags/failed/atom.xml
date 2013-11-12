@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: failed | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/tags/failed/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[factory_girl Validation failed]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/03/16/factory-girl-validation-failed/"/>
+    <updated>2012-03-16T16:22:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/03/16/factory-girl-validation-failed</id>
+    <content type="html"><![CDATA[<h2>factory_girl Validation failed</h2>
+
+<p>You need to use a sequence to prevent the creation of user objects with the same email, since you must have a validation for the uniqueness of emails in your User model.</p>
+
+<pre><code>Factory.sequence :email do |n|
+  “test#{n}@example.com”
+end
+
+Factory.define :user do |user|
+  user.name "Testing User"
+  user.email { Factory.next(:email) }
+  user.password "foobar"
+  user.password_confirmation "foobar"
+end
+</code></pre>
+
+
+<p>You can read more in the <a href="https://github.com/thoughtbot/factory_girl/wiki/Usage" rel="nofollow">Factory Girl documentation</a>.</p>
+
+<p>&nbsp;</p>
+
+<p>Using factory_girl to create several instances of a class that belongs to another class causes a Validation failed error.</p>
+
+<p>This happens because each instance tries to automatically create the object to which it belongs. However since the first instance creates it, the following instances crash because the object already exists.</p>
+
+<p>I have been struggling to solve this problem and it seems finally I arrived to a satisfactory solution.</p>
+
+<p>The problem arises when there is a one to many relationship between to classes and I try to create several instances of a class.</p>
+
+<p>In my case I have a subdomain which has many users:</p>
+
+<p>class Subdomain &lt; ActiveRecord::Base validates_uniqueness_of :name, :case_sensitive =&gt; false
+has_many :users
+end
+class User &lt; ActiveRecord::Base belongs_to: subdomain endThe factories are as follows: FactoryGirl.define do factory :subdomain do name &lsquo;test-subdomain&rsquo; end factory :user do subdomain email &lsquo;<a href="&#109;&#x61;&#105;&#108;&#116;&#111;&#x3a;&#x74;&#101;&#115;&#116;&#45;&#117;&#x73;&#x65;&#x72;&#64;&#101;&#120;&#97;&#x6d;&#x70;&#x6c;&#x65;&#46;&#x63;&#111;&#x6d;">&#x74;&#101;&#115;&#x74;&#x2d;&#117;&#115;&#x65;&#114;&#x40;&#x65;&#120;&#x61;&#x6d;&#112;&#x6c;&#101;&#46;&#99;&#111;&#109;</a>&rsquo; password &lsquo;123456¿ password_confirmation '123456&rsquo; end endWhen I try to create two users using the following code: FactoryGirl.create(:user, :email =&gt; &ldquo;<a href="&#109;&#97;&#x69;&#x6c;&#116;&#111;&#58;&#x66;&#x69;&#x72;&#x73;&#x74;&#x40;&#101;&#x78;&#x61;&#109;&#112;&#x6c;&#x65;&#x2e;&#x63;&#111;&#x6d;">&#102;&#x69;&#x72;&#115;&#x74;&#64;&#101;&#120;&#97;&#109;&#x70;&#108;&#101;&#x2e;&#99;&#x6f;&#109;</a>&rdquo;)
+FactoryGirl.create(:user, :email =&gt; &ldquo;<a href="&#x6d;&#x61;&#x69;&#x6c;&#116;&#111;&#58;&#115;&#x65;&#x63;&#111;&#x6e;&#100;&#x40;&#x65;&#x78;&#97;&#x6d;&#x70;&#108;&#x65;&#x2e;&#x63;&#x6f;&#109;">&#x73;&#101;&#99;&#x6f;&#x6e;&#100;&#64;&#101;&#120;&#97;&#109;&#112;&#108;&#x65;&#46;&#x63;&#x6f;&#x6d;</a>&rdquo;)I get the following error:</p>
+
+<p>Validation failed: Name has already been taken (ActiveRecord::RecordInvalid)This happens because when the first user is created, the default subdomain is created too and when the second user is created the subdomain already exists.</p>
+
+<p>If we want to use the same subdomain for both users we can do the following:</p>
+
+<p>s = FactoryGirl.create(:subdomain)
+FactoryGirl.create(:user, :email =&gt; &ldquo;<a href="&#x6d;&#97;&#105;&#x6c;&#116;&#x6f;&#58;&#x66;&#105;&#x72;&#115;&#116;&#x40;&#x65;&#120;&#x61;&#x6d;&#x70;&#108;&#x65;&#46;&#99;&#x6f;&#109;">&#102;&#x69;&#x72;&#115;&#x74;&#64;&#x65;&#120;&#97;&#x6d;&#x70;&#x6c;&#101;&#x2e;&#99;&#x6f;&#109;</a>&rdquo;, :subdomain =&gt; s)
+FactoryGirl.create(:user, :email =&gt; &ldquo;<a href="&#109;&#x61;&#105;&#x6c;&#x74;&#x6f;&#58;&#115;&#x65;&#99;&#111;&#x6e;&#x64;&#x40;&#101;&#x78;&#97;&#109;&#112;&#x6c;&#101;&#46;&#x63;&#x6f;&#109;">&#115;&#101;&#x63;&#111;&#x6e;&#100;&#64;&#101;&#120;&#97;&#x6d;&#x70;&#108;&#x65;&#x2e;&#99;&#111;&#109;</a>&rdquo;, :subdomain =&gt; s)However as our has_many relations become deeper, test data creation becomes more complex.</p>
+
+<p>My solution to this problem is as to change the factory for user:</p>
+
+<p>factory :user do
+subdomain { Subdomain.find_by_name(&lsquo;test-subdomain&rsquo;) || FactoryGirl.create(:subdomain) }
+email &lsquo;<a href="&#109;&#x61;&#105;&#x6c;&#x74;&#x6f;&#x3a;&#116;&#x65;&#x73;&#116;&#45;&#x75;&#115;&#101;&#x72;&#x40;&#x65;&#x78;&#x61;&#x6d;&#x70;&#x6c;&#101;&#46;&#99;&#111;&#x6d;">&#116;&#101;&#115;&#116;&#x2d;&#117;&#x73;&#101;&#x72;&#64;&#x65;&#120;&#97;&#x6d;&#x70;&#x6c;&#x65;&#x2e;&#99;&#111;&#x6d;</a>&rsquo;
+password &lsquo;123456&rsquo;
+password_confirmation &lsquo;123456&rsquo;
+endIn this case the factory uses the default subdomain if it already exists, avoiding the validation problem.</p>
+
+<p>Now if we use the initial code, it works without problem, assigning both users to the default subdomain</p>
+
+<p>FactoryGirl.create(:user, :email =&gt; &ldquo;<a href="&#x6d;&#97;&#105;&#108;&#x74;&#x6f;&#x3a;&#x66;&#x69;&#114;&#115;&#x74;&#64;&#101;&#120;&#x61;&#109;&#112;&#108;&#101;&#x2e;&#x63;&#111;&#109;">&#102;&#105;&#114;&#x73;&#116;&#64;&#101;&#120;&#97;&#x6d;&#112;&#108;&#101;&#x2e;&#x63;&#x6f;&#109;</a>&rdquo;)
+FactoryGirl.create(:user, :email =&gt; &ldquo;<a href="&#x6d;&#97;&#105;&#108;&#116;&#x6f;&#58;&#115;&#101;&#99;&#111;&#x6e;&#x64;&#64;&#x65;&#x78;&#97;&#109;&#x70;&#x6c;&#x65;&#x2e;&#x63;&#111;&#109;">&#x73;&#101;&#x63;&#x6f;&#x6e;&#x64;&#64;&#x65;&#120;&#97;&#x6d;&#x70;&#108;&#x65;&#x2e;&#x63;&#x6f;&#109;</a>&rdquo;)However this does not limit us to use the same subdomain for all users:</p>
+
+<p>other_subdomain = FactoryGirl.create(:subdomain, :name =&gt; &ldquo;other-subdomain&rdquo;)</p>
+
+<p>FactoryGirl.create(:user, :email =&gt; &ldquo;<a href="&#109;&#97;&#x69;&#x6c;&#116;&#111;&#58;&#x66;&#x69;&#114;&#x73;&#x74;&#64;&#101;&#x78;&#x61;&#x6d;&#112;&#x6c;&#101;&#x2e;&#x63;&#111;&#109;">&#102;&#x69;&#x72;&#115;&#116;&#x40;&#101;&#120;&#x61;&#109;&#x70;&#x6c;&#101;&#x2e;&#x63;&#x6f;&#x6d;</a>&rdquo;, :subdomain =&gt; other_subdomain)
+FactoryGirl.create(:user, :email =&gt; &ldquo;<a href="&#109;&#97;&#x69;&#108;&#x74;&#x6f;&#58;&#x73;&#101;&#99;&#111;&#x6e;&#100;&#64;&#x65;&#x78;&#x61;&#x6d;&#x70;&#108;&#101;&#x2e;&#x63;&#111;&#109;">&#x73;&#101;&#99;&#111;&#x6e;&#x64;&#64;&#x65;&#x78;&#97;&#109;&#112;&#108;&#x65;&#46;&#99;&#x6f;&#x6d;</a>&rdquo;)In this case, the first user is assigned to other-subdomain and the second user is assigned to test-subdomain.</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: Object | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/tags/object/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Rails Object Relationships and JSON Rendering]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/04/03/rails-object-relationships-and-json-rendering/"/>
+    <updated>2012-04-03T22:46:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/04/03/rails-object-relationships-and-json-rendering</id>
+    <content type="html"><![CDATA[<h2>Rails Object Relationships and JSON Rendering</h2>
+
+<p><code>class ModelA &lt; ActiveRecord::Base
+  belongs_to :ModelB</code></p>
+
+<p>  &hellip;</p>
+
+<p>class ModelB &lt; ActiveRecord::Base
+  has_many :ModelA</p>
+
+<p>When calling the show action of the ModelA controller the returned JSON should show all ObjectAs that are children of the ObjectB of which the ObjectA in question is a child of.</p>
+
+<p>By default you&rsquo;ll only get the JSON that represents <code>modelb</code> in your example above. But, you can tell Rails to include the other related objects as well:</p>
+
+<p><code>def export
+  @export_data = ModelA.find(params[:id])
+  respond_to do |format|
+    format.html
+    format.json { render :json =&gt; @export_data.to_json(:include =&gt; :modelb) }
+  end
+end
+</code></p>
+
+<p>You can even tell it to exclude certain fields if you don&rsquo;t want to see them in the export:</p>
+
+<p><code>render :json =&gt; @export_data.to_json(:include =&gt; { :modelb =&gt; { :except =&gt; [:created_at, updated_at]}})</code></p>
+
+<p>Or, include only certain fields:</p>
+
+<p><code>
+render :json =&gt; @export_data.to_json(:include =&gt; { :modelb =&gt; { :only =&gt; :name }})
+</code></p>
+
+<p>And you can nest those as deeply as you need (let&rsquo;s say that ModelB also has_many ModelC):</p>
+
+<p><code>
+render :json =&gt; @export_data.to_json(:include =&gt; { :modelb =&gt; { :include =&gt; :modelc }})</code></p>
+]]></content>
+  </entry>
+  
+</feed>

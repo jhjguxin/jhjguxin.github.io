@@ -1,0 +1,528 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: rvm | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/tags/rvm/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[RVM 下载 加速 -by liuhui998]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/05/14/rvm-xia-zai-jia-su-by-liuhui998/"/>
+    <updated>2012-05-14T15:37:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/05/14/rvm-xia-zai-jia-su-by-liuhui998</id>
+    <content type="html"><![CDATA[<h2>RVM 下载 加速 -by liuhui998</h2>
+
+<p>今天晚上有点时间，我就折腾了一下 rails。</p>
+
+<p>按照这个<a title="教程" href="http://ruby-china.org/wiki/install_ruby_guide">教程</a>，我一步步的进行安装。</p>
+
+<p>正如我之前听说的 <a title="rvm" href="https://rvm.beginrescueend.com/rvm/install/">rvm</a> 下载 ruby 的速度只有不到5KB/s 速度。</p>
+
+<p>在 google 了二圈后，我发现国内外好像没有人解决这个问题。</p>
+
+<p>于是我发扬geek精神，开始打起了 rvm 源代码的主意：</p>
+
+<p>1） rvm 是从 ruby-lang.org 这个站点下载 ruby 的源代码
+rvm 慢的主要是因为 ruby-lang.org 这个网站下载速度慢</p>
+
+<p>2） 如果找到 ruby-lang.org 的更快的镜像网站，并修改 rvm 里面的配置
+这个问题也就解决了</p>
+
+<p>于是找到一个叫 <a title="UK Mirror Service " href="http://www.mirrorservice.org/">UK Mirror Service</a> 的网站，它提供了 ruby-lang.org 镜像服务：</p>
+
+<p><a title="http://www.mirrorservice.org/sites/ftp.ruby-lang.org/" href="http://www.mirrorservice.org/sites/ftp.ruby-lang.org/"><a href="http://www.mirrorservice.org/sites/ftp.ruby-lang.org/">http://www.mirrorservice.org/sites/ftp.ruby-lang.org/</a></a></p>
+
+<p>我测试了一下，平均速度最慢也超过 30KB/s</p>
+
+<p>好的镜像找到了，那么下一步就是在哪里修改 ruby 下载地址。</p>
+
+<div><figure>
+<div>
+<table>
+<tbody>
+<tr>
+<td></td>
+<td>
+<pre><code>cd $rvm_path grep -nR "ruby-lang.org" ./</code></pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure></div>
+
+
+<p>&nbsp;</p>
+
+<p>发现地址是写在 $rvm_path/config/db 文件里</p>
+
+<p>找到这一段：</p>
+
+<div><figure>
+<div>
+<table>
+<tbody>
+<tr>
+<td></td>
+<td>
+<pre><code>ruby_1.0_url=http://ftp.ruby-lang.org/pub/ruby/1.0 ruby_1.2_url=http://ftp.ruby-lang.org/pub/ruby/1.2 ruby_1.3_url=http://ftp.ruby-lang.org/pub/ruby/1.3 ruby_1.4_url=http://ftp.ruby-lang.org/pub/ruby/1.4 ruby_1.5_url=http://ftp.ruby-lang.org/pub/ruby/1.5 ruby_1.6_url=http://ftp.ruby-lang.org/pub/ruby/1.6 ruby_1.7_url=http://ftp.ruby-lang.org/pub/ruby/1.7 ruby_1.8_url=http://ftp.ruby-lang.org/pub/ruby/1.8 ruby_1.9_url=http://ftp.ruby-lang.org/pub/ruby/1.9 ruby_2.0_url=http://ftp.ruby-lang.org/pub/ruby/2.0</code></pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure></div>
+
+
+<p>&nbsp;</p>
+
+<p>改成</p>
+
+<div><figure>
+<div>
+<table>
+<tbody>
+<tr>
+<td></td>
+<td>
+<pre><code>ruby_1.0_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.0 ruby_1.2_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.2 ruby_1.3_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.3 ruby_1.4_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.4 ruby_1.5_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.5 ruby_1.6_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.6 ruby_1.7_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.7 ruby_1.8_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.8 ruby_1.9_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.9 ruby_2.0_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/2.0</code></pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure></div>
+
+
+<p>&nbsp;</p>
+
+<p>我已把这个修攺提交到我们仓库里 <a title="http://github.com/liuhui998/rvm" href="http://github.com/liuhui998/rvm"><a href="http://github.com/liuhui998/rvm">http://github.com/liuhui998/rvm</a></a>
+可以直接点击下载我改好后的 <a title="db 文件" href="https://raw.github.com/liuhui998/rvm/0f0be9a1316d607a9956415110bef8ea9b8a6726/config/db">文件</a></p>
+
+<p>大家改好 $rvm_path/config/db 文件后，最好能重启终端程序后再执行 rvm install 命令
+这样新的 mirror 就会起效。</p>
+
+<p>经过测试，改进后的 rvm， 在家中4M 以太网的速度可以达到200KB/s.</p>
+
+<p>其本上解决了 rvm 下载 ruby 慢的问题。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[rvm下安装gem编译失败 linecache19]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/02/14/rvmxia-an-zhuang-gembian-yi-shi-bai-linecache19/"/>
+    <updated>2012-02-14T15:41:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/02/14/rvmxia-an-zhuang-gembian-yi-shi-bai-linecache19</id>
+    <content type="html"><![CDATA[<h2>rvm下安装gem编译失败 linecache19</h2>
+
+<p>报错:An error occured while installing linecache19 (0.5.12), and Bundler cannot continue.</p>
+
+<p>以下引用stackoverflow中的解答</p>
+
+<p>ruby -v</p>
+
+<p>then manually use &mdash;force to bypass version check:</p>
+
+<p>gem install ruby_core_source</p>
+
+<p>gem install linecache19 &mdash;force</p>
+
+<p>if you faced with another error starting with following lines:</p>
+
+<p>checking for vm_core.h&hellip; no</p>
+
+<p><strong><em> extconf.rb failed </em></strong></p>
+
+<p>You have to explicitly set the source path to vm_core.h</p>
+
+<p>In my case:</p>
+
+<p>$ which ruby</p>
+
+<p>/<span style="background-color: #ffd700;">User</span>s/Reza/.rvm/rubies/ruby-1.9.2-rc2/bin/ruby</p>
+
+<p>$ echo $rvm_path</p>
+
+<p>/<span style="background-color: #ffd700;">User</span>s/Reza/.rvm/</p>
+
+<p>so to install linecache19 :</p>
+
+<p>gem install ruby_core_source</p>
+
+<p>gem install linecache19 &mdash;force &mdash; &mdash;with-ruby-include=$rvm_path/src/ruby-1.9.2-rc2/</p>
+
+<p>ruby-debug19 has a similar issue:</p>
+
+<p>gem install ruby-debug19 &mdash;force &mdash; &mdash;with-ruby-include=$rvm_path/src/ruby-1.9.2-rc2/</p>
+
+<p>That&rsquo;s all!</p>
+
+<p>=====================================</p>
+
+<p>关键地方:</p>
+
+<p>gem install ruby_core_source</p>
+
+<p>if cannot <code>rvm pkg install openssl</code>
+  <code>sudo rvm pkg install openssl</code>
+end</p>
+
+<p>rvm remove 1.9.2-p290
+rvm install 1.9.2-p290 &mdash;with-openssl-dir=$rvm_path/usr</p>
+
+<h2>ruby-debug and ruby 1.9</h2>
+
+
+<p>If you have trouble installing ruby-debug19 try installing with the following command:</p>
+
+<pre>$ rvm reinstall 1.9.2 --patch debug --force-autoconf
+#可以先试试下面这个命令
+$ gem install ruby-debug19 -- --with-ruby-include="${MY_RUBY_HOME/rubies/src}"</pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[rvm on ubuntu 11.10 install ruby 1.9.2 error]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/01/31/rvm-on-ubuntu-11-dot-10-install-ruby-1-dot-9-2-error/"/>
+    <updated>2012-01-31T22:42:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/01/31/rvm-on-ubuntu-11-dot-10-install-ruby-1-dot-9-2-error</id>
+    <content type="html"><![CDATA[<h2>rvm on ubuntu 11.10 install ruby 1.9.2 error</h2>
+
+<div>
+
+When trying to install ruby 1.9.2 using rvm I got a nasty suprise:
+<div>
+<pre>ossl_ssl.c:110:1: error: ‘SSLv2_method’ undeclared here (not in a function)
+ossl_ssl.c:111:1: error: ‘SSLv2_server_method’ undeclared here (not in a function)
+ossl_ssl.c:112:1: error: ‘SSLv2_client_method’ undeclared here (not in a function)
+make[1]: *** [ossl_ssl.o] Error 1
+make[1]: Leaving directory `/var/cache/ruby-rvm/src/ruby-1.9.2-p180/ext/openssl'
+make: *** [mkmain.sh] Error 1</pre>
+</div>
+<h2>The solution</h2>
+<div>
+<pre>sudo apt-get install ruby-rvm
+# make sure we have $rvm_path
+source /etc/profile
+# don't use ubuntus openssl
+rvm package install openssl
+or
+rvm pkg install openssl
+rvm install 1.9.2 --with-openssl-dir=$rvm_path/usr</pre>
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[rvm常用用法]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/01/31/rvmchang-yong-yong-fa/"/>
+    <updated>2012-01-31T16:43:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/01/31/rvmchang-yong-yong-fa</id>
+    <content type="html"><![CDATA[<h2>rvm常用用法</h2>
+
+<p><strong>jhjguxin@jhjguxin-virtual-machine:~$ su<span>d</span>o gpassw<span>d</span> -a root rvm</strong>
+<strong>A<span>d</span><span>d</span>ing user root to group rvm</strong>
+<strong>jhjguxin@jhjguxin-virtual-machine:~$ su<span>d</span>o gpassw<span>d</span> -a jhjguxin rvm</strong>
+<strong>A<span>d</span><span>d</span>ing user jhjguxin to group rvm</strong>
+<strong>jhjguxin@jhjguxin-virtual-machine:~$ su<span>d</span>o gpassw<span>d</span> -a www-<span>d</span>ata rvm</strong>
+<strong>A<span>d</span><span>d</span>ing user www-<span>d</span>ata to group rvm</strong></p>
+
+<p><strong>这个是重点如果没有添加group的话则 install 会不成功</strong>
+The installer no longer auto-a<span>d</span><span>d</span>s root or users to the rvm group. A<span>d</span>mins must <span>d</span>o this.
+Also, please note that group memberships are ONLY evaluate<span>d</span> at login time.
+This means that users must log out then back in be<span>f</span>ore group membership takes e<span>f</span><span><span>f</span>e</span>ct!</p>
+
+<ul>
+<li><p>I<span>f</span> you have any questions, issues an<span>d</span>/or i<span>de</span>as <span>f</span>or improvement please
+<span>f</span>ork the project an<span>d</span> issue a pull request.</p></li>
+<li><p>I<span>f</span> you wish to <span>d</span>isable the project .rvmrc <span>f</span>ile <span>f</span>unctionality, set
+rvm_project_rvmrc=0 in either /etc/rvmrc or ~/.rvmrc.
+then log out an<span>d</span> back in.</p></li>
+<li><p>You <em>must</em> rea<span>d</span> &lsquo;rvm requirements&rsquo; <span>f</span>or a<span>d</span><span>d</span>itional OS speci<span>f</span>ic requirements <span>f</span>or
+various rubies, an<span>d</span> native-extension gems. Expect <span>f</span>ailures until those are met!</p></li>
+<li><p><span>F</span>or screen users, please <span>d</span>o not <span>f</span>orget to rea<span>d</span> <a href="https://rvm.beginrescueen">https://rvm.beginrescueen</a><span>d</span>.com/work<span>f</span>low/screen/.
+You will nee<span>d</span> to a<span>d</span><span>d</span> &lsquo;shell &ndash;/bin/bash&rsquo; to your $HOME/.screenrc to properly loa<span>d</span> RVM.</p></li>
+<li><p>rvm_trust_rvmrcs has been change<span>d</span> to rvm_trust_rvmrcs_<span>f</span>lag <span>f</span>or consistency</p></li>
+<li><p>Project rvmrc <span>f</span>iles are now checke<span>d</span> <span>f</span>or trust whenever they change, as
+promise<span>d</span> by the note <span>d</span>isplaye<span>d</span> <span>d</span>uring the review process</p></li>
+<li><p>Ruby package <span>de</span>pen<span>de</span>ncy list <span>f</span>or your OS is given by:
+rvm requirements</p></li>
+<li><p>I<span>f</span> you encounter any issues with a ruby &lsquo;X&rsquo; your best bet is to:
+rvm get hea<span>d</span> &amp;&amp; rvm reinstall X</p></li>
+<li><p>I<span>f</span> you see the <span>f</span>ollowing error message: Unknown alias name: &lsquo;<span style="background-color: #ffd700;">def</span>ault&rsquo;
+re-set your <span style="background-color: #ffd700;">def</span>ault ruby, this is <span>d</span>ue to a change in how <span style="background-color: #ffd700;">def</span>ault works.</p></li>
+<li><p>a<span>f</span>ter_use an<span>d</span> a<span>f</span>ter_c<span>d</span> hook now supports multiple <span>f</span>iles with a<span>f</span>ter<em>*</em>*
+the custom hooks can be easily turne<span>d</span> on/o<span>f</span><span>f</span> by:
+chmo<span>d</span> +x $rvm_path/hooks/a<span>f</span>ter_c<span>d</span><em>[hook_name]
+chmo<span>d</span> -x $rvm_path/hooks/a<span>f</span>ter_use</em>[hook_name]</p></li>
+<li><p>I<span>f</span> your shell exits on entering <span>d</span>irectory with <span>f</span>reshly checke<span>d</span> out sources
+you shoul<span>d</span> up<span>d</span>ate .rvmrc <span>f</span>ile, an<span>d</span> replace any <code>exit</code> with <code>return</code>.</p></li>
+<li><p>I<span>f</span> you wish to use RVM in an interactive <span>f</span>ashion in other shells
+then place the <span>f</span>ollowing line at the en<span>d</span> o<span>f</span> your shell&rsquo;s loa<span>d</span>ing <span>f</span>iles
+(.bashrc or .bash_pro<span>f</span>ile <span>f</span>or bash an<span>d</span> .zshenv <span>f</span>or zsh),
+a<span>f</span>ter all PATH/variable settings:</p></li>
+</ul>
+
+
+<p><strong>in my system</strong></p>
+
+<p>[-s &ldquo;$<em>HOME/.rvm/scripts/rvm&rdquo;</em>] source &ldquo;$HOME/.rvm/scripts/rvm"  &amp;&amp; echo "add rvm sucessful …&rdquo; # This loads RVM into a shell session.</p>
+
+<ul>
+<li><p>On some systems (like Ubuntu) rvmsu<span>d</span>o requires <span>f</span>ollowing changes to work properly:
+<a href="http://stackover">http://stackover</a><span>f</span>low.com/questions/257616/su<span>d</span>o-changes-path-why</p></li>
+<li><p>To up<span>d</span>ate RVM loa<span>d</span>ing co<span>de</span> appen<span>d</span> &lsquo;&mdash;auto&rsquo; to &lsquo;rvm get &hellip;&rsquo;</p></li>
+<li><p>In case you have some ol<span>d</span> RVM <span>f</span>iles/rubies in &lsquo;/usr/local/bin&rsquo; or &lsquo;$HOME/bin&rsquo; <span><span>f</span>e</span>el <span>f</span>ree to remove them,
+they were copie<span>d</span> there because o<span>f</span> bug in path <span>de</span>tection.</p></li>
+<li><p>ZSH 4.3.15 is buggy, be care<span>f</span>ul with it, it can break RVM, especially multiuser installations,
+You shoul<span>d</span> consi<span>de</span>r <span>d</span>owngra<span>d</span>ing ZSH to 4.3.12 which has proven to work more reliable with RVM.</p></li>
+</ul>
+
+
+<h1>RVM:  Shell scripts enabling management o<span>f</span> multiple ruby environments.</h1>
+
+<h1>RT<span>F</span>M: <a href="https://rvm.beginrescueen">https://rvm.beginrescueen</a><span>d</span>.com/</h1>
+
+<h1>HELP: <a href="http://webchat.">http://webchat.</a><span>f</span>reeno<span>de</span>.net/?channels=rvm (#rvm on irc.<span>f</span>reeno<span>de</span>.net)</h1>
+
+<h1>Screencast: <a href="http://screencasts.org/episo">http://screencasts.org/episo</a><span>de</span>s/how-to-use-rvm</h1>
+
+<h1>In case o<span>f</span> any issues rea<span>d</span> output o<span>f</span> &lsquo;rvm requirements&rsquo; an<span>d</span>/or &lsquo;rvm notes&rsquo;</h1>
+
+<p>Upgra<span>de</span> o<span>f</span> RVM in /usr/share/ruby-rvm/ is complete.</p>
+
+<h1>jhjguxin,</h1>
+
+<p>#</p>
+
+<h1>   Thank you <span>f</span>or using RVM!</h1>
+
+<h1>   I sincerely hope that RVM helps to make your li<span><span>f</span>e</span> easier an<span>d</span> more enjoyable!!!</h1>
+
+<p>#</p>
+
+<h1>~Wayne</h1>
+
+<p>install <span>De</span>pen<span>de</span>ncies:(# librea<span>d</span>line6-<span>de</span>v is <span>d</span>isable)</p>
+
+<p>su<span>d</span>o apt-get install buil<span>d</span>-essential openssl librea<span>d</span>line6 curl git-core zlib1g zlib1g-<span>de</span>v libssl-<span>de</span>v libyaml-<span>de</span>v libsqlite3-0 libsqlite3-<span>de</span>v sqlite3 libxml2-<span>de</span>v libxslt-<span>de</span>v autocon<span>f</span> libc6-<span>de</span>v ncurses-<span>de</span>v automake libtool bison subversion</p>
+
+<p>I<span>f</span> installation an<span>d</span> con<span>f</span>iguration were success<span>f</span>ul, RVM shoul<span>d</span> now loa<span>d</span> whenever you open a new shell. This can be teste<span>d</span> by executing the <span>f</span>ollowing comman<span>d</span> which shoul<span>d</span> output <em>&lsquo;rvm is a <span>f</span>unction&rsquo;</em> as shown below.</p>
+
+<pre>user$ type rvm | hea<span>d</span> -1
+rvm is a <span>f</span>unction</pre>
+
+
+<p>rvm常用用法
+运行，</p>
+
+<p>安装完成后，配置启动环境，修改~/.bashrc 文件，加入（我这里并不是这个文件但是只要找到就对）</p>
+
+<h1>a<span>d</span><span>d</span> rvm</h1>
+
+<p>i<span>f</span> [[ -s &ldquo;$HOME/.rvm/scripts/rvm&rdquo; ]]  ; then
+source &ldquo;$HOME/.rvm/scripts/rvm&rdquo; ;
+<span>f</span>i</p>
+
+<p>在新的终端里就能看到rvm是否已安装成功：</p>
+
+<p>$  rvm notes</p>
+
+<p>RVM安装完成后，就可以通过TA来安装管理 Ruby 了。用下面一条命令来安装Ruby 1.9.2</p>
+
+<p>$  rvm install 1.9.2</p>
+
+<p>*Ruby包的下载实在太慢了，这里总是中断。有个小技巧，你可以用工具下载好ruby-1.9.2-p0.tar.bz2，然后手工放到~/.rvm/archives 目录下。然后再运行这条命令，就可以直接解压安装了。</p>
+
+<p>&nbsp;</p>
+
+<p>把该版本的Ruby设为默认</p>
+
+<p>rvm &mdash;help
+获得rvm的常用用法：</p>
+
+<p>rvm [<span>F</span>lags] [Options] Action [Implementation[,Implementation[,&hellip;]]
+rvm最常用的Action包括：</p>
+
+<p>对Ruby的操作
+主要包括读取，安装，卸载，更新，读取ruby等.</p>
+
+<p>读取远程可安装的Ruby版本</p>
+
+<h1>获得当前可以用的ruby版本</h1>
+
+<p>rvm list known
+安装Ruby</p>
+
+<h1>安装其中的ruby1.9.2-p290</h1>
+
+<p>rvm install ruby-1.9.2-p290
+使用</p>
+
+<h1>切换到刚刚安装的ruby1.9.2-p290版本</h1>
+
+<p>rvm use ruby1.9.2-p290
+读取</p>
+
+<h1>列出当前rvm下的ruby版本</h1>
+
+<p>rvm list</p>
+
+<h1>查询当前使用的ruby版本路径</h1>
+
+<p>which ruby</p>
+
+<h1>获得当前ruby版本</h1>
+
+<p>ruby -v
+输出rvm当前使用的ruby版本与gemset信息：
+rvm in<span>f</span>o
+在项目文件中使用RVM
+在自己的项目根目录下面，创建一个.rvmrc文件，里面内容可以指定ruby版本与gemset。例如，某项目根目录下面的.rvmrc文件内容如下：</p>
+
+<p>rvm ruby-1.9.2-p290@rails31
+这表示，该项目使用ruby1.9.2p290这个版本的ruby，gem安装在rails31下面。然后iterm的zsh或者bash；或者TextMate中的rubymate,rakemate；以及pow等工具就可以直接调用相应ruby版本与相应gemset。</p>
+
+<p>&nbsp;</p>
+
+<p>使用下面命令对RVM自己进行升级
+$ rvm up<span>d</span>ate</p>
+
+<p>RVM 信息</p>
+
+<p>通过以下几个命令查看当前RVM当前信息</p>
+
+<p>$ rvm in<span>f</span>o
+$ rvm in<span>f</span>o 1.9.2
+Ruby的安装使用与管理
+用这个命令查看有哪些RVM可用的Ruby版本</p>
+
+<p>$ rvm list known
+$ rvm install 1.9.2    # 安装 ruby-1.9.2
+$ rvm install ree   # install Ruby Enterprise E<span>d</span>ition (REE)</p>
+
+<p>安装多个版本的Ruby之后，RVM可以很方便的进行切换。使用下条命令可以设置某一版本为当前使用版本。</p>
+
+<p>$ rvm  ruby-1.8.7-p160 #切换1.8.7-p160为当前使用版本
+$ rvm 1.8.7-p160    #同上面命令一样rvm ruby-1.8.7-p160
+$ ruby -v #查看当前Ruby版本</p>
+
+<p>&nbsp;</p>
+
+<p>查看当前Ruby的安装位置</p>
+
+<p>$ which ruby
+设置默认使用版本
+将某一个版本的ruby设为默认，这样避免每次启动新的Shell都要选择所要使用的Ruby版本。</p>
+
+<p>$ rvm &mdash;default use 1.8.7   #设置1.9.2为默认版本</p>
+
+<p>$ rvm <span style="background-color: #ffd700;">def</span>ault      #通过<span style="background-color: #ffd700;">def</span>ault可以快速回到默认版本
+$ rvm list <span style="background-color: #ffd700;">def</span>ault     #查看当前版本设置信息
+$ rvm reset     #恢复系统默认设置
+查看已安装的Ruby信息
+列出所有已经安装的Ruby的版本信息</p>
+
+<p>$ rvm list      #列出已安装的Ruby版本</p>
+
+<p>$ rvm list rubies     #同上
+$ rvm list <span style="background-color: #ffd700;">def</span>ault    #显示默认Ruby版本信息
+$ rvm list known     #列出RVM所支持的所有Ruby版本的信息</p>
+
+<p>创建别名
+使用带版本号的ruby时，每次切换时都要输入很长的版本号，非常的不方便，通过使用别名功能，可以创建很简短的别名来代替长长的ruby信息。</p>
+
+<p>$ rvm alias create ree<span>d</span> ree-1.8.7-p2010.01    #为ree-187的Ruby版本创建一个别名叫：ree<span>d</span></p>
+
+<p>$ rvm use ree<span>d</span>  #通过别名迅速切换
+$ rvm alias <span>de</span>lete ree<span>d</span>   #删除别名
+$ rvm alias list # 查看所有的别名</p>
+
+<p>删除已安装版本</p>
+
+<p>$ rvm remove ruby-1.9.2-p0</p>
+
+<p>$ rvm uninstall ruby-1.9.2-p0
+管理 Gemsets
+一个gemset就是一个目录，是某一个Ruby版本的Gem使用集，通过环境变量配置，使该gemset下的gem命令导入到Shell。</p>
+
+<p>一个Ruby版本初装时就默认给了一个同名的gemset，也就是说rvm ruyb-1.9.2-p0 命令在执行时，就是使用该环境变量。</p>
+
+<p>创建
+基于指定Ruby版本创建一个新的Gemset</p>
+
+<p>$ rvm 1.9.2  #？？？
+$ rvm gemset create rails3  #创建一个名为rails3的gemset
+使用
+指定某一个gemset作为当前环境使用。</p>
+
+<p>$ rvm 1.9.2  #？？？</p>
+
+<p>$ rvm gemset use rails3   #在当前Ruby下使用rails3这个gemset</p>
+
+<p>$ rvm use ruby-1.9.2-p0@rails3 #或者直接使用这种命名，直接指定ruby和gemset的信息。
+$ rvm use ruby-1.9.2-p0@rails3 &mdash;<span style="background-color: #ffd700;">def</span>ault   #设置默认
+查看Gemsets信息</p>
+
+<p>$ rvm <span style="background-color: #ffd700;">def</span>ault  #选择使用ruby版本</p>
+
+<p>列出当前Ruby版本下所有gemsets的信息r</p>
+
+<p>$ rvm gemset list</p>
+
+<p>列出所有Ruby版本下所有gemsets的信息</p>
+
+<p>$ rvm gemset list_all
+显示当前所使用的gemset信息
+$ rvm gemset name     #当前gemset的名称</p>
+
+<p>rails3
+$ rvm gem<span>d</span>ir   #所在位置
+~/.rvm/gems/ruby-1.9.2-p0@rails3
+删除
+删除一个gemset，默认有确认操作，使用 &mdash;<span>f</span>orce 可跳过该步骤。</p>
+
+<p>$ rvm gemset <span>de</span>lete rails3  #会让确认一次
+$ rvm &mdash;<span>f</span>orce gemset <span>de</span>lete rails3     #直接删除，没有确定步骤
+清空
+可以清空一个Gemset，删除其中的所有的gems包</p>
+
+<p>$ rvm gemset empty rails3
+$ rvm &mdash;<span>f</span>orce gemset empty rails3   #直接删除，没有确定步骤</p>
+
+<p>导出
+将当前gemsets内的信息导出到一个 name.gems文件，gems文件内定义gem的名称，版本号和其信赖关系。</p>
+
+<p>$ rvm gemset export rails3.gems
+导入
+将gems文件所指定的gems安装到当前gemset下。</p>
+
+<p>$ rvm gemset rails 3
+$ rvm gemset import rails3
+复制
+可以将一个gemset内的所有gems包都复制到另一个gemset，很快速的复制一个当前环境。</p>
+
+<p>$ rvm gemset copy 1.8.7@rails3 1.9.2-hea<span>d</span>@rails3</p>
+
+<p>全局 gemsets （global gemsets）</p>
+
+<p>每一个ruby版本都默认创建一个全局的gemset，以ruby_version@global命名，这样基于该ruby版本下所有的gemsets都会包含全局gemset里的gem包。可以起到统一约定的作用，也避免重复创建。
+默认安装的global gemset内仅有一个gem包：rake</p>
+
+<div>标签： <a href="http://jhjguxin.hwcrazy.com/tag/rails/">rails</a> <a href="http://jhjguxin.hwcrazy.com/tag/ruby/">ruby</a> <a href="http://jhjguxin.hwcrazy.com/tag/rvm/">rvm</a></div>
+
+]]></content>
+  </entry>
+  
+</feed>

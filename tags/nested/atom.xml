@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: nested | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/tags/nested/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Creating nested resources in ruby on rails 3 and updating scaffolding links and redirection]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/07/09/creating-nested-resources-in-ruby-on-rails-3-and-updating-scaffolding-links-and-redirection/"/>
+    <updated>2012-07-09T12:26:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/07/09/creating-nested-resources-in-ruby-on-rails-3-and-updating-scaffolding-links-and-redirection</id>
+    <content type="html"><![CDATA[<h2>Creating nested resources in ruby on rails 3 and updating scaffolding links and redirection</h2>
+
+<p>In this article, I&rsquo;ll walk through a basic Rails (3.2.x) setup for creating a nested resource for two models. Nested resources work well when you want to build out URL structure between two related models, and still maintain a RESTful convention. This code assumes you are running RVM to manage Ruby/Gem versions, and Git for version control.</p>
+
+<p>Creating a new Rails project
+$ mkdir family # create rvm gemset
+$ echo &ldquo;rvm use &mdash;create ruby-1.9.2@family&rdquo; > family/.rvmrc
+$ cd family # install rails
+$ gem install rails # create new rails project
+$ rails new . # version control
+$ git init
+$ git add .
+$ git commit -am &ldquo;new rails project&rdquo;
+Create two models (Parent &amp; Child)</p>
+
+<h1>Parent model</h1>
+
+<p>$ rails generate scaffold Parent name:string
+$ git add .
+$ git commit -am &ldquo;rails generate scaffold Parent name:string&rdquo;</p>
+
+<h1>Child model</h1>
+
+<p>$ rails generate scaffold Child name:string parent_id:integer
+$ git add .
+$ git commit -am &ldquo;rails generate scaffold Child name:string parent_id:integer&rdquo;</p>
+
+<h1>Create db (defaults to SQLite3)</h1>
+
+<p>$ rake db:migrate</p>
+
+<h1>version control</h1>
+
+<p>$ git add db/schema.rb
+$ git commit db/schema.rb -m &ldquo;created database schema&rdquo;
+Review un-nested routes
+$ rake routes
+   children GET    /children(.:format)          children#index</p>
+
+<pre><code>        POST   /children(.:format)          children#create
+</code></pre>
+
+<p>  new_child GET    /children/new(.:format)      children#new
+ edit_child GET    /children/:id/edit(.:format) children#edit</p>
+
+<pre><code>  child GET    /children/:id(.:format)      children#show
+        PUT    /children/:id(.:format)      children#update
+        DELETE /children/:id(.:format)      children#destroy
+parents GET    /parents(.:format)           parents#index
+        POST   /parents(.:format)           parents#create
+</code></pre>
+
+<p> new_parent GET    /parents/new(.:format)       parents#new
+edit_parent GET    /parents/:id/edit(.:format)  parents#edit</p>
+
+<pre><code> parent GET    /parents/:id(.:format)       parents#show
+        PUT    /parents/:id(.:format)       parents#update
+        DELETE /parents/:id(.:format)       parents#destroy
+</code></pre>
+
+<p>Adding model relationships</p>
+
+<h1>file: app/models/parent.rb</h1>
+
+<p>class Parent &lt; ActiveRecord::Base
+  attr_accessible :name
+  has_many :children
+end</p>
+
+<h1>file: app/models/child.rb</h1>
+
+<p>class Child &lt; ActiveRecord::Base
+  attr_accessible :name, :parent_id
+  belongs_to :parent
+end</p>
+
+<h1>version control</h1>
+
+<p>$ git commit app/models -m &ldquo;added relationships to models&rdquo;
+Nesting the routes
+$ rake routes
+  parent_children GET    /parents/:parent_id/children(.:format)          children#index</p>
+
+<pre><code>              POST   /parents/:parent_id/children(.:format)          children#create
+</code></pre>
+
+<p> new_parent_child GET    /parents/:parent_id/children/new(.:format)      children#new
+edit_parent_child GET    /parents/:parent_id/children/:id/edit(.:format) children#edit</p>
+
+<pre><code> parent_child GET    /parents/:parent_id/children/:id(.:format)      children#show
+              PUT    /parents/:parent_id/children/:id(.:format)      children#update
+              DELETE /parents/:parent_id/children/:id(.:format)      children#destroy
+      parents GET    /parents(.:format)                              parents#index
+              POST   /parents(.:format)                              parents#create
+   new_parent GET    /parents/new(.:format)                          parents#new
+  edit_parent GET    /parents/:id/edit(.:format)                     parents#edit
+       parent GET    /parents/:id(.:format)                          parents#show
+              PUT    /parents/:id(.:format)                          parents#update
+              DELETE /parents/:id(.:format)                          parents#destroy
+</code></pre>
+
+<p>Adding test data via Rails console
+$ rails c</p>
+
+<blockquote><p>dad = Parent.new(:name => &lsquo;Paul&rsquo;)
+ => #<Parent id: nil, name: "Paul", created_at: nil, updated_at: nil></p>
+
+<p>dad.save
+   (0.1ms)  begin transaction
+  SQL (20.0ms)  INSERT INTO &ldquo;parents&rdquo; (&ldquo;created_at&rdquo;, &ldquo;name&rdquo;, &ldquo;updated_at&rdquo;) VALUES (?, ?, ?)  [[&ldquo;created_at&rdquo;, Fri, 06 Apr 2012 16:13:17 UTC +00:00], [&ldquo;name&rdquo;, &ldquo;Paul&rdquo;], [&ldquo;updated_at&rdquo;, Fri, 06 Apr 2012 16:13:17 UTC +00:00]]
+   (2.4ms)  commit transaction
+ => true</p>
+
+<p>son = dad.children.new(:name => &lsquo;Eric&rsquo;)
+ => #<Child id: nil, name: "Eric", parent_id: 1, created_at: nil, updated_at: nil></p>
+
+<p>daughter = dad.children.new(:name => &lsquo;Mara&rsquo;)
+ => #<Child id: nil, name: "Mara", parent_id: 1, created_at: nil, updated_at: nil></p>
+
+<p>exit
+Adding a private controller method to load the Parent object for each method</p>
+
+<h1>file: app/controllers/children_controller.rb</h1>
+
+<p>@@ -1,4 +1,7 @@
+ class ChildrenController &lt; ApplicationController
++
++  before_filter :load_parent
++
+   # GET /children
+   # GET /children.json
+   def index
+@@ -80,4 +83,11 @@ class ChildrenController &lt; ApplicationController</p>
+
+<pre><code>   format.json { head :no_content }
+ end
+</code></pre>
+
+<p>   end
++
++  private
++
++    def load_parent
++      @parent = Parent.find(params[:parent_id])
++    end
++
+ end
+At this point, each controller and view for the Child class model needs to be adjusted (links, redirection, form, etc)</p></blockquote>
+
+<p>Method: children#index</p>
+
+<h1>file: app/controllers/children_controller.rb</h1>
+
+<p>   def index
+&ndash;    @children = Child.all
++    @children = @parent.children.all</p>
+
+<h1>file: app/views/children/index.html.erb</h1>
+
+<ul>
+<li> <td>&lt;%= link_to &lsquo;Show&rsquo;, child %></td></li>
+<li> <td>&lt;%= link_to &lsquo;Edit&rsquo;, edit_child_path(child) %></td></li>
+<li> <td>&lt;%= link_to &lsquo;Destroy&rsquo;, child, confirm: &lsquo;Are you sure?&rsquo;, method: :delete %></td></li>
+<li> <td>&lt;%= link_to &lsquo;Show&rsquo;, parent_child_path(@parent, child) %></td></li>
+<li> <td>&lt;%= link_to &lsquo;Edit&rsquo;, edit_parent_child_path(@parent, child) %></td></li>
+<li> <td>&lt;%= link_to &lsquo;Destroy&rsquo;, [@parent, child], confirm: &lsquo;Are you sure?&rsquo;, method: :delete %></td></li>
+</ul>
+
+
+<p>&ndash;&lt;%= link_to &lsquo;New Child&rsquo;, new_child_path %>
++&lt;%= link_to &lsquo;New Child&rsquo;, new_parent_child_path(@parent) %>
+Method: children#new</p>
+
+<h1>file: app/controllers/children_controller.rb</h1>
+
+<p>   def new
+&ndash;    @child = Child.new
++    @child = @parent.children.new</p>
+
+<h1>file: app/views/children/_form.html.erb</h1>
+
+<p>&ndash;&lt;%= form_for(@child) do |f| %>
++&lt;%= form_for([@parent, @child]) do |f| %></p>
+
+<h1>file: app/views/children/new.html.erb</h1>
+
+<p>&ndash;&lt;%= link_to &lsquo;Back&rsquo;, children_path %>
++&lt;%= link_to &lsquo;Back&rsquo;, parent_children_path(@parent) %>
+Method: children#create</p>
+
+<h1>file: app/controllers/children_controller.rb</h1>
+
+<p>   def create
+&ndash;    @child = Child.new(params[:child])
++    @child = @parent.children.new(params[:child])</p>
+
+<pre><code> respond_to do |format|
+   if @child.save
+</code></pre>
+
+<ul>
+<li><pre><code> format.html { redirect_to @child, notice: 'Child was successfully created.' }
+</code></pre></li>
+<li><pre><code> format.html { redirect_to [@parent, @child], notice: 'Child was successfully created.' }
+</code></pre>
+
+<p>Method: children#show</p></li>
+</ul>
+
+
+<h1>file: app/controllers/children_controller.rb</h1>
+
+<p>   def show
+&ndash;    @child = Child.find(params[:id])
++    @child = @parent.children.find(params[:id])</p>
+
+<h1>file: app/views/children/show.html.erb</h1>
+
+<p>&ndash;&lt;%= link_to &lsquo;Edit&rsquo;, edit_child_path(@child) %> |
+&ndash;&lt;%= link_to &lsquo;Back&rsquo;, children_path %>
++&lt;%= link_to &lsquo;Edit&rsquo;, edit_parent_child_path(@parent, @child) %> |
++&lt;%= link_to &lsquo;Back&rsquo;, parent_children_path(@parent) %>
+Method: children#edit</p>
+
+<h1>file: app/controllers/children_controller.rb</h1>
+
+<p>   def edit
+&ndash;    @child = Child.find(params[:id])
++    @child = @parent.children.find(params[:id])</p>
+
+<h1>file: app/views/children/edit.html.erb</h1>
+
+<p>&ndash;&lt;%= link_to &lsquo;Show&rsquo;, @child %> |
+&ndash;&lt;%= link_to &lsquo;Back&rsquo;, children_path %>
++&lt;%= link_to &lsquo;Show&rsquo;, parent_child_path(@parent, @child) %> |
++&lt;%= link_to &lsquo;Back&rsquo;, parent_children_path(@parent) %>
+Method: children#update</p>
+
+<h1>file: app/controllers/children_controller.rb</h1>
+
+<p>   def update
+&ndash;    @child = Child.find(params[:id])
++    @child = @parent.children.find(params[:id])</p>
+
+<pre><code> respond_to do |format|
+   if @child.update_attributes(params[:child])
+</code></pre>
+
+<ul>
+<li><pre><code> format.html { redirect_to @child, notice: 'Child was successfully updated.' }
+</code></pre></li>
+<li><pre><code> format.html { redirect_to [@parent, @child], notice: 'Child was successfully updated.' }
+</code></pre>
+
+<p>Method: children#destroy</p></li>
+</ul>
+
+
+<h1>file: app/controllers/children_controller.rb</h1>
+
+<p>   def destroy
+&ndash;    @child = Child.find(params[:id])
++    @child = @parent.children.find(params[:id])</p>
+
+<pre><code> @child.destroy
+
+ respond_to do |format|
+</code></pre>
+
+<ul>
+<li>   format.html { redirect_to children_url }</li>
+<li>   format.html { redirect_to parent_children_path(@parent) }
+At this point, the default scaffolding&rsquo;s links and redirection have been updated to work with the nested routes.</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

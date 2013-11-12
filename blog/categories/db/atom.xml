@@ -1,0 +1,629 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: DB | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/blog/categories/db/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[通过mongodump和mongorestore实现Mongodb备份和恢复 --by chenzhou123520]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/"/>
+    <updated>2012-10-08T22:29:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520</id>
+    <content type="html"><![CDATA[<h2>通过mongodump和mongorestore实现Mongodb备份和恢复 &mdash;by chenzhou123520</h2>
+
+<p>from <a href="http://chenzhou123520.iteye.com/blog/1630993"><a href="http://chenzhou123520.iteye.com/blog/1630993">http://chenzhou123520.iteye.com/blog/1630993</a></a></p>
+
+<p>Mongodb自带了mongodump和mongorestore这两个工具来实现对数据的备份和恢复。</p>
+
+<p>mongodump能够在Mongodb运行时进行备份，它的工作原理是对运行的Mongodb做查询，然后将所有查到的文档写入磁盘。但是存在的问题时使用mongodump产生的备份不一定是数据库的实时快照，如果我们在备份时对数据库进行了写入操作，则备份出来的文件可能不完全和Mongodb实时数据相等。另外在备份时可能会对其它客户端性能产生不利的影响。</p>
+
+<p>mongodump用法如下：</p>
+
+<pre>[root@localhost mongodb]# ./bin/mongodump --help
+Export MongoDB data to BSON files.
+
+options:
+  --help                   produce help message
+  -v [ --verbose ]         be more verbose (include multiple times for more
+                           verbosity e.g. -vvvvv)
+  --version                print the program&#039;s version and exit
+  -h [ --host ] arg        mongo host to connect to ( &lt;set name&gt;/s1,s2 for
+                           sets)
+  --port arg               server port. Can also use --host hostname:port
+  --ipv6                   enable IPv6 support (disabled by default)
+  -u [ --username ] arg    username
+  -p [ --password ] arg    password
+  --dbpath arg             directly access mongod database files in the given
+                           path, instead of connecting to a mongod  server -
+                           needs to lock the data directory, so cannot be used
+                           if a mongod is currently accessing the same path
+  --directoryperdb         if dbpath specified, each db is in a separate
+                           directory
+  --journal                enable journaling
+  -d [ --db ] arg          database to use
+  -c [ --collection ] arg  collection to use (some commands)
+  -o [ --out ] arg (=dump) output directory or &quot;-&quot; for stdout
+  -q [ --query ] arg       json query
+  --oplog                  Use oplog for point-in-time snapshotting
+  --repair                 try to recover a crashed database
+  --forceTableScan         force a table scan (do not use $snapshot)</pre>
+
+
+<p>参数说明：</p>
+
+<p>-h:指明数据库宿主机的IP</p>
+
+<p>-u:指明数据库的用户名</p>
+
+<p>-p:指明数据库的密码</p>
+
+<p>-d:指明数据库的名字</p>
+
+<p>-c:指明collection的名字</p>
+
+<p>-o:指明到要导出的文件名</p>
+
+<p>-q:指明导出数据的过滤条件</p>
+
+<p>具体使用示例如下：</p>
+
+<pre>[root@localhost mongodb]# ./bin/mongodump -d test -o data/backup
+connected to: 127.0.0.1
+DATABASE: test   to     data/backup/test
+    test.system.indexes to data/backup/test/system.indexes.bson
+         9 objects
+    test.users to data/backup/test/users.bson
+         3 objects
+    test.games to data/backup/test/games.bson
+         1 objects
+    test.blog.post to data/backup/test/blog.post.bson
+         1 objects
+    test.lists to data/backup/test/lists.bson
+         1 objects
+    test.math to data/backup/test/math.bson
+         1 objects
+    test.map to data/backup/test/map.bson
+         8 objects
+    test.my_collection to data/backup/test/my_collection.bson
+         0 objects
+    test.foo to data/backup/test/foo.bson
+         6 objects
+    test.system.users to data/backup/test/system.users.bson
+         1 objects</pre>
+
+
+<p>mongorestore是Mongodb从备份中恢复数据的工具，它主要用来获取mongodump的输出结果，并将备份的数据插入到运行的Mongodb中。</p>
+
+<p>mongorestore命令使用方法如下：</p>
+
+<pre>[root@localhost mongodb]# ./bin/mongorestore --help
+usage: ./bin/mongorestore [options] [directory or filename to restore from]
+options:
+  --help                  produce help message
+  -v [ --verbose ]        be more verbose (include multiple times for more
+                          verbosity e.g. -vvvvv)
+  --version               print the program&#039;s version and exit
+  -h [ --host ] arg       mongo host to connect to ( &lt;set name&gt;/s1,s2 for sets)
+  --port arg              server port. Can also use --host hostname:port
+  --ipv6                  enable IPv6 support (disabled by default)
+  -u [ --username ] arg   username
+  -p [ --password ] arg   password
+  --dbpath arg            directly access mongod database files in the given
+                          path, instead of connecting to a mongod  server -
+                          needs to lock the data directory, so cannot be used
+                          if a mongod is currently accessing the same path
+  --directoryperdb        if dbpath specified, each db is in a separate
+                          directory
+  --journal               enable journaling
+  -d [ --db ] arg         database to use
+  -c [ --collection ] arg collection to use (some commands)
+  --objcheck              validate object before inserting
+  --filter arg            filter to apply before inserting
+  --drop                  drop each collection before import
+  --oplogReplay           replay oplog for point-in-time restore
+  --keepIndexVersion      don&#039;t upgrade indexes to newest version</pre>
+
+
+<p>参数说明：</p>
+
+<p>-h:指明数据库宿主机的IP</p>
+
+<p>-u:指明数据库的用户名</p>
+
+<p>-p:指明数据库的密码</p>
+
+<p>-d:指明数据库的名字</p>
+
+<p>-c:指明collection的名字</p>
+
+<p>-o:指明到要备份的文件名</p>
+
+<p>-q:指明备份数据的过滤条件</p>
+
+<p>&nbsp;</p>
+
+<p>具体使用示例如下：</p>
+
+<pre>[root@localhost mongodb]# ./bin/mongorestore -d test --drop data/backup/test/
+connected to: 127.0.0.1
+Tue Aug 14 01:18:17 data/backup/test/games.bson
+Tue Aug 14 01:18:17      going into namespace [test.games]
+Tue Aug 14 01:18:17      dropping
+1 objects found
+Tue Aug 14 01:18:17 data/backup/test/foo.bson
+Tue Aug 14 01:18:17      going into namespace [test.foo]
+Tue Aug 14 01:18:17      dropping
+6 objects found
+Tue Aug 14 01:18:17 data/backup/test/blog.post.bson
+Tue Aug 14 01:18:17      going into namespace [test.blog.post]
+Tue Aug 14 01:18:17      dropping
+1 objects found
+Tue Aug 14 01:18:17 data/backup/test/lists.bson
+Tue Aug 14 01:18:17      going into namespace [test.lists]
+Tue Aug 14 01:18:17      dropping
+1 objects found
+Tue Aug 14 01:18:17 data/backup/test/map.bson
+Tue Aug 14 01:18:17      going into namespace [test.map]
+Tue Aug 14 01:18:17      dropping
+8 objects found
+Tue Aug 14 01:18:17 data/backup/test/math.bson
+Tue Aug 14 01:18:17      going into namespace [test.math]
+Tue Aug 14 01:18:17      dropping
+1 objects found
+Tue Aug 14 01:18:17 data/backup/test/system.users.bson
+Tue Aug 14 01:18:17      going into namespace [test.system.users]
+1 objects found
+Tue Aug 14 01:18:17 data/backup/test/my_collection.bson
+Tue Aug 14 01:18:17      going into namespace [test.my_collection]
+Tue Aug 14 01:18:17      dropping
+Tue Aug 14 01:18:17 file data/backup/test/my_collection.bson empty, skipping
+Tue Aug 14 01:18:17 data/backup/test/users.bson
+Tue Aug 14 01:18:17      going into namespace [test.users]
+Tue Aug 14 01:18:17      dropping
+3 objects found
+Tue Aug 14 01:18:17 data/backup/test/system.indexes.bson
+Tue Aug 14 01:18:17      going into namespace [test.system.indexes]
+Tue Aug 14 01:18:17      dropping
+Tue Aug 14 01:18:17 { key: { _id: 1 }, ns: &quot;test.users&quot;, name: &quot;_id_&quot; }
+Tue Aug 14 01:18:17 { key: { _id: 1 }, ns: &quot;test.games&quot;, name: &quot;_id_&quot; }
+Tue Aug 14 01:18:17 { key: { _id: 1 }, ns: &quot;test.blog.post&quot;, name: &quot;_id_&quot; }
+Tue Aug 14 01:18:17 { key: { _id: 1 }, ns: &quot;test.lists&quot;, name: &quot;_id_&quot; }
+Tue Aug 14 01:18:17 { key: { _id: 1 }, ns: &quot;test.math&quot;, name: &quot;_id_&quot; }
+Tue Aug 14 01:18:17 { key: { _id: 1 }, ns: &quot;test.map&quot;, name: &quot;_id_&quot; }
+Tue Aug 14 01:18:17 { key: { gps: &quot;2d&quot; }, ns: &quot;test.map&quot;, name: &quot;gps_&quot;, min: -180.0, max: 181.0 }
+Tue Aug 14 01:18:17 { key: { _id: 1 }, ns: &quot;test.foo&quot;, name: &quot;_id_&quot; }
+Tue Aug 14 01:18:17 { key: { _id: 1 }, ns: &quot;test.system.users&quot;, name: &quot;_id_&quot; }
+9 objects found</pre>
+
+
+<p>&nbsp;</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Simple CRUD with MongoDB ]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/07/27/simple-crud-with-mongodb/"/>
+    <updated>2012-07-27T12:34:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/07/27/simple-crud-with-mongodb</id>
+    <content type="html"><![CDATA[<h2>Simple CRUD with MongoDB</h2>
+
+<p>When I meet a new technology, I like to experience it &ldquo;just as it comes&rdquo;. I&rsquo;m happy at the command line and I like to type actual commands and see man pages before I use any wrappers or helper tools. So when I met <a href="http://www.mongodb.org/">MongoDB</a> for the first time, I did exactly that. This post shows those first steps of creating a database, and inserting, reading, deleting and updating data.</p>
+
+<p><em>Before we begin, you should install mongo. This is painless and for me, on ubuntu, <code>sudo aptitude install mongodb</code> did the trick.</em></p>
+
+<h3>Some Terminology</h3>
+
+
+<p>Here are some translations from the RDBMS equivalent wording:</p>
+
+<ul>
+    <li>"database" is still "database"</li>
+    <li>"table" becomes "collection"</li>
+    <li>"row" becomes "record"</li>
+    <li>try to forget the word "column", we don't have those</li>
+</ul>
+
+
+<h3>Let's Begin</h3>
+
+
+<p><strong>Creating a Database</strong></p>
+
+<p>You don&rsquo;t really create a database with mongo, you just kind of start using it. Once you put something in there, it exists. I&rsquo;m going to name my new database <code>pets</code>.</p>
+
+<pre>use pets</pre>
+
+
+<p><strong>Adding Data</strong></p>
+
+<p>To do anything in mongo, you start your command with <code>db</code> which refers to the database you&rsquo;re using. The different parts of the command are separated by dots. To insert data you use a command like <code>db.[collection].save()</code> and feed in the data to save. The format of the data is JSON-esque &ndash; I read JSON but I don&rsquo;t really write it, however I found it became familiar pretty quickly. To insert some data, you can do:</p>
+
+<pre>&gt; db.animals.save({'animal':'cat', 'name':'fluffy', 'type':'long-haired', 'owner':'Anna'});
+&gt; db.animals.save({'animal':'dog', 'type':'spaniel', 'name':'toffee', 'colour':'toffee', 'owner':'Ben'});
+&gt; db.animals.save({'owner':'Ben', 'animal':'cat', 'name':'ginger', 'collar':true});</pre>
+
+
+<p><strong>Fetching Data</strong></p>
+
+<p>Did anything happen? We can check, using <code>db.[collection].find()</code> - this will give us everything in the collection, a bit like <code>select * from [table]</code> does in SQL.</p>
+
+<pre>&gt; db.animals.find();
+{ "_id" : ObjectId("4ebb8fd68f7aaffc5d287383"), "animal" : "cat", "name" : "fluffy", "type" : "long-haired", "owner" : "Anna" }
+{ "_id" : ObjectId("4ebb90048f7aaffc5d287384"), "animal" : "dog", "type" : "spaniel", "name" : "toffee", "colour" : "toffee", "owner" : "Ben" }
+{ "_id" : ObjectId("4ebb90768f7aaffc5d287385"), "owner" : "Ben", "animal" : "cat", "name" : "ginger", "collar" : true }</pre>
+
+
+<p>We definitely have data! We can also filter this down, the equivalent of adding a &ldquo;where&rdquo; clause, for example, let&rsquo;s only see cats:</p>
+
+<pre>&gt; db.animals.find({'animal':'cat'});
+{ "_id" : ObjectId("4ebb8fd68f7aaffc5d287383"), "animal" : "cat", "name" : "fluffy", "type" : "long-haired", "owner" : "Anna" }
+{ "_id" : ObjectId("4ebb90768f7aaffc5d287385"), "owner" : "Ben", "animal" : "cat", "name" : "ginger", "collar" : true }</pre>
+
+
+<p>You can add multiple constraints here, how about cats belonging to Ben?</p>
+
+<pre>&gt; db.animals.find({'animal':'cat', 'owner':'Ben'});
+{ "_id" : ObjectId("4ebb90768f7aaffc5d287385"), "owner" : "Ben", "animal" : "cat", "name" : "ginger", "collar" : true }</pre>
+
+
+<p>If any of the records don&rsquo;t have the field you&rsquo;re searching on, they won&rsquo;t appear in the results. We&rsquo;re not tied to a rigid structure of columns so you can just throw in whichever data seems useful at the time, and search on whatever is there. We can also search on whether we have the field at all, for example, animals where we know what colour they are:</p>
+
+<pre>&gt; db.animals.find({colour: {$exists: true}});
+{ "_id" : ObjectId("4ebb90048f7aaffc5d287384"), "animal" : "dog", "type" : "spaniel", "name" : "toffee", "colour" : "toffee", "owner" : "Ben" }</pre>
+
+
+<p><strong>Updating Data</strong></p>
+
+<p>This confused me for a long time, as mongo does have an <code>update()</code> function, which you can use to update one or many records in a particular way. What I found I really wanted though was to use the <code>save()</code> method again, because if the record has an identifier that exists, mongo will update it, otherwise it will insert it as we saw above. So we can just grab a record and change it, then save it:</p>
+
+<pre>&gt; db.animals.find({'animal':'dog'});
+{ "_id" : ObjectId("4ebb90048f7aaffc5d287384"), "animal" : "dog", "type" : "spaniel", "name" : "toffee", "colour" : "toffee", "owner" : "Ben" }
+db.animals.save({ "_id" : ObjectId("4ebb90048f7aaffc5d287384"), "animal" : "dog", "breed" : "spaniel", "name" : "toffee", "colour" : "toffee", "owner" : "Ben" });</pre>
+
+
+<p>I realised that calling a spaniel a &ldquo;type&rdquo; of dog would be better expressed as being a &ldquo;breed&rdquo;, so I simply changed that record and mongo updated it for me. The <code>update() </code>statement is better for working on sets of records &ndash; for example if we decide Ben should be using his Sunday name:</p>
+
+<pre>&gt; db.animals.update({'owner':'Ben'}, {$set: {'owner':'Benjamin'}}, false, true);</pre>
+
+
+<p>There&rsquo;s a lot going on here, so let&rsquo;s look at the pieces step-by-step. The <a href="http://www.mongodb.org/display/DOCS/Updating">documentation</a> describes the update function as:</p>
+
+<pre>db.collection.update( criteria, objNew, upsert, multi )</pre>
+
+
+<p>The first part, the <em>criteria</em> is the same as we would use for the <code>find()</code> method. The next argument is what we&rsquo;re changing. I&rsquo;m just setting one field to a given value, so I used the <code>$set</code> modifier (modifiers are an art in themselves, this post is rambling on already so I&rsquo;ll write about those another day if you&rsquo;re interested). The next argument is the <em>upsert</em>, which is whether to insert a new record if we didn&rsquo;t find any matches &ndash; I want to update existing records, not insert anything, so I set this to false. Finally the <em>multi</em> flag tells mongo to update ALL the records it can find that match the<em>criteria</em>, if this is false it will stop after one (lazy thing!).</p>
+
+<p><strong>Deleting Data</strong></p>
+
+<p>If you&rsquo;ve come this far then I&rsquo;m impressed, and deleting is the easy part so we&rsquo;re almost there! Exactly like the <code>find()</code>and <code>update()</code> commands, we just supply a criteria to the <code>remove()</code> command. This could be either one of the fields, as we used already, or the object ID itself, like this:</p>
+
+<pre>&gt; db.animals.remove({_id: ObjectId("4ebb90768f7aaffc5d287385")});</pre>
+
+
+<p>As with all things mongo, you won&rsquo;t get any feedback about whether it worked, since most of the time we&rsquo;re using this on systems so fast there isn&rsquo;t time for niceties, but if you try to <code>find()</code> this record now, you won&rsquo;t be able to.</p>
+
+<h3>MongoDB</h3>
+
+
+<p>There&rsquo;s so much that&rsquo;s exciting about mongo, the sheer size and speed of this data store, the support for map reduce, the sharding support &hellip; I could go on. However you still need to be able to have a quick word with your database and check what data it has, maybe tweak something, and I hope that these mongo examples will serve as a quick reference for anyone who needs them, including me of course! I like databases, APIs and command line, so working with mongo is kind of magical for me, are you working with it? I&rsquo;d love to hear how others are getting on and what other tips I need to know, so leave a comment and share, please!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[NoSQL]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/05/08/nosql/"/>
+    <updated>2012-05-08T17:39:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/05/08/nosql</id>
+    <content type="html"><![CDATA[<h2>NoSQL</h2>
+
+<h2>NoSQL</h2>
+
+
+<p>NoSQL，指的是非关系型的数据库。随着互联网 web2.0 网站的兴起，传统的关系数据库在应付 web2.0 网站，特别是超大规模和高并发的 SNS 类型的 web2.0 纯动态网站已经显得力不从心，暴露了很多难以克服的问题，而非关系型的数据库则由于其本身的特点得到了非常迅速的发展。</p>
+
+<h3><a name="%E7%AE%80%E4%BB%8B" href="https://github.com/jhjguxin/project-manage/blob/master/nosql/nosql-baidubaike.zh-cn.markdown#%E7%AE%80%E4%BB%8B"></a>简介</h3>
+
+
+<p>NoSQL(NoSQL = Not Only SQL )，意即反 SQL 运动，是一项全新的数据库革命性运动，早期就有人提出，发展至 2009 年趋势越发高涨。NoSQL 的拥护者们提倡运用非关系型的数据存储，相对于目前铺天盖地的关系型数据库运用，这一概念无疑是一种全新的思维的注入。</p>
+
+<h3><a name="%E7%8E%B0%E4%BB%8A%E7%8A%B6%E5%86%B5" href="https://github.com/jhjguxin/project-manage/blob/master/nosql/nosql-baidubaike.zh-cn.markdown#%E7%8E%B0%E4%BB%8A%E7%8A%B6%E5%86%B5"></a>现今状况</h3>
+
+
+<p>现今的计算机体系结构在数据存储方面要求具备庞大的水平扩展性，而 NoSQL 致力于改变这一现状。目前 Google 的 BigTable 和 Amazon 的 Dynamo 使用的就是 NoSQL 型数据库。</p>
+
+<p>NoSQL 项目的名字上看不出什么相同之处，但是，它们通常在某些方面相同：它们可以处理超大量的数据。</p>
+
+<p>这场革命目前仍然需要等待。的确，NoSQL 对大型企业来说还不是主流，但是，一两年之后很可能就会变个样子。在 NoSQL 运动的最新一次聚会中，来自世界各地的 150 人挤满了 CBS Interactive 的一间会议室。分享他们如何推翻缓慢而昂贵的关系数据库的暴政，怎样使用更有效和更便宜的方法来管理数据。</p>
+
+<p>“关系型数据库给你强加了太多东西。它们要你强行修改对象数据，以满足 RDBMS （relational database management system，关系型数据库管理系统）的需要。” 在 NoSQL 拥护者们看来，基于 NoSQL 的替代方案 “只是给你所需要的”。</p>
+
+<ol>
+    <li>水平扩展性(horizontal scalability)指能够连接多个软硬件的特性,这样可以将多个服务器从逻辑上看成一个实体。</li>
+</ol>
+
+
+<h3><a name="%E6%88%91%E4%BB%AC%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8nosql%E9%9D%9E%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93" href="https://github.com/jhjguxin/project-manage/blob/master/nosql/nosql-baidubaike.zh-cn.markdown#%E6%88%91%E4%BB%AC%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8nosql%E9%9D%9E%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93"></a>我们为什么要使用NOSQL非关系数据库?</h3>
+
+
+<p>随着互联网 web2.0 网站的兴起，非关系型的数据库现在成了一个极其热门的新领域，非关系数据库产品的发展非常迅速。而传统的关系数据库在应付 web2.0 网站，特别是超大规模和高并发的 SNS 类型的 web2.0 纯动态网站已经显得力不从心，暴露了很多难以克服的问题，<strong>例如</strong>：</p>
+
+<ol>
+    <li>High performance - 对数据库高并发读写的需求 web2.0 网站要根据用户个性化信息来实时生成动态页面和提供动态信息，所以基本上无法使用动态页面静态化技术，因此数据库并发负载非常高，往往要达到每秒上万次读写请求。关系数据库应付上万次 SQL 查询还勉强顶得住，但是应付上万次 SQL 写数据请求，硬盘 IO 就已经无法承受了。其实对于普通的 BBS 网站，往往也存在对高并发写请求的需求。</li>
+    <li>Huge Storage - 对海量数据的高效率存储和访问的需求 对于大型的 SNS 网站，每天用户产生海量的用户动态，以国外的 Friendfeed 为例，一个月就达到了 2.5 亿条用户动态，对于关系数据库来说，在一张 2.5 亿条记录的表里面进行 SQL 查询，效率是极其低下乃至不可忍受的。再例如大型 web 网站的用户登录系统，<strong>例如</strong>腾讯，盛大，动辄数以亿计的帐号，关系数据库也很难应付。</li>
+    <li>High Scalability &amp;&amp; High Availability- 对数据库的高可扩展性和高可用性的需求 在基于 web 的架构当中，数据库是最难进行横向扩展的，当一个应用系统的用户量和访问量与日俱增的时候，你的数据库却没有办法像 web server 和 app server 那样简单的通过添加更多的硬件和服务节点来扩展性能和负载能力。对于很多需要提供 24 小时不间断服务的网站来说，对数据库系统进行升级和扩展是非常痛苦的事情，往往需要停机维护和数据迁移，为什么数据库不能通过不断的添加服务器节点来实现扩展呢？</li>
+</ol>
+
+
+<p>在上面提到的 “三高” 需求面前，关系数据库遇到了难以克服的障碍，而对于 web2.0 网站来说，关系数据库的很多主要特性却往往无用武之地，<strong>例如</strong>：</p>
+
+<ol>
+    <li>数据库事务一致性需求 很多 web 实时系统并不要求严格的数据库事务，对读一致性的要求很低，有些场合对写一致性要求也不高。因此数据库事务管理成了数据库高负载下一个沉重的负担。</li>
+    <li>数据库的写实时性和读实时性需求 对关系数据库来说，插入一条数据之后立刻查询，是肯定可以读出来这条数据的，但是对于很多 web 应用来说，并不要求这么高的实时性。</li>
+    <li>对复杂的SQL查询，特别是多表关联查询的需求 任何大数据量的 web 系统，都非常忌讳多个大表的关联查询，以及复杂的数据分析类型的复杂 SQL 报表查询，特别是 SNS 类型的网站，从需求以及产品设计角度，就避免了这种情况的产生。往往更多的只是单表的主键查询，以及单表的简单条件分页查询，SQL 的功能被极大的弱化了。</li>
+</ol>
+
+
+<p>因此，关系数据库在这些越来越多的应用场景下显得不那么合适了，为了解决这类问题的非关系数据库应运而生。</p>
+
+<p>NoSQL 是非关系型数据存储的广义定义。它打破了长久以来关系型数据库与 ACID 理论大一统的局面。NoSQL 数据存储不需要固定的表结构，通常也不存在连接操作。在大数据存取上具备关系型数据库无法比拟的性能优势。该术语在 2009 年初得到了广泛认同。</p>
+
+<p>当今的应用体系结构需要数据存储在横向伸缩性上能够满足需求。而 NoSQL 存储就是为了实现这个需求。Google 的 BigTable 与 Amazon 的 Dynamo 是非常成功的商业 NoSQL 实现。一些开源的 NoSQL 体系，如 Facebook 的 Cassandra， Apache 的 HBase，也得到了广泛认同。从这些 NoSQL 项目的名字上看不出什么相同之处：Hadoop、Voldemort、Dynomite，还有其它很多。</p>
+
+<h3><a name="nosql-%E4%B8%8E%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%BE%E8%AE%A1%E7%90%86%E5%BF%B5%E6%AF%94%E8%BE%83" href="https://github.com/jhjguxin/project-manage/blob/master/nosql/nosql-baidubaike.zh-cn.markdown#nosql-%E4%B8%8E%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%BE%E8%AE%A1%E7%90%86%E5%BF%B5%E6%AF%94%E8%BE%83"></a>NoSQL 与关系型数据库设计理念比较</h3>
+
+
+<p>关系型数据库中的表都是存储一些格式化的数据结构，每个元组字段的组成都一样，即使不是每个元组都需要所有的字段，但数据库会为每个元组分配所有的字段，这样的结构可以便于表与表之间进行连接等操作，但从另一个角度来说它也是关系型数据库性能瓶颈的一个因素。而非关系型数据库以键值对存储，它的结构不固定，每一个元组可以有不一样的字段，每个元组可以根据需要增加一些自己的键值对，这样就不会局限于固定的结构，可以减少一些时间和空间的开销。</p>
+
+<h3><a name="%E7%89%B9%E7%82%B9" href="https://github.com/jhjguxin/project-manage/blob/master/nosql/nosql-baidubaike.zh-cn.markdown#%E7%89%B9%E7%82%B9"></a>特点</h3>
+
+
+<ul>
+    <li><strong>它们可以处理超大量的数据。</strong></li>
+    <li><strong>它们运行在便宜的PC服务器集群上。</strong></li>
+    <li>PC集群扩充起来非常方便并且成本很低，避免了“sharding”操作的复杂性和成本。</li>
+    <li><strong>它们击碎了性能瓶颈。</strong></li>
+    <li>NoSQL的支持者称，通过NoSQL架构可以省去将Web或Java应用和数据转换成SQL友好格式的时间，执行速度变得更快。</li>
+    <li>“SQL并非适用于所有的程序代码，” 对于那些繁重的重复操作的数据，SQL值得花钱。但是当数据库结构非常简单时，SQL可能没有太大用处。</li>
+    <li><strong>没有过多的操作。</strong></li>
+    <li>虽然NoSQL的支持者也承认关系数据库提供了无可比拟的功能集合，而且在数据完整性上也发挥绝对稳定，他们同时也表示，企业的具体需求可能没有那么多。</li>
+    <li><strong>Bootstrap支持</strong></li>
+    <li>因为NoSQL项目都是开源的，因此它们缺乏供应商提供的正式支持。这一点它们与大多数开源项目一样，不得不从社区中寻求支持。</li>
+</ul>
+
+
+<h3><a name="%E7%BC%BA%E7%82%B9" href="https://github.com/jhjguxin/project-manage/blob/master/nosql/nosql-baidubaike.zh-cn.markdown#%E7%BC%BA%E7%82%B9"></a>缺点</h3>
+
+
+<p>但是一些人承认，没有正式的官方支持，万一出了差错会是可怕的，至少很多管理人员是这样看。</p>
+
+<p>“我们确实需要做一些说服工作，但基本在他们看到我们的第一个原型运行良好之后，我们就能够说服他们，这是条正确的道路。”</p>
+
+<p>此外，nosql并未形成一定标准，各种产品层出不穷，内部混乱，各种项目还需时间来检验</p>
+
+<h2><a name="8-%E7%A7%8D-nosql-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E5%AF%B9%E6%AF%94" href="https://github.com/jhjguxin/project-manage/blob/master/nosql/nosql-baidubaike.zh-cn.markdown#8-%E7%A7%8D-nosql-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E5%AF%B9%E6%AF%94"></a>8 种 Nosql 数据库系统对比</h2>
+
+
+<blockquote>
+<h2><a style="direction: ltr;" href="http://blog.jobbole.com/1344/">resources from</a><span style="direction: ltr;">,</span><a style="direction: ltr;" href="http://kkovacs.eu/cassandra-vs-mongodb-vs-couchdb-vs-redis">english resources</a></h2>
+</blockquote>
+
+
+<p>虽然 SQL 数据库是非常有用的工具，但经历了 15 年的一支独秀之后垄断即将被打破。这只是时间问题：被迫使用关系数据库，但最终发现不能适应需求的情况不胜枚举。</p>
+
+<p>但是 NoSQL 数据库之间的不同，远超过两 SQL 数据库之间的差别。这意味着软件架构师更应该在项目开始时就选择好一个适合的 NoSQL 数据库。针对这种情况，这里对 <a href="http://cassandra.apache.org/">Cassandra</a>、 <a href="http://www.mongodb.org/">Mongodb</a>、<a href="http://couchdb.apache.org/">CouchDB</a>、<a href="http://redis.io/">Redis</a>、 <a href="http://www.basho.com/Riak.html">Riak</a>、 <a href="http://www.couchbase.org/membase">Membase</a>、<a href="http://neo4j.org/">Neo4j</a>和 <a href="http://hbase.apache.org/">HBase</a> 进行了比较：</p>
+
+<ol>
+    <li>CouchDB</li>
+</ol>
+
+
+<ul>
+    <li>所用语言： Erlang</li>
+    <li>特点：DB一致性，易于使用</li>
+    <li>使用许可： Apache</li>
+    <li>协议： HTTP/REST</li>
+    <li>双向数据复制，</li>
+    <li>持续进行或临时处理，</li>
+    <li>处理时带冲突检查，</li>
+    <li>因此，采用的是master-master复制（见编注2）</li>
+    <li>MVCC – 写操作不阻塞读操作</li>
+    <li>可保存文件之前的版本</li>
+    <li>Crash-only（可靠的）设计</li>
+    <li>需要不时地进行数据压缩</li>
+    <li>视图：嵌入式 映射/减少</li>
+    <li>格式化视图：列表显示</li>
+    <li>支持进行服务器端文档验证</li>
+    <li>支持认证</li>
+    <li>根据变化实时更新</li>
+    <li>支持附件处理</li>
+    <li>因此，<a href="http://couchapp.org/">CouchApps</a>（独立的 js应用程序）</li>
+    <li>需要 jQuery程序库
+
+<strong>最佳应用场景</strong>：适用于数据变化较少，执行预定义查询，进行数据统计的应用程序。适用于需要提供数据版本支持的应用程序。
+
+<strong>例如</strong>： CRM、CMS 系统。 master-master 复制对于多站点部署是非常有用的。
+
+（编注2：master-master复制：是一种数据库同步方法，允许数据在一组计算机之间共享数据，并且可以通过小组中任意成员在组内进行数据更新。）</li>
+</ul>
+
+
+<ol>
+    <li>Redis</li>
+</ol>
+
+
+<ul>
+    <li>所用语言：C/C++</li>
+    <li>特点：运行异常快</li>
+    <li>使用许可： BSD</li>
+    <li>协议：类 Telnet</li>
+    <li>有硬盘存储支持的内存数据库，</li>
+    <li>但自2.0版本以后可以将数据交换到硬盘（注意， 2.4以后版本不支持该特性！）</li>
+    <li>Master-slave复制（见编注3）</li>
+    <li>虽然采用简单数据或以键值索引的哈希表，但也支持复杂操作，例如 ZREVRANGEBYSCORE。</li>
+    <li>INCR &amp; co （适合计算极限值或统计数据）</li>
+    <li>支持 sets（同时也支持 union/diff/inter）</li>
+    <li>支持列表（同时也支持队列；阻塞式 pop操作）</li>
+    <li>支持哈希表（带有多个域的对象）</li>
+    <li>支持排序 sets（高得分表，适用于范围查询）</li>
+    <li>Redis支持事务</li>
+    <li>支持将数据设置成过期数据（类似快速缓冲区设计）</li>
+    <li>Pub/Sub允许用户实现消息机制
+
+<strong>最佳应用场景</strong>：适用于数据变化快且数据库大小可遇见（适合内存容量）的应用程序。
+
+<strong>例如</strong>：股票价格、数据分析、实时数据搜集、实时通讯。
+
+（编注3：Master-slave 复制：如果同一时刻只有一台服务器处理所有的复制请求，这被称为 Master-slave 复制，通常应用在需要提供高可用性的服务器集群。）</li>
+</ul>
+
+
+<ol>
+    <li>MongoDB</li>
+</ol>
+
+
+<ul>
+    <li>所用语言：C++</li>
+    <li>特点：保留了 SQL 一些友好的特性（查询，索引）。</li>
+    <li>使用许可： AGPL（发起者： Apache）</li>
+    <li>协议： Custom, binary（BSON）</li>
+    <li>Master/slave复制（支持自动错误恢复，使用 sets 复制）</li>
+    <li>内建分片机制</li>
+    <li>支持 javascript表达式查询</li>
+    <li>可在服务器端执行任意的 javascript函数</li>
+    <li>update-in-place 支持比 CouchDB 更好</li>
+    <li>在数据存储时采用内存到文件映射</li>
+    <li>对性能的关注超过对功能的要求</li>
+    <li>建议最好打开日志功能（参数 –journal）</li>
+    <li>在 32 位操作系统上，数据库大小限制在约2.5Gb</li>
+    <li>空数据库大约占 192Mb</li>
+    <li>采用 GridFS存储大数据或元数据（不是真正的文件系统）
+
+<strong>最佳应用场景</strong>：适用于需要动态查询支持；需要使用索引而不是 map/reduce功能；需要对大数据库有性能要求；需要使用 CouchDB但因为数据改变太频繁而占满内存的应用程序。
+
+<strong>例如</strong>：你本打算采用 MySQL或 PostgreSQL，但因为它们本身自带的预定义栏让你望而却步。</li>
+</ul>
+
+
+<ol>
+    <li>Riak
+<ul>
+    <li>所用语言：Erlang 和 C，以及一些 Javascript</li>
+    <li>特点：具备容错能力</li>
+    <li>使用许可： Apache</li>
+    <li>协议： HTTP/REST 或者 custom binary</li>
+    <li>可调节的分发及复制(N, R, W)</li>
+    <li>用 JavaScript or Erlang 在操作前或操作后进行验证和安全支持。</li>
+    <li>使用 JavaScript 或 Erlang 进行 Map/reduce</li>
+    <li>连接及连接遍历：可作为图形数据库使用</li>
+    <li>索引：输入元数据进行搜索（1.0版本即将支持）</li>
+    <li>大数据对象支持（ Luwak）</li>
+    <li>提供“开源”和“企业”两个版本</li>
+    <li>全文本搜索，索引，通过 Riak搜索服务器查询（ beta版）</li>
+    <li>支持Masterless多站点复制及商业许可的 SNMP 监控</li>
+</ul>
+<strong>最佳应用场景</strong>：适用于想使用类似 Cassandra（类似Dynamo）数据库但无法处理 bloat及复杂性的情况。适用于你打算做多站点复制，但又需要对单个站点的扩展性，可用性及出错处理有要求的情况。
+
+<strong>例如</strong>：销售数据搜集，工厂控制系统；对宕机时间有严格要求；可以作为易于更新的 web服务器使用。</li>
+    <li>Membase
+<ul>
+    <li>所用语言： Erlang和C</li>
+    <li>特点：兼容 Memcache，但同时兼具持久化和支持集群</li>
+    <li>使用许可： Apache 2.0</li>
+    <li>协议：分布式缓存及扩展</li>
+    <li>非常快速（200k+/秒），通过键值索引数据</li>
+    <li>可持久化存储到硬盘</li>
+    <li>所有节点都是唯一的（ master-master复制）</li>
+    <li>在内存中同样支持类似分布式缓存的缓存单元</li>
+    <li>写数据时通过去除重复数据来减少 IO</li>
+    <li>提供非常好的集群管理 web界面</li>
+    <li>更新软件时软无需停止数据库服务</li>
+    <li>支持连接池和多路复用的连接代理</li>
+</ul>
+<strong>最佳应用场景</strong>：适用于需要低延迟数据访问，高并发支持以及高可用性的应用程序
+
+<strong>例如</strong>：低延迟数据访问比如以广告为目标的应用，高并发的 web 应用比如网络游戏（例如 Zynga）</li>
+    <li>Neo4j
+<ul>
+    <li>所用语言： Java</li>
+    <li>特点：基于关系的图形数据库</li>
+    <li>使用许可： GPL，其中一些特性使用 AGPL/商业许可</li>
+    <li>协议： HTTP/REST（或嵌入在 Java中）</li>
+    <li>可独立使用或嵌入到 Java应用程序</li>
+    <li>图形的节点和边都可以带有元数据</li>
+    <li>很好的自带web管理功能</li>
+    <li>使用多种算法支持路径搜索</li>
+    <li>使用键值和关系进行索引</li>
+    <li>为读操作进行优化</li>
+    <li>支持事务（用 Java api）</li>
+    <li>使用 Gremlin图形遍历语言</li>
+    <li>支持 Groovy脚本</li>
+    <li>支持在线备份，高级监控及高可靠性支持使用 AGPL/商业许可</li>
+</ul>
+<strong>最佳应用场景</strong>：适用于图形一类数据。这是 Neo4j与其他nosql数据库的最显著区别
+
+<strong>例如</strong>：社会关系，公共交通网络，地图及网络拓谱</li>
+    <li>Cassandra
+<ul>
+    <li>所用语言： Java</li>
+    <li>特点：对大型表格和 Dynamo支持得最好</li>
+    <li>使用许可： Apache</li>
+    <li>协议： Custom, binary (节约型)</li>
+    <li>可调节的分发及复制(N, R, W)</li>
+    <li>支持以某个范围的键值通过列查询</li>
+    <li>类似大表格的功能：列，某个特性的列集合</li>
+    <li>写操作比读操作更快</li>
+    <li>基于 Apache分布式平台尽可能地 Map/reduce</li>
+    <li>我承认对 Cassandra有偏见，一部分是因为它本身的臃肿和复杂性，也因为 Java的问题（配置，出现异常，等等）</li>
+</ul>
+<strong>最佳应用场景</strong>：当使用写操作多过读操作（记录日志）如果每个系统组建都必须用 Java编写（没有人因为选用 Apache的软件被解雇）
+
+<strong>例如</strong>：银行业，金融业（虽然对于金融交易不是必须的，但这些产业对数据库的要求会比它们更大）写比读更快，所以一个自然的特性就是实时数据分析
+
+<strong>最佳应用场景</strong>：当使用写操作多过读操作（记录日志）如果每个系统组建都必须用 Java编写（没有人因为选用 Apache的软件被解雇）
+
+<strong>例如</strong>：银行业，金融业（虽然对于金融交易不是必须的，但这些产业对数据库的要求会比它们更大）写比读更快，所以一个自然的特性就是实时数据分析</li>
+    <li>HBase
+<blockquote>（配合 ghshephard 使用）</blockquote>
+<ul>
+    <li>所用语言： Java</li>
+    <li>特点：支持数十亿行X上百万列</li>
+    <li>使用许可： Apache</li>
+    <li>协议：HTTP/REST （支持 Thrift，见编注4）</li>
+    <li>在 BigTable之后建模</li>
+    <li>采用分布式架构 Map/reduce</li>
+    <li>对实时查询进行优化</li>
+    <li>高性能 Thrift网关</li>
+    <li>通过在server端扫描及过滤实现对查询操作预判</li>
+    <li>支持 XML, Protobuf, 和binary的HTTP</li>
+    <li>Cascading, hive, and pig source and sink modules</li>
+    <li>基于 Jruby（ JIRB）的shell</li>
+    <li>对配置改变和较小的升级都会重新回滚</li>
+    <li>不会出现单点故障</li>
+    <li>堪比MySQL的随机访问性能</li>
+</ul>
+<strong>最佳应用场景</strong>：适用于偏好BigTable:)并且需要对大数据进行随机、实时访问的场合。
+
+<strong>例如</strong>： Facebook消息数据库（更多通用的用例即将出现）
+
+编注4：Thrift 是一种接口定义语言，为多种其他语言提供定义和创建服务，由Facebook开发并开源。
+
+当然，所有的系统都不只具有上面列出的这些特性。这里我仅仅根据自己的观点列出一些我认为的重要特性。与此同时，技术进步是飞速的，所以上述的内容肯定需要不断更新。我会尽我所能地更新这个列表。</li>
+</ol>
+
+
+<p>&nbsp;</p>
+]]></content>
+  </entry>
+  
+</feed>

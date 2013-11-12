@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: heroku | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/tags/heroku/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[在Heroku上部署（托管）你的Rails应用]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/02/01/zai-herokushang-bu-shu-%28tuo-guan-%29ni-de-railsying-yong/"/>
+    <updated>2012-02-01T14:56:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/02/01/zai-herokushang-bu-shu-(tuo-guan-)ni-de-railsying-yong</id>
+    <content type="html"><![CDATA[<h2>在Heroku上部署（托管）你的Rails应用</h2>
+
+<p>Heroku 是Ruby on Rails的托管提供商，提供运行Ruby on Rails应用的整套环境。和传统的托管商相比，他并不仅仅是提供一个服务器给你，而且提供有趣的工具和接口来帮助你更加容易的工作，使你从繁重的安装、配置、管理和保证服务器安全中解脱出来。
+Heroku是用git来管理项目的，另外还要用到ssh来登录，这两个工具在Linux环境下的安装方法如下：
+git安装</p>
+
+<p>ssh安装</p>
+
+<p>当然要使用Heroku，你就要到其 官方网 注册一个账号；
+以上工作完成后，并可进行如下操作，将你的Rails应用托管到Heroku：</p>
+
+<p>以来内容转自： <a href="http://hi.baidu.com/haifreeidea/blog/item/e09279c53b7d06c338db49c9.html">http://hi.baidu.com/haifreeidea/blog/item/e09279c53b7d06c338db49c9.html</a></p>
+
+<p>①、＄ gem install heroku</p>
+
+<p>②、先要生成一个公钥，使用命令:
+$ ssh-keygen -t rsa
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/user/.ssh/id_rsa):
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /home/user/.ssh/id_rsa.
+Your public key has been saved in /home/user/.ssh/id_rsa.pub.
+The key fingerprint is:
+a6:88:0a:bb:74:70:c6:e0:d5:49:65:e3:04:d5:6c:3e <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#x3a;&#117;&#x73;&#101;&#114;&#x40;&#119;&#x6f;&#114;&#107;&#115;&#x74;&#x61;&#116;&#x69;&#x6f;&#110;&#46;&#108;&#111;&#x63;&#97;&#x6c;">&#x75;&#115;&#x65;&#114;&#64;&#x77;&#111;&#x72;&#107;&#115;&#116;&#97;&#x74;&#x69;&#x6f;&#110;&#x2e;&#x6c;&#x6f;&#99;&#97;&#x6c;</a></p>
+
+<p>把公钥加入到Heroku
+$ heroku keys:add
+Uploading ssh public key /home/user/.ssh/id_rsa.pub</p>
+
+<p>如果想删除公钥，可以用命令：
+$ heroku keys:remove <a href="&#x6d;&#97;&#105;&#x6c;&#116;&#111;&#58;&#117;&#x73;&#x65;&#x72;&#64;&#x77;&#x6f;&#x72;&#x6b;&#115;&#116;&#97;&#116;&#105;&#x6f;&#x6e;&#x2e;&#x6c;&#111;&#99;&#97;&#108;">&#x75;&#115;&#x65;&#x72;&#64;&#119;&#x6f;&#114;&#107;&#x73;&#x74;&#97;&#116;&#x69;&#x6f;&#110;&#46;&#x6c;&#111;&#99;&#x61;&#x6c;</a></p>
+
+<p>查看公钥，用命令：
+$ heroku keys</p>
+
+<p>③、现在就可以创建一个项目了(预先要安装好rails)。
+$ rails myapp            (如果是已有的应用，这一步可以跳过)</p>
+
+<p>$ cd myapp
+$ git init
+$ git add .
+$ git commit -m &ldquo;my first commit&rdquo;
+Created initial commit 5df2d09: my first commit
+44 files changed, 8393 insertions(+), 0 deletions(&ndash;)
+create mode 100644 README
+create mode 100644 Rakefile
+create mode 100644 app/controllers/application.rb
+&hellip;</p>
+
+<h2>In heroku how to control the ruby version</h2>
+
+
+<p>Usage: heroku stack</p>
+
+<p>show the list of available stacks</p>
+
+<p>&mdash;all  # include deprecated stacks</p>
+
+<p>Additional commands, type &ldquo;heroku help COMMAND&rdquo; for more details:</p>
+
+<p>stack:migrate STACK  # prepare migration of this app to a new stack</p>
+
+<p>use heroku create &mdash;stack to creat the stack</p>
+
+<p>heroku create &mdash;stack bamboo-ree-1.8.7</p>
+
+<p>&nbsp;</p>
+
+<p>④、把这个项目创建到Heroku上。
+＄ heroku create myapp
+Enter your Heroku credentials.
+Email: <a href="&#x6d;&#97;&#105;&#108;&#x74;&#x6f;&#x3a;&#117;&#x73;&#101;&#114;&#x40;&#x65;&#120;&#x61;&#109;&#112;&#108;&#x65;&#x2e;&#99;&#111;&#109;">&#x75;&#115;&#101;&#114;&#64;&#x65;&#x78;&#x61;&#109;&#x70;&#108;&#101;&#x2e;&#x63;&#x6f;&#x6d;</a>
+Password:
+Uploading ssh public key /home/user/.ssh/id_rsa.pub
+（当第一次运行heroku命令时，要求输入Email，password，这个是你在Heroku注册的Email和密码，以便创建~/.heroku/credentials文件，这个文件记录了你输入的用户名和密码，以后就不再需要输入了。）</p>
+
+<p>⑤、接下来运行：
+$ git push heroku master
+Counting objects: 65, done.
+Compressing objects: 100% (58/58), done.
+Writing objects: 100% (65/65), 80.54 KiB, done.
+Total 65 (delta 14), reused 0 (delta 0)</p>
+
+<p>&mdash;&mdash;&ndash;&gt; Heroku receiving push
+&mdash;&mdash;&ndash;&gt; Rails app detected
+Compiled slug size is 0.1MB
+&mdash;&mdash;&ndash;&gt; Launching&hellip;&hellip;. done
+App deployed to Heroku</p>
+
+<p>To git@heroku.com:vivid-mountain-91.git
+* [new branch]      master &ndash;&gt; master</p>
+
+<p>⑥、再做一个数据库迁移：
+$ heroku rake db:migrate</p>
+
+<p>现在就可以像平常使用Rails一样编写程序了。</p>
+
+<p>更新代码可以用：
+$ git push heroku</p>
+
+<p>The rake db:reset task is not supported. Heroku apps do not have permission to drop and create databases. Use the heroku pg:reset command instead.</p>
+
+<p>将本地数据更新到Heroku网站上:
+$ heroku db:push
+（这个命令会使用taps，如果没有安装，请先安装。）</p>
+
+<p>要打开网页浏览，就可以用
+$ heroku open</p>
+
+<p><strong>Permission denied (publickey) when deploying heroku code. fatal: The remote end hung up unexpectedly</strong></p>
+
+<p>jhjguxin@jhjguxin-virtual-machine:~/heroku_enki$ git push heroku master
+Permission denied (publickey).
+fatal: The remote end hung up unexpectedly
+jhjguxin@jhjguxin-virtual-machine:~/heroku_enki$ heroku keys:add ~/.ssh/id_rsa.pub
+Uploading ssh public key /home/jhjguxin/.ssh/id_rsa.pub
+jhjguxin@jhjguxin-virtual-machine:~/heroku_enki$ git push heroku masterCounting objects: 460, done.
+Delta compression using up to 2 threads.
+Compressing objects: 100% (418/418), done.
+Writing objects: 100% (460/460), 447.32 KiB | 141 KiB/s, done.
+Total 460 (delta 55), reused 0 (delta 0)</p>
+
+<p>about db</p>
+
+<p>To ease deployment of typical Rails applications, Heroku automatically generates a new database.yml file on deployment. This auto-generated database.yml file configures your RACK_ENV environment to your selected postgres db. This enables you to simply push a Rails app up to Heroku and have it automatically connect to your database.</p>
+
+<p>I had the same problem, and although I did not solve the problem, I found a workaround.</p>
+
+<p>Instead of using:</p>
+
+<p>heroku run rake db:migrate</p>
+
+<p>You can use:</p>
+
+<p>heroku run:detached rake db:migrate</p>
+
+<p>This runs the command in the background, writing the output to the log. When it is finished you can view the log for the result.</p>
+
+<p>自己生成的git地址不好看，最好在<strong>本地</strong>改</p>
+
+<div id="">
+<ol start="1">
+    <li>heroku rename newname</li>
+</ol>
+</div>
+
+
+<p>帐号下改完要</p>
+
+<ol start="1">
+    <li>$ git remote rm heroku</li>
+    <li>$ git remote add heroku git@heroku.com:newname.git</li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Using RVM with Heroku]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/02/01/using-rvm-with-heroku/"/>
+    <updated>2012-02-01T11:29:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/02/01/using-rvm-with-heroku</id>
+    <content type="html"><![CDATA[<h2>Using RVM with Heroku</h2>
+
+<p>Heroku is a deployment platform for running rails application on a scalable architecture.</p>
+
+<p>Heroku provides a managed multi-tenant environment to run rails applications and does not provide a mechanism for running RVM directly since client apps do not have access to a configurable environment or command line. However RVM remains a useful tool for managing developments and making sure that development and test environments match the environment on Heroku&rsquo;s platform.</p>
+
+<p>Check which version of the Heroku stack your app will be deployed on ( or by running the Herou command line <code>heroku stack</code>) and setup your .rvmrc to use the same Ruby version as your stack.</p>
+]]></content>
+  </entry>
+  
+</feed>

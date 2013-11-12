@@ -1,0 +1,718 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Markdown Syntax Guide - Francis's Octopress Blog</title>
+  <meta name="author" content="Francis Jiang">
+
+  
+  <meta name="description" content="Markdown Syntax Guide Markdown Syntax Guide
+The Allura code uses markdown syntax everywhere to allow you to create rich
+text markup, and extends &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jhjguxin.github.io/blog/2011/11/22/markdown-syntax-guide">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Francis's Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-25901353-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Francis's Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jhjguxin.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/readme">Readme</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Markdown Syntax Guide</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-22T18:13:00+08:00" pubdate data-updated="true">Nov 22<span>nd</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>Markdown Syntax Guide</h2>
+
+<p>Markdown Syntax Guide
+The Allura code uses markdown syntax everywhere to allow you to create rich
+text markup, and extends markdown in several ways to allow for quick linking
+to other artifacts in your project.</p>
+
+<p>Markdown was created to be easy to read, easy to write, and still readable in plain text format.</p>
+
+<p>Links
+Reference Links
+Artifact Links
+Text
+Blockquotes
+Preformatted Text
+Lists
+Tables
+Headers
+Horizontal Rules
+Images
+Escapes
+More Headers
+Code Highlighting
+Includes
+Neighborhood Notifications
+Download Button
+Project Screenshots
+Thanks
+Links
+Most URLs will automatically be turned into links. To be explicit, just write it like this:</p>
+
+<p><a href="http://someurl">http://someurl</a></p>
+
+<p><a href="&#109;&#x61;&#x69;&#108;&#116;&#111;&#x3a;&#115;&#x6f;&#x6d;&#x65;&#98;&#x62;&#x6f;&#98;&#x40;&#101;&#x78;&#x61;&#x6d;&#x70;&#x6c;&#x65;&#46;&#x63;&#111;&#109;">&#x73;&#111;&#x6d;&#x65;&#x62;&#x62;&#111;&#x62;&#x40;&#101;&#120;&#x61;&#109;&#x70;&#x6c;&#101;&#x2e;&#99;&#111;&#109;</a></p>
+
+<p>Output:</p>
+
+<p><a href="http://someurl">http://someurl</a></p>
+
+<p><a href="&#109;&#x61;&#105;&#x6c;&#116;&#x6f;&#x3a;&#115;&#x6f;&#x6d;&#101;&#98;&#98;&#111;&#x62;&#x40;&#x65;&#x78;&#97;&#109;&#112;&#x6c;&#101;&#46;&#99;&#x6f;&#109;">&#x73;&#x6f;&#x6d;&#101;&#x62;&#98;&#111;&#98;&#x40;&#x65;&#x78;&#x61;&#109;&#x70;&#108;&#x65;&#x2e;&#99;&#111;&#109;</a></p>
+
+<p>To use text for the link, write it:</p>
+
+<p><a href="http://someurl">like this</a>Output:</p>
+
+<p>like this</p>
+
+<p>You can add a <em>title</em> (which shows up under the cursor):</p>
+
+<p><a href="http://someurl" title="this title shows up when you hover">like this</a>Output:</p>
+
+<p>like this</p>
+
+<p>Reference Links
+You can also put the <a href="http://url">link URL</a> below the current paragraph
+like <a href="http://another.url" title="A funky title">this</a>.</p>
+
+<p>Output:</p>
+
+<p>You can also put the link URL below the current paragraph like this.</p>
+
+<p>Here the text &ldquo;link URL&rdquo; gets linked to &ldquo;<a href="http://url">http://url</a>&rdquo;, and the lines showing &ldquo;<a href="http://url">1</a>: <a href="http://url">http://url</a>&rdquo; won&rsquo;t show anything.</p>
+
+<p>Or you can use a <a href="http://goes/with/the/link/name/textOutput:">shortcut</a> reference, which links the text &ldquo;shortcut&rdquo; to the link named &ldquo;<a href="http://goes/with/the/link/name/textOutput:">shortcut</a>&rdquo; on the next paragraph.</p>
+
+<p>Or you can use a <a href="http://goes/with/the/link/name/textOutput:">shortcut</a> reference, which links the text
+&ldquo;shortcut&rdquo; to the link named &ldquo;<a href="http://goes/with/the/link/name/textOutput:">shortcut</a>&rdquo; on the next paragraph.</p>
+
+<p>Or you can use a shortcut reference, which links the text &ldquo;shortcut&rdquo; to the link named &ldquo;shortcut&rdquo; on the next paragraph.</p>
+
+<p>Artifact Links
+Any existing forge resource can be linked with surrounding square brackets ie [MyPage] or [#123].</p>
+
+<p>Links to resources in other tools can be explicitly referenced by adding a tool identifier prefix to the link. So for instance <code>[developerwiki:MyPage]</code> can refer to a wiki page in a <code>developerwiki</code> instance. You can also link to tickets with <code>[tickets:#123]</code> assuming there&rsquo;s a 123 ticket in a Tracker instance mounted at <code>tickets</code>. The same is true for forums, or any of the other tools you have installed. You can even link to tickets in a subproject with <code>[subproject.tickets:#123]</code>.</p>
+
+<p>[MyPage]
+[developerwiki:MyPage]
+[#123]
+[tickets:#123]
+No example output is available for this one because it only works on real artifacts. Try it in your project!</p>
+
+<p>Text
+Use * or _ to emphasize things:</p>
+
+<p><em>this is in italic</em>  and <em>so is this</em></p>
+
+<p><strong>this is in bold</strong>  and <strong>so is this</strong></p>
+
+<p><strong><em>this is bold and italic</em></strong>  and <strong><em>so is this</em></strong>
+Output:</p>
+
+<p>this is in italic and so is this</p>
+
+<p>this is in bold and so is this</p>
+
+<p>this is bold and italic and so is this</p>
+
+<p>You can strike through text using HTML like this:</p>
+
+<p><s>this is strike through text</s>
+Output:</p>
+
+<p>this is strike through text</p>
+
+<p>Just write paragraphs like in a text file and they will display how
+you would expect.  A blank line separates paragraphs.</p>
+
+<p>So this is a new paragraph. But any text on adjacent lines
+will all end up
+in the same paragraph.
+Output:</p>
+
+<p>Just write paragraphs like in a text file and they will display how
+you would expect. A blank line separates paragraphs.</p>
+
+<p>So this is a new paragraph. But any text on adjacent lines
+will all end up
+in the same paragraph.</p>
+
+<p>Blockquotes
+Use the > character in front of a line, just like in email</p>
+
+<blockquote><p>Use it if you&rsquo;re quoting a person, a song or whatever.</p>
+
+<p>You can use <em>italic</em> or lists inside them also.
+And just like with other paragraphs,
+all of these lines are still
+part of the blockquote, even without the > character in front.</p></blockquote>
+
+<p>To end the blockquote, just put a blank line before the following
+paragraph.
+Output:</p>
+
+<p>Use it if you&rsquo;re quoting a person, a song or whatever.</p>
+
+<p>You can use italic or lists inside them also. And just like with other paragraphs, all of these lines are still part of the blockquote, even without the > character in front.</p>
+
+<p>To end the blockquote, just put a blank line before the following
+paragraph.</p>
+
+<p>Preformatted Text
+If you want some text to show up exactly as you write it, without Markdown doing anything to it, just indent every line by at least 4 spaces (or 1 tab).</p>
+
+<pre><code>This line won't *have any markdown* formatting applied.
+I can even write &lt;b&gt;HTML&lt;/b&gt; and it will show up as text.
+This is great for showing program source code, or HTML or even
+Markdown. &lt;b&gt;this won't show up as HTML&lt;/b&gt; but
+exactly &lt;i&gt;as you see it in this text file&lt;/i&gt;.
+</code></pre>
+
+<p>As a shortcut you can use backquotes to do the same thing while
+inside a normal pargraph.  <code>This won't be *italic* or **bold**
+at all.</code>
+Output:</p>
+
+<p>This line won&rsquo;t <em>have any markdown</em> formatting applied.
+I can even write <b>HTML</b> and it will show up as text.
+This is great for showing program source code, or HTML or even
+Markdown. <b>this won&rsquo;t show up as HTML</b> but
+exactly <i>as you see it in this text file</i>.
+As a shortcut you can use backquotes to do the same thing while
+inside a normal pargraph. This won&rsquo;t be <em>italic</em> or <strong>bold</strong>
+at all.</p>
+
+<p>Lists
+* an asterisk starts an unordered list
+* and this is another item in the list
++ or you can also use the + character
+&ndash; or the &ndash; character</p>
+
+<p>To start an ordered list, write this:</p>
+
+<ol>
+<li>this starts a list <em>with</em> numbers</li>
+<li>this will show as number &ldquo;2&rdquo;</li>
+<li>this will show as number &ldquo;3.&rdquo;</li>
+<li>any number, +, &ndash;, or * will keep the list going.
+
+<ul>
+<li>just indent by 4 spaces (or tab) to make a sub-list
+
+<ol>
+<li> keep indenting for more sub lists</li>
+</ol>
+</li>
+<li>here i&rsquo;m back to the second level
+Output:</li>
+</ul>
+</li>
+</ol>
+
+
+<p>an asterisk starts an unordered list
+and this is another item in the list
+or you can also use the + character
+or the &ndash; character
+To start an ordered list, write this:</p>
+
+<p>this starts a list with numbers
+this will show as number &ldquo;2&rdquo;
+this will show as number &ldquo;3.&rdquo;
+any number, +, &ndash;, or * will keep the list going.
+just indent by 4 spaces (or tab) to make a sub-list
+keep indenting for more sub lists
+here i&rsquo;m back to the second level
+Tables
+You can create tables using pipes and dashes like this:</p>
+
+<table>
+<thead>
+<tr>
+<th>  First Header  </th>
+<th> Second Header</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>  Content Cell  </td>
+<td> Content Cell</td>
+</tr>
+<tr>
+<td>  Content Cell  </td>
+<td> Content Cell</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>Output:</p>
+
+<p>First Header Second Header
+Content Cell Content Cell
+Content Cell Content Cell</p>
+
+<p>You can use markdown syntax within table cells for formatting:</p>
+
+<table>
+<thead>
+<tr>
+<th>  First Header   </th>
+<th> Second Header</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>  <em>Content Cell</em> </td>
+<td> Content Cell</td>
+</tr>
+<tr>
+<td>  Content Cell   </td>
+<td> Content Cell</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>Output:</p>
+
+<p>First Header Second Header
+Content Cell Content Cell
+Content Cell Content Cell</p>
+
+<p>You can also create tables using HTML code.</p>
+
+<p>Headers
+Just put 1 or more dashes or equals signs (&mdash;&ndash; or ===) below the title.</p>
+
+<h1>This is a huge header</h1>
+
+<h2>this is a smaller header</h2>
+
+<p>Output:</p>
+
+<p>This is a huge header
+this is a smaller header
+Horizontal Rule
+Just put three or more *&rsquo;s or &ndash;&rsquo;s on a line:</p>
+
+<hr />
+
+<p>Output:</p>
+
+<hr />
+
+<p>Or, you can use single spaces between then, like this:</p>
+
+<hr />
+
+<p>Output:</p>
+
+<hr />
+
+<p>or</p>
+
+<hr />
+
+<p>Output:</p>
+
+<hr />
+
+<p>Make sure you have a blank line above the dashes, though, or else:</p>
+
+<h2>you will get a header</h2>
+
+<p>Output:</p>
+
+<p>you will get a header
+Images
+To include an image, just put a &ldquo;!&rdquo; in front of a text link:</p>
+
+<p><img src="https://sourceforge.net/images/icon_linux.gif" alt="alternate text" />
+Output:</p>
+
+<p>The &ldquo;alternate text&rdquo; will show up if the browser can&rsquo;t load the image.</p>
+
+<p>You can also use a title if you want, like this:</p>
+
+<p><img src="https://sourceforge.net/images/icon_linux.gif" title="tiny arrow" alt="tiny arrow" />
+Output:</p>
+
+<p>To reference an attached image, just use the img macro. You can add more attributes:</p>
+
+<p>[[img src=attached-image.jpg alt=foobar]]
+Output:</p>
+
+<p>Escapes
+What if you want to just show asterisks, not italics?</p>
+
+<ul>
+<li>this shows up in italics: <em>a happy day</em></li>
+<li>this shows the asterisks: *a happy day*
+Output:</li>
+</ul>
+
+
+<p>this shows up in italics: a happy day
+this shows the asterisks: <em>a happy day</em>
+The backslashes will disappear and leave the asterisks.</p>
+
+<p>You can do the same with any of the characters that have a special meaning
+for Markdown.</p>
+
+<p>HTML tags may need to be escaped. <b> will be interpreted as a bold tag. Entity codes will be used. <foobar> isn&rsquo;t allowed and will be dropped, so you probably want to escape it:</p>
+
+<p><b>this will be bold</b>
+you should escape &lt;unknown&gt; tags
+&lt; special entities work
+&amp;lt; if you want to escape it
+Output:</p>
+
+<p>this will be bold
+you should escape <unknown> tags
+&lt; special entities work
+&lt; if you want to escape it</p>
+
+<p>Individual ampersands (&amp;) and less-than signs (&lt;) are fine, they will be shown as expected.</p>
+
+<p>More Headers
+More ways of doing headers:</p>
+
+<h1>this is a huge header</h1>
+
+<h2>this is a smaller header</h2>
+
+<h3>this is even smaller</h3>
+
+<h4>more small</h4>
+
+<h5>even smaller</h5>
+
+<h6>smallest still: <code>&lt;h6&gt;</code> header</h6>
+
+<p>Output:</p>
+
+<p>this is a huge header
+this is a smaller header
+this is even smaller
+more small
+even smaller
+smallest still: <h6> header
+You can use up to 6 # characters at the beginning of the line.</p>
+
+<p>Code Highlighting
+The Code highlighting used in the newforge is based on (<a href="http://www.freewisdom.org/projects/python-markdown/CodeHilite">http://www.freewisdom.org/projects/python-markdown/CodeHilite</a>). It follows the same syntax as regular Markdown code blocks, except that there are two ways to tell the highlighter what language to use for the code block.</p>
+
+<p>If the first line of the codeblock contains a shebang, the language is derived from that and line numbers are used.</p>
+
+<pre><code>#!/usr/bin/python
+# Code goes here ...
+</code></pre>
+
+<p>Output:</p>
+
+<p>1
+2 #!/usr/bin/python</p>
+
+<h1>Code goes here &hellip;</h1>
+
+<p>If the first line contains a shebang, but the shebang line does not contain a path (a single / or even a space) or If the first line begins with three or more colons, the text following the colons identifies the language. In both cases, the first line is removed from the code block before processing.</p>
+
+<pre><code>:::python
+# Code goes here ...
+</code></pre>
+
+<p>Output:</p>
+
+<h1>Code goes here &hellip;</h1>
+
+<p>You can also designate a code block by surrounding it with lines of tildes. The type of code highlighting to apply will be inferred based on the code within, or you can specify like above.</p>
+
+<p><del>
+<a href="#">My code</a>
+</del>
+Output:</p>
+
+<p><a href="#">My code</a>
+Includes
+You can embed another wiki page directly:</p>
+
+<p>[[include ref=SamplePage]]
+No example output is available for this one because it only works on real wiki pages. Try it in your wiki!</p>
+
+<p>Neighborhood Notifications
+You can list updates from all projects in a neighborhood by tool type. Max_number (default is 5) and sort (default is pubdate) are optional:</p>
+
+<p>[[neighborhood_feeds tool_name=Wiki max_number=10 sort=pubdate]]
+Neighborhood Blog Posts
+You can view blog posts from all projects in a neighborhood. Max_number (default is 5) and sort (default is timestamp) are optional:</p>
+
+<p>[[neighborhood_blog_posts max_number=10 sort=timestamp]]
+Project Blog Posts
+You can view blog posts from all blogs in a project. Max_number (default is 5), mount point (leave empty to view posts from all blog tools in a project), and sort (default is timestamp) are optional:</p>
+
+<p>[[project_blog_posts max_number=10 sort=timestamp mount_point=news]]
+Download Button
+You can display a download button that links to the best download available for the active project. Please note that if you use this macro and there is no download associated with your project, the button will not appear.</p>
+
+<p>[[download_button]]
+Project Screenshots
+You can show all the screenshots for the current project as thumbnails that are linked to the full-size image.</p>
+
+<p>[[project_screenshots]]
+Thanks
+Thanks to John Gruber and Aaron Swartz for creating Markdown.</p>
+
+<p>This page is based on some examples from Greg Schueler, <a href="&#x6d;&#97;&#105;&#x6c;&#116;&#x6f;&#x3a;&#103;&#114;&#101;&#103;&#x40;&#x76;&#x61;&#x72;&#105;&#111;&#x2e;&#x75;&#x73;">&#x67;&#114;&#101;&#x67;&#x40;&#118;&#97;&#114;&#105;&#x6f;&#46;&#x75;&#x73;</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Francis Jiang</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-22T18:13:00+08:00" pubdate data-updated="true">Nov 22<span>nd</span>, 2011</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/wang-wen/'>网文</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://jhjguxin.github.io/blog/2011/11/22/markdown-syntax-guide/" data-via="jhjguxin" data-counturl="http://jhjguxin.github.io/blog/2011/11/22/markdown-syntax-guide/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2011/11/21/guides-rubyonrails-migrations-en-and-cn/" title="Previous Post: guides rubyonrails Migrations (EN and CN)">&laquo; guides rubyonrails Migrations (EN and CN)</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2011/11/24/active-record-validations-and-callbacks-huo-dong-ji-lu-yan-zheng-he-hui-diao/" title="Next Post: Active Record Validations and Callbacks 活动记录验证和回调">Active Record Validations and Callbacks 活动记录验证和回调 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/">通过mongodump和mongorestore实现Mongodb备份和恢复 --by Chenzhou123520</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes/">Ruby on Rails 4.0 Release Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/rails-active-record-named-scopes/">Rails Active Record Named Scopes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/">晒晒我们的开源项目 ITEYE开源代码</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/">Single Sign-on 单点登录 Sso</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/jhjguxin">@jhjguxin</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'jhjguxin',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Francis Jiang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

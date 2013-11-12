@@ -1,0 +1,1933 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Francis's Octopress Blog</title>
+  <meta name="author" content="Francis Jiang">
+
+  
+  <meta name="description" content="数据迁移（rake ） 有时候我们的Rails应用是在已有数据库上的，我们需要把基于SQL的schema转化成ActiveRecord的schema 1，dump schema
+运行rake db:schema:dump来将数据库中的表结构复制到db/schema.rb文件中
+这时运行rake &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jhjguxin.github.io/blog/page/5">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Francis's Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-25901353-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Francis's Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jhjguxin.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/readme">Readme</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/21/shu-ju-qian-yi-%28rake-%29/">数据迁移（rake ）</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-21T14:05:00+08:00" pubdate data-updated="true">May 21<span>st</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>数据迁移（rake ）</h2>
+
+<div id="blog_content">
+<div>
+
+有时候我们的Rails应用是在已有数据库上的，我们需要把基于SQL的schema转化成ActiveRecord的schema
+
+1，dump schema
+运行rake db:schema:dump来将数据库中的表结构复制到db/schema.rb文件中
+这时运行rake db:schema:load或者将schema.rb的内容copy到一个migration中并运行rake db:migrate会生成表
+其中:force =&gt; true表示会覆盖数据库已存在的表，这样会让我们丢失数据库已有的data
+
+2，migration的版本
+Rails会自动生成schema_info表，该表的version列表示当前的migration的version，即migration文件开头的number
+可以修改schema_info的version来控制要执行的migrate任务
+
+3，避免丢失数据
+一种方式是先从数据库extract fixtures，然后rake db:schema:load或rake db:migrate，并且:force =&gt; true，然后rake db:fixtures:load
+另一种方式是修改schema_info的version来控制要执行的migrate任务
+
+</div>
+</div>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/20/shi-yong-rubyjie-xi-chun-zhen-ipku-qqwry-dot-dat/">使用ruby解析纯真IP库-qqwry.dat</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-20T15:40:00+08:00" pubdate data-updated="true">May 20<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>使用ruby解析纯真IP库-qqwry.dat</h2>
+
+<p>在写一个地区相关的节能时，需要用到根据IP判断地区的功能，就想着找一个能够解析IP到地址的库。找了一下资料，国内用的比较多的IP库是早年就开始流行到现在的纯真IP库（QQrwy.dat），至于用ruby来解析纯真IP库的，则没找到几个，文章是不少，不过引用的几乎都是同样的代码，那个是比较早的ruby版本了，在1.9.2下跑的话，会有问题，我小改了一下，发现还是会有些问题，于是索性自己写一个吧。</p>
+
+<p>要解析纯真IP库，对于该库的数据结构是必须要了解的，不多说，网上几乎唯一的纯真数据格式的说明就是这篇了  <a href="http://lumaqq.linuxsir.org/article/qqwry_format_detail.html" target="_blank">纯真IP数据库格式解析</a></p>
+
+<p>格式并不算太复杂，主要是要注意偏移。纯真IP库的字符编码是GB2312的，而Windows下的命令行窗口也是GB2312编码，所以就不用转编码了。不过我是在linux下写的，所以默认编码用的是utf8，这也算是大势所趋么（也提供了GB编码的取得方式）。</p>
+
+<p>代码如下，如果看过IP库格式的话，配上代码注释，应该是比较容易就懂的。</p>
+
+<p>试了一下，查询1000次用时大概200毫秒左右</p>
+
+<pre>require 'iconv'
+
+class IpSearch
+    def initialize(file='qqwry.dat')
+        filename = file
+        @file = File.open(filename,"r")
+        @index_first,@index_last  = @file.read(8).unpack('L2')
+            @index_total = (@index_last - @index_first)/7 + 1
+            @location = {}
+    end
+
+    #把IP转换为长整形
+    def ip2long(ip)
+      long = 0
+      ip.split(/\./).each_with_index do |b, i|
+        long += b.to_i &lt;&lt; 8*(3-i)
+      end
+      long
+    end
+
+    #读取偏移值
+    def read_offset(position)
+        @file.seek position
+        chars = @file.read(3).unpack('C3')
+        (chars[2]&lt;&lt;16) + (chars[1]&lt;&lt;8) + chars[0]
+    end
+
+    #读取记录中的4字节作为一个long值
+    def read_long(position)
+        @file.seek position
+        @file.read(4).unpack('L')[0]
+    end
+
+    #读取模式信息，1和2为正常，其他值异常
+    #position:字符串偏移量
+    def read_mode(position)
+        @file.seek position #前4位为IP值
+        @file.read(1).unpack('C')[0]
+    end
+
+    #根据IP在索引中查找具体位置
+    def find_str_offset(ip_long)
+        offset_min,offset_max = @index_first,@index_last
+
+            while offset_min &lt;= offset_max
+                offset_mid =  offset_min + (offset_max - offset_min) / 14*7
+                mid = read_long(offset_mid)
+
+                if ip_long &lt; mid
+                    offset_max = offset_mid - 7
+                elsif ip_long == mid
+                    return read_offset(offset_mid+4)
+                else
+                    offset_min = offset_mid + 7
+                end
+            end
+
+            return read_offset(offset_max+4)
+    end
+
+    #读取字符串
+    def read_str(position)
+        @file.seek position
+        str = []
+        while c = @file.getc
+          break if str.size &gt; 60 #地址不会太长，防止有异常数据
+          break if c == "\0"  #地址字符串以\0结尾
+          str &lt;&lt; c
+        end
+        str.join ''
+    end
+
+    #根据IP查找地址
+    def find_ip_location(ip)
+        offset = find_str_offset(ip2long(ip))#读取具体数据在记录区的偏移
+        @location = {}
+        case read_mode(offset+4)
+        when 1
+      str_offset = read_offset(offset+4+1) #读取字符串存储位置偏移（4是IP值，1是模式）
+      if read_mode(str_offset)==2 then
+        country_offset = read_offset(str_offset+1)
+        @location[:country] = read_str country_offset
+        @location[:area] = read_area(str_offset+4)
+      else
+        @location[:country] = read_str str_offset
+        @location[:area] = read_area(@file.pos)
+      end
+
+        when 2
+            str_offset = read_offset(offset+4+1) #读取字符串存储位置偏移（4是IP值，1是模式）
+            @location[:country] = read_str(str_offset)
+            @location[:area] = read_area(offset+8)
+        else
+            @location[:country] = read_str(offset)
+            @location[:area] = read_str(@file.pos)
+        end
+
+        @location
+    end
+
+    #读取记录中的地址信息
+    def read_area(position)
+        mode = read_mode(position)
+        if mode==1 || mode==2
+            offset = read_offset(position+1)
+            return '' if offset==0
+            return read_str(offset)
+        else
+            return read_str(position)
+        end
+    end
+
+    #取得国家，UTF8编码
+    def country
+        Iconv.iconv('UTF-8//IGNORE','GB2312//IGNORE',@location[:country])
+    end
+
+    #取得地区，UTF8编码
+    def area
+        Iconv.iconv('UTF-8//IGNORE','GB2312//IGNORE',@location[:area])
+    end
+
+    #取得国家，GB2312编码
+    def country_gb
+        @location[:country]
+    end
+
+    #取得地区，GB2312编码
+    def area_gb
+        @location[:area]
+    end
+end
+
+#************************以下测试代码*****************
+time_start = Time.now
+list = %w[66.249.71.153 202.8.15.255.2 61.157.175.233 58.19.176.201 61.178.12.170 61.191.187.113 121.14.133.169 58.222.234.230 202.198.184.136 121.12.116.58 203.191.148.55]
+is = IpSearch.new
+100.times do |i|
+    list.each do |ip|
+      is.find_ip_location(ip)
+      #puts is.country
+      #puts is.area
+      #puts '-'*50
+    end
+end
+
+puts "total time:#{Time.now-time_start}"</pre>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/18/how-to-allow-users-to-sign-in-using-their-username-or-email-address/">How to: Allow Users to Sign in Using Their Username or Email Address</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-18T14:58:00+08:00" pubdate data-updated="true">May 18<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>How To: Allow users to sign in using their username or email address</h2>
+
+<p>For this example, we will assume your model is called <code>User</code></p>
+
+<h3>Create a username field in the <code>users</code> table</h3>
+
+
+<ol>
+    <li>Create a migration:
+<div>
+<pre> rails generate migration add_username_to_users username:string</pre>
+</div></li>
+    <li>Run the migration:
+<div>
+<pre> rake db:migrate</pre>
+</div></li>
+    <li>Modify the <code>User</code> model and add username to attr_accessible
+<div>
+<pre> attr_accessible :username</pre>
+</div></li>
+</ol>
+
+
+<h3>Create a login virtual attribute in Users</h3>
+
+
+<ol>
+    <li>Add login as an attr_accessor
+<div>
+<pre># Virtual attribute for authenticating by either username or email
+# This is in addition to a real persisted field like 'username'
+attr_accessor :login</pre>
+</div></li>
+    <li>Add login to attr_accessible
+<div>
+<pre>attr_accessible :login</pre>
+</div></li>
+</ol>
+
+
+<h3>Tell Devise to use :login in the authentication_keys</h3>
+
+
+<ol>
+    <li>Modify config/initializers/devise.rb to have:
+<div>
+<pre> config.authentication_keys = [ :login ]</pre>
+</div></li>
+</ol>
+
+
+<ul>
+    <li>If you are using multiple models with Devise, it is best to set the authentication_keys on the model itself if the keys may differ:
+<div>
+<pre>devise :database_authenticatable, :registerable,
+       :recoverable, :rememberable, :trackable, 
+       :validatable, :authentication_keys =&gt; [:login]</pre>
+</div></li>
+</ul>
+
+
+<ol>
+    <li>Overwrite Devise’s find_for_database_authentication method in Users model</li>
+</ol>
+
+
+<ul>
+    <li>For ActiveRecord:
+<div>
+<pre> def self.find_for_database_authentication(warden_conditions)
+   conditions = warden_conditions.dup
+   login = conditions.delete(:login)
+   where(conditions).where(["lower(username) = :value OR lower(email) = :value", { :value =&gt; login.strip.downcase }]).first
+ end</pre>
+</div></li>
+    <li>For Mongoid:
+Note: This code for Mongoid does some small things differently then the ActiveRecord code above. Would be great if someone could port the complete functionality of the ActiveRecord code over to Mongoid [basically you need to port the ‘where(conditions)’]. It is not required but will allow greater flexibility.
+<div>
+<pre>field :email
+
+def self.find_for_database_authentication(conditions)
+  login = conditions.delete(:login)
+  self.any_of({ :username =&gt; login }, { :email =&gt; login }).first
+end</pre>
+</div></li>
+</ul>
+
+
+<ul>
+    <li>For MongoMapper:
+<div>
+<pre>def self.find_for_database_authentication(conditions)
+  login = conditions.delete(:login).downcase
+  where('$or' =&gt; [{:username =&gt; login}, {:email =&gt; login}]).first
+end</pre>
+</div></li>
+</ul>
+
+
+<h3>Update your views</h3>
+
+
+<ol>
+    <li>Make sure you have the Devise views in your project so that you can customize them
+Rails 3:
+<div>
+<pre> rails g devise:views</pre>
+</div>
+Rails 2:
+<div>
+<pre> script/generate devise_views</pre>
+</div></li>
+    <li>Modify the views
+<ul>
+    <li>sessions/new.html.erb:
+<div>
+<pre>-  &lt;p&gt;&lt;%= f.label :email %&gt;&lt;br /&gt;
+-  &lt;%= f.email_field :email %&gt;&lt;/p&gt;
++  &lt;p&gt;&lt;%= f.label :login %&gt;&lt;br /&gt;
++  &lt;%= f.text_field :login %&gt;&lt;/p&gt;</pre>
+</div></li>
+    <li>registrations/new.html.erb
+<div>
+<pre>+  &lt;p&gt;&lt;%= f.label :username %&gt;&lt;br /&gt;
++  &lt;%= f.text_field :username %&gt;&lt;/p&gt;
+   &lt;p&gt;&lt;%= f.label :email %&gt;&lt;br /&gt;
+   &lt;%= f.email_field :email %&gt;&lt;/p&gt;</pre>
+</div></li>
+    <li>registrations/edit.html.erb
+<div>
+<pre>+  &lt;p&gt;&lt;%= f.label :username %&gt;&lt;br /&gt;
++  &lt;%= f.text_field :username %&gt;&lt;/p&gt;
+   &lt;p&gt;&lt;%= f.label :email %&gt;&lt;br /&gt;
+   &lt;%= f.email_field :email %&gt;&lt;/p&gt;</pre>
+</div></li>
+</ul>
+</li>
+</ol>
+
+
+<h3>Manipulate the :login label that Rails will display</h3>
+
+
+<ol>
+    <li>Modify config/locales/en.yml to contain something like:
+Rails 2:
+<div>
+<pre>activemodel:
+  attributes:
+    user:
+      login: "Username or email"</pre>
+</div>
+Rails 3:
+<div>
+<pre>en:
+  activerecord:
+    attributes:
+      user:  
+        login: "Username or email"</pre>
+</div></li>
+</ol>
+
+
+<h2>Allow users to recover their password using either username or email address</h2>
+
+
+<p>This section assumes you have run through the steps in Allow users to Sign In using their username or password.</p>
+
+<h3>Tell Devise to use :login in the reset_password_keys</h3>
+
+
+<ol>
+    <li>Modify config/initializers/devise.rb to have:
+<div>
+<pre> config.reset_password_keys = [ :login ]</pre>
+</div></li>
+</ol>
+
+
+<h3>Overwrite Devise’s finder methods in Users</h3>
+
+
+<ul>
+    <li>For ActiveRecord:
+<div>
+<pre> protected
+
+ # Attempt to find a user by it's email. If a record is found, send new
+ # password instructions to it. If not user is found, returns a new user
+ # with an email not found error.
+ def self.send_reset_password_instructions(attributes={})
+   recoverable = find_recoverable_or_initialize_with_errors(reset_password_keys, attributes, :not_found)
+   recoverable.send_reset_password_instructions if recoverable.persisted?
+   recoverable
+ end 
+
+ def self.find_recoverable_or_initialize_with_errors(required_attributes, attributes, error=:invalid)
+   (case_insensitive_keys || []).each { |k| attributes[k].try(:downcase!) }
+
+   ###the has some error in my issue, my you should comment two line bellow
+   attributes = attributes.slice(*required_attributes)
+   attributes.delete_if { |key, value| value.blank? }
+
+   if attributes.size == required_attributes.size
+     if attributes.has_key?(:login)
+        login = attributes.delete(:login)
+        record = find_record(login)
+     else  
+       record = where(attributes).first
+     end  
+   end  
+
+   unless record
+     record = new
+
+     required_attributes.each do |key|
+       value = attributes[key]
+       record.send("#{key}=", value)
+       record.errors.add(key, value.present? ? error : :blank)
+     end  
+   end  
+   record
+ end
+
+ def self.find_record(login)
+   where(["username = :value OR email = :value", { :value =&gt; login }]).first
+ end</pre>
+</div></li>
+    <li>For Mongoid:</li>
+</ul>
+
+
+<div>
+<pre>def self.find_record(login)
+  found = where(:username =&gt; login).to_a
+  found = where(:email =&gt; login).to_a if found.empty?
+  found
+end</pre>
+</div>
+
+
+<p>For Mongoid this can be optimized using a <a href="http://omarqureshi.net/posts/2010/06/17/mongoid-or-query/" rel="nofollow">custom javascript function</a></p>
+
+<div>
+<pre>def self.find_record(login)
+  where("function() {return this.username == '#{login}' || this.email == '#{login}'}")
+end</pre>
+</div>
+
+
+<ul>
+    <li>For MongoMapper:</li>
+</ul>
+
+
+<div>
+<pre>def self.find_record(login)
+  (self.where(:email =&gt; login[:login]).first || self.where(:username =&gt; login[:login]).first) rescue nil
+end</pre>
+</div>
+
+
+<h3>Update your views</h3>
+
+
+<ol>
+    <li>Modify the views
+<ul>
+    <li>passwords/new.html.erb:
+<div>
+<pre>-  &lt;p&gt;&lt;%= f.label :email %&gt;&lt;br /&gt;
+-  &lt;%= f.email_field :email %&gt;&lt;/p&gt;
++  &lt;p&gt;&lt;%= f.label :login %&gt;&lt;br /&gt;
++  &lt;%= f.text_field :login %&gt;&lt;/p&gt;</pre>
+</div></li>
+</ul>
+</li>
+</ol>
+
+
+<h2>Gmail or me.com Style</h2>
+
+
+<p>Another way to do this is me.com and gmail style. You allow an email or the username of the email. For public facing accounts, this has more security. Rather than allow some hacker to enter a username and then just guess the password, they would have no clue what the user’s email is. Just to make it easier on the user for logging in, allow a short form of their email to be used e.g “someone@domain.com” or just “someone” for short.</p>
+
+<div>
+<pre>before_create :create_login
+
+  def create_login             
+    email = self.email.split(/@/)
+    login_taken = User.where( :login =&gt; email[0]).first
+    unless login_taken
+      self.login = email[0]
+    else    
+      self.login = self.email
+    end        
+  end
+
+  def self.find_for_database_authentication(conditions)
+    self.where(:login =&gt; conditions[:email]).first || self.where(:email =&gt; conditions[:email]).first
+  end</pre>
+</div>
+
+
+<p>For the Rails 2 version (1.0 tree): There is no <code>find_for_database_authentication</code> method, so use <code>self.find_for_authentication</code> as the finding method.</p>
+
+<div>
+<pre>def self.find_for_authentication(conditions)
+  conditions = ["username = ? or email = ?", conditions[authentication_keys.first], conditions[authentication_keys.first]]
+  super
+end</pre>
+</div>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/17/how-use-the-collection-type-model-columnzen-yang-shi-yong-ji-he-lei-xing-de-mo-xing-zi-duan/">How Use the Collection Type Model Column怎样使用集合类型的模型字段</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-17T16:09:00+08:00" pubdate data-updated="true">May 17<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>How use the collection type model column怎样使用集合类型的模型字段</h2>
+
+<p>For example you have bellow code in migrate folder</p>
+
+<p><code>      # 0: &lt;20, 1: 20&lt; &lt;=25 , 2: 25&lt; &lt;=30, 3: 30&lt; &lt;=35, 4: 35&lt; &lt;=40, 5: 40&lt;</p>
+
+<pre><code>add_column :profiles, :agerange, :integer&lt;/code&gt;
+</code></pre>
+
+<p>and then how to use it:</p>
+
+<p>for model file:</p>
+
+<p><code>  # 0: &lt;20, 1: 20&lt; &lt;=25 , 2: 25&lt; &lt;=30, 3: 30&lt; &lt;=35, 4: 35&lt; &lt;=40, 5: 40&lt;
+  A20     = 0
+  A20_25  = 1
+  A25_30  = 2
+  A30_35  = 3
+  A35_40  = 4
+  A40     = 5</p>
+
+<p>  AGERANGE = {</p>
+
+<pre><code>A20        =&gt; "#{I18n.t("activerecord.attributes.profiles.agerange.A20")}",
+A20_25     =&gt; "#{I18n.t("activerecord.attributes.profiles.agerange.A20_25")}",
+A25_30     =&gt; "#{I18n.t("activerecord.attributes.profiles.agerange.A25_30")}",
+A30_35     =&gt; "#{I18n.t("activerecord.attributes.profiles.agerange.A30_35")}",
+A35_40     =&gt; "#{I18n.t("activerecord.attributes.profiles.agerange.A35_40")}",
+A40        =&gt; "#{I18n.t("activerecord.attributes.profiles.agerange.A40")}",
+</code></pre>
+
+<p>  }</p>
+
+<p>  validates_inclusion_of :agerange, :in => AGERANGE.keys,</p>
+
+<pre><code>  :message =&gt; " must be in #{AGERANGE.values.join ','}"
+</code></pre>
+
+<p>  # just a helper method for the view
+  def age_range</p>
+
+<pre><code>AGERANGE[agerange]
+</code></pre>
+
+<p>  end</code></p>
+
+<pre>and then how use them in ‘form‘ and ’show‘ page</pre>
+
+
+<pre>in form.html.erb</pre>
+
+
+<p><code></p>
+
+<pre><code>&lt;%= f.label :agerange, t("activerecord.attributes.profiles.agerange_label") %&gt;
+&lt;%= select_tag(:agerange, options_for_select(Profile::AGERANGE.invert)) %&gt;&lt;/code&gt;
+</code></pre>
+
+<pre>in show.html.erb</pre>
+
+
+<pre><%= s.attribute :age_range %></pre>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/15/5-ge-chang-jian-de-rails-kai-fa-wu-qu/">5 个常见的 Rails 开发误区</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-15T19:14:00+08:00" pubdate data-updated="true">May 15<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>5 个常见的 Rails 开发误区</h2>
+
+<p>本文作者是一名Rails开发者，他总结了在Rails开发过程中的一些常见误区。<strong>文章内容如下：</strong></p>
+
+<p>我使用Rails已经有一段时间了，在这期间我看了大量的Rails项目，下面的这五个常见的误区，我几乎在每一个Rails代码中都看到过。</p>
+
+<p><strong>1.  没有 schema 规范的迁移</strong></p>
+
+<p>数据模型是应用程序的核心。没有schema的约束，你的数据会因为项目代码上的bugs而慢慢变得糟糕，直到你无法相信库中的任何字段。这里有一个 Concact Schema：</p>
+
+<pre>create_table "contacts" do |t|
+    t.integer  "user_id"
+    t.string   "name"
+    t.string   "phone"
+    t.string   "email"
+end</pre>
+
+
+<pre>上面哪些需要更改呢？通常一个Contact必须依附于User，并且会有一个name 属性，这可以使用数据库约束来确保。可以添加“:null =&gt; false”，这样即使验证代码存在bugs，我们依然可以确保模型一致性，因为如果违反了null约束，数据库并不会允许模型保存这些数据。</pre>
+
+
+<pre>create_table "contacts" do |t|
+    t.integer  "user_id", :null =&gt; false
+    t.string   "name", :null =&gt; false
+    t.string   "phone"
+    t.string   "email"
+end</pre>
+
+
+<pre><strong>TIPS：</strong>使用“:limit =&gt; N”规范你的string类型字段的大小。Strings 默认255个字符，而phone字段应该不需要这么长吧！</pre>
+
+
+<pre><strong>2.  面向对象编程</strong> 
+
+大多数Rails开发人员并不写面向对象的代码。他们通常会在项目中写面向MVC的Ruby代码（把模型和控制器分开写在合适的位置）。通常是在lib目录下添加带有类方法的工具模块，仅此而已。但开发人员往往需要花费2-3年才能认识到“Rails就是Ruby。我完全可以创建一些简单的对象，并且不一定按照Rails建议的方式去封装它们。” 
+
+<strong>TIPS：</strong>对你调用的第三方服务使用facade（外观模式）。通过在测试中提供mock facade，你就不用在你的测试集中真的去调用这些第三方服务了。</pre>
+
+
+<pre><strong>3.  在 helpers中连接HTML</strong> 
+
+如果你正在创建helper，恭喜，至少说明你正在试图让你的视图层更整洁。但是开发人员经常不知道一些使用helpers创建标签的常见方式，这就导致了槽糕的字符串连接或者糟糕的插值形式。</pre>
+
+
+<pre>str = "&lt;li class='vehicle_list'&gt; "
+str += link_to("#{vehicle.title.upcase} Sale", show_all_styles_path(vehicle.id, vehicle.url_title))
+str += " &lt;/li&gt;"
+str.html_safe</pre>
+
+
+<pre>看吧，相当糟糕，而且容易导致XSS安全漏洞！让 content_tag 来拯救这些代码吧。</pre>
+
+
+<pre>content_tag :li, :class =&gt; 'vehicle_list' do
+  link_to("#{vehicle.title.upcase} Sale", show_all_styles_path(vehicle.id, vehicle.url_title))
+end</pre>
+
+
+<pre><strong>TIPS：</strong>现在就开始在helper中使用blocks（代码块）吧。当产生内嵌的HTML时，嵌入的blocks更自然、更贴切。 
+
+<strong>4.  Giant Queries（大查询，比如载入整张表的查询）会把一切都加载到内存</strong> 
+
+如果你需要修正数据，你只需要遍历并且修正它，对吗？</pre>
+
+
+<pre>User.has_purchased(true).each do |customer|
+  customer.grant_role(:customer)
+end</pre>
+
+
+<pre>假设你有个百万级别客户的电商网站，假设每个用户对象需要500字节，上面的代码会在运行的时候消耗500M内存。 
+
+下面是更好的方式：</pre>
+
+
+<pre>User.has_purchased(true).find_each do |customer|
+  customer.grant_role(:customer)
+end</pre>
+
+
+<pre>find_each使用 find_in_batches 每次取出1000条记录，非常有效的降低了对内存的需求。 
+
+<strong>TIPS：</strong>使用 update_all 或者原始 SQL 语句执行大的更新操作。学习SQL可能需要花费点时间，不过带来的好处是明显的：你会看到100x的性能改善。 
+
+<strong>5.  代码审查</strong> 
+
+我猜你会使用GitHub，并且我进一步猜测你不会去pull requests（GitHub上的申请代码合并操作）。如果你需要花费一到两天去构建一个新特性，那么到一个分支上去做吧，然后发送一个 pull request。团队会审查你的代码，并且给出一些你没有考虑到的改进或者最新特性的建议。我保证这样会提高你的代码质量。我们在<a href="http://www.theclymb.com/invite-from/mperham" target="_blank">TheClymb</a>项目中90%的改动都是通过这种方式完成的，并且这是100%值得去做的一个经验。 
+
+<strong>TIPS：</strong>不要没有经过任何测试就合并你的pull request。测试对保证应用的稳定性非常有价值，并且可以让你踏实地睡一个好觉。</pre>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/14/rvm-xia-zai-jia-su-by-liuhui998/">RVM 下载 加速 -by Liuhui998</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-14T15:37:00+08:00" pubdate data-updated="true">May 14<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>RVM 下载 加速 -by liuhui998</h2>
+
+<p>今天晚上有点时间，我就折腾了一下 rails。</p>
+
+<p>按照这个<a title="教程" href="http://ruby-china.org/wiki/install_ruby_guide">教程</a>，我一步步的进行安装。</p>
+
+<p>正如我之前听说的 <a title="rvm" href="https://rvm.beginrescueend.com/rvm/install/">rvm</a> 下载 ruby 的速度只有不到5KB/s 速度。</p>
+
+<p>在 google 了二圈后，我发现国内外好像没有人解决这个问题。</p>
+
+<p>于是我发扬geek精神，开始打起了 rvm 源代码的主意：</p>
+
+<p>1） rvm 是从 ruby-lang.org 这个站点下载 ruby 的源代码
+rvm 慢的主要是因为 ruby-lang.org 这个网站下载速度慢</p>
+
+<p>2） 如果找到 ruby-lang.org 的更快的镜像网站，并修改 rvm 里面的配置
+这个问题也就解决了</p>
+
+<p>于是找到一个叫 <a title="UK Mirror Service " href="http://www.mirrorservice.org/">UK Mirror Service</a> 的网站，它提供了 ruby-lang.org 镜像服务：</p>
+
+<p><a title="http://www.mirrorservice.org/sites/ftp.ruby-lang.org/" href="http://www.mirrorservice.org/sites/ftp.ruby-lang.org/"><a href="http://www.mirrorservice.org/sites/ftp.ruby-lang.org/">http://www.mirrorservice.org/sites/ftp.ruby-lang.org/</a></a></p>
+
+<p>我测试了一下，平均速度最慢也超过 30KB/s</p>
+
+<p>好的镜像找到了，那么下一步就是在哪里修改 ruby 下载地址。</p>
+
+<div><figure>
+<div>
+<table>
+<tbody>
+<tr>
+<td></td>
+<td>
+<pre><code>cd $rvm_path grep -nR "ruby-lang.org" ./</code></pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure></div>
+
+
+<p>&nbsp;</p>
+
+<p>发现地址是写在 $rvm_path/config/db 文件里</p>
+
+<p>找到这一段：</p>
+
+<div><figure>
+<div>
+<table>
+<tbody>
+<tr>
+<td></td>
+<td>
+<pre><code>ruby_1.0_url=http://ftp.ruby-lang.org/pub/ruby/1.0 ruby_1.2_url=http://ftp.ruby-lang.org/pub/ruby/1.2 ruby_1.3_url=http://ftp.ruby-lang.org/pub/ruby/1.3 ruby_1.4_url=http://ftp.ruby-lang.org/pub/ruby/1.4 ruby_1.5_url=http://ftp.ruby-lang.org/pub/ruby/1.5 ruby_1.6_url=http://ftp.ruby-lang.org/pub/ruby/1.6 ruby_1.7_url=http://ftp.ruby-lang.org/pub/ruby/1.7 ruby_1.8_url=http://ftp.ruby-lang.org/pub/ruby/1.8 ruby_1.9_url=http://ftp.ruby-lang.org/pub/ruby/1.9 ruby_2.0_url=http://ftp.ruby-lang.org/pub/ruby/2.0</code></pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure></div>
+
+
+<p>&nbsp;</p>
+
+<p>改成</p>
+
+<div><figure>
+<div>
+<table>
+<tbody>
+<tr>
+<td></td>
+<td>
+<pre><code>ruby_1.0_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.0 ruby_1.2_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.2 ruby_1.3_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.3 ruby_1.4_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.4 ruby_1.5_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.5 ruby_1.6_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.6 ruby_1.7_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.7 ruby_1.8_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.8 ruby_1.9_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.9 ruby_2.0_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/2.0</code></pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure></div>
+
+
+<p>&nbsp;</p>
+
+<p>我已把这个修攺提交到我们仓库里 <a title="http://github.com/liuhui998/rvm" href="http://github.com/liuhui998/rvm"><a href="http://github.com/liuhui998/rvm">http://github.com/liuhui998/rvm</a></a>
+可以直接点击下载我改好后的 <a title="db 文件" href="https://raw.github.com/liuhui998/rvm/0f0be9a1316d607a9956415110bef8ea9b8a6726/config/db">文件</a></p>
+
+<p>大家改好 $rvm_path/config/db 文件后，最好能重启终端程序后再执行 rvm install 命令
+这样新的 mirror 就会起效。</p>
+
+<p>经过测试，改进后的 rvm， 在家中4M 以太网的速度可以达到200KB/s.</p>
+
+<p>其本上解决了 rvm 下载 ruby 慢的问题。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/11/the-501-developer-manifesto-%3C%3C501cheng-xu-yuan-xuan-yan-%3E%3E/">The 501 Developer Manifesto&#8211;《501程序员宣言》</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-11T13:55:00+08:00" pubdate data-updated="true">May 11<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>The 501 Developer Manifesto&mdash;《501程序员宣言》</h2>
+
+<p>We are software developers who take pride in our work but choose not to be wholly defined by it.</p>
+
+<div>As such, we are <strong>proud</strong> to say that we value:</div>
+
+
+<div>
+<ul>
+    <li><strong>Our families</strong> over the commercial goals of business owners</li>
+    <li><strong>Free time</strong> over free snacks</li>
+    <li><strong>Living our lives</strong> over maintaining our <a href="http://www.codinghorror.com/blog/2006/04/your-personal-brand.html">personal brands</a></li>
+    <li><strong>Sustainable pace</strong> over muscle-man heroics</li>
+    <li>Our <strong>personal creative projects</strong> over commercial products the world doesn&#8217;t need</li>
+    <li>Having <strong>money for nice clothes</strong> over getting free t-shirts from Microsoft</li>
+    <li>Playing fußball <strong>in the pub with our friends</strong> over playing fußball in the office with our team leader</li>
+    <li><strong><a href="http://programmersbeingdicks.tumblr.com/">Not being a dick</a></strong> over being a rockstar</li>
+</ul>
+</div>
+
+
+<div>That is to say, we value the things on the left more than we value the things on the right. And some of the things on the right aren&#8217;t even on our radar.</div>
+
+
+<div>If you:
+<ul>
+    <li>Write a technical blog</li>
+    <li>Contribute to open source projects</li>
+    <li>Attend user groups in your spare time</li>
+    <li>Mostly only read books about coding and productivity</li>
+    <li><a href="http://twitter.com/toiletcoder">Push to GitHub while sitting on the toilet</a></li>
+    <li>Are committed to maximum awesomeness at all times, or would have us believe it</li>
+</ul>
+&#8230;we respect you for it. There&#8217;s probably some pity in there too, but honestly, it&#8217;s mostly respect.</div>
+
+
+<div>We recognize that your willingness to allow your employment to penetrate deeply into your personal life means that you will inevitably become our supervisor. We&#8217;re cool with this.</div>
+
+
+<div>In return, you must recognize that the success of the projects on which we work together depends largely upon the degree to which you treat <em>us</em>with respect, both as <strong>skilled professionals</strong> and as <strong>a diversity of autonomous living people</strong>. Get that right, and we&#8217;ll do a great job. Get it badly wrong, and there&#8217;s a risk that we&#8217;ll piss <em>all</em> over your fireworks. There are more of us than there are of you.</div>
+
+
+<div>To us it is <em>just a job</em>, but we still do it well.</div>
+
+
+<div>译文：</div>
+
+
+<p>我们是程序员。我们以我们的工作为荣，但不允许生活被其完全左右。</p>
+
+<p>基于此，我们非常自豪的宣布，我们认为：</p>
+
+<div>
+<pre>家庭比老板的生意更重要。
+业余时间比公司提供的免费零食更重要。
+过自己的生活比辛苦维护个人品牌更重要。
+有计划和连续不断的工作节奏比个人超常的能力更重要。
+花时间自己去购物比耗费心思得到微软的免费T恤更重要。
+和挚友打球比和上司打球更重要。
+不拖团队后腿比成为业界大牛更重要。</pre>
+</div>
+
+
+<p>在以上所列内容中，我们把前者看的更重要。对于后者，我们不屑一顾。</p>
+
+<p>但如果你：</p>
+
+<div>
+<pre>写技术博客。
+参与开源项目的开发。
+在业余时间参加技术交流活动。
+几乎只读和编程与开发效率有关的书籍。
+在GitHub上有自己的托管项目。
+许下诺言始终做到最好，或者让别人深信这一点。
+……</pre>
+</div>
+
+
+<p>我们会因此而尊重你。以上内容或许并不全面，但列出的这些，说实话，它们几乎都是值得尊重的。</p>
+
+<p>而从这些内容中，我们也意识到你将把事业深深地融入到你的生活中，这些努力会让你不可避免的会成为我们的上司。对于这一点，我们为你感到高兴。</p>
+
+<p>但反过来，你也必须意识到，事业的成功是和你是否尊重我们，包括对我们作为专业人士并有享受多姿多彩的生活权利的尊重，是息息相关的。选择尊重这些，我们将一起创造美好的未来；而如果选择否定这些，一切成功的梦想都将只是梦想。而这一切，将取决于你的选择。</p>
+
+<p>虽然对于我们来说这只是一份工作，但我们依然做到最好。</p>
+
+<p>&nbsp;</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/08/nosql/">NoSQL</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-08T17:39:00+08:00" pubdate data-updated="true">May 8<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>NoSQL</h2>
+
+<h2>NoSQL</h2>
+
+
+<p>NoSQL，指的是非关系型的数据库。随着互联网 web2.0 网站的兴起，传统的关系数据库在应付 web2.0 网站，特别是超大规模和高并发的 SNS 类型的 web2.0 纯动态网站已经显得力不从心，暴露了很多难以克服的问题，而非关系型的数据库则由于其本身的特点得到了非常迅速的发展。</p>
+
+<h3><a name="%E7%AE%80%E4%BB%8B" href="https://github.com/jhjguxin/project-manage/blob/master/nosql/nosql-baidubaike.zh-cn.markdown#%E7%AE%80%E4%BB%8B"></a>简介</h3>
+
+
+<p>NoSQL(NoSQL = Not Only SQL )，意即反 SQL 运动，是一项全新的数据库革命性运动，早期就有人提出，发展至 2009 年趋势越发高涨。NoSQL 的拥护者们提倡运用非关系型的数据存储，相对于目前铺天盖地的关系型数据库运用，这一概念无疑是一种全新的思维的注入。</p>
+
+<h3><a name="%E7%8E%B0%E4%BB%8A%E7%8A%B6%E5%86%B5" href="https://github.com/jhjguxin/project-manage/blob/master/nosql/nosql-baidubaike.zh-cn.markdown#%E7%8E%B0%E4%BB%8A%E7%8A%B6%E5%86%B5"></a>现今状况</h3>
+
+
+<p>现今的计算机体系结构在数据存储方面要求具备庞大的水平扩展性，而 NoSQL 致力于改变这一现状。目前 Google 的 BigTable 和 Amazon 的 Dynamo 使用的就是 NoSQL 型数据库。</p>
+
+<p>NoSQL 项目的名字上看不出什么相同之处，但是，它们通常在某些方面相同：它们可以处理超大量的数据。</p>
+
+<p>这场革命目前仍然需要等待。的确，NoSQL 对大型企业来说还不是主流，但是，一两年之后很可能就会变个样子。在 NoSQL 运动的最新一次聚会中，来自世界各地的 150 人挤满了 CBS Interactive 的一间会议室。分享他们如何推翻缓慢而昂贵的关系数据库的暴政，怎样使用更有效和更便宜的方法来管理数据。</p>
+
+<p>“关系型数据库给你强加了太多东西。它们要你强行修改对象数据，以满足 RDBMS （relational database management system，关系型数据库管理系统）的需要。” 在 NoSQL 拥护者们看来，基于 NoSQL 的替代方案 “只是给你所需要的”。</p>
+
+<ol>
+    <li>水平扩展性(horizontal scalability)指能够连接多个软硬件的特性,这样可以将多个服务器从逻辑上看成一个实体。</li>
+</ol>
+
+
+<h3><a name="%E6%88%91%E4%BB%AC%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8nosql%E9%9D%9E%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93" href="https://github.com/jhjguxin/project-manage/blob/master/nosql/nosql-baidubaike.zh-cn.markdown#%E6%88%91%E4%BB%AC%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8nosql%E9%9D%9E%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93"></a>我们为什么要使用NOSQL非关系数据库?</h3>
+
+
+<p>随着互联网 web2.0 网站的兴起，非关系型的数据库现在成了一个极其热门的新领域，非关系数据库产品的发展非常迅速。而传统的关系数据库在应付 web2.0 网站，特别是超大规模和高并发的 SNS 类型的 web2.0 纯动态网站已经显得力不从心，暴露了很多难以克服的问题，<strong>例如</strong>：</p>
+
+<ol>
+    <li>High performance - 对数据库高并发读写的需求 web2.0 网站要根据用户个性化信息来实时生成动态页面和提供动态信息，所以基本上无法使用动态页面静态化技术，因此数据库并发负载非常高，往往要达到每秒上万次读写请求。关系数据库应付上万次 SQL 查询还勉强顶得住，但是应付上万次 SQL 写数据请求，硬盘 IO 就已经无法承受了。其实对于普通的 BBS 网站，往往也存在对高并发写请求的需求。</li>
+    <li>Huge Storage - 对海量数据的高效率存储和访问的需求 对于大型的 SNS 网站，每天用户产生海量的用户动态，以国外的 Friendfeed 为例，一个月就达到了 2.5 亿条用户动态，对于关系数据库来说，在一张 2.5 亿条记录的表里面进行 SQL 查询，效率是极其低下乃至不可忍受的。再例如大型 web 网站的用户登录系统，<strong>例如</strong>腾讯，盛大，动辄数以亿计的帐号，关系数据库也很难应付。</li>
+    <li>High Scalability &amp;&amp; High Availability- 对数据库的高可扩展性和高可用性的需求 在基于 web 的架构当中，数据库是最难进行横向扩展的，当一个应用系统的用户量和访问量与日俱增的时候，你的数据库却没有办法像 web server 和 app server 那样简单的通过添加更多的硬件和服务节点来扩展性能和负载能力。对于很多需要提供 24 小时不间断服务的网站来说，对数据库系统进行升级和扩展是非常痛苦的事情，往往需要停机维护和数据迁移，为什么数据库不能通过不断的添加服务器节点来实现扩展呢？</li>
+</ol>
+
+
+<p>在上面提到的 “三高” 需求面前，关系数据库遇到了难以克服的障碍，而对于 web2.0 网站来说，关系数据库的很多主要特性却往往无用武之地，<strong>例如</strong>：</p>
+
+<ol>
+    <li>数据库事务一致性需求 很多 web 实时系统并不要求严格的数据库事务，对读一致性的要求很低，有些场合对写一致性要求也不高。因此数据库事务管理成了数据库高负载下一个沉重的负担。</li>
+    <li>数据库的写实时性和读实时性需求 对关系数据库来说，插入一条数据之后立刻查询，是肯定可以读出来这条数据的，但是对于很多 web 应用来说，并不要求这么高的实时性。</li>
+    <li>对复杂的SQL查询，特别是多表关联查询的需求 任何大数据量的 web 系统，都非常忌讳多个大表的关联查询，以及复杂的数据分析类型的复杂 SQL 报表查询，特别是 SNS 类型的网站，从需求以及产品设计角度，就避免了这种情况的产生。往往更多的只是单表的主键查询，以及单表的简单条件分页查询，SQL 的功能被极大的弱化了。</li>
+</ol>
+
+
+<p>因此，关系数据库在这些越来越多的应用场景下显得不那么合适了，为了解决这类问题的非关系数据库应运而生。</p>
+
+<p>NoSQL 是非关系型数据存储的广义定义。它打破了长久以来关系型数据库与 ACID 理论大一统的局面。NoSQL 数据存储不需要固定的表结构，通常也不存在连接操作。在大数据存取上具备关系型数据库无法比拟的性能优势。该术语在 2009 年初得到了广泛认同。</p>
+
+<p>当今的应用体系结构需要数据存储在横向伸缩性上能够满足需求。而 NoSQL 存储就是为了实现这个需求。Google 的 BigTable 与 Amazon 的 Dynamo 是非常成功的商业 NoSQL 实现。一些开源的 NoSQL 体系，如 Facebook 的 Cassandra， Apache 的 HBase，也得到了广泛认同。从这些 NoSQL 项目的名字上看不出什么相同之处：Hadoop、Voldemort、Dynomite，还有其它很多。</p>
+
+<h3><a name="nosql-%E4%B8%8E%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%BE%E8%AE%A1%E7%90%86%E5%BF%B5%E6%AF%94%E8%BE%83" href="https://github.com/jhjguxin/project-manage/blob/master/nosql/nosql-baidubaike.zh-cn.markdown#nosql-%E4%B8%8E%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%BE%E8%AE%A1%E7%90%86%E5%BF%B5%E6%AF%94%E8%BE%83"></a>NoSQL 与关系型数据库设计理念比较</h3>
+
+
+<p>关系型数据库中的表都是存储一些格式化的数据结构，每个元组字段的组成都一样，即使不是每个元组都需要所有的字段，但数据库会为每个元组分配所有的字段，这样的结构可以便于表与表之间进行连接等操作，但从另一个角度来说它也是关系型数据库性能瓶颈的一个因素。而非关系型数据库以键值对存储，它的结构不固定，每一个元组可以有不一样的字段，每个元组可以根据需要增加一些自己的键值对，这样就不会局限于固定的结构，可以减少一些时间和空间的开销。</p>
+
+<h3><a name="%E7%89%B9%E7%82%B9" href="https://github.com/jhjguxin/project-manage/blob/master/nosql/nosql-baidubaike.zh-cn.markdown#%E7%89%B9%E7%82%B9"></a>特点</h3>
+
+
+<ul>
+    <li><strong>它们可以处理超大量的数据。</strong></li>
+    <li><strong>它们运行在便宜的PC服务器集群上。</strong></li>
+    <li>PC集群扩充起来非常方便并且成本很低，避免了“sharding”操作的复杂性和成本。</li>
+    <li><strong>它们击碎了性能瓶颈。</strong></li>
+    <li>NoSQL的支持者称，通过NoSQL架构可以省去将Web或Java应用和数据转换成SQL友好格式的时间，执行速度变得更快。</li>
+    <li>“SQL并非适用于所有的程序代码，” 对于那些繁重的重复操作的数据，SQL值得花钱。但是当数据库结构非常简单时，SQL可能没有太大用处。</li>
+    <li><strong>没有过多的操作。</strong></li>
+    <li>虽然NoSQL的支持者也承认关系数据库提供了无可比拟的功能集合，而且在数据完整性上也发挥绝对稳定，他们同时也表示，企业的具体需求可能没有那么多。</li>
+    <li><strong>Bootstrap支持</strong></li>
+    <li>因为NoSQL项目都是开源的，因此它们缺乏供应商提供的正式支持。这一点它们与大多数开源项目一样，不得不从社区中寻求支持。</li>
+</ul>
+
+
+<h3><a name="%E7%BC%BA%E7%82%B9" href="https://github.com/jhjguxin/project-manage/blob/master/nosql/nosql-baidubaike.zh-cn.markdown#%E7%BC%BA%E7%82%B9"></a>缺点</h3>
+
+
+<p>但是一些人承认，没有正式的官方支持，万一出了差错会是可怕的，至少很多管理人员是这样看。</p>
+
+<p>“我们确实需要做一些说服工作，但基本在他们看到我们的第一个原型运行良好之后，我们就能够说服他们，这是条正确的道路。”</p>
+
+<p>此外，nosql并未形成一定标准，各种产品层出不穷，内部混乱，各种项目还需时间来检验</p>
+
+<h2><a name="8-%E7%A7%8D-nosql-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E5%AF%B9%E6%AF%94" href="https://github.com/jhjguxin/project-manage/blob/master/nosql/nosql-baidubaike.zh-cn.markdown#8-%E7%A7%8D-nosql-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E5%AF%B9%E6%AF%94"></a>8 种 Nosql 数据库系统对比</h2>
+
+
+<blockquote>
+<h2><a style="direction: ltr;" href="http://blog.jobbole.com/1344/">resources from</a><span style="direction: ltr;">,</span><a style="direction: ltr;" href="http://kkovacs.eu/cassandra-vs-mongodb-vs-couchdb-vs-redis">english resources</a></h2>
+</blockquote>
+
+
+<p>虽然 SQL 数据库是非常有用的工具，但经历了 15 年的一支独秀之后垄断即将被打破。这只是时间问题：被迫使用关系数据库，但最终发现不能适应需求的情况不胜枚举。</p>
+
+<p>但是 NoSQL 数据库之间的不同，远超过两 SQL 数据库之间的差别。这意味着软件架构师更应该在项目开始时就选择好一个适合的 NoSQL 数据库。针对这种情况，这里对 <a href="http://cassandra.apache.org/">Cassandra</a>、 <a href="http://www.mongodb.org/">Mongodb</a>、<a href="http://couchdb.apache.org/">CouchDB</a>、<a href="http://redis.io/">Redis</a>、 <a href="http://www.basho.com/Riak.html">Riak</a>、 <a href="http://www.couchbase.org/membase">Membase</a>、<a href="http://neo4j.org/">Neo4j</a>和 <a href="http://hbase.apache.org/">HBase</a> 进行了比较：</p>
+
+<ol>
+    <li>CouchDB</li>
+</ol>
+
+
+<ul>
+    <li>所用语言： Erlang</li>
+    <li>特点：DB一致性，易于使用</li>
+    <li>使用许可： Apache</li>
+    <li>协议： HTTP/REST</li>
+    <li>双向数据复制，</li>
+    <li>持续进行或临时处理，</li>
+    <li>处理时带冲突检查，</li>
+    <li>因此，采用的是master-master复制（见编注2）</li>
+    <li>MVCC – 写操作不阻塞读操作</li>
+    <li>可保存文件之前的版本</li>
+    <li>Crash-only（可靠的）设计</li>
+    <li>需要不时地进行数据压缩</li>
+    <li>视图：嵌入式 映射/减少</li>
+    <li>格式化视图：列表显示</li>
+    <li>支持进行服务器端文档验证</li>
+    <li>支持认证</li>
+    <li>根据变化实时更新</li>
+    <li>支持附件处理</li>
+    <li>因此，<a href="http://couchapp.org/">CouchApps</a>（独立的 js应用程序）</li>
+    <li>需要 jQuery程序库
+
+<strong>最佳应用场景</strong>：适用于数据变化较少，执行预定义查询，进行数据统计的应用程序。适用于需要提供数据版本支持的应用程序。
+
+<strong>例如</strong>： CRM、CMS 系统。 master-master 复制对于多站点部署是非常有用的。
+
+（编注2：master-master复制：是一种数据库同步方法，允许数据在一组计算机之间共享数据，并且可以通过小组中任意成员在组内进行数据更新。）</li>
+</ul>
+
+
+<ol>
+    <li>Redis</li>
+</ol>
+
+
+<ul>
+    <li>所用语言：C/C++</li>
+    <li>特点：运行异常快</li>
+    <li>使用许可： BSD</li>
+    <li>协议：类 Telnet</li>
+    <li>有硬盘存储支持的内存数据库，</li>
+    <li>但自2.0版本以后可以将数据交换到硬盘（注意， 2.4以后版本不支持该特性！）</li>
+    <li>Master-slave复制（见编注3）</li>
+    <li>虽然采用简单数据或以键值索引的哈希表，但也支持复杂操作，例如 ZREVRANGEBYSCORE。</li>
+    <li>INCR &amp; co （适合计算极限值或统计数据）</li>
+    <li>支持 sets（同时也支持 union/diff/inter）</li>
+    <li>支持列表（同时也支持队列；阻塞式 pop操作）</li>
+    <li>支持哈希表（带有多个域的对象）</li>
+    <li>支持排序 sets（高得分表，适用于范围查询）</li>
+    <li>Redis支持事务</li>
+    <li>支持将数据设置成过期数据（类似快速缓冲区设计）</li>
+    <li>Pub/Sub允许用户实现消息机制
+
+<strong>最佳应用场景</strong>：适用于数据变化快且数据库大小可遇见（适合内存容量）的应用程序。
+
+<strong>例如</strong>：股票价格、数据分析、实时数据搜集、实时通讯。
+
+（编注3：Master-slave 复制：如果同一时刻只有一台服务器处理所有的复制请求，这被称为 Master-slave 复制，通常应用在需要提供高可用性的服务器集群。）</li>
+</ul>
+
+
+<ol>
+    <li>MongoDB</li>
+</ol>
+
+
+<ul>
+    <li>所用语言：C++</li>
+    <li>特点：保留了 SQL 一些友好的特性（查询，索引）。</li>
+    <li>使用许可： AGPL（发起者： Apache）</li>
+    <li>协议： Custom, binary（BSON）</li>
+    <li>Master/slave复制（支持自动错误恢复，使用 sets 复制）</li>
+    <li>内建分片机制</li>
+    <li>支持 javascript表达式查询</li>
+    <li>可在服务器端执行任意的 javascript函数</li>
+    <li>update-in-place 支持比 CouchDB 更好</li>
+    <li>在数据存储时采用内存到文件映射</li>
+    <li>对性能的关注超过对功能的要求</li>
+    <li>建议最好打开日志功能（参数 –journal）</li>
+    <li>在 32 位操作系统上，数据库大小限制在约2.5Gb</li>
+    <li>空数据库大约占 192Mb</li>
+    <li>采用 GridFS存储大数据或元数据（不是真正的文件系统）
+
+<strong>最佳应用场景</strong>：适用于需要动态查询支持；需要使用索引而不是 map/reduce功能；需要对大数据库有性能要求；需要使用 CouchDB但因为数据改变太频繁而占满内存的应用程序。
+
+<strong>例如</strong>：你本打算采用 MySQL或 PostgreSQL，但因为它们本身自带的预定义栏让你望而却步。</li>
+</ul>
+
+
+<ol>
+    <li>Riak
+<ul>
+    <li>所用语言：Erlang 和 C，以及一些 Javascript</li>
+    <li>特点：具备容错能力</li>
+    <li>使用许可： Apache</li>
+    <li>协议： HTTP/REST 或者 custom binary</li>
+    <li>可调节的分发及复制(N, R, W)</li>
+    <li>用 JavaScript or Erlang 在操作前或操作后进行验证和安全支持。</li>
+    <li>使用 JavaScript 或 Erlang 进行 Map/reduce</li>
+    <li>连接及连接遍历：可作为图形数据库使用</li>
+    <li>索引：输入元数据进行搜索（1.0版本即将支持）</li>
+    <li>大数据对象支持（ Luwak）</li>
+    <li>提供“开源”和“企业”两个版本</li>
+    <li>全文本搜索，索引，通过 Riak搜索服务器查询（ beta版）</li>
+    <li>支持Masterless多站点复制及商业许可的 SNMP 监控</li>
+</ul>
+<strong>最佳应用场景</strong>：适用于想使用类似 Cassandra（类似Dynamo）数据库但无法处理 bloat及复杂性的情况。适用于你打算做多站点复制，但又需要对单个站点的扩展性，可用性及出错处理有要求的情况。
+
+<strong>例如</strong>：销售数据搜集，工厂控制系统；对宕机时间有严格要求；可以作为易于更新的 web服务器使用。</li>
+    <li>Membase
+<ul>
+    <li>所用语言： Erlang和C</li>
+    <li>特点：兼容 Memcache，但同时兼具持久化和支持集群</li>
+    <li>使用许可： Apache 2.0</li>
+    <li>协议：分布式缓存及扩展</li>
+    <li>非常快速（200k+/秒），通过键值索引数据</li>
+    <li>可持久化存储到硬盘</li>
+    <li>所有节点都是唯一的（ master-master复制）</li>
+    <li>在内存中同样支持类似分布式缓存的缓存单元</li>
+    <li>写数据时通过去除重复数据来减少 IO</li>
+    <li>提供非常好的集群管理 web界面</li>
+    <li>更新软件时软无需停止数据库服务</li>
+    <li>支持连接池和多路复用的连接代理</li>
+</ul>
+<strong>最佳应用场景</strong>：适用于需要低延迟数据访问，高并发支持以及高可用性的应用程序
+
+<strong>例如</strong>：低延迟数据访问比如以广告为目标的应用，高并发的 web 应用比如网络游戏（例如 Zynga）</li>
+    <li>Neo4j
+<ul>
+    <li>所用语言： Java</li>
+    <li>特点：基于关系的图形数据库</li>
+    <li>使用许可： GPL，其中一些特性使用 AGPL/商业许可</li>
+    <li>协议： HTTP/REST（或嵌入在 Java中）</li>
+    <li>可独立使用或嵌入到 Java应用程序</li>
+    <li>图形的节点和边都可以带有元数据</li>
+    <li>很好的自带web管理功能</li>
+    <li>使用多种算法支持路径搜索</li>
+    <li>使用键值和关系进行索引</li>
+    <li>为读操作进行优化</li>
+    <li>支持事务（用 Java api）</li>
+    <li>使用 Gremlin图形遍历语言</li>
+    <li>支持 Groovy脚本</li>
+    <li>支持在线备份，高级监控及高可靠性支持使用 AGPL/商业许可</li>
+</ul>
+<strong>最佳应用场景</strong>：适用于图形一类数据。这是 Neo4j与其他nosql数据库的最显著区别
+
+<strong>例如</strong>：社会关系，公共交通网络，地图及网络拓谱</li>
+    <li>Cassandra
+<ul>
+    <li>所用语言： Java</li>
+    <li>特点：对大型表格和 Dynamo支持得最好</li>
+    <li>使用许可： Apache</li>
+    <li>协议： Custom, binary (节约型)</li>
+    <li>可调节的分发及复制(N, R, W)</li>
+    <li>支持以某个范围的键值通过列查询</li>
+    <li>类似大表格的功能：列，某个特性的列集合</li>
+    <li>写操作比读操作更快</li>
+    <li>基于 Apache分布式平台尽可能地 Map/reduce</li>
+    <li>我承认对 Cassandra有偏见，一部分是因为它本身的臃肿和复杂性，也因为 Java的问题（配置，出现异常，等等）</li>
+</ul>
+<strong>最佳应用场景</strong>：当使用写操作多过读操作（记录日志）如果每个系统组建都必须用 Java编写（没有人因为选用 Apache的软件被解雇）
+
+<strong>例如</strong>：银行业，金融业（虽然对于金融交易不是必须的，但这些产业对数据库的要求会比它们更大）写比读更快，所以一个自然的特性就是实时数据分析
+
+<strong>最佳应用场景</strong>：当使用写操作多过读操作（记录日志）如果每个系统组建都必须用 Java编写（没有人因为选用 Apache的软件被解雇）
+
+<strong>例如</strong>：银行业，金融业（虽然对于金融交易不是必须的，但这些产业对数据库的要求会比它们更大）写比读更快，所以一个自然的特性就是实时数据分析</li>
+    <li>HBase
+<blockquote>（配合 ghshephard 使用）</blockquote>
+<ul>
+    <li>所用语言： Java</li>
+    <li>特点：支持数十亿行X上百万列</li>
+    <li>使用许可： Apache</li>
+    <li>协议：HTTP/REST （支持 Thrift，见编注4）</li>
+    <li>在 BigTable之后建模</li>
+    <li>采用分布式架构 Map/reduce</li>
+    <li>对实时查询进行优化</li>
+    <li>高性能 Thrift网关</li>
+    <li>通过在server端扫描及过滤实现对查询操作预判</li>
+    <li>支持 XML, Protobuf, 和binary的HTTP</li>
+    <li>Cascading, hive, and pig source and sink modules</li>
+    <li>基于 Jruby（ JIRB）的shell</li>
+    <li>对配置改变和较小的升级都会重新回滚</li>
+    <li>不会出现单点故障</li>
+    <li>堪比MySQL的随机访问性能</li>
+</ul>
+<strong>最佳应用场景</strong>：适用于偏好BigTable:)并且需要对大数据进行随机、实时访问的场合。
+
+<strong>例如</strong>： Facebook消息数据库（更多通用的用例即将出现）
+
+编注4：Thrift 是一种接口定义语言，为多种其他语言提供定义和创建服务，由Facebook开发并开源。
+
+当然，所有的系统都不只具有上面列出的这些特性。这里我仅仅根据自己的观点列出一些我认为的重要特性。与此同时，技术进步是飞速的，所以上述的内容肯定需要不断更新。我会尽我所能地更新这个列表。</li>
+</ol>
+
+
+<p>&nbsp;</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/05/starting-ruby-on-rails-what-i-wish-i-knew/">Starting Ruby on Rails: What I Wish I Knew</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-05T19:38:00+08:00" pubdate data-updated="true">May 5<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Starting Ruby on Rails: What I Wish I Knew</h2>
+
+<blockquote>from betterexplained.com , update by francis</blockquote>
+
+
+<p><a href="http://rubyonrails.com/">Ruby on Rails</a> is an <strong>elegant</strong>, <strong>compact</strong> and <strong>fun</strong> way to build web applications. Unfortunately, many gotchas await the new programmer. Now that I have a few [rails projects}(<a href="http://instacalc.com/"><a href="http://instacalc.com/">http://instacalc.com/</a></a>) under my belt, here&rsquo;s my shot at sparing you the suffering I experienced when first getting started.</p>
+
+<h3><a name="tools-just-get-them" href="https://github.com/jhjguxin/project-manage/blob/master/rails/wiki/starting-ruby-on-rails-what-i-wish-i-knew.en.markdown#tools-just-get-them"></a>Tools: Just Get Them</h3>
+
+
+<p>Here&rsquo;s the tools you&rsquo;ll need. Don&rsquo;t read endless reviews trying to decide on the best one; start somewhere and get going.</p>
+
+<ul>
+    <li><a href="http://www.pragmaticprogrammer.com/titles/rails/">Agile Web Development with Rails.</a> Yes, it&#8217;s a book. And a cohesive book is worth 100 hobbled-together online tutorials.</li>
+    <li><a href="http://rubyforge.org/projects/instantrails/">InstantRails</a>: A <code>.zip</code> file containing Ruby, Apache, MySQL and PHP (for PhpMyAdmin), packaged and ready to go.</li>
+    <li><a href="http://www.aptana.com/">Aptana/RadRails</a> (like Eclipse) or Ruby In Steel (like Visual Studio) for editing code.</li>
+    <li><a href="http://subversion.tigris.org/">Subversion</a>, <a href="http://tortoisesvn.net/downloads">TortoiseSVN</a> and/or <a href="https://github.com/">Github</a> for source control.</li>
+    <li>Browse popular ruby on rails links on [del.icio.us]<a href="http://del.icio.us/popular/rubyonrails">http://del.icio.us/popular/rubyonrails</a>), <a href="http://railsbrain.com/">Rails documentation</a> and <a href="http://docs.huihoo.com/ruby/ruby-man-1.4/syntax.html">Ruby syntax &amp; examples</a>.</li>
+</ul>
+
+
+<p>But What Does It All Mean?</p>
+
+<p>&ldquo;Ruby on Rails&rdquo; is catchy but confusing. Is Rails some type of magical drug that Ruby is on? (Depending on who you ask, yes.)</p>
+
+<p><strong>Ruby</strong> is a programming language, similar to +Python+ and +Perl+. It is dynamically typed (no need for &ldquo;int i&rdquo;), 解释执行, and can be modified at runtime (such as adding new methods to classes). It has 数十种 of shortcuts that make it very clean; methods are rarely over 10 lines. It has good RegEx support and works well for shell scripting.</p>
+
+<p><strong>Rails</strong> is a <a href="http://rubygems.org/read/book/1">gem</a>, or a Ruby library. Some gems let you use the Win32 API. Others handle networking. Rails helps make web applications, providing classes for saving to the database, handling URLs and displaying html (along with a webserver, maintenance tasks, a debugging console and much more).</p>
+
+<p><strong>IRB</strong> is the interactive Ruby console (type &ldquo;irb&rdquo; to use). Rails has a special IRB console to access your web app as it is running (excellent for live debugging).</p>
+
+<p><strong>Rake</strong> is Ruby&rsquo;s version of Make. Define and run maintenance 维护 tasks like setting up databases, reloading data, backing up, or even deploying an app to your website.</p>
+
+<p><strong>Erb</strong> is embedded Ruby, which is like PHP. It lets you mix Ruby with HTML (for example): Ruby, which is like PHP. It lets you mix Ruby with HTML (for example):</p>
+
+<div>
+<pre>  &lt;div&gt;Hello there, &lt;%= get_user_name() %&gt;&lt;/div&gt;</pre>
+</div>
+
+
+<p><strong>YAML</strong> (or <strong>YML</strong>) means &ldquo;YAML Ain&rsquo;t a Markup Language&rdquo; — it&rsquo;s a simple way to <a href="http://en.wikipedia.org/wiki/YAML">specify data</a>:</p>
+
+<div>
+<pre>  {name: John Smith, age: 33}</pre>
+</div>
+
+
+<p>It&rsquo;s like JSON, much leaner than XML, and used by Rails for setting configuration options (like setting the database name and password).</p>
+
+<p>Phew! Once Ruby is installed and in your path, you can add the rails gem using:</p>
+
+<pre lang="shell"><code> gem install rails </code></pre>
+
+
+<p>In general, use gem install &ldquo;gem_name&rdquo;, which searches online sources for that library. Although Rails is &ldquo;just another gem&rdquo;, it is the killer library that brought Ruby into the limelight.</p>
+
+<h3><a name="understanding-ruby-isms" href="https://github.com/jhjguxin/project-manage/blob/master/rails/wiki/starting-ruby-on-rails-what-i-wish-i-knew.en.markdown#understanding-ruby-isms"></a>Understanding Ruby-Isms</h3>
+
+
+<p>It&rsquo;s daunting to learn a new library and a new language at the same time. Here are some of the biggest Ruby gotchas 陷阱 for those with a C/C++/Java background.</p>
+
+<p>Ruby removes unnecessary cruft: (){};</p>
+
+<ul>
+    <li>Parenthesis on method calls are optional; use print &#8220;hi&#8221;.</li>
+    <li>Semicolons aren&#8217;t needed after each line (crazy, I know).</li>
+    <li>Use &#8220;if then else end&#8221; rather than braces.</li>
+    <li>Parens aren&#8217;t needed around the conditions in if-then statements.</li>
+    <li>Methods automatically return the last line (call return explicitly if needed)</li>
+</ul>
+
+
+<p>Ruby scraps the annoying, ubiquitous punctuation that distracts from the program logic. Why put parens ((around),(everything))? Again, if you want parens, put ‘em in there. But you&rsquo;ll take off the training wheels soon enough.</p>
+
+<p>The line noise (er, &ldquo;punctuation&rdquo;) we use in C and Java is for the compiler&rsquo;s benefit, not ours. Be warned: after weeks with Ruby, other languages become a bit painful to read.</p>
+
+<pre>def greet(name)              # simple method
+   "Hello, " + name          # returned automatically
+end
+
+greet "world"                # ==&gt; "Hello, world"</pre>
+
+
+<p><strong>Those Funny Ruby Variables</strong></p>
+
+<ul>
+    <li><code>x = 3</code> is a local variable for a method or block (gone when the method is done)</li>
+    <li><code>@x = 3</code> is a instance variable owned by each object (it sticks around)</li>
+    <li><code>@@x = 3</code> is a class variable shared by all objects (it sticks around, too).</li>
+    <li><code>:hello</code> is a symbol, like a constant string. Useful for indexing hashes. Speaking of which…</li>
+    <li><code>dictionary = { :cat =&gt; "Goes meow", :dog =&gt; "Barks loud."}</code> is a hash of key/value pairs. Access elements with<code>dictionary[:cat]</code>. &gt; when key is a symbol, after ruby 1.9 <code>dictionary = { "cat" =&gt; "Goes meow", dog: "Barks loud."}</code></li>
+</ul>
+
+
+<p><strong>Those Funny Ruby Assignments</strong></p>
+
+<p>Ruby has the <code>||</code> operator which is a bit funky. When put in a chain</p>
+
+<div>
+<pre>  x = a || b || c || "default"</pre>
+</div>
+
+
+<p>it means &ldquo;test each value and return the first that&rsquo;s not false.&#8221; <strong>So if a is false, it tries b. If b is false, it tries c. Otherwise, it returns the string &#8220;default&rdquo;.</strong></p>
+
+<p>If you write <code>x = x || &ldquo;default&rdquo;</code> it means &ldquo;set x to itself (if it has a value), otherwise use the default.&rdquo; An easier way to write this is</p>
+
+<div>
+<pre>  x ||= "default"</pre>
+</div>
+
+
+<p>which means the same: set x to the default value unless it has some other value. You&rsquo;ll see this a lot in Ruby programs.</p>
+
+<p><strong>Those Funny Ruby Blocks</strong></p>
+
+<p>Ruby has &ldquo;blocks&rdquo;, which are like anonymous functions passed to a loop or another function. These blocks can specify a parameter using<code>|param|</code> and then take actions, call functions of their own, and so on. Blocks are useful when applying some function to each element of an array. It helps to think of them as a type of anonymous function that can, but doesn&rsquo;t have to, take a parameter.</p>
+
+<pre>3.times do |i|
+   print i*i
+end</pre>
+
+
+<p>In this example, the numbers <code>0</code>,<code>1</code> and <code>2</code> are passed to a block (do… end) that takes a single parameter (i) and prints i squared. The output would be <code>0</code>, followed by <code>1</code> followed by <code>4</code> (and looks like &ldquo;014″ since we didn&rsquo;t include spaces). Blocks are common in Ruby but take some getting used to, so be forewarned.</p>
+
+<p>These are the Ruby lessons that were tricky when starting out. Try <a href="http://mislav.uniqpath.com/poignant-guide/">Why&rsquo;s Poignant Guide To Ruby</a> for more info (&ldquo;Why&rdquo; is the name of the author… it confused me too).</p>
+
+<h3><a name="understanding-rails-isms" href="https://github.com/jhjguxin/project-manage/blob/master/rails/wiki/starting-ruby-on-rails-what-i-wish-i-knew.en.markdown#understanding-rails-isms"></a>Understanding Rails-isms</h3>
+
+
+<p>Rails has its own peculiarities. &ldquo;Trust us, it&rsquo;s good for you.&rdquo; say the programmers. It&rsquo;s true – the features/quirks make Rails stand out, but they&rsquo;re confusing until they click. Remember:</p>
+
+<ul>
+    <li><strong>Class and table names are important</strong>. Rails has certain naming conventions; it expects objects from the class Person to be saved to a database table named people. Yes, Rails has <strong>a pluralization engine</strong> to figure out what object maps to what table (I kid you not). This magic is great, but scary at first when you&#8217;re not sure how classes and tables are getting linked together.</li>
+    <li>Many methods take an &#8220;options&#8221; hash as a parameter, rather than having dozens of individual parameters. When you see
+<div>
+<pre>link_to "View Post", :action =&gt; 'show', :controller =&gt; 'article', :id =&gt; @article</pre>
+</div></li>
+</ul>
+
+
+<p>The call is really doing this:</p>
+
+<div>
+<pre>  link_to("View Post", {:action =&gt; 'show', :controller =&gt; 'article', :id =&gt; @article})</pre>
+</div>
+
+
+<p>There are only two parameters: the name (&ldquo;View Post&rdquo;) and a hash with 3 key/value pairs. Ruby lets us remove the extra parens and braces, leaving the stripped-down function call above.</p>
+
+<h3><a name="understanding-the-model-view-controller-pattern" href="https://github.com/jhjguxin/project-manage/blob/master/rails/wiki/starting-ruby-on-rails-what-i-wish-i-knew.en.markdown#understanding-the-model-view-controller-pattern"></a>Understanding The Model-View-Controller Pattern</h3>
+
+
+<p>Rails is built around the <a href="http://betterexplained.com/articles/intermediate-rails-understanding-models-views-and-controllers/">model-view-controller</a> pattern. It&rsquo;s a <strong>simple concept</strong>: <strong>separate the data, logic, and display layers of your program</strong>. This lets you split functionality cleanly, just like having separateHTML, CSS and Javascript files prevents your code from mushing together. Here&rsquo;s the MVC breakdown:</p>
+
+<ul>
+    <li><strong>Models</strong> are classes that talk to the databse. You find, create and save models, so you don&#8217;t (usually) have to write SQL. Rails has a class to handle the magic of saving to a database when a model is updated.</li>
+    <li><strong>Controllers</strong> take user input (like a URL) and decide what to do (show a page, order an item, post a comment). They may initially have business logic, like finding the right models or changing data. As your rails ninjitsu improves, constantly refactor and move business logic into the model (<a href="http://weblog.jamisbuck.org/2006/10/18/skinny-controller-fat-model">fat model, skinny controller</a>). Ideally, controllers just take inputs, call model methods, and pass outputs to the view (including error messages).</li>
+    <li><strong>Views</strong> display the output, usually HTML. They use ERB and this part of Rails is like PHP - you useHTML templates with some Ruby variables thrown in. Rails also makes it easy to create views asXML (for web services/RSS feeds) or JSON (for AJAX calls).</li>
+</ul>
+
+
+<p>The MVC pattern is key to building a readable, maintainable and easily-updateable web app.</p>
+
+<h3><a name="understanding-rails-directory-structure" href="https://github.com/jhjguxin/project-manage/blob/master/rails/wiki/starting-ruby-on-rails-what-i-wish-i-knew.en.markdown#understanding-rails-directory-structure"></a>Understanding Rails&#8217; Directory Structure</h3>
+
+
+<p>When you create your first rails app, the directories are laid out for you. The structure is well-organized: Models are in <code>app/models</code>, controllers in <code>app/controllers</code>, and views in <code>app/my_local_views</code> (just kidding).</p>
+
+<p>The naming conventions are important – it lets rails applications &ldquo;find their parts&rdquo; easily, without additional configuration. Also, it&rsquo;s very easy for another programmer to understand and learn from any rails app. I can take a look at Typo, the rails blogging software, and have a good idea of how it works in minutes. Consistency creates comprehension.</p>
+
+<h3><a name="understanding-rails-scaffolding" href="https://github.com/jhjguxin/project-manage/blob/master/rails/wiki/starting-ruby-on-rails-what-i-wish-i-knew.en.markdown#understanding-rails-scaffolding"></a>Understanding Rails&#8217; Scaffolding</h3>
+
+
+<p><strong>Scaffolding</strong> gives you default controller actions (URLs to visit) and a view (forms to fill out) to interact with your data — you don&rsquo;t need to build an interface yourself. You do need to define the Model and create a database table.</p>
+
+<p>Think of scaffolds as the &ldquo;default&rdquo; interface you can use to interact with your app – you&rsquo;ll slowly override parts of the default as your app is built. You specify scaffolds in the controller with a single line:</p>
+
+<p>and it adds default actions and views for showing, editing, and creating your &ldquo;Person&rdquo; object. Rails forms take some getting used to, so scaffolding helps a lot in the initial stages.</p>
+
+<h3><a name="more-tips-and-tricks" href="https://github.com/jhjguxin/project-manage/blob/master/rails/wiki/starting-ruby-on-rails-what-i-wish-i-knew.en.markdown#more-tips-and-tricks"></a>More Tips and Tricks</h3>
+
+
+<p>I originally planned on a list of tips &amp; tricks I found helpful when learning rails. It quickly struck me that Ruby on Rails actually requires a lot of background knowledge, and despite (or because of) its &ldquo;magic&rdquo;, it can still be confusing. I&rsquo;ll get into my favorite tricks in an upcoming article.</p>
+
+<p>As you dive further into web development, these guides may be helpful:</p>
+
+<ul>
+    <li><a href="http://betterexplained.com/articles/how-to-debug-web-applications-with-firefox/">How To Debug Web Applications With Firefox</a></li>
+    <li><a href="http://betterexplained.com/articles/how-to-optimize-your-site-with-http-caching/">How To Optimize Your Site With HTTP Caching</a></li>
+    <li><a href="http://betterexplained.com/articles/how-to-optimize-your-site-with-gzip-compression/">How To Optimize Your Site With GZIP Compression</a></li>
+    <li><a href="http://betterexplained.com/articles/speed-up-your-javascript-load-time/">Speed Up Your Javascript Load Time</a></li>
+    <li><a href="http://betterexplained.com/articles/the-quick-guide-to-guids/">The Quick Guide to GUIDs</a></li>
+</ul>
+
+
+<p>Source : <a href="http://betterexplained.com/articles/starting-ruby-on-rails-what-i-wish-i-knew/"><a href="http://betterexplained.com/articles/starting-ruby-on-rails-what-i-wish-i-knew/">http://betterexplained.com/articles/starting-ruby-on-rails-what-i-wish-i-knew/</a></a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/04/ruby-on-rails-programming-best-practices/">Ruby on Rails – Programming Best Practices</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-04T13:44:00+08:00" pubdate data-updated="true">May 4<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Ruby on Rails – Programming Best Practices</h2>
+
+<p><strong>Don&rsquo;t Repeat Yourself</strong></p>
+
+<p>I&rsquo;m sure most of you have heard of the <a href="http://en.wikipedia.org/wiki/Don%27t_repeat_yourself">DRY principle</a>. It is something Rails has taken to heart, and I&rsquo;m very glad it has. By not repeating yourself you can freely change something in one area of the program without worrying if you need to make the same change in another area. Not only that, but keeping the code DRY usually leads to better design.</p>
+
+<p>Sometimes it is difficult to find duplication in your code. If you find yourself making a similar change in multiple places, you should first remove this duplication so you only need to make the change <strong>in one place</strong>.</p>
+
+<p>This principle should not only be followed in code, but in your database and other areas as well. If you are repeating logic or data in the database, consider changing the design so it is not repeated.</p>
+
+<p>That said, there are times when repeated data is good. For example, if you are building a cart system, the price for the items in the cart should be stored in a separate field than the price for the product. This allows you to change the price of the product without effecting all previous orders.</p>
+
+<p>&nbsp;</p>
+
+<p><strong>Stick to the Conventions</strong></p>
+
+<p>Another extremely important practice taken up by the Rails community: stick to the conventions. From naming variables to structuring files, there are conventions on how to do these things in Rails. If you are unsure of the conventions, check out a Rails book or tutorial &ndash; most of them stick to the conventions.</p>
+
+<p>The advantages of sticking to conventions are almost too numerous to count. In fact, it deserves <a href="http://railsforum.com/viewtopic.php?id=1042">its own article</a>.</p>
+
+<p>&nbsp;</p>
+
+<p><strong>Optimize Later</strong></p>
+
+<p>Performance is a major concern for many people switching to Rails, and rightly so. It is true that Rails is generally slower than other web frameworks. However, it is very scalable, so do not worry about it at the beginning. If you are a large corporation that needs to handle thousands of requests per second, then you may have something to be concerned about, but for the majority of us performance does not need to be considered until near the completion of the application.</p>
+
+<p>Any optimization done early requires guessing. Instead you should wait until you know where the bottlenecks are. Optimizing usually requires extra/complex code, and you should keep the code as clean and simple as possible. Therefore, only optimize where necessary. Also, any performance testing should be done in the <strong>production</strong> environment, as this adds some optimizations which are usually turned off in the <strong>development</strong> environment.</p>
+
+<p>Above all else, don&rsquo;t let fear of poor performance inhibit you from making good design decisions! There are usually good ways to optimize while still keeping the good design, but these ways are hard to see unless you have a good design already in place. In short, don&rsquo;t worry about performance while designing.</p>
+
+<p>&nbsp;</p>
+
+<p><strong>Humans First</strong></p>
+
+<p>Code for humans first, computers second. In other words, make the code as readable as you can. No, I&rsquo;m not talking about cluttering it with comments. Most code should be understandable <strong>without comments</strong>.</p>
+
+<p>How do you make the code more readable without comments? Rename variables, move code into classes/methods, etc. Try to give variables and methods concise, yet descriptive names. Do not abbreviate the names unless the abbreviation is very common.</p>
+
+<p>&nbsp;</p>
+
+<p><strong>Test Driven Development</strong></p>
+
+<p>You&rsquo;ve heard it said: &ldquo;Rails makes testing easy, so you don&rsquo;t have any excuses not to do it.&rdquo;. Well, in my opinion, testing is never easy &ndash; it is just <strong>easier</strong> in Rails.</p>
+
+<p>Seriously, if you have not tried <a href="http://en.wikipedia.org/wiki/Test_driven_development">test driven development</a>, give it a go. Automated tests are a godsend! I find myself rarely going to the web browser anymore to test things out. I just know it works because all of the tests pass. I wouldn&rsquo;t dare code a mildly complex application without testing anymore. It will take some time to get used to testing, but the benefits are far worth it.</p>
+
+<p>&nbsp;</p>
+
+<p><strong>Refactoring</strong></p>
+
+<p>This is my favorite best practice, and for good reason. Refactoring ties all of the things in this list together. Simply put, if you want to become a better programming, learn <a href="http://en.wikipedia.org/wiki/Refactoring">Refactoring</a>. Normally the first time you write a piece of code, it is messy. Whatever you do, <strong>don&rsquo;t leave the messy code as is</strong>. Even if it works correctly, it will be a headache to maintain. You should take some time to clean up the code, make it readable, and improve the design.</p>
+
+<p>Make it beautiful.</p>
+
+<p><em>Last edited by ryanb (2006-10-31 00:13:39)</em></p>
+
+<p>The original <a href="http://www.amazon.com/Refactoring-Improving-Design-Existing-Code/dp/0201485672/">Refactoring</a> book is definitely recommended reading. There is also <a href="http://www.amazon.com/exec/obidos/ASIN/0321293533">Refactoring Databases</a>.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/6/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/4/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/">通过mongodump和mongorestore实现Mongodb备份和恢复 &#8211;by Chenzhou123520</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes/">Ruby on Rails 4.0 Release Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/rails-active-record-named-scopes/">Rails Active Record Named Scopes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/">晒晒我们的开源项目 ITEYE开源代码</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/">Single Sign-on 单点登录 Sso</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/jhjguxin">@jhjguxin</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'jhjguxin',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Francis Jiang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

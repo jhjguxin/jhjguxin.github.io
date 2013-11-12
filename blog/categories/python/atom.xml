@@ -1,0 +1,1696 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: python | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/blog/categories/python/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[python hashlib md5]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/04/12/python-hashlib-md5/"/>
+    <updated>2012-04-12T17:53:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/04/12/python-hashlib-md5</id>
+    <content type="html"><![CDATA[<h2>python hashlib md5</h2>
+
+<blockquote>#-*- coding:utf-8 -*-
+from hashlib import md5
+content = 12
+content_str = str(content)
+ciphertext = md5(content_str).hexdigest() #加密
+print ciphertext
+
+#from hashlib import md5
+#ciphertext_str=raw_input() #写入要解密的密文,如827ccb0eea8a706c4c34a16891f84e7b
+#MD5是不可逆的密码加密，可以说除了暴力破解外无法还原，但同样的输入加密出来的结果是一致的，因此要比较输入是否正确，只要比较一下加密后的结果即可，而Python中可以使用hashlib进行MD5加密，具体方法如下
+
+for i in xrange(100000):
+ciphertext_tmp = md5(str(i)).hexdigest()
+if ciphertext_tmp == ciphertext:
+print 'the password is %d' % i
+break</blockquote>
+
+
+<p>python的base64加密解密及md5加密</p>
+
+<blockquote>import hashlib
+
+a = "a test string"
+print hashlib.md5(a).hexdigest()
+print hashlib.sha1(a).hexdigest()
+print hashlib.sha224(a).hexdigest()
+print hashlib.sha256(a).hexdigest()
+print hashlib.sha384(a).hexdigest()
+print hashlib.sha512(a).hexdigest()
+
+import base64
+str='haha'
+encoded = base64.b64encode(str)
+decoded = base64.b64decode(encoded)</blockquote>
+
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[python ruby geek by django社区and ruby-china]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/03/20/python-ruby-geek-by-djangoshe-qu-and-ruby-china/"/>
+    <updated>2012-03-20T13:48:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/03/20/python-ruby-geek-by-djangoshe-qu-and-ruby-china</id>
+    <content type="html"><![CDATA[<h2>python ruby geek by django社区and ruby-china</h2>
+
+<p style="text-align: left;">by ruby-china 由 <a href="http://ruby-china.org/users/gaicitadie" data-name="盖茨他爹">gaicitadie</a> 在 <a href="http://ruby-china.org/topics/node27">瞎扯淡</a> 节点</p>
+
+
+
+
+<div>
+<p style="text-align: left;">统计一个字符串在另一个字符串中出现的次数，python只需要一个count方法：</p>
+
+<div>
+<pre>&gt;&gt;&gt; '11ab1111ab111ac11111'.count('ab') 2</pre>
+huacnlee 1楼, 于24小时前回复 irb&gt; '11ab1111ab111ac11111'.scan("ab").count
+2
+ywencn 2楼, 于24小时前回复 1.9.2p290 :001 &gt;  '11ab1111ab111ac11111'.count('ab')
+ =&gt; 5
+楼主想表达什么？
+
+ywencn 3楼, 于24小时前回复 哎呀。。。怎么python和ruby的count还不一样，哈哈
+
+huacnlee 4楼, 于24小时前回复 Ruby 的 "".count 统计的是后面所有的字符
+
+dreamrise 5楼, 于24小时前回复 貌似_who还写过一个python与ruby转换的程序？
+
+gaicitadie 6楼, 于23小时前回复 奥运奖牌榜：
+国家 金牌数 银牌数 铜牌数
+china 37 26 11
+usa 30 22 50
+russia 30 33 20
+
+中国习惯上先按金牌数排名，金牌数一样的按银牌数再排，如果银牌数再一样就按铜牌数排：
+
+&gt;&gt;&gt; sorted([('china',37,26,11), ('usa',30,22,50), ('russia',30,33,20)], key=lambda x:(-x[1],-x[2],-x[3]))
+[('china', 37, 26, 11), ('russia', 30, 33, 20), ('usa', 30, 22, 50)]
+美国习惯上金牌银牌铜牌都是奖牌，所以按奖牌总数排序：
+
+&gt;&gt;&gt; sorted([('china',37,26,11), ('usa',30,22,50), ('russia',30,33,20)], key=lambda x:-(x[1]+x[2]+x[3]))
+[('usa', 30, 22, 50), ('russia', 30, 33, 20), ('china', 37, 26, 11)]
+python的排序达到了类似SQL查询的能力，只需要告诉它排序的条件就可以了，python为数据而生
+
+gaicitadie 7楼, 于23小时前回复 上面的例子是python模拟SQL的order by功能，下面的例子用python模拟SQL的where条件查询
+
+统计金牌数超过35的国家：
+
+&gt;&gt;&gt; [x for x in [('china',37,26,11), ('usa',30,22,50), ('russia',30,33,20)] if x[1]&gt;35]
+[('china', 37, 26, 11)]
+统计奖牌总数超过100的国家：
+
+&gt;&gt;&gt; [x for x in [('china',37,26,11), ('usa',30,22,50), ('russia',30,33,20)] if x[1]+x[2]+x[3]&gt;100]
+[('usa', 30, 22, 50)]
+huyong36 8楼, 于23小时前回复 @gaicitadie ruby是
+
+[['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].select{|x| x[1] &gt; 35}
+[['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].select{|x| x[1] + x[2] + x[3] &gt; 100}
+quakewang 9楼, 于23小时前回复 #6楼 @gaicitadie
+order by 的ruby代码
+
+[['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].sort_by{|m| [-m[1], -m[2], -m[3]]}
+[['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].sort_by{|m| -(m[1] + m[2] + m[3])]}
+skandhas 10楼, 于23小时前回复 从楼主的例子直接翻译到Ruby
+1 中国习惯上先按金牌数排名，金牌数一样的按银牌数再排，如果银牌数再一样就按铜牌数排：
+
+[['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].sort_by{|x| [-x[1],-x[2],-x[3]]}
+2 美国习惯上金牌银牌铜牌都是奖牌，所以按奖牌总数排序：
+
+[['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].sort_by{|x| -(x[1]+x[2]+x[3])}
+3 统计金牌数超过35的国家：
+
+[['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].select{|x| x[1] &gt;35}
+4 统计奖牌总数超过100的国家：
+
+[['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].select{|x| x[1]+x[2]+x[3] &gt; 100}
+这两个语言都挺类似，我觉得ruby的select更直观。
+
+另 楼主这个帖子想表达什么？没看出什么来。如果说只通过sorted就说明python是为数据而生的话，那ruby不也是吗。哈哈
+
+daqing 11楼, 于23小时前回复 我来写个Ruby版本的。
+
+第一个，奖牌排序:
+
+data = [[:china, 27, 26, 11], [:usa, 20, 22, 50], [:russia, 30, 33, 20]]
+
+data.sort_by { |x| [-x[1], -x[2], -x[3]] } # 中国排序方法，按金/银/铜牌数
+data.sort_by { |x| -(x[1] + x[2] + x[3]) } # 美国排序方法，按奖牌总数
+第二个，奖牌统计:
+
+data.select { |x| x[1] &gt; 35 } # 金牌数超过35的国家
+data.select { |x| x[1] + x[2] + x[3] &gt; 100 } # 奖牌总数超过100的国家
+哪个更简洁，一目了然了吧。
+
+daqing 12楼, 于23小时前回复 原来大家都在回复。。等我写出来才发现。
+
+daqing 13楼, 于23小时前回复 #10楼 @skandhas 看了你的方法，才想到，select是更直接的做法。collect方法会包含nil值。
+
+reus 14楼, 于23小时前回复 Why I Hate Advocacy
+<a href="http://www.perl.com/pub/2000/12/advocacy.html">http://www.perl.com/pub/2000/12/advocacy.html</a>
+
+gaicitadie 15楼, 于23小时前回复 总统选举投票，初步唱票记录：
+
+['Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama']
+根据唱票记录统计每人的票数并按从多到少排序
+
+&gt;&gt;&gt; l = ['Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama']
+&gt;&gt;&gt; sorted(set([(i, l.count(i)) for i in l]), key=lambda x:-x[1])
+[('Jim', 4), ('bush', 2), ('obama', 1)]
+clearJiang 16楼, 于23小时前回复 #15楼 @gaicitadie 不如直接用collections.Counter
+
+gaicitadie 17楼, 于23小时前回复 #16楼 @clearJiang 低版本没有collections
+
+daqing 18楼, 于23小时前回复 总统选举投票
+
+l = ['Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama']
+l.uniq.collect { |x| [x, l.count(x)] }
+=&gt; [["Jim", 4], ["bush", 2], ["obama", 1]]
+skandhas 19楼, 于22小时前回复 #15楼 @gaicitadie
+根据唱票记录统计每人的票数并按从多到少排序:
+
+l = ['Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama']
+l.group_by{|i| i}.map{|k,v| [k,v.length] }
+quakewang 20楼, 于22小时前回复 python要和ruby比 文件、字符操作或者数组、Hash操作的便利性绝对完败，要砸场还不如在性能上一棍子打死ruby。
+
+bony 21楼, 于22小时前回复 这样的帖子应该多一点。长知识。@skandhas cool.
+
+quakewang 22楼, 于22小时前回复 #15楼 @gaicitadie
+
+['Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama'].inject(Hash.new(0)) {|h, e| h[e] += 1; h}.sort_by{|e| -e[1]}
+daqing 23楼, 于22小时前回复 说实话，Python的lambda匿名函数，跟Ruby的Block相比，从书写上就败了。
+
+gaicitadie 24楼, 于22小时前回复 随机设置验证码的4个字符(不包括图片处理部分)
+
+&gt;&gt;&gt; import random
+&gt;&gt;&gt; s = 'ABCDEFGHIJKLMNPRSTUVWXYZ'
+&gt;&gt;&gt; ''.join(random.sample((s),4))
+'EXSG'
+&gt;&gt;&gt; ''.join(random.sample((s),4))
+'TGYN'
+&gt;&gt;&gt; ''.join(random.sample((s),4))
+'MEYP'
+&gt;&gt;&gt; ''.join(random.sample((s),4))
+'TGIF'
+&gt;&gt;&gt; ''.join(random.sample((s),4))
+'JDWF'
+quakewang 25楼, 于22小时前回复 #24楼 @gaicitadie
+
+('A'..'Z').to_a.sample(4).join
+reus 26楼, 于22小时前回复 #15楼 @gaicitadie 你这个算法是O(n ^ 2)的，应该用reduce
+
+def stat(acc, x):
+  acc.setdefault(x, 0)
+  acc[x] += 1
+  return acc
+sorted(reduce(stat,
+  ['Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama'], {}).iteritems(),
+    key = lambda x: -x[1])
+huyong36 27楼, 于22小时前回复 @skandhas cool,加上个排序。
+
+gaicitadie 28楼, 于22小时前回复 #26楼 @reus reduce不如列表解析快，虽然list.count会重复统计
+
+skandhas 29楼, 于22小时前回复 #27楼 @huyong36
+对，是忘了排序
+
+l = ['Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama']
+l.group_by{|i| i}.map{|k,v| [k,v.length] }.sort_by{|name,count| -count }
+huacnlee 30楼, 于22小时前回复 风格不同而已，用起来都是一样方便。这个就是让我喜欢 Python 和 Ruby 的原因之一。
+
+reus 31楼, 于22小时前回复 #28楼 @gaicitadie
+就是慢在count调用上，for i in l遍历数组，且每个元素又再count遍历一次，O(n ^ 2)
+reduce只需要遍历一次，O(n)
+不信可以测试下
+
+huyong36 32楼, 于22小时前回复 这帖应该是捧场帖,我喜欢这样的学习。
+
+raecoo 33楼, 于22小时前回复 受用
+
+hysios 34楼, 于21小时前回复 •字符串查找
+# python
+&gt;&gt;&gt; '11ab1111ab111ac11111'.count('ab')
+2
+# Ruby
+ruby-1.9.2-p290 &gt;   '11ab111123ab111ac11111'.count 'ab', 'b'
+2
+hysios 35楼, 于21小时前回复 •奖牌排序
+# python
+&gt;&gt;&gt; sorted([('china',37,26,11), ('usa',30,22,50), ('russia',30,33,20)], key=lambda x:(-x[1],-x[2],-x[3]))
+[('china', 37, 26, 11), ('russia', 30, 33, 20), ('usa', 30, 22, 50)]
+# ruby
+ruby-1.9.2-p290 &gt; [['china',37,26,11], ['usa',30,22,50],['russia',30,33,20]].sort_by {|name,j,y,t| [-j,-y,-t] }
+ =&gt; [["china", 37, 26, 11], ["russia", 30, 33, 20], ["usa", 30, 22, 50]]
+hysios 36楼, 于21小时前回复 •奖牌统计
+# python
+&gt;&gt;&gt; sorted([('china',37,26,11), ('usa',30,22,50), ('russia',30,33,20)], key=lambda x:-(x[1]+x[2]+x[3]))
+[('usa', 30, 22, 50), ('russia', 30, 33, 20), ('china', 37, 26, 11)]
+# ruby
+ruby-1.9.2-p290 &gt; [['china',37,26,11], ['usa',30,22,50],['russia',30,33,20]].sort_by {|name,j,y,t| [-j + -y + -t] }
+ =&gt; [["usa", 30, 22, 50], ["russia", 30, 33, 20], ["china", 37, 26, 11]]
+kfll 37楼, 于21小时前回复 捧场..
+js:
+
+'11ab1111ab111ac11111'.match(/ab/g).length;
+'11ab1111ab111ac11111'.split('ab').length - 1;
+中式排名：
+
+[[37, 26, 11], [30, 22, 50], [30, 33, 20]].sort().reverse();
+hysios 38楼, 于21小时前回复 总统选举投票，初步唱票记录：
+
+# ruby
+&gt;&gt;&gt; l = ['Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama']
+&gt;&gt;&gt; sorted(set([(i, l.count(i)) for i in l]), key=lambda x:-x[1])
+[('Jim', 4), ('bush', 2), ('obama', 1)]
+# ruby
+ruby-1.9.2-p290 &gt;  ['bush','Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama'].each_with_object({}) {|name,s| s[name] = s.fetch(name,0) + 1 }.sort
+ =&gt; [["Jim", 4], ["bush", 3], ["obama", 1]]
+huyong36 39楼, 于21小时前回复 #34楼 @hysios
+
+'11ab111123ab111ac11111'.count 'ab', 'b'
+这样不对吧...这样只是找出来字符串里出现b的次数。
+
+irb(main):106:0&gt; '11ab111123ab111ac11111b'.count 'ab', 'b'
+=&gt; 3
+hysios 40楼, 于21小时前回复 @huyong36 thx count是没办法实现的, 别的方法也不错
+
+huyong36 41楼, 于20小时前回复 #40楼 @hysios 恩,请教
+
+irb(main):115:0&gt; '11ab111123ab111c11111'.count  'a'
+=&gt; 2
+irb(main):114:0&gt; '11ab111123ab111c11111'.count  'ab'
+=&gt; 4
+字符可以统计,为什么字符串不能。。
+
+jhjguxin 42楼, 于20小时前回复 @huyong36
+count([other_str]+) → fixnum click to toggle source
+Each other_str parameter defines a set of characters to count. The intersection of these sets defines the characters to count in str. Any other_str that starts with a caret (^) is negated. The sequence c1–c2 means all characters between c1 and c2.
+
+Guest 43楼, 于20小时前回复 gaicitadie = [['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].tap do |man|
+  def man.make_self(&amp;process); process.call self; end
+  def man.become_egghead
+    `python -c "print( sorted([('china',37,26,11), ('usa',30,22,50), ('russia',30,33,20)], key=lambda x:(-x[1],-x[2],-x[3])) )"`
+  end
+  def man.glow_up
+    dont_be_shy = true
+    unless self.respond_to? :more_elegant, dont_be_shy
+      def self.more_elegant
+        self.sort_by { |country, glods, silvers, bronzes| [-glods,-silvers,-bronzes] }
+      end
+    end
+    if self.respond_to? :become_egghead
+      class &lt;&lt; self; remove_method :become_egghead; end
+    end
+    self
+  end
+end
+gaicitadie.make_self &amp;:become_egghead
+gaicitadie.glow_up.make_self &amp;:more_elegant
+geekontheway 44楼, 于20小时前回复 #41楼 @huyong36 ruby的count 统计的是字符的数量 所以'11ab111123ab111c11111'.count 'ab'等同于'11ab111123ab111c11111'.count 'a' + '11ab111123ab111c11111'.count 'b'
+
+jhjguxin 45楼, 于20小时前回复 简而言之就是 取每一个字符的count的交集
+
+huyong36 46楼, 于20小时前回复 @geekontheway @jhjguxin 3Q...
+
+hysios 47楼, 于20小时前回复 #41楼 @huyong36 count 是统计所有的字符,并不会把参数当成字符串处理
+
+FenRagwort 48楼, 于17小时前回复 合并两个字典/哈希，重复的项目，两个值相加
+
+hash1.merge(hash2) {|dupkey,val1,val2| val1 + val2 }
+楼主来个Python的写法？
+
+hhuai 49楼, 于16小时前回复 method_missing, 楼主来个？？
+
+gaicitadie 50楼, 于14小时前回复 #48楼 @FenRagwort ，这个暂时只想到了普通方法
+
+for k,v in hash2.items():
+    if k in hash1:
+        hash1[k] += v
+    else:
+        hash1.setdefault(k,v)
+zw963 51楼, 于12小时前回复 #19楼 @skandhas
+
+的确酷, 不说说实在的. group_by用来做这个, 真是有点大才小用了.
+
+reus 52楼, 于12小时前回复 #49楼 @hhuai
+
+class Foo:
+  def __getattr__(self, name):
+    def _foo(*arg, **kwargs):
+      return self.method_missing(name, *arg, **kwargs)
+    return _foo
+
+  def method_missing(self, name, *args, **kwargs):
+    print name, args, kwargs
+
+a = Foo()
+a.foo('bar', baz = 'baz')
+
+&nbsp;
+
+huacnlee 1楼, 于24小时前回复 irb&gt; '11ab1111ab111ac11111'.scan("ab").count
+2
+ywencn 2楼, 于24小时前回复 1.9.2p290 :001 &gt;  '11ab1111ab111ac11111'.count('ab')
+ =&gt; 5
+楼主想表达什么？
+
+ywencn 3楼, 于24小时前回复 哎呀。。。怎么python和ruby的count还不一样，哈哈
+
+huacnlee 4楼, 于24小时前回复 Ruby 的 "".count 统计的是后面所有的字符
+
+dreamrise 5楼, 于24小时前回复 貌似_who还写过一个python与ruby转换的程序？
+
+gaicitadie 6楼, 于23小时前回复 奥运奖牌榜：
+国家 金牌数 银牌数 铜牌数
+china 37 26 11
+usa 30 22 50
+russia 30 33 20
+
+中国习惯上先按金牌数排名，金牌数一样的按银牌数再排，如果银牌数再一样就按铜牌数排：
+
+&gt;&gt;&gt; sorted([('china',37,26,11), ('usa',30,22,50), ('russia',30,33,20)], key=lambda x:(-x[1],-x[2],-x[3]))
+[('china', 37, 26, 11), ('russia', 30, 33, 20), ('usa', 30, 22, 50)]
+美国习惯上金牌银牌铜牌都是奖牌，所以按奖牌总数排序：
+
+&gt;&gt;&gt; sorted([('china',37,26,11), ('usa',30,22,50), ('russia',30,33,20)], key=lambda x:-(x[1]+x[2]+x[3]))
+[('usa', 30, 22, 50), ('russia', 30, 33, 20), ('china', 37, 26, 11)]
+python的排序达到了类似SQL查询的能力，只需要告诉它排序的条件就可以了，python为数据而生
+
+gaicitadie 7楼, 于23小时前回复 上面的例子是python模拟SQL的order by功能，下面的例子用python模拟SQL的where条件查询
+
+统计金牌数超过35的国家：
+
+&gt;&gt;&gt; [x for x in [('china',37,26,11), ('usa',30,22,50), ('russia',30,33,20)] if x[1]&gt;35]
+[('china', 37, 26, 11)]
+统计奖牌总数超过100的国家：
+
+&gt;&gt;&gt; [x for x in [('china',37,26,11), ('usa',30,22,50), ('russia',30,33,20)] if x[1]+x[2]+x[3]&gt;100]
+[('usa', 30, 22, 50)]
+huyong36 8楼, 于23小时前回复 @gaicitadie ruby是
+
+[['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].select{|x| x[1] &gt; 35}
+[['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].select{|x| x[1] + x[2] + x[3] &gt; 100}
+quakewang 9楼, 于23小时前回复 #6楼 @gaicitadie
+order by 的ruby代码
+
+[['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].sort_by{|m| [-m[1], -m[2], -m[3]]}
+[['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].sort_by{|m| -(m[1] + m[2] + m[3])]}
+skandhas 10楼, 于23小时前回复 从楼主的例子直接翻译到Ruby
+1 中国习惯上先按金牌数排名，金牌数一样的按银牌数再排，如果银牌数再一样就按铜牌数排：
+
+[['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].sort_by{|x| [-x[1],-x[2],-x[3]]}
+2 美国习惯上金牌银牌铜牌都是奖牌，所以按奖牌总数排序：
+
+[['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].sort_by{|x| -(x[1]+x[2]+x[3])}
+3 统计金牌数超过35的国家：
+
+[['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].select{|x| x[1] &gt;35}
+4 统计奖牌总数超过100的国家：
+
+[['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].select{|x| x[1]+x[2]+x[3] &gt; 100}
+这两个语言都挺类似，我觉得ruby的select更直观。
+
+另 楼主这个帖子想表达什么？没看出什么来。如果说只通过sorted就说明python是为数据而生的话，那ruby不也是吗。哈哈
+
+daqing 11楼, 于23小时前回复 我来写个Ruby版本的。
+
+第一个，奖牌排序:
+
+data = [[:china, 27, 26, 11], [:usa, 20, 22, 50], [:russia, 30, 33, 20]]
+
+data.sort_by { |x| [-x[1], -x[2], -x[3]] } # 中国排序方法，按金/银/铜牌数
+data.sort_by { |x| -(x[1] + x[2] + x[3]) } # 美国排序方法，按奖牌总数
+第二个，奖牌统计:
+
+data.select { |x| x[1] &gt; 35 } # 金牌数超过35的国家
+data.select { |x| x[1] + x[2] + x[3] &gt; 100 } # 奖牌总数超过100的国家
+哪个更简洁，一目了然了吧。
+
+daqing 12楼, 于23小时前回复 原来大家都在回复。。等我写出来才发现。
+
+daqing 13楼, 于23小时前回复 #10楼 @skandhas 看了你的方法，才想到，select是更直接的做法。collect方法会包含nil值。
+
+reus 14楼, 于23小时前回复 Why I Hate Advocacy
+<a href="http://www.perl.com/pub/2000/12/advocacy.html">http://www.perl.com/pub/2000/12/advocacy.html</a>
+
+gaicitadie 15楼, 于23小时前回复 总统选举投票，初步唱票记录：
+
+['Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama']
+根据唱票记录统计每人的票数并按从多到少排序
+
+&gt;&gt;&gt; l = ['Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama']
+&gt;&gt;&gt; sorted(set([(i, l.count(i)) for i in l]), key=lambda x:-x[1])
+[('Jim', 4), ('bush', 2), ('obama', 1)]
+clearJiang 16楼, 于23小时前回复 #15楼 @gaicitadie 不如直接用collections.Counter
+
+gaicitadie 17楼, 于23小时前回复 #16楼 @clearJiang 低版本没有collections
+
+daqing 18楼, 于23小时前回复 总统选举投票
+
+l = ['Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama']
+l.uniq.collect { |x| [x, l.count(x)] }
+=&gt; [["Jim", 4], ["bush", 2], ["obama", 1]]
+skandhas 19楼, 于22小时前回复 #15楼 @gaicitadie
+根据唱票记录统计每人的票数并按从多到少排序:
+
+l = ['Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama']
+l.group_by{|i| i}.map{|k,v| [k,v.length] }
+quakewang 20楼, 于22小时前回复 python要和ruby比 文件、字符操作或者数组、Hash操作的便利性绝对完败，要砸场还不如在性能上一棍子打死ruby。
+
+bony 21楼, 于22小时前回复 这样的帖子应该多一点。长知识。@skandhas cool.
+
+quakewang 22楼, 于22小时前回复 #15楼 @gaicitadie
+
+['Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama'].inject(Hash.new(0)) {|h, e| h[e] += 1; h}.sort_by{|e| -e[1]}
+daqing 23楼, 于22小时前回复 说实话，Python的lambda匿名函数，跟Ruby的Block相比，从书写上就败了。
+
+gaicitadie 24楼, 于22小时前回复 随机设置验证码的4个字符(不包括图片处理部分)
+
+&gt;&gt;&gt; import random
+&gt;&gt;&gt; s = 'ABCDEFGHIJKLMNPRSTUVWXYZ'
+&gt;&gt;&gt; ''.join(random.sample((s),4))
+'EXSG'
+&gt;&gt;&gt; ''.join(random.sample((s),4))
+'TGYN'
+&gt;&gt;&gt; ''.join(random.sample((s),4))
+'MEYP'
+&gt;&gt;&gt; ''.join(random.sample((s),4))
+'TGIF'
+&gt;&gt;&gt; ''.join(random.sample((s),4))
+'JDWF'
+quakewang 25楼, 于22小时前回复 #24楼 @gaicitadie
+
+('A'..'Z').to_a.sample(4).join
+reus 26楼, 于22小时前回复 #15楼 @gaicitadie 你这个算法是O(n ^ 2)的，应该用reduce
+
+def stat(acc, x):
+  acc.setdefault(x, 0)
+  acc[x] += 1
+  return acc
+sorted(reduce(stat,
+  ['Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama'], {}).iteritems(),
+    key = lambda x: -x[1])
+huyong36 27楼, 于22小时前回复 @skandhas cool,加上个排序。
+
+gaicitadie 28楼, 于22小时前回复 #26楼 @reus reduce不如列表解析快，虽然list.count会重复统计
+
+skandhas 29楼, 于22小时前回复 #27楼 @huyong36
+对，是忘了排序
+
+l = ['Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama']
+l.group_by{|i| i}.map{|k,v| [k,v.length] }.sort_by{|name,count| -count }
+huacnlee 30楼, 于22小时前回复 风格不同而已，用起来都是一样方便。这个就是让我喜欢 Python 和 Ruby 的原因之一。
+
+reus 31楼, 于22小时前回复 #28楼 @gaicitadie
+就是慢在count调用上，for i in l遍历数组，且每个元素又再count遍历一次，O(n ^ 2)
+reduce只需要遍历一次，O(n)
+不信可以测试下
+
+huyong36 32楼, 于22小时前回复 这帖应该是捧场帖,我喜欢这样的学习。
+
+raecoo 33楼, 于22小时前回复 受用
+
+hysios 34楼, 于21小时前回复 •字符串查找
+# python
+&gt;&gt;&gt; '11ab1111ab111ac11111'.count('ab')
+2
+# Ruby
+ruby-1.9.2-p290 &gt;   '11ab111123ab111ac11111'.count 'ab', 'b'
+2
+hysios 35楼, 于21小时前回复 •奖牌排序
+# python
+&gt;&gt;&gt; sorted([('china',37,26,11), ('usa',30,22,50), ('russia',30,33,20)], key=lambda x:(-x[1],-x[2],-x[3]))
+[('china', 37, 26, 11), ('russia', 30, 33, 20), ('usa', 30, 22, 50)]
+# ruby
+ruby-1.9.2-p290 &gt; [['china',37,26,11], ['usa',30,22,50],['russia',30,33,20]].sort_by {|name,j,y,t| [-j,-y,-t] }
+ =&gt; [["china", 37, 26, 11], ["russia", 30, 33, 20], ["usa", 30, 22, 50]]
+hysios 36楼, 于21小时前回复 •奖牌统计
+# python
+&gt;&gt;&gt; sorted([('china',37,26,11), ('usa',30,22,50), ('russia',30,33,20)], key=lambda x:-(x[1]+x[2]+x[3]))
+[('usa', 30, 22, 50), ('russia', 30, 33, 20), ('china', 37, 26, 11)]
+# ruby
+ruby-1.9.2-p290 &gt; [['china',37,26,11], ['usa',30,22,50],['russia',30,33,20]].sort_by {|name,j,y,t| [-j + -y + -t] }
+ =&gt; [["usa", 30, 22, 50], ["russia", 30, 33, 20], ["china", 37, 26, 11]]
+kfll 37楼, 于21小时前回复 捧场..
+js:
+
+'11ab1111ab111ac11111'.match(/ab/g).length;
+'11ab1111ab111ac11111'.split('ab').length - 1;
+中式排名：
+
+[[37, 26, 11], [30, 22, 50], [30, 33, 20]].sort().reverse();
+hysios 38楼, 于21小时前回复 总统选举投票，初步唱票记录：
+
+# ruby
+&gt;&gt;&gt; l = ['Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama']
+&gt;&gt;&gt; sorted(set([(i, l.count(i)) for i in l]), key=lambda x:-x[1])
+[('Jim', 4), ('bush', 2), ('obama', 1)]
+# ruby
+ruby-1.9.2-p290 &gt;  ['bush','Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama'].each_with_object({}) {|name,s| s[name] = s.fetch(name,0) + 1 }.sort
+ =&gt; [["Jim", 4], ["bush", 3], ["obama", 1]]
+huyong36 39楼, 于21小时前回复 #34楼 @hysios
+
+'11ab111123ab111ac11111'.count 'ab', 'b'
+这样不对吧...这样只是找出来字符串里出现b的次数。
+
+irb(main):106:0&gt; '11ab111123ab111ac11111b'.count 'ab', 'b'
+=&gt; 3
+hysios 40楼, 于21小时前回复 @huyong36 thx count是没办法实现的, 别的方法也不错
+
+huyong36 41楼, 于20小时前回复 #40楼 @hysios 恩,请教
+
+irb(main):115:0&gt; '11ab111123ab111c11111'.count  'a'
+=&gt; 2
+irb(main):114:0&gt; '11ab111123ab111c11111'.count  'ab'
+=&gt; 4
+字符可以统计,为什么字符串不能。。
+
+jhjguxin 42楼, 于20小时前回复 @huyong36
+count([other_str]+) → fixnum click to toggle source
+Each other_str parameter defines a set of characters to count. The intersection of these sets defines the characters to count in str. Any other_str that starts with a caret (^) is negated. The sequence c1–c2 means all characters between c1 and c2.
+
+Guest 43楼, 于20小时前回复 gaicitadie = [['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].tap do |man|
+  def man.make_self(&amp;process); process.call self; end
+  def man.become_egghead
+    `python -c "print( sorted([('china',37,26,11), ('usa',30,22,50), ('russia',30,33,20)], key=lambda x:(-x[1],-x[2],-x[3])) )"`
+  end
+  def man.glow_up
+    dont_be_shy = true
+    unless self.respond_to? :more_elegant, dont_be_shy
+      def self.more_elegant
+        self.sort_by { |country, glods, silvers, bronzes| [-glods,-silvers,-bronzes] }
+      end
+    end
+    if self.respond_to? :become_egghead
+      class &lt;&lt; self; remove_method :become_egghead; end
+    end
+    self
+  end
+end
+gaicitadie.make_self &amp;:become_egghead
+gaicitadie.glow_up.make_self &amp;:more_elegant
+geekontheway 44楼, 于20小时前回复 #41楼 @huyong36 ruby的count 统计的是字符的数量 所以'11ab111123ab111c11111'.count 'ab'等同于'11ab111123ab111c11111'.count 'a' + '11ab111123ab111c11111'.count 'b'
+
+jhjguxin 45楼, 于20小时前回复 简而言之就是 取每一个字符的count的交集
+
+huyong36 46楼, 于20小时前回复 @geekontheway @jhjguxin 3Q...
+
+hysios 47楼, 于20小时前回复 #41楼 @huyong36 count 是统计所有的字符,并不会把参数当成字符串处理
+
+FenRagwort 48楼, 于17小时前回复 合并两个字典/哈希，重复的项目，两个值相加
+
+hash1.merge(hash2) {|dupkey,val1,val2| val1 + val2 }
+楼主来个Python的写法？
+
+hhuai 49楼, 于16小时前回复 method_missing, 楼主来个？？
+
+gaicitadie 50楼, 于14小时前回复 #48楼 @FenRagwort ，这个暂时只想到了普通方法
+
+for k,v in hash2.items():
+    if k in hash1:
+        hash1[k] += v
+    else:
+        hash1.setdefault(k,v)
+zw963 51楼, 于12小时前回复 #19楼 @skandhas
+
+的确酷, 不说说实在的. group_by用来做这个, 真是有点大才小用了.
+
+reus 52楼, 于12小时前回复 #49楼 @hhuai
+
+class Foo:
+  def __getattr__(self, name):
+    def _foo(*arg, **kwargs):
+      return self.method_missing(name, *arg, **kwargs)
+    return _foo
+
+  def method_missing(self, name, *args, **kwargs):
+    print name, args, kwargs
+
+a = Foo()
+a.foo('bar', baz = 'baz')
+
+&nbsp;
+
+huacnlee 1楼, 于24小时前回复 irb&gt; '11ab1111ab111ac11111'.scan("ab").count
+2
+ywencn 2楼, 于24小时前回复 1.9.2p290 :001 &gt;  '11ab1111ab111ac11111'.count('ab')
+ =&gt; 5
+楼主想表达什么？
+
+ywencn 3楼, 于24小时前回复 哎呀。。。怎么python和ruby的count还不一样，哈哈
+
+huacnlee 4楼, 于24小时前回复 Ruby 的 "".count 统计的是后面所有的字符
+
+dreamrise 5楼, 于24小时前回复 貌似_who还写过一个python与ruby转换的程序？
+
+gaicitadie 6楼, 于23小时前回复 奥运奖牌榜：
+国家 金牌数 银牌数 铜牌数
+china 37 26 11
+usa 30 22 50
+russia 30 33 20
+
+中国习惯上先按金牌数排名，金牌数一样的按银牌数再排，如果银牌数再一样就按铜牌数排：
+
+&gt;&gt;&gt; sorted([('china',37,26,11), ('usa',30,22,50), ('russia',30,33,20)], key=lambda x:(-x[1],-x[2],-x[3]))
+[('china', 37, 26, 11), ('russia', 30, 33, 20), ('usa', 30, 22, 50)]
+美国习惯上金牌银牌铜牌都是奖牌，所以按奖牌总数排序：
+
+&gt;&gt;&gt; sorted([('china',37,26,11), ('usa',30,22,50), ('russia',30,33,20)], key=lambda x:-(x[1]+x[2]+x[3]))
+[('usa', 30, 22, 50), ('russia', 30, 33, 20), ('china', 37, 26, 11)]
+python的排序达到了类似SQL查询的能力，只需要告诉它排序的条件就可以了，python为数据而生
+
+gaicitadie 7楼, 于23小时前回复 上面的例子是python模拟SQL的order by功能，下面的例子用python模拟SQL的where条件查询
+
+统计金牌数超过35的国家：
+
+&gt;&gt;&gt; [x for x in [('china',37,26,11), ('usa',30,22,50), ('russia',30,33,20)] if x[1]&gt;35]
+[('china', 37, 26, 11)]
+统计奖牌总数超过100的国家：
+
+&gt;&gt;&gt; [x for x in [('china',37,26,11), ('usa',30,22,50), ('russia',30,33,20)] if x[1]+x[2]+x[3]&gt;100]
+[('usa', 30, 22, 50)]
+huyong36 8楼, 于23小时前回复 @gaicitadie ruby是
+
+[['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].select{|x| x[1] &gt; 35}
+[['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].select{|x| x[1] + x[2] + x[3] &gt; 100}
+quakewang 9楼, 于23小时前回复 #6楼 @gaicitadie
+order by 的ruby代码
+
+[['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].sort_by{|m| [-m[1], -m[2], -m[3]]}
+[['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].sort_by{|m| -(m[1] + m[2] + m[3])]}
+skandhas 10楼, 于23小时前回复 从楼主的例子直接翻译到Ruby
+1 中国习惯上先按金牌数排名，金牌数一样的按银牌数再排，如果银牌数再一样就按铜牌数排：
+
+[['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].sort_by{|x| [-x[1],-x[2],-x[3]]}
+2 美国习惯上金牌银牌铜牌都是奖牌，所以按奖牌总数排序：
+
+[['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].sort_by{|x| -(x[1]+x[2]+x[3])}
+3 统计金牌数超过35的国家：
+
+[['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].select{|x| x[1] &gt;35}
+4 统计奖牌总数超过100的国家：
+
+[['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].select{|x| x[1]+x[2]+x[3] &gt; 100}
+这两个语言都挺类似，我觉得ruby的select更直观。
+
+另 楼主这个帖子想表达什么？没看出什么来。如果说只通过sorted就说明python是为数据而生的话，那ruby不也是吗。哈哈
+
+daqing 11楼, 于23小时前回复 我来写个Ruby版本的。
+
+第一个，奖牌排序:
+
+data = [[:china, 27, 26, 11], [:usa, 20, 22, 50], [:russia, 30, 33, 20]]
+
+data.sort_by { |x| [-x[1], -x[2], -x[3]] } # 中国排序方法，按金/银/铜牌数
+data.sort_by { |x| -(x[1] + x[2] + x[3]) } # 美国排序方法，按奖牌总数
+第二个，奖牌统计:
+
+data.select { |x| x[1] &gt; 35 } # 金牌数超过35的国家
+data.select { |x| x[1] + x[2] + x[3] &gt; 100 } # 奖牌总数超过100的国家
+哪个更简洁，一目了然了吧。
+
+daqing 12楼, 于23小时前回复 原来大家都在回复。。等我写出来才发现。
+
+daqing 13楼, 于23小时前回复 #10楼 @skandhas 看了你的方法，才想到，select是更直接的做法。collect方法会包含nil值。
+
+reus 14楼, 于23小时前回复 Why I Hate Advocacy
+<a href="http://www.perl.com/pub/2000/12/advocacy.html">http://www.perl.com/pub/2000/12/advocacy.html</a>
+
+gaicitadie 15楼, 于23小时前回复 总统选举投票，初步唱票记录：
+
+['Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama']
+根据唱票记录统计每人的票数并按从多到少排序
+
+&gt;&gt;&gt; l = ['Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama']
+&gt;&gt;&gt; sorted(set([(i, l.count(i)) for i in l]), key=lambda x:-x[1])
+[('Jim', 4), ('bush', 2), ('obama', 1)]
+clearJiang 16楼, 于23小时前回复 #15楼 @gaicitadie 不如直接用collections.Counter
+
+gaicitadie 17楼, 于23小时前回复 #16楼 @clearJiang 低版本没有collections
+
+daqing 18楼, 于23小时前回复 总统选举投票
+
+l = ['Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama']
+l.uniq.collect { |x| [x, l.count(x)] }
+=&gt; [["Jim", 4], ["bush", 2], ["obama", 1]]
+skandhas 19楼, 于22小时前回复 #15楼 @gaicitadie
+根据唱票记录统计每人的票数并按从多到少排序:
+
+l = ['Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama']
+l.group_by{|i| i}.map{|k,v| [k,v.length] }
+quakewang 20楼, 于22小时前回复 python要和ruby比 文件、字符操作或者数组、Hash操作的便利性绝对完败，要砸场还不如在性能上一棍子打死ruby。
+
+bony 21楼, 于22小时前回复 这样的帖子应该多一点。长知识。@skandhas cool.
+
+quakewang 22楼, 于22小时前回复 #15楼 @gaicitadie
+
+['Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama'].inject(Hash.new(0)) {|h, e| h[e] += 1; h}.sort_by{|e| -e[1]}
+daqing 23楼, 于22小时前回复 说实话，Python的lambda匿名函数，跟Ruby的Block相比，从书写上就败了。
+
+gaicitadie 24楼, 于22小时前回复 随机设置验证码的4个字符(不包括图片处理部分)
+
+&gt;&gt;&gt; import random
+&gt;&gt;&gt; s = 'ABCDEFGHIJKLMNPRSTUVWXYZ'
+&gt;&gt;&gt; ''.join(random.sample((s),4))
+'EXSG'
+&gt;&gt;&gt; ''.join(random.sample((s),4))
+'TGYN'
+&gt;&gt;&gt; ''.join(random.sample((s),4))
+'MEYP'
+&gt;&gt;&gt; ''.join(random.sample((s),4))
+'TGIF'
+&gt;&gt;&gt; ''.join(random.sample((s),4))
+'JDWF'
+quakewang 25楼, 于22小时前回复 #24楼 @gaicitadie
+
+('A'..'Z').to_a.sample(4).join
+reus 26楼, 于22小时前回复 #15楼 @gaicitadie 你这个算法是O(n ^ 2)的，应该用reduce
+
+def stat(acc, x):
+  acc.setdefault(x, 0)
+  acc[x] += 1
+  return acc
+sorted(reduce(stat,
+  ['Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama'], {}).iteritems(),
+    key = lambda x: -x[1])
+huyong36 27楼, 于22小时前回复 @skandhas cool,加上个排序。
+
+gaicitadie 28楼, 于22小时前回复 #26楼 @reus reduce不如列表解析快，虽然list.count会重复统计
+
+skandhas 29楼, 于22小时前回复 #27楼 @huyong36
+对，是忘了排序
+
+l = ['Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama']
+l.group_by{|i| i}.map{|k,v| [k,v.length] }.sort_by{|name,count| -count }
+huacnlee 30楼, 于22小时前回复 风格不同而已，用起来都是一样方便。这个就是让我喜欢 Python 和 Ruby 的原因之一。
+
+reus 31楼, 于22小时前回复 #28楼 @gaicitadie
+就是慢在count调用上，for i in l遍历数组，且每个元素又再count遍历一次，O(n ^ 2)
+reduce只需要遍历一次，O(n)
+不信可以测试下
+
+huyong36 32楼, 于22小时前回复 这帖应该是捧场帖,我喜欢这样的学习。
+
+raecoo 33楼, 于22小时前回复 受用
+
+hysios 34楼, 于21小时前回复 •字符串查找
+# python
+&gt;&gt;&gt; '11ab1111ab111ac11111'.count('ab')
+2
+# Ruby
+ruby-1.9.2-p290 &gt;   '11ab111123ab111ac11111'.count 'ab', 'b'
+2
+hysios 35楼, 于21小时前回复 •奖牌排序
+# python
+&gt;&gt;&gt; sorted([('china',37,26,11), ('usa',30,22,50), ('russia',30,33,20)], key=lambda x:(-x[1],-x[2],-x[3]))
+[('china', 37, 26, 11), ('russia', 30, 33, 20), ('usa', 30, 22, 50)]
+# ruby
+ruby-1.9.2-p290 &gt; [['china',37,26,11], ['usa',30,22,50],['russia',30,33,20]].sort_by {|name,j,y,t| [-j,-y,-t] }
+ =&gt; [["china", 37, 26, 11], ["russia", 30, 33, 20], ["usa", 30, 22, 50]]
+hysios 36楼, 于21小时前回复 •奖牌统计
+# python
+&gt;&gt;&gt; sorted([('china',37,26,11), ('usa',30,22,50), ('russia',30,33,20)], key=lambda x:-(x[1]+x[2]+x[3]))
+[('usa', 30, 22, 50), ('russia', 30, 33, 20), ('china', 37, 26, 11)]
+# ruby
+ruby-1.9.2-p290 &gt; [['china',37,26,11], ['usa',30,22,50],['russia',30,33,20]].sort_by {|name,j,y,t| [-j + -y + -t] }
+ =&gt; [["usa", 30, 22, 50], ["russia", 30, 33, 20], ["china", 37, 26, 11]]
+kfll 37楼, 于21小时前回复 捧场..
+js:
+
+'11ab1111ab111ac11111'.match(/ab/g).length;
+'11ab1111ab111ac11111'.split('ab').length - 1;
+中式排名：
+
+[[37, 26, 11], [30, 22, 50], [30, 33, 20]].sort().reverse();
+hysios 38楼, 于21小时前回复 总统选举投票，初步唱票记录：
+
+# ruby
+&gt;&gt;&gt; l = ['Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama']
+&gt;&gt;&gt; sorted(set([(i, l.count(i)) for i in l]), key=lambda x:-x[1])
+[('Jim', 4), ('bush', 2), ('obama', 1)]
+# ruby
+ruby-1.9.2-p290 &gt;  ['bush','Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama'].each_with_object({}) {|name,s| s[name] = s.fetch(name,0) + 1 }.sort
+ =&gt; [["Jim", 4], ["bush", 3], ["obama", 1]]
+huyong36 39楼, 于21小时前回复 #34楼 @hysios
+
+'11ab111123ab111ac11111'.count 'ab', 'b'
+这样不对吧...这样只是找出来字符串里出现b的次数。
+
+irb(main):106:0&gt; '11ab111123ab111ac11111b'.count 'ab', 'b'
+=&gt; 3
+hysios 40楼, 于21小时前回复 @huyong36 thx count是没办法实现的, 别的方法也不错
+
+huyong36 41楼, 于20小时前回复 #40楼 @hysios 恩,请教
+
+irb(main):115:0&gt; '11ab111123ab111c11111'.count  'a'
+=&gt; 2
+irb(main):114:0&gt; '11ab111123ab111c11111'.count  'ab'
+=&gt; 4
+字符可以统计,为什么字符串不能。。
+
+jhjguxin 42楼, 于20小时前回复 @huyong36
+count([other_str]+) → fixnum click to toggle source
+Each other_str parameter defines a set of characters to count. The intersection of these sets defines the characters to count in str. Any other_str that starts with a caret (^) is negated. The sequence c1–c2 means all characters between c1 and c2.
+
+Guest 43楼, 于20小时前回复 gaicitadie = [['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].tap do |man|
+  def man.make_self(&amp;process); process.call self; end
+  def man.become_egghead
+    `python -c "print( sorted([('china',37,26,11), ('usa',30,22,50), ('russia',30,33,20)], key=lambda x:(-x[1],-x[2],-x[3])) )"`
+  end
+  def man.glow_up
+    dont_be_shy = true
+    unless self.respond_to? :more_elegant, dont_be_shy
+      def self.more_elegant
+        self.sort_by { |country, glods, silvers, bronzes| [-glods,-silvers,-bronzes] }
+      end
+    end
+    if self.respond_to? :become_egghead
+      class &lt;&lt; self; remove_method :become_egghead; end
+    end
+    self
+  end
+end
+gaicitadie.make_self &amp;:become_egghead
+gaicitadie.glow_up.make_self &amp;:more_elegant
+geekontheway 44楼, 于20小时前回复 #41楼 @huyong36 ruby的count 统计的是字符的数量 所以'11ab111123ab111c11111'.count 'ab'等同于'11ab111123ab111c11111'.count 'a' + '11ab111123ab111c11111'.count 'b'
+
+jhjguxin 45楼, 于20小时前回复 简而言之就是 取每一个字符的count的交集
+
+huyong36 46楼, 于20小时前回复 @geekontheway @jhjguxin 3Q...
+
+hysios 47楼, 于20小时前回复 #41楼 @huyong36 count 是统计所有的字符,并不会把参数当成字符串处理
+
+FenRagwort 48楼, 于17小时前回复 合并两个字典/哈希，重复的项目，两个值相加
+
+hash1.merge(hash2) {|dupkey,val1,val2| val1 + val2 }
+楼主来个Python的写法？
+
+hhuai 49楼, 于16小时前回复 method_missing, 楼主来个？？
+
+gaicitadie 50楼, 于14小时前回复 #48楼 @FenRagwort ，这个暂时只想到了普通方法
+
+for k,v in hash2.items():
+    if k in hash1:
+        hash1[k] += v
+    else:
+        hash1.setdefault(k,v)
+zw963 51楼, 于12小时前回复 #19楼 @skandhas
+
+的确酷, 不说说实在的. group_by用来做这个, 真是有点大才小用了.
+
+reus 52楼, 于12小时前回复 #49楼 @hhuai
+
+class Foo:
+  def __getattr__(self, name):
+    def _foo(*arg, **kwargs):
+      return self.method_missing(name, *arg, **kwargs)
+    return _foo
+
+  def method_missing(self, name, *args, **kwargs):
+    print name, args, kwargs
+
+a = Foo()
+a.foo('bar', baz = 'baz')
+
+&nbsp;
+
+huacnlee 1楼, 于24小时前回复 irb&gt; '11ab1111ab111ac11111'.scan("ab").count
+2
+ywencn 2楼, 于24小时前回复 1.9.2p290 :001 &gt;  '11ab1111ab111ac11111'.count('ab')
+ =&gt; 5
+楼主想表达什么？
+
+ywencn 3楼, 于24小时前回复 哎呀。。。怎么python和ruby的count还不一样，哈哈
+
+huacnlee 4楼, 于24小时前回复 Ruby 的 "".count 统计的是后面所有的字符
+
+dreamrise 5楼, 于24小时前回复 貌似_who还写过一个python与ruby转换的程序？
+
+gaicitadie 6楼, 于23小时前回复 奥运奖牌榜：
+国家 金牌数 银牌数 铜牌数
+china 37 26 11
+usa 30 22 50
+russia 30 33 20
+
+中国习惯上先按金牌数排名，金牌数一样的按银牌数再排，如果银牌数再一样就按铜牌数排：
+
+&gt;&gt;&gt; sorted([('china',37,26,11), ('usa',30,22,50), ('russia',30,33,20)], key=lambda x:(-x[1],-x[2],-x[3]))
+[('china', 37, 26, 11), ('russia', 30, 33, 20), ('usa', 30, 22, 50)]
+美国习惯上金牌银牌铜牌都是奖牌，所以按奖牌总数排序：
+
+&gt;&gt;&gt; sorted([('china',37,26,11), ('usa',30,22,50), ('russia',30,33,20)], key=lambda x:-(x[1]+x[2]+x[3]))
+[('usa', 30, 22, 50), ('russia', 30, 33, 20), ('china', 37, 26, 11)]
+python的排序达到了类似SQL查询的能力，只需要告诉它排序的条件就可以了，python为数据而生
+
+gaicitadie 7楼, 于23小时前回复 上面的例子是python模拟SQL的order by功能，下面的例子用python模拟SQL的where条件查询
+
+统计金牌数超过35的国家：
+
+&gt;&gt;&gt; [x for x in [('china',37,26,11), ('usa',30,22,50), ('russia',30,33,20)] if x[1]&gt;35]
+[('china', 37, 26, 11)]
+统计奖牌总数超过100的国家：
+
+&gt;&gt;&gt; [x for x in [('china',37,26,11), ('usa',30,22,50), ('russia',30,33,20)] if x[1]+x[2]+x[3]&gt;100]
+[('usa', 30, 22, 50)]
+huyong36 8楼, 于23小时前回复 @gaicitadie ruby是
+
+[['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].select{|x| x[1] &gt; 35}
+[['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].select{|x| x[1] + x[2] + x[3] &gt; 100}
+quakewang 9楼, 于23小时前回复 #6楼 @gaicitadie
+order by 的ruby代码
+
+[['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].sort_by{|m| [-m[1], -m[2], -m[3]]}
+[['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].sort_by{|m| -(m[1] + m[2] + m[3])]}
+skandhas 10楼, 于23小时前回复 从楼主的例子直接翻译到Ruby
+1 中国习惯上先按金牌数排名，金牌数一样的按银牌数再排，如果银牌数再一样就按铜牌数排：
+
+[['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].sort_by{|x| [-x[1],-x[2],-x[3]]}
+2 美国习惯上金牌银牌铜牌都是奖牌，所以按奖牌总数排序：
+
+[['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].sort_by{|x| -(x[1]+x[2]+x[3])}
+3 统计金牌数超过35的国家：
+
+[['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].select{|x| x[1] &gt;35}
+4 统计奖牌总数超过100的国家：
+
+[['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].select{|x| x[1]+x[2]+x[3] &gt; 100}
+这两个语言都挺类似，我觉得ruby的select更直观。
+
+另 楼主这个帖子想表达什么？没看出什么来。如果说只通过sorted就说明python是为数据而生的话，那ruby不也是吗。哈哈
+
+daqing 11楼, 于23小时前回复 我来写个Ruby版本的。
+
+第一个，奖牌排序:
+
+data = [[:china, 27, 26, 11], [:usa, 20, 22, 50], [:russia, 30, 33, 20]]
+
+data.sort_by { |x| [-x[1], -x[2], -x[3]] } # 中国排序方法，按金/银/铜牌数
+data.sort_by { |x| -(x[1] + x[2] + x[3]) } # 美国排序方法，按奖牌总数
+第二个，奖牌统计:
+
+data.select { |x| x[1] &gt; 35 } # 金牌数超过35的国家
+data.select { |x| x[1] + x[2] + x[3] &gt; 100 } # 奖牌总数超过100的国家
+哪个更简洁，一目了然了吧。
+
+daqing 12楼, 于23小时前回复 原来大家都在回复。。等我写出来才发现。
+
+daqing 13楼, 于23小时前回复 #10楼 @skandhas 看了你的方法，才想到，select是更直接的做法。collect方法会包含nil值。
+
+reus 14楼, 于23小时前回复 Why I Hate Advocacy
+<a href="http://www.perl.com/pub/2000/12/advocacy.html">http://www.perl.com/pub/2000/12/advocacy.html</a>
+
+gaicitadie 15楼, 于23小时前回复 总统选举投票，初步唱票记录：
+
+['Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama']
+根据唱票记录统计每人的票数并按从多到少排序
+
+&gt;&gt;&gt; l = ['Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama']
+&gt;&gt;&gt; sorted(set([(i, l.count(i)) for i in l]), key=lambda x:-x[1])
+[('Jim', 4), ('bush', 2), ('obama', 1)]
+clearJiang 16楼, 于23小时前回复 #15楼 @gaicitadie 不如直接用collections.Counter
+
+gaicitadie 17楼, 于23小时前回复 #16楼 @clearJiang 低版本没有collections
+
+daqing 18楼, 于23小时前回复 总统选举投票
+
+l = ['Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama']
+l.uniq.collect { |x| [x, l.count(x)] }
+=&gt; [["Jim", 4], ["bush", 2], ["obama", 1]]
+skandhas 19楼, 于22小时前回复 #15楼 @gaicitadie
+根据唱票记录统计每人的票数并按从多到少排序:
+
+l = ['Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama']
+l.group_by{|i| i}.map{|k,v| [k,v.length] }
+quakewang 20楼, 于22小时前回复 python要和ruby比 文件、字符操作或者数组、Hash操作的便利性绝对完败，要砸场还不如在性能上一棍子打死ruby。
+
+bony 21楼, 于22小时前回复 这样的帖子应该多一点。长知识。@skandhas cool.
+
+quakewang 22楼, 于22小时前回复 #15楼 @gaicitadie
+
+['Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama'].inject(Hash.new(0)) {|h, e| h[e] += 1; h}.sort_by{|e| -e[1]}
+daqing 23楼, 于22小时前回复 说实话，Python的lambda匿名函数，跟Ruby的Block相比，从书写上就败了。
+
+gaicitadie 24楼, 于22小时前回复 随机设置验证码的4个字符(不包括图片处理部分)
+
+&gt;&gt;&gt; import random
+&gt;&gt;&gt; s = 'ABCDEFGHIJKLMNPRSTUVWXYZ'
+&gt;&gt;&gt; ''.join(random.sample((s),4))
+'EXSG'
+&gt;&gt;&gt; ''.join(random.sample((s),4))
+'TGYN'
+&gt;&gt;&gt; ''.join(random.sample((s),4))
+'MEYP'
+&gt;&gt;&gt; ''.join(random.sample((s),4))
+'TGIF'
+&gt;&gt;&gt; ''.join(random.sample((s),4))
+'JDWF'
+quakewang 25楼, 于22小时前回复 #24楼 @gaicitadie
+
+('A'..'Z').to_a.sample(4).join
+reus 26楼, 于22小时前回复 #15楼 @gaicitadie 你这个算法是O(n ^ 2)的，应该用reduce
+
+def stat(acc, x):
+  acc.setdefault(x, 0)
+  acc[x] += 1
+  return acc
+sorted(reduce(stat,
+  ['Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama'], {}).iteritems(),
+    key = lambda x: -x[1])
+huyong36 27楼, 于22小时前回复 @skandhas cool,加上个排序。
+
+gaicitadie 28楼, 于22小时前回复 #26楼 @reus reduce不如列表解析快，虽然list.count会重复统计
+
+skandhas 29楼, 于22小时前回复 #27楼 @huyong36
+对，是忘了排序
+
+l = ['Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama']
+l.group_by{|i| i}.map{|k,v| [k,v.length] }.sort_by{|name,count| -count }
+huacnlee 30楼, 于22小时前回复 风格不同而已，用起来都是一样方便。这个就是让我喜欢 Python 和 Ruby 的原因之一。
+
+reus 31楼, 于22小时前回复 #28楼 @gaicitadie
+就是慢在count调用上，for i in l遍历数组，且每个元素又再count遍历一次，O(n ^ 2)
+reduce只需要遍历一次，O(n)
+不信可以测试下
+
+huyong36 32楼, 于22小时前回复 这帖应该是捧场帖,我喜欢这样的学习。
+
+raecoo 33楼, 于22小时前回复 受用
+
+hysios 34楼, 于21小时前回复 •字符串查找
+# python
+&gt;&gt;&gt; '11ab1111ab111ac11111'.count('ab')
+2
+# Ruby
+ruby-1.9.2-p290 &gt;   '11ab111123ab111ac11111'.count 'ab', 'b'
+2
+hysios 35楼, 于21小时前回复 •奖牌排序
+# python
+&gt;&gt;&gt; sorted([('china',37,26,11), ('usa',30,22,50), ('russia',30,33,20)], key=lambda x:(-x[1],-x[2],-x[3]))
+[('china', 37, 26, 11), ('russia', 30, 33, 20), ('usa', 30, 22, 50)]
+# ruby
+ruby-1.9.2-p290 &gt; [['china',37,26,11], ['usa',30,22,50],['russia',30,33,20]].sort_by {|name,j,y,t| [-j,-y,-t] }
+ =&gt; [["china", 37, 26, 11], ["russia", 30, 33, 20], ["usa", 30, 22, 50]]
+hysios 36楼, 于21小时前回复 •奖牌统计
+# python
+&gt;&gt;&gt; sorted([('china',37,26,11), ('usa',30,22,50), ('russia',30,33,20)], key=lambda x:-(x[1]+x[2]+x[3]))
+[('usa', 30, 22, 50), ('russia', 30, 33, 20), ('china', 37, 26, 11)]
+# ruby
+ruby-1.9.2-p290 &gt; [['china',37,26,11], ['usa',30,22,50],['russia',30,33,20]].sort_by {|name,j,y,t| [-j + -y + -t] }
+ =&gt; [["usa", 30, 22, 50], ["russia", 30, 33, 20], ["china", 37, 26, 11]]
+kfll 37楼, 于21小时前回复 捧场..
+js:
+
+'11ab1111ab111ac11111'.match(/ab/g).length;
+'11ab1111ab111ac11111'.split('ab').length - 1;
+中式排名：
+
+[[37, 26, 11], [30, 22, 50], [30, 33, 20]].sort().reverse();
+hysios 38楼, 于21小时前回复 总统选举投票，初步唱票记录：
+
+# ruby
+&gt;&gt;&gt; l = ['Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama']
+&gt;&gt;&gt; sorted(set([(i, l.count(i)) for i in l]), key=lambda x:-x[1])
+[('Jim', 4), ('bush', 2), ('obama', 1)]
+# ruby
+ruby-1.9.2-p290 &gt;  ['bush','Jim', 'bush', 'Jim', 'Jim', 'Jim', 'bush', 'obama'].each_with_object({}) {|name,s| s[name] = s.fetch(name,0) + 1 }.sort
+ =&gt; [["Jim", 4], ["bush", 3], ["obama", 1]]
+huyong36 39楼, 于21小时前回复 #34楼 @hysios
+
+'11ab111123ab111ac11111'.count 'ab', 'b'
+这样不对吧...这样只是找出来字符串里出现b的次数。
+
+irb(main):106:0&gt; '11ab111123ab111ac11111b'.count 'ab', 'b'
+=&gt; 3
+hysios 40楼, 于21小时前回复 @huyong36 thx count是没办法实现的, 别的方法也不错
+
+huyong36 41楼, 于20小时前回复 #40楼 @hysios 恩,请教
+
+irb(main):115:0&gt; '11ab111123ab111c11111'.count  'a'
+=&gt; 2
+irb(main):114:0&gt; '11ab111123ab111c11111'.count  'ab'
+=&gt; 4
+字符可以统计,为什么字符串不能。。
+
+jhjguxin 42楼, 于20小时前回复 @huyong36
+count([other_str]+) → fixnum click to toggle source
+Each other_str parameter defines a set of characters to count. The intersection of these sets defines the characters to count in str. Any other_str that starts with a caret (^) is negated. The sequence c1–c2 means all characters between c1 and c2.
+
+Guest 43楼, 于20小时前回复 gaicitadie = [['china',37,26,11], ['usa',30,22,50], ['russia',30,33,20]].tap do |man|
+  def man.make_self(&amp;process); process.call self; end
+  def man.become_egghead
+    `python -c "print( sorted([('china',37,26,11), ('usa',30,22,50), ('russia',30,33,20)], key=lambda x:(-x[1],-x[2],-x[3])) )"`
+  end
+  def man.glow_up
+    dont_be_shy = true
+    unless self.respond_to? :more_elegant, dont_be_shy
+      def self.more_elegant
+        self.sort_by { |country, glods, silvers, bronzes| [-glods,-silvers,-bronzes] }
+      end
+    end
+    if self.respond_to? :become_egghead
+      class &lt;&lt; self; remove_method :become_egghead; end
+    end
+    self
+  end
+end
+gaicitadie.make_self &amp;:become_egghead
+gaicitadie.glow_up.make_self &amp;:more_elegant
+geekontheway 44楼, 于20小时前回复 #41楼 @huyong36 ruby的count 统计的是字符的数量 所以'11ab111123ab111c11111'.count 'ab'等同于'11ab111123ab111c11111'.count 'a' + '11ab111123ab111c11111'.count 'b'
+
+jhjguxin 45楼, 于20小时前回复 简而言之就是 取每一个字符的count的交集
+
+huyong36 46楼, 于20小时前回复 @geekontheway @jhjguxin 3Q...
+
+hysios 47楼, 于20小时前回复 #41楼 @huyong36 count 是统计所有的字符,并不会把参数当成字符串处理
+
+FenRagwort 48楼, 于17小时前回复 合并两个字典/哈希，重复的项目，两个值相加
+
+hash1.merge(hash2) {|dupkey,val1,val2| val1 + val2 }
+楼主来个Python的写法？
+
+hhuai 49楼, 于16小时前回复 method_missing, 楼主来个？？
+
+gaicitadie 50楼, 于14小时前回复 #48楼 @FenRagwort ，这个暂时只想到了普通方法
+
+for k,v in hash2.items():
+    if k in hash1:
+        hash1[k] += v
+    else:
+        hash1.setdefault(k,v)
+zw963 51楼, 于12小时前回复 #19楼 @skandhas
+
+的确酷, 不说说实在的. group_by用来做这个, 真是有点大才小用了.
+
+reus 52楼, 于12小时前回复 #49楼 @hhuai
+
+class Foo:
+  def __getattr__(self, name):
+    def _foo(*arg, **kwargs):
+      return self.method_missing(name, *arg, **kwargs)
+    return _foo
+
+  def method_missing(self, name, *args, **kwargs):
+    print name, args, kwargs
+
+a = Foo()
+a.foo('bar', baz = 'baz')
+
+&nbsp;
+
+Francis.J(864248765)  13:19:50
+&gt;&gt;&gt; l=['a','a','b','b','b','c','c']
+
+&gt;&gt;&gt; sorted(set([i for i in l]))
+['a', 'b', 'c']
+Francis.J(864248765)  13:20:01
+这样还行
+Francis.J(864248765)  13:21:15
+但是感觉 没有 pop 省资源
+GG(75865965)  13:26:39
+cat cat source.txt |uniq
+
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Python 的虛擬環境及多版本開發利器─Virtualenv 與 Pythonbrew]]></title>
+    <link href="http://jhjguxin.github.io/blog/2011/12/15/python-de-xu-ni-huan-jing-ji-duo-ban-ben-kai-fa-li-qi-%5Bnil%5Dvirtualenv-yu-pythonbrew/"/>
+    <updated>2011-12-15T21:29:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2011/12/15/python-de-xu-ni-huan-jing-ji-duo-ban-ben-kai-fa-li-qi-[nil]virtualenv-yu-pythonbrew</id>
+    <content type="html"><![CDATA[<h2>Python 的虛擬環境及多版本開發利器─Virtualenv 與 Pythonbrew</h2>
+
+<p>Virtualenv 和 Pythonbrew 都是可以創造虛擬（獨立）Python 環境的工具，只是虛擬（獨立）標的不同。</p>
+
+<p>Virtualenv 可以隔離函數庫需求不同的專案，讓它們不會互相影響。在建立並啟動虛擬環境後，透過 <code>pip</code> 安裝的套件會被放在虛擬環境中，專案就可以擁有一個獨立的環境。</p>
+
+<p>簡而言之，Virtualenv 可以幫你做到：</p>
+
+<ul>
+    <li>在沒有權限的情況下安裝新套件</li>
+    <li>不同專案可以使用不同版本的相同套件</li>
+    <li>套件版本升級時不會影響其他專案</li>
+</ul>
+
+
+<p>Pythonbrew 則可以在家目錄中安裝多個 Python，並迅速地切換版本；也可以在指定的 Python 版本下批次測試你的 Python 程式；另外更整合了 Virtualenv。</p>
+
+<p>這篇文章會詳細介紹這兩個工具，讓你在多人開發及多版本開發的環境中更得心應手。</p>
+
+<p>&nbsp;</p>
+
+<h3>事前準備</h3>
+
+
+<p>Python 的 package 通常會上傳至 <a href="http://pypi.python.org/pypi" target="_blank">PyPI</a>，有很多工具都可以從 <a href="http://pypi.python.org/pypi">PyPI</a> 安裝 package。下面會使用 <code>easy_install</code> 這個工具（由 <a href="http://pypi.python.org/pypi/setuptools" target="_blank">setuptools</a> 提供）來安裝 Virtualenv 和 Pythonbrew。</p>
+
+<h4>01. Linux</h4>
+
+
+<p>如果不知道 <code>easy_install</code> 或還沒安裝 setuptools，在 Debian/Ubuntu 可以用下列指令安裝：</p>
+
+<pre><code>$ sudo apt-get install python-setuptools </code></pre>
+
+
+<p>在 Fedora/CentOS/Redhat/openSUSE，則可以使用：</p>
+
+<pre><code>$ su - # yum install python-setuptools </code></pre>
+
+
+<h4>02. Windows</h4>
+
+
+<p>在 Windows 則可以從 <a href="http://pypi.python.org/pypi/setuptools" target="_blank">setuptools</a> 的頁面找到 <code>*.exe</code> 格式的安裝檔案。安裝完後，可以在 <code>C:\PythonX.Y\Scripts&lt;/code>（X.Y 是 Python 的版本）下找到 <code>easy_install.exe</code>。記得把這個路徑放進 Windows 環境變數中的 PATH。</p>
+
+<p>接著就可以輕鬆安裝任何在 <a href="http://pypi.python.org/pypi" target="_blank">PyPI</a> 的 Python Package 囉。</p>
+
+<h3>Virtualenv - Virtual Python Environment builder</h3>
+
+
+<h4>01. 安裝</h4>
+
+
+<p>Pythonbrew 已整合了 Virtualenv，如果不想額外安裝一個套件，也可以不要裝 Virtualenv。</p>
+
+<p>如果需要安裝，請於命令列模式下輸入下列指令：</p>
+
+<pre><code># easy_install virtualenv </code></pre>
+
+
+<h4>02. 使用方法</h4>
+
+
+<h5>I. 建立虛擬環境</h5>
+
+
+<p>請於命令列模式下輸入下列指令：</p>
+
+<pre><code>$ virtualenv [指定虛擬環境的名稱] </code></pre>
+
+
+<p>例如下列指令會建立名為 &ldquo;ENV&rdquo; 的虛擬環境：</p>
+
+<pre><code>$ virtualenv ENV </code></pre>
+
+
+<p>預設在建立虛擬環境時，會依賴系統環境中的 site packages，如果想<em>完全不依賴</em>系統的 packages，可以加上參數 <code>&mdash;no-site-packages</code> 來建立虛擬環境：</p>
+
+<pre><code>$ virtualenv --no-site-packages [指定虛擬環境的名稱] </code></pre>
+
+
+<div id="ii.-啟動虛擬環境">
+<h3>II. 啟動虛擬環境</h3>
+請先切換當前目錄至建立的虛擬環境中。前例中，建立名稱為 "ENV"，則：
+<pre><code>$ cd ENV </code></pre>
+接著，啟動虛擬環境：
+<pre><code>$ source bin/activate </code></pre>
+在 Windows 環境中則改用：
+<pre><code>&gt; \path\to\env\Scripts\activate.bat </code></pre>
+然後就可以注意到，在 shell 提示字元的最前面多了虛擬環境的名稱提示：
+<pre><code>(ENV) ...$ </code></pre>
+<h5>III. 退出虛擬環境</h5>
+請於命令列模式下輸入下列指令：
+<pre><code>$ deactivate </code></pre>
+就可以回到系統原先的 Python 環境。
+<h5>IV. 在虛擬環境安裝新的 Python 套件</h5>
+Virtualenv 在安裝時會附帶 <code>pip</code> 這個 Python 的套件安裝工具，當虛擬環境被啟動時，由它安裝的 package 會出現在虛擬環境的資料夾中，用法是：
+<pre><code>(ENV)...$ pip install [套件名稱] </code></pre>
+如果系統也有安裝 <code>pip</code>，請特別注意是否已經<em>啟動</em>虛擬環境，否則套件會被安裝到系統中，而非虛擬環境裡。
+
+如果想要避免 <code>pip</code> 在沒有進入虛擬環境時被使用，可以在 <code>~/.bashrc</code> 加上：
+<pre><code>export PIP_REQUIRE_VIRTUALENV=true </code></pre>
+要求 <code>pip</code> 一定要在虛擬環境中執行。
+
+也可以用下面的設定，讓系統的 <code>pip</code> 自動使用啟動中的虛擬環境。
+<pre><code>export PIP_RESPECT_VIRTUALENV=true </code></pre>
+避免意外將套件安裝至系統環境。
+<h5>V. 從程式中指定使用虛擬環境的函數庫</h5>
+無法從 Shell 啟動虛擬環境的情況，像是使用 <a href="http://www.modpython.org/" target="_blank">mod_python</a> 或 <a href="http://code.google.com/p/modwsgi/" target="_blank">mod_wsgi</a>，這時可以在 Python 的程式中加上：
+<pre><code>activate_this = '/path/to/env/bin/activate_this.py' execfile(activate_this, dict(__file__=activate_this)) </code></pre>
+來使用安裝在虛擬環境中的 packages。
+<h4>03. 延伸套件：Virtualenvwrapper</h4>
+Virtualenvwrapper 是一個 Virtualenv 的 extension，可使虛擬環境的管理變得更容易。
+
+詳細來說，Virtualenvwrapper 提供下述功能：
+<ol>
+    <li>將所有的虛擬環境整合在一個目錄下。</li>
+    <li>管理（新增、移除、複製）所有的虛擬環境。</li>
+    <li>可以使用一個命令切換虛擬環境。</li>
+    <li>Tab 補全虛擬環境的名字。</li>
+    <li>每個操作都提供允許使用者自訂的 hooks。</li>
+    <li>可撰寫容易分享的 extension plugin 系統。</li>
+</ol>
+<h5>I. 安裝</h5>
+請於命令列模式下輸入下列指令：
+<pre><code># easy_install virtualenvwrapper </code></pre>
+<h5>II. 使用方法</h5>
+於 <code>$WORKON_HOME</code>製作虛擬環境：
+<pre><code>$ mkvirtualenv [-i package] [-r requirements_file] [virtualenv options] ENVNAME </code></pre>
+列出所有的虛擬環境：
+<pre><code>$ lsvirtualenv [-b] [-l] [-h] </code></pre>
+<code>-b</code> 是簡短模式；<code>-l</code> 是詳細模式（預設）；<code>-h</code> 是印出 help 資訊。
+
+移除虛擬環境：
+<pre><code>$ rmvirtualenv ENVNAME </code></pre>
+複製虛擬環境：
+<pre><code>$ cpvirtualenv ENVNAME TARGETENVNAME </code></pre>
+啟動虛擬環境：
+<pre><code>$ workon [environment_name] </code></pre>
+如果只輸入 <code>workon</code>，則會列出所有的虛擬環境。
+
+離開虛擬環境一樣是使用 <code>deactivate</code>。
+
+可以使用下面的設定來告訴 <code>pip</code> Virtualenv 的路徑。
+<pre><code>export PIP_VIRTUALENV_BASE=$WORKON_HOME </code></pre>
+Virtualenvwrapper 的功能當然不只如此，更多功能可以參考 <a href="http://www.doughellmann.com/docs/virtualenvwrapper/index.html" target="_blank">Virtualenvwrapper 的官方文件</a>。
+<h3>Pythonbrew</h3>
+<h4>01. 安裝</h4>
+Pythonbrew 是個比較新的專案，雖然比較新，卻非常完整。它也有整合上面介紹的 Virtualenv。可以用類似 Virtualenvwrapper 的方式來操作 Virtualenv。
+
+安裝方式與 Virtualenv 一樣，只要輸入下面的指令就可以了：
+<pre><code># easy_install $ pythonbrew </code></pre>
+Pythonbrew 官方有推薦的安裝方式，但這篇教學為求一致性，就不額外介紹了，可以參考 <a href="https://github.com/utahta/$%20pythonbrew/blob/master/README.rst" target="_blank">pythonbrew/README.rst</a>。
+
+對於 Windows 的使用者，很可惜地，Pythonbrew 暫時沒有支援 Windows 的計畫 (<a href="https://github.com/utahta/$%20pythonbrew/issues/6" target="_blank">#6: Windows Support? - Issues - utahta/pythonbrew - GitHub</a>)。所以 Windows 暫時還沒辦法使用 Pythonbrew 囉。
+
+經過 <code>easy_install</code> 的安裝後，還需要在 shell 執行：
+<pre><code>$ pythonbrew_install </code></pre>
+才會把初始的設定檔和資料夾配置進你的家目錄。接著要修改 <code>~/.bashrc</code> 的配置：
+<pre><code>$ echo "source ~/.pythonbrew/etc/bashrc" &gt;&gt; ~/.bashrc </code></pre>
+這樣就算安裝完全囉。
+
+Pythonbrew 使用 <code>curl</code> 來抓取資料，如果你的系統沒有，請記得安裝。Ubuntu 上可以使用這行指令：
+<pre><code>$ sudo apt-get install curl </code></pre>
+<h4>02. 編譯前準備</h4>
+因為 Pythonbrew 採取下載 tarball，並編譯、安裝的方法，所以我們要先為系統準備好編譯 Python 所需的套件。
+
+也因為許多 Linux 發行版都已打包 Python，所以我們可以偷懶一點，用已經打包好的套件來解決編譯所需的相依性。在 Ubuntu/Debian 上，可以透過：
+<pre><code>$ sudo apt-get build-dep python2.7 </code></pre>
+來安裝所有編譯 Python 2.7 所需的套件。雖然已經能夠安裝得相當完整，但還是缺少了 <code>gdbm</code> 這個 module，如果需要的話，可以透過：
+<pre><code>$ sudo apt-get build-dep python-gdbm </code></pre>
+來安裝編譯 <code>gdbm</code> 所需的套件。
+
+註：<code>bsddb185</code>、<code>linuxaudiodev</code>、<code>ossaudiodev</code>、<code>sunaudiodev</code> 等是按以上方式安裝後，仍會缺少的 module。其中 <code>ossaudiodev</code>（Open Sound System）在隨 Ubuntu 發布的 Python 中有提供，列出來讓大家參考。
+
+Fedora/CentOS/Redhat/openSUSE 則可以使用 <code>yum-builddep</code> 這個指令。
+<h4>03. 使用方法</h4>
+Pythonbrew 的操作不外乎安裝、移除、列出及使用新的 Python 版本，下面是依照初次使用時所需的指令順序來介紹。
+<h5>I. 列出可安裝的版本</h5>
+首先我們用 <code>list --know</code> 列出可以安裝的 Python 版本：
+<pre><code>$ pythonbrew list --know </code></pre>
+</div>
+
+
+<div id="ii.-安裝新的版本">
+<h5>II. 安裝新的版本</h5>
+接著利用 <code>install VERSION</code> 來下載並編譯 Python 到本機，除了接 Python 的版本編號以外，也可以接 Python 的 tarball 路徑或網址來安裝；也能調整編譯 Python 的選項。下面是一些例子：
+<pre><code>$ pythonbrew install 2.7.2 $ pythonbrew install --verbose 2.7.2 $ pythonbrew install --force 2.7.2 $ pythonbrew install --no-test 2.7.2 $ pythonbrew install --configure="CC=gcc_4.1" 2.7.2 $ pythonbrew install --no-setuptools 2.7.2 $ pythonbrew install http://www.python.org/ftp/python/2.7/Python-2.7.2.tgz $ pythonbrew install /path/to/Python-2.7.2.tgz $ pythonbrew install /path/to/Python-2.7.2 $ pythonbrew install 2.7.2 3.2 </code></pre>
+<h5>III. 清理安裝時產生的檔案</h5>
+下載的 Python tarball 會放在 <code>~/.pythonbrew/dists/</code> 下；而編譯則會在 <code>~/.pythonbrew/build/</code> 下進行。如果想清理這兩個目錄，可以使用：
+<pre><code>$ pythonbrew cleanup </code></pre>
+<h5>IV. 列出所有已安裝的版本</h5>
+安裝好之後，可以使用 <code>list</code> 命令列出所有已安裝的 Python 版本：
+<pre><code>$ pythonbrew list </code></pre>
+後面有打星號的，就是現在正在使用的 Python 版本。
+<h5>V. 切換已安裝的版本</h5>
+可以使用 <code>switch</code> 來切換預設的 Python 版本：
+<pre><code>$ pythonbrew switch VERSION </code></pre>
+如果只想在當前的 shell 下切換，可以使用 <code>use</code>：
+<pre><code>$ pythonbrew use VERSION </code></pre>
+要切換回預設的環境時，使用 <code>off</code>：
+<pre><code>$ pythonbrew off </code></pre>
+就會返回系統環境的 Python 了。
+<h5>VI. 批次在不同版本下測試</h5>
+最重要的是，可以用系統內所有安裝過的 Python 版本，或指定的 Python 版本來測試自己的程式！
+<pre><code>$ pythonbrew py test.py # 使用所有有安裝的版本 $ pythonbrew py -v test.py # 詳細輸出 $ pythonbrew py -p 2.7.2 -p 3.2 test.py # 指定特定的版本 </code></pre>
+<h5>VII. 移除已安裝的版本</h5>
+若想移除已經安裝的 Python，則可以使用 <code>uninstall</code>：
+<pre><code>$ pythonbrew uninstall 2.7.2 $ pythonbrew uninstall 2.7.2 3.2 </code></pre>
+<h5>VIII. 與 Virtualenv 的整合</h5>
+要注意 Pythonbrew 中所提供的 Virtualenv，是基於 Pythonbrew 中所安裝的 Python（置於 <code>~/.pythonbrew/venvs/Python-VERSION/</code> 下）。在不使用 Pythonbrew 的情況下，無法使用附屬於 Pythonbrew 的 <code>venv</code> 功能。
+
+Pythonbrew 提供了和 Virtualenvwrapper 類似的功能，只是沒有像 Virtualenvwrapper 那麼完整的 plugin 系統。所有在 Pythonbrew 中的 Virtualenv 指令都以 <code>venv</code> 作為第一個副命令。
+<pre><code>$ pythonbrew venv create [指定虛擬環境的名稱] $ pythonbrew venv list $ pythonbrew venv use [指定虛擬環境的名稱] $ pythonbrew venv delete [指定虛擬環境的名稱] </code></pre>
+離開虛擬環境一樣是使用 <code>deactivate</code>。
+<h5>IX. Buildout</h5>
+如果有使用 <a href="http://www.buildout.org/" target="_blank">Buildout</a> 這個工具，也可以透過 Pythonbrew 來執行：
+<pre><code>$ pythonbrew buildout $ pythonbrew buildout -p 2.6.6 # 指定版本 </code></pre>
+</div>
+
+
+<div id="x.-自我更新">
+<h5>X. 自我更新</h5>
+最後，Pythonbrew 有內建更新自己的指令：
+<pre><code>$ pythonbrew update $ pythonbrew update --master $ pythonbrew update --develop </code></pre>
+Virtualenv 和 Pythonbrew 就介紹到這邊，如果想獲得更多資訊，可以多多參考它們的官網哦。祝大家玩得愉快。
+<h3>參考資料</h3>
+<ul>
+    <li><a href="http://www.virtualenv.org/" target="_blank">www.virtualenv.org</a></li>
+    <li><a href="https://github.com/utahta/pythonbrew" target="_blank">utahta/pythonbrew - GitHub</a></li>
+    <li><a href="http://pypi.python.org/pypi/setuptools" target="_blank">setuptools - PyPI</a></li>
+    <li><a href="http://pypi.python.org/pypi/pip" target="_blank">pip - PyPI</a></li>
+    <li><a href="http://www.doughellmann.com/docs/virtualenvwrapper/" target="_blank">virtualenvwrapper documentaion</a></li>
+    <li><a href="http://stackoverflow.com/questions/6171210/building-python-and-more-on-missing-modules" target="_blank">Building Python and more on missing modules - Stack Overflow</a></li>
+</ul>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Django开发必知必会]]></title>
+    <link href="http://jhjguxin.github.io/blog/2011/12/15/djangokai-fa-bi-zhi-bi-hui/"/>
+    <updated>2011-12-15T21:27:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2011/12/15/djangokai-fa-bi-zhi-bi-hui</id>
+    <content type="html"><![CDATA[<h2>Django开发必知必会</h2>
+
+<div id="cnblogs_post_body">
+<h1>Django开发必知必会</h1>
+<div id="id1">
+<h1>版权说明</h1>
+由于最近发现很多转载笔者的文章而没有说明作者和出处,所以特别在些声明.
+
+本博客所有内容采用 Creative Commons Licenses 许可使用. 引用本内容时，请保留 <strong>朱涛</strong>, <strong>出处</strong> ，并且 <strong>非商业</strong> .
+
+</div>
+<div id="id2">
+<h1>摘要</h1>
+Django 作为 python 社区中最流利的web框架,它所强调的就是 <strong>快速开发</strong>, <strong>复用</strong>, <strong>可读</strong>. 本文主要介绍使用 Django 来开发所需要了解的知识,其中也包含了一些指导性的原则以及笔者的一些经验之谈.
+<div id="contents">
+
+Contents
+<ul>
+    <li>版权说明</li>
+    <li>摘要</li>
+    <li>基本知识
+<ul>
+    <li>熟悉python和django</li>
+    <li>其它的相关技术</li>
+</ul>
+</li>
+    <li>可用的资源</li>
+    <li>高级知识
+<ul>
+    <li>使用virtualenv+pip来构建独立的开发环境</li>
+    <li>使用fabric进行部署</li>
+</ul>
+</li>
+    <li>推荐的开发流程</li>
+    <li>结论</li>
+    <li>参考资料</li>
+</ul>
+</div>
+</div>
+<div id="id3">
+<h1>基本知识</h1>
+<div id="python-django">
+<h2>熟悉python和django</h2>
+Django 是基于 python 的,所以在开发前需要熟悉相关的技术.
+
+python 推荐几本比较好的书,包括:
+<ol>
+    <li>learning python</li>
+    <li>python cookbook</li>
+</ol>
+熟读 Django 的 官方文档 和相关的书籍，这些都是必须。比较好的书籍有：
+<ol>
+    <li>Django Book</li>
+    <li>Pro Django</li>
+    <li>Practical Django Projects</li>
+</ol>
+更多参考 django相关资源.
+
+</div>
+<div id="id4">
+<h2>其它的相关技术</h2>
+作为web开发的程序员,还需要了解其它的相关技术,包括:
+<ul>
+    <li>html</li>
+    <li>css</li>
+    <li>javascript ( jquery 等)</li>
+    <li>ajax</li>
+    <li>网络知识和标准,如 http 协议, TCP/IP网络架构等.</li>
+</ul>
+</div>
+</div>
+<div id="id5">
+<h1>可用的资源</h1>
+掌握了上面提到的基本知识外,我们对 python, Django 及web开发的相关技术有了一定的熟悉,也对 python 和 Django 的 哲学也有一定的了解,如 <em>Don't Repeat Yourself</em>,<em>Keep It Simple, Stupid</em>, <em>Don't Reinvent Wheels</em> 等.
+
+所以,在开始一个项目之前我们需要了解已有哪些可用的资源.
+
+而在可用的资源中,最需要跟踪的一个项目就是 pinax ，它提供了站点所必须的一些常用功能，而 所采用的方式便是提供一些 <strong>可复用的app</strong>, 使得我们很容易集成到我们的环境中， 或者基于 pinax 二次开发。
+
+除此之外，还需要了解一些特定领域的相关资源，如：
+<ul>
+    <li>商店 satchmo</li>
+    <li>地理 GeoDjango</li>
+    <li>OpenId django-openid</li>
+    <li>等等</li>
+</ul>
+在获得特定领域的相关资源后，会大大地提高开发的效率，从而降低成本。
+
+</div>
+<div id="id6">
+<h1>高级知识</h1>
+掌握上面提到的技术,这时就基本上是一个合格的 Django 程序员了,但是除此之外,还需要了解一些高级的知识.
+<div id="virtualenv-pip">
+<h2>使用virtualenv+pip来构建独立的开发环境</h2>
+virtualenv 用 于建立一个独立的（与其它module)的虚拟环境，从而使得不同的虚拟环境下的 程序可以依赖于不同版本的module,例如某个django project是基于0.96的，而另外的project是基于 1.1的，所以就必须有不同的虚拟环境。 了解更多参考： pip and virtualenv
+
+使用 pip 来 <strong>复制</strong> 已有的依赖。 pip 是用来取代 easy_install 的，除此而外， 我们还可以很方便地使用 pip 来 <strong>复制</strong> 我们当前的工作环境。例如，我们建立一个<em>requirements.txt</em> 文件 来记录我们当前工作环境中的相关依赖程序，然后输入 <cite>pip install -r /path/to/requirements.txt</cite>, 那么相应的 依赖软件会自动安装。前提是你的系统已经安装了 pip.
+
+除此而外，当你需要部署一个django项目时，可以使用 wsgi 很方便地进行部署，具体参考 virtualenv and wsgi.
+
+</div>
+<div id="fabric">
+<h2>使用fabric进行部署</h2>
+参考 Deploying Python Web Applications
+
+另外,我们还可以使用 python 的强大功能,来实现例如配置文件的路径自适应, 利用调试状态来设定特定的属性等.
+
+</div>
+</div>
+<div id="id7">
+<h1>推荐的开发流程</h1>
+可使用下面的开发流程来进行 Django 的开发(假设是从新开始一个项目的)：
+<ol>
+    <li>使用 virtualenv 建立相应的独立环境</li>
+    <li>使用 easy_install 和 pip 安装相应的依赖模块</li>
+    <li>多人开发时可将当前的所有模块 <strong>复制</strong> 给同事( <cite>pip</cite> 有 <em>feeze</em> 命令来输出当前环境下的所有依赖模块及版本,以保证所有的开发人员使用相同的代码库)</li>
+    <li>为服务器也建立相应的独立环境,并使用 fabric 进行自动化部署.</li>
+    <li>最后,使用 wsgi 和web服务器来发布产品</li>
+</ol>
+</div>
+<div id="id8">
+<h1>结论</h1>
+利用 Django 的 <strong>复用</strong>, <strong>快速开发</strong> 等特性来进行Web开发, 其实是有一定的规律可循的, 除了上面介绍的一些开发知识(技巧)外,如果在开发中你发现某个过程很繁琐,你这时候就要考虑去调研 是否已经存在相关的解决方案.而不要一味地,耗时地去完成.
+
+</div>
+<div id="id9">
+<h1>参考资料</h1>
+<ol>
+    <li>Notes on using pip and virtualenv with Django</li>
+    <li>啄木鸟社区</li>
+    <li>django相关资源</li>
+</ol>
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[python中的编码问题]]></title>
+    <link href="http://jhjguxin.github.io/blog/2011/12/07/pythonzhong-de-bian-ma-wen-ti/"/>
+    <updated>2011-12-07T13:37:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2011/12/07/pythonzhong-de-bian-ma-wen-ti</id>
+    <content type="html"><![CDATA[<h2>python中的编码问题</h2>
+
+<p>这里简单的说一下。（下面内容基本上时从《Python.Core.Programming.2ed》上摘的）
+Unicode是计算机可以支持这个星球上的多种语言的秘密武器，在Unicode之前，用的都是ASCII，ASCII吗非常简单，每个英文字符都用7位二进制数的方式存储在计算机内，其范围是32到126.它的实现原理这里也不说了。
+但是ASCII码只能表示95个可打印的字符，后来把ASCII扩展到了8位，这样就能表示223个字符了，虽然这个来表示欧美字母语言已经足够了，但是对于像中文等语系来说就太少了。于是Unicode码诞生了。
+Unicode通过使用一个或者多个字节来表示一个字符，这样就突破了ASCII的限制，这样，Unicode可以表示超过90000个字符了。
+ 
+Python 与Unicode
+ 
+为了让Unicode和ASCII码值的字符串看起来尽可能的相像，Python的字符串从原来的简单数据类型改变成了真正的对象，ASCII字符串成了ＳｔｒｉｎｇＴｙｐｅ，而Ｕｎｉｃｏｄｅ字符串成了UnicodeType类型，他们的行为非常相近。String模块里面都有相应的处理函数。String模块已经停止了更新，只保留了对ＡＳＸＩＩ码的支持，string模块已经不推荐使用，在任何要跟Ｕｎｉｃｏｄｅ兼容的代码里都不要再用该模块，Python保留该模块仅仅为了向后兼容。
+Python里面默认所有字面上的字符串都用ASCII编码，可以通过在字符串前面加一个‘ｕ’前缀的方式声明Ｕｎｉｃｏｄｅ字符串，这个‘ｕ’前缀告诉Python后面的字符串要编成Ｕｎｉｃｏｄｅ字符串。
+ 
+&gt;&gt;&gt; &ldquo;Hello World&rdquo; #ASCII string
+&lsquo;Hello World&rsquo;
+&gt;&gt;&gt; u"Hello World" #Unicode string
+u'Hello World'
+ 
+内建的str()函数和chr（）函数不能处理Unicode，它们只能处理常规ASCII编码的字符串，如果一个Unicode字符串作为参数传给了str（）函数，它会首先被转换成ASCII码字符串然后交给str（）函数。
+ 
+Codecs
+ 
+Codec是把Coder/DECoder得首字母组合，它定义了文本跟二进制的转换方式，跟ASCII那种用一个字节把字符转换成数字的方式不同，Unicode用的是多字节，这导致了Unicode支持多种不同的编码方式，比如说codec支持的四种耳熟能详的编码方式是：ASCII，ISO8859—1/Latin-1，UTF-8,和UTF-16
+最著名的是UTF-8编码，它也用一个字节来编码ASCII字符，这让那些必须同时处理ASCII码和Unicode码文本的程序员的工作变得非常轻松，因为ASCII字符的UTF-8编码和ASCII编码完全相同。
+UTF-8编码可以用1到4个字节来表示其他语言的字符，这给那些需要直接处理Unicode数据的程序员带来了麻烦，因为他们没有办法按照固定长度逐一读出各个字符，幸运的是我们不需要掌握直接读取Unicode数据的方法，Python已经替我们完成了相关细节，我们无需为处理多字节字符的复杂问题而担心。
+UTF-16也是一种变长编码，但是它不常用。
+ 
+编码解码
+ 
+Unicode支持多种编码格式，这为程序员带来了额外的负担，每当你向一个文件写入字符串的时候，你必须定义一个编码用于把对应的Unicode内容转换成你定义的格式，Python通过Unicode字符串的encode()函数解决了这个问题，该函数接受字符串中的字符为参数，输出你指定的编码格式的内容。
+所以，每次我们写一个Unicode字符串到磁盘上我们都要用指定的编码器给他“编码“一下，相应地，当我们从这个文件读取数据时，我们必须”解码”该文件，使之成为Unicode字符串对象。
+简单的例子：</p>
+
+<div><code>#!/usr/bin/env python
+# -*- coding: UTF-8 -*-
+import chardet
+#chardet.detect(u'啊啊算法')
+def u(s, encoding):
+if isinstance(s, unicode):#用来判断是否为unicode
+return s
+else:
+try:
+return unicode(s, encoding)# 不是的话就转成unicode
+except IOError:
+print('error\n')</code>#s=r'\u6df1\u5733\u71c3\u6c14\u4e2d\u7b7e\u7387'
+#zh = reduce(lambda x,y: x + unichr(int(y, 16)), s.split(r"\u"))
+#print zh
+def jiema(getstring):
+fstr=r""
+list_str=getstring.split(r'\u')
+for single in list_str:
+if single != '':
+fstr+=unichr(int(single,16))
+print fstrif __name__=='__main__':
+coding=['utf','ascii','gb2312','gbk']
+a='\u8bf7\u91cd\u65b0\u767b\u5f55'#这里没有加u得到的 就是ascii码
+#if chardet.detect(u'啊啊算法')
+if chardet.detect(a)['encoding']=='ascii':
+print "beging to call jiema ...."
+jiema(a)
+else:
+print "beging to zhuanma"
+for code in coding:
+print code
+print u(a,code)
+print """Python里面默认所有字面上的字符串都用ASCII编码，可以通过在字符串前面加一个‘ｕ’前缀的方式声明Ｕｎｉｃｏｄｅ字符串，这个‘ｕ’前缀告诉Python后面的字符串要编成Ｕｎｉｃｏｄｅ字符串。"""
+print """ASCII 是一种字符集,包括大小写的英文字母、数字、控制字符等，它用一个字节表示，范围是 0-127Unicode分为UTF-8和UTF-16。UTF-8变长度的，最多 6 个字节，小于 127 的字符用一个字节表示，与 ASCII 字符集的结果一样，ASCII 编码下的英语文本不需要修改就可以当作 UTF-8 编码进行处理。"""
+<div>标签： <a href="http://jhjguxin.hwcrazy.com/tag/python/">python</a></div>
+</div>
+
+]]></content>
+  </entry>
+  
+</feed>

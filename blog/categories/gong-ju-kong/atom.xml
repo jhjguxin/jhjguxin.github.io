@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: 工具控 | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/blog/categories/gong-ju-kong/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[晒晒我们的开源项目 ITEYE开源代码]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/"/>
+    <updated>2012-09-27T08:34:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma</id>
+    <content type="html"><![CDATA[<h2>晒晒我们的开源项目 ITEYE开源代码</h2>
+
+<p>我们的研发团队是一支mini型研发团队，目前共有研发人员13人。由于网站产品维护的历史原因，这13人的研发团队分为4支小组，分别是：Ruby研发小组5人；PHP研发小组4人；.net研发小组2人，Java搜索小组2人。</p>
+
+<p>别看我们研发人员这么少，但是我们研发人员战斗力很强，我们维护和开发着十多条产品线。在我们开发自身产品的过程中，也积累了一些比较通用的组件，一些对大家来说有用的工具。因此从今年下半年开始，我们陆续将一些组件和工具开源出来，哪怕这些项目的质量并不是那么高，也希望能够给社区带来一点点自己的贡献。</p>
+
+<p>以下简要介绍一下我们已经开源的项目，今后我们还会努力开源更多的东西和大家交流和分享：</p>
+
+<p>1、Ansj中文分词 &ndash; 开源的高准确率Java中文分词器</p>
+
+<p>项目Github地址：<a href="https://github.com/ansjsun/ansj_seg" target="_blank"><a href="https://github.com/ansjsun/ansj_seg">https://github.com/ansjsun/ansj_seg</a></a>
+这是基于大名鼎鼎中科院的Ictclas中文分词算法编写的Java实现版本，比常用的开源mmseg4j的分词准确率高。目前我们自己站内的搜索将逐渐从mmseg4j算法替换成Ansj中文分词算法。</p>
+
+<p>2、ServiceFramework &ndash; 开源的羽量级Java Web服务框架</p>
+
+<p>项目Github地址：<a href="https://github.com/allwefantasy/ServiceFramework" target="_blank"><a href="https://github.com/allwefantasy/ServiceFramework">https://github.com/allwefantasy/ServiceFramework</a></a>
+我们基于Java的开源搜索框架lucene编写了网站的分布式搜索和Tag文章分类服务。因为需要向前端的Web应用程序提供搜索和Tag服务接口API，所以我们编写了这个羽量级的Java框架软件。它的优点就是羽量级，自身集成了Jetty服务器，MVC，IoC和ORM，让你只需要编写非常少的代码，就可以快速将你的业务逻辑组件以Web API的方式提供服务。</p>
+
+<p>3、ExportBlog &ndash; 开源的通用博客导出工具</p>
+
+<p>项目Github地址：<a href="https://github.com/sqzhuyi/ExportBlog" target="_blank"><a href="https://github.com/sqzhuyi/ExportBlog">https://github.com/sqzhuyi/ExportBlog</a></a>
+这是一个基于.net Winforms编写的通用博客导出工具，支持导出网站包括：CSDN、ITEYE、博客园、新浪、搜狐、和讯、ChinaUnix、网易、51CTO、开源中国、百度空间、QQ空间等等。导出格式支持CHM、PDF、HTML、TXT和EPUB 5种格式文档。详细介绍：<a href="http://blog.csdn.net/sq_zhuyi/article/details/7924776" target="_blank"><a href="http://blog.csdn.net/sq_zhuyi/article/details/7924776">http://blog.csdn.net/sq_zhuyi/article/details/7924776</a></a></p>
+
+<p>4、Secode_level_cache &ndash; 开源的Rails对象缓存插件</p>
+
+<p>项目Github地址：<a href="https://github.com/csdn-dev/second_level_cache" target="_blank"><a href="https://github.com/csdn-dev/second_level_cache">https://github.com/csdn-dev/second_level_cache</a></a>
+Rails的ActiveRecord自身没有带强大的对象缓存功能，这是AR的一个重大的遗憾。早在2008年开始，我们就借鉴了Java强大的ORM框架Hibernate的二级对象缓存编写了这个Rails的AR对象缓存插件，并且一直作为JavaEye网站缓存优化的秘密武器来使用，取得了非常理想的效果。
+现在我们将这个插件从Rails2.x的版本升级到了3.x版本，并且抽取成了一个通用插件，开始应用于新的Rails3.2的项目之上。有志于AR对象缓存优化的ruby程序员不容错过。</p>
+
+<p>5、limiter － 网站反爬虫和DOS攻击的利器</p>
+
+<p>项目Github地址：<a href="https://github.com/csdn-dev/limiter" target="_blank"><a href="https://github.com/csdn-dev/limiter">https://github.com/csdn-dev/limiter</a></a>
+早年的JavaEye网站曾经深受DOS攻击和爬虫海量抓取造成的负载过高的困扰，我曾经和这个问题进行了为期几年不懈的斗争，并且在总结几年斗争经验后写了一篇总结性博客文章：<a href="http://robbin.iteye.com/blog/451014" target="_blank">互联网网站的反爬虫策略浅析</a> 。当时我基于这个反爬虫策略编写了JavaEye网站的智能防火墙插件，取得了良好的效果。
+现在我们将这个插件从JavaEye的源代码中剥离出来，抽取成一个通用的rackware，便于应用于普通的Rails3.x的项目当中。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Google Chrome Keyboard and mouse shortcuts]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/08/30/google-chrome-keyboard-and-mouse-shortcuts/"/>
+    <updated>2012-08-30T11:10:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/08/30/google-chrome-keyboard-and-mouse-shortcuts</id>
+    <content type="html"><![CDATA[<h2>Google Chrome Keyboard and mouse shortcuts</h2>
+
+<h3> Keyboard and mouse shortcuts</h3>
+
+
+<h2>Windows keyboard shortcuts</h2>
+
+
+<h3>Tab and window shortcuts</h3>
+
+
+<table cellspacing="0" cellpadding="3">
+<tbody>
+<tr>
+<td>Ctrl+N</td>
+<td>Opens a new window.</td>
+</tr>
+<tr>
+<td>Ctrl+T</td>
+<td>Opens a new tab.</td>
+</tr>
+<tr>
+<td>Ctrl+Shift+N</td>
+<td>Opens a new window in incognito mode.</td>
+</tr>
+<tr>
+<td>Press Ctrl+O, then select file.</td>
+<td>Opens a file from your computer in Google Chrome.</td>
+</tr>
+<tr>
+<td>Press Ctrl and click a link. Or click a link with your middle mouse button (or mousewheel).</td>
+<td>Opens the link in a new tab in the background .</td>
+</tr>
+<tr>
+<td>Press Ctrl+Shift and click a link. Or press Shift and click a link with your middle mouse button (or mousewheel).</td>
+<td>Opens the link in a new tab and switches to the newly opened tab.</td>
+</tr>
+<tr>
+<td>Press Shift and click a link.</td>
+<td>Opens the link in a new window.</td>
+</tr>
+<tr>
+<td>Ctrl+Shift+T</td>
+<td>Reopens the last tab you've closed. Google Chrome remembers the last 10 tabs you've closed.</td>
+</tr>
+<tr>
+<td>Drag a link to a tab.</td>
+<td>Opens the link in the tab.</td>
+</tr>
+<tr>
+<td>Drag a link to a blank area on the tab strip.</td>
+<td>Opens the link in a new tab.</td>
+</tr>
+<tr>
+<td>Drag a tab out of the tab strip.</td>
+<td>Opens the tab in a new window.</td>
+</tr>
+<tr>
+<td>Drag a tab out of the tab strip and into an existing window.</td>
+<td>Opens the tab in the existing window.</td>
+</tr>
+<tr>
+<td>Press Esc while dragging a tab.</td>
+<td>Returns the tab to its original position.</td>
+</tr>
+<tr>
+<td>Ctrl+1 through Ctrl+8</td>
+<td>Switches to the tab at the specified position number on the tab strip.</td>
+</tr>
+<tr>
+<td>Ctrl+9</td>
+<td>Switches to the last tab.</td>
+</tr>
+<tr>
+<td>Ctrl+Tab or Ctrl+PgDown</td>
+<td>Switches to the next tab.</td>
+</tr>
+<tr>
+<td>Ctrl+Shift+Tab or Ctrl+PgUp</td>
+<td>Switches to the previous tab.</td>
+</tr>
+<tr>
+<td>Alt+F4</td>
+<td>Closes the current window.</td>
+</tr>
+<tr>
+<td>Ctrl+W or Ctrl+F4</td>
+<td>Closes the current tab or pop-up.</td>
+</tr>
+<tr>
+<td>Click a tab with your middle mouse button (or mousewheel).</td>
+<td>Closes the tab you clicked.</td>
+</tr>
+<tr>
+<td>Right-click, or click and hold either the Back or Forward arrow in the browser toolbar.</td>
+<td>Displays your browsing history in the tab.</td>
+</tr>
+<tr>
+<td>Press Backspace, or Alt and the left arrow together.</td>
+<td>Goes to the previous page in your browsing history for the tab.</td>
+</tr>
+<tr>
+<td>Press Shift+Backspace, or Alt and the right arrow together.</td>
+<td>Goes to the next page in your browsing history for the tab.</td>
+</tr>
+<tr>
+<td>Press Ctrl and click either the Back arrow, Forward arrow, or Go button in the toolbar. Or click either button with your middle mouse button (or mousewheel).</td>
+<td>Opens the button destination in a new tab in the background.</td>
+</tr>
+<tr>
+<td>Double-click the blank area on the tab strip.</td>
+<td>Maximizes or minimizes the window.</td>
+</tr>
+<tr>
+<td>Alt+Home</td>
+<td>Opens your homepage in your current window.</td>
+</tr>
+</tbody>
+</table>
+
+
+<h3>Google Chrome feature shortcuts</h3>
+
+
+<table cellspacing="0" cellpadding="3">
+<tbody>
+<tr>
+<td width="50%">Alt+F or Alt+E</td>
+<td>Opens the wrench menu, which lets you customize and control settings in Google Chrome.</td>
+</tr>
+<tr>
+<td width="50%">Ctrl+Shift+B</td>
+<td>Toggles the bookmarks bar on and off.</td>
+</tr>
+<tr>
+<td>Ctrl+H</td>
+<td>Opens the History page.</td>
+</tr>
+<tr>
+<td>Ctrl+J</td>
+<td>Opens the Downloads page.</td>
+</tr>
+<tr>
+<td>Shift+Esc</td>
+<td>Opens the Task Manager.</td>
+</tr>
+<tr>
+<td>Shift+Alt+T</td>
+<td>Sets focus on the first tool in the browser toolbar. You can then use the following shortcuts to move around in the toolbar:
+<ul>
+    <li>Press Tab, Shift+Tab, Home, End, right arrow, and left arrow to move focus to different items in the toolbar.</li>
+    <li>Press Space or Enter to activate toolbar buttons, including page actions and browser actions.</li>
+    <li>Press Shift+F10 to bring up any associated context menu (e.g. browsing history for the Back button).</li>
+    <li>Press Esc to return focus from the toolbar back to the page.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td>F6 or Shift+F6</td>
+<td>Switches focus to the next keyboard-accessible pane. Panes include:
+<ul>
+    <li>Highlights the URL in the address bar</li>
+    <li>Bookmarks bar (if visible)</li>
+    <li>The main web content (including any infobars)</li>
+    <li>Downloads bar (if visible)</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td>Ctrl+Shift+J</td>
+<td>Opens Developer Tools.</td>
+</tr>
+<tr>
+<td>Ctrl+Shift+Delete</td>
+<td>Opens the Clear Browsing Data dialog.</td>
+</tr>
+<tr>
+<td>F1</td>
+<td>Opens the Help Center in a new tab (our favorite).</td>
+</tr>
+<tr>
+<td>Ctrl+Shift+M</td>
+<td>Switch between multiple users.</td>
+</tr>
+</tbody>
+</table>
+
+
+<h3>Address bar shortcuts</h3>
+
+
+<p>Use the following shortcuts in the address bar:</p>
+
+<table cellspacing="0" cellpadding="3">
+<tbody>
+<tr>
+<td width="50%">Type a search term, then press Enter.</td>
+<td>Performs a search using your default search engine.</td>
+</tr>
+<tr>
+<td>Type a search engine keyword, press Space, type a search term, and press Enter.</td>
+<td>Performs a search using the search engine associated with the keyword.</td>
+</tr>
+<tr>
+<td>Begin typing a search engine URL, press Tab when prompted, type a search term, and press Enter.</td>
+<td>Performs a search using the search engine associated with the URL.</td>
+</tr>
+<tr>
+<td>Ctrl+Enter</td>
+<td>Adds www. and .com to your input in the address bar and open the resulting URL.</td>
+</tr>
+<tr>
+<td>Type a URL, then press Alt+Enter.</td>
+<td>Opens the URL in a new tab.</td>
+</tr>
+<tr>
+<td>Ctrl+L or Alt+D</td>
+<td>Highlights the URL.</td>
+</tr>
+<tr>
+<td>Ctrl+K or Ctrl+E</td>
+<td>Places a '?' in the address bar. Type a search term after the question mark to perform a search using your default search engine.</td>
+</tr>
+<tr>
+<td>Press Ctrl and the left arrow together.</td>
+<td>Moves your cursor to the preceding key term in the address bar</td>
+</tr>
+<tr>
+<td>Press Ctrl and the right arrow together.</td>
+<td>Moves your cursor to the next key term in the address bar</td>
+</tr>
+<tr>
+<td>Ctrl+Backspace</td>
+<td>Deletes the key term that precedes your cursor in the address bar</td>
+</tr>
+<tr>
+<td>Select an entry in the address bar drop-down menu with your keyboard arrows, then press Shift+Delete.</td>
+<td>Deletes the entry from your browsing history, if possible.</td>
+</tr>
+<tr>
+<td>Click an entry in the address bar drop-down menu with your middle mouse button (or mousewheel).</td>
+<td>Opens the entry in a new tab in the background.</td>
+</tr>
+<tr>
+<td>Press Page Up or Page Down when the address bar drop-down menu is visible.</td>
+<td>Selects the first or last entry in the drop-down menu.</td>
+</tr>
+</tbody>
+</table>
+
+
+<p><a name="webpage"></a></p>
+
+<h3>Webpage shortcuts</h3>
+
+
+<table cellspacing="0" cellpadding="3">
+<tbody>
+<tr>
+<td width="50%">Ctrl+P</td>
+<td>Prints your current page.</td>
+</tr>
+<tr>
+<td>Ctrl+S</td>
+<td>Saves your current page.</td>
+</tr>
+<tr>
+<td>F5 or Ctrl+R</td>
+<td>Reloads your current page.</td>
+</tr>
+<tr>
+<td>Esc</td>
+<td>Stops the loading of your current page.</td>
+</tr>
+<tr>
+<td>Ctrl+F</td>
+<td>Opens the find bar.</td>
+</tr>
+<tr>
+<td>Ctrl+G or F3</td>
+<td>Finds the next match for your input in the find bar.</td>
+</tr>
+<tr>
+<td>Ctrl+Shift+G, Shift+F3, or Shift+Enter</td>
+<td>Finds the previous match for your input in the find bar.</td>
+</tr>
+<tr>
+<td>Click the middle mouse button (or mousewheel).</td>
+<td>Activates auto-scrolling. As you move your mouse, the page automatically scrolls according to the direction of the mouse.</td>
+</tr>
+<tr>
+<td>Ctrl+F5 or Shift+F5</td>
+<td>Reloads your current page, ignoring cached content.</td>
+</tr>
+<tr>
+<td>Press Alt and click a link.</td>
+<td>Downloads the target of the link.</td>
+</tr>
+<tr>
+<td>Ctrl+U</td>
+<td>Opens the source of your current page.</td>
+</tr>
+<tr>
+<td>Drag a link to bookmarks bar</td>
+<td>Saves the link as a bookmark.</td>
+</tr>
+<tr>
+<td>Ctrl+D</td>
+<td>Saves your current webpage as a bookmark.</td>
+</tr>
+<tr>
+<td width="50%">Ctrl+Shift+D</td>
+<td>Saves all open pages as bookmarks in a new folder.</td>
+</tr>
+<tr>
+<td>F11</td>
+<td>Opens your page in full-screen mode. Press F11 again to exit full-screen.</td>
+</tr>
+<tr>
+<td>Ctrl and +, or press Ctrl and scroll your mousewheel up.</td>
+<td>Enlarges everything on the page.</td>
+</tr>
+<tr>
+<td>Ctrl and -, or press Ctrl and scroll your mousewheel down.</td>
+<td>Makes everything on the page smaller.</td>
+</tr>
+<tr>
+<td>Ctrl+0</td>
+<td>Returns everything on the page to normal size.</td>
+</tr>
+<tr>
+<td>Space bar</td>
+<td>Scrolls down the web page.</td>
+</tr>
+<tr>
+<td>Home</td>
+<td>Goes to the top of the page.</td>
+</tr>
+<tr>
+<td>End</td>
+<td>Goes to the bottom of the page.</td>
+</tr>
+<tr>
+<td>Press Shift and scroll your mousewheel.</td>
+<td>Scrolls horizontally on the page.</td>
+</tr>
+</tbody>
+</table>
+
+
+<h3>Text shortcuts</h3>
+
+
+<table cellspacing="0" cellpadding="3">
+<tbody>
+<tr>
+<td width="50%">Ctrl+C</td>
+<td>Copies highlighted content to the clipboard.</td>
+</tr>
+<tr>
+<td>Ctrl+V or Shift+Insert</td>
+<td>Pastes content from the clipboard.</td>
+</tr>
+<tr>
+<td>Ctrl+Shift+V</td>
+<td>Paste content from the clipboard without formatting.</td>
+</tr>
+<tr>
+<td>Ctrl+X or Shift+Delete</td>
+<td>Deletes the highlighted content and copies it to the clipboard.</td>
+</tr>
+</tbody>
+</table>
+
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,330 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>rails - Devise - Handling - devise_error_messages - Francis's Octopress Blog</title>
+  <meta name="author" content="Francis Jiang">
+
+  
+  <meta name="description" content="rails &ndash; Devise &ndash; Handling &ndash; devise_error_messages in my user edit page, there is a line as follows: &lt;%= devise_error_messages &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jhjguxin.github.io/blog/2012/05/30/rails-devise-handling-devise-error-messages">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Francis's Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-25901353-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Francis's Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jhjguxin.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/readme">Readme</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Rails - Devise - Handling - Devise_error_messages</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-30T13:10:00+08:00" pubdate data-updated="true">May 30<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>rails &ndash; Devise &ndash; Handling &ndash; devise_error_messages</h2>
+
+<p>in my user edit page, there is a line as follows:</p>
+
+<pre><code>&lt;%= devise_error_messages! %&gt; </code></pre>
+
+
+<p>The problem is this does not output errors the stand way that the rest of the app does:</p>
+
+<pre><code>&lt;% flash.each do |key, value| %&gt;     &lt;divpun" style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; border-image: initial; vertical-align: baseline; background-image: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: transparent; color: rgb(0, 0, 0); "&gt;&lt;%= key %&gt;"&gt;&lt;%= value %&gt;&lt;/div&gt; &lt;% end %&gt; </code></pre>
+
+
+<p>My question, is how to I get the devise error message to work like the others that use the flash.each?</p>
+
+<p>Thanks</p>
+
+<p>I&rsquo;m trying to figure this out myself. I just found this issue logged on Github<a href="https://github.com/plataformatec/devise/issues/issue/504/#comment_574788" rel="nofollow"><a href="https://github.com/plataformatec/devise/issues/issue/504/#comment_574788">https://github.com/plataformatec/devise/issues/issue/504/#comment_574788</a></a></p>
+
+<p>Jose is saying that <code>devise_error_messsages!</code> method is just a <em>stub</em> (though it contains implementation) and that we&rsquo;re supposed to override/replace it. It would have been nice if this was pointed out somewhere in the wiki, which is why i guess there are a few people like us that have been guessing.</p>
+
+<p>So I&rsquo;m going to try reopening the module and redefine the method, effectively overriding the default implementation. I&rsquo;ll let you know how it goes.</p>
+
+<h2>Update</h2>
+
+
+<p>Yep, that works. I created <code>app/helpers/deivse_helper.rb</code> and overrode it like so:</p>
+
+<pre><code>module DeviseHelper   def devise_error_messages!     'KABOOM!'   end end </code></pre>
+
+
+<p>So knowing this, I can modify the method to display error messages the way I want it to.</p>
+
+<p>To help you solve your original problem: Here&rsquo;s the original <a href="https://github.com/plataformatec/devise/blob/master/app/helpers/devise_helper.rb#L6" rel="nofollow"><code>devise_helper.rb</code> on Github</a>. Take a look at how the error messages are being traversed, specifically <a href="https://github.com/plataformatec/devise/blob/master/app/helpers/devise_helper.rb#L5" rel="nofollow">Line 5</a>.</p>
+
+<pre><code>messages = resource.errors.full_messages.map { |msg| content_tag(:li, msg) }.join </code></pre>
+
+
+<p>That should help you get started. :)</p>
+
+<h2>Another update</h2>
+
+
+<p>The <code>resource</code> object is actually the model that is being used by devise (go figure).</p>
+
+<pre><code>resource.class         #=&gt; User resource.errors.class  #=&gt; ActiveModel::Error </code></pre>
+
+
+<p>It also appears to be defined in a higher scope (probably coming from the controller), so it can be accessed in a variety of places.</p>
+
+<p>Anywhere in your Helper</p>
+
+<pre><code>module DeviseHelper   def devise_error_messages1!     resource.errors.full_messages.map { |msg| content_tag(:li, msg) }.join   end   def devise_error_messages2!     resource.errors.full_messages.map { |msg| content_tag(:p, msg) }.join   end end </code></pre>
+
+
+<p>Your View</p>
+
+<pre><code>&lt;div&gt;&lt;%= resource.errors.inspect %&gt;&lt;/div&gt;</code></pre>
+
+
+<p>More info look at <a href="http://stackoverflow.com/questions/4101641/rails-devise-handling-devise-error-messages"><a href="http://stackoverflow.com/questions/4101641/rails-devise-handling-devise-error-messages">http://stackoverflow.com/questions/4101641/rails-devise-handling-devise-error-messages</a></a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Francis Jiang</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-30T13:10:00+08:00" pubdate data-updated="true">May 30<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://jhjguxin.github.io/blog/2012/05/30/rails-devise-handling-devise-error-messages/" data-via="jhjguxin" data-counturl="http://jhjguxin.github.io/blog/2012/05/30/rails-devise-handling-devise-error-messages/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/05/25/howto-easily-create-a-boot-info-summary/" title="Previous Post: HOWTO : easily create a Boot-Info summary">&laquo; HOWTO : easily create a Boot-Info summary</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/06/01/lvm-jian-ti-zhong-wen/" title="Next Post: LVM (简体中文)">LVM (简体中文) &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/">通过mongodump和mongorestore实现Mongodb备份和恢复 --by Chenzhou123520</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes/">Ruby on Rails 4.0 Release Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/rails-active-record-named-scopes/">Rails Active Record Named Scopes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/">晒晒我们的开源项目 ITEYE开源代码</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/">Single Sign-on 单点登录 Sso</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/jhjguxin">@jhjguxin</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'jhjguxin',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Francis Jiang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

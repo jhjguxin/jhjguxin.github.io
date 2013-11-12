@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: 单表继承 | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/tags/单表继承/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Single table inheritance (单表继承)]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/06/18/single-table-inheritance-dan-biao-ji-cheng/"/>
+    <updated>2012-06-18T15:40:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/06/18/single-table-inheritance-dan-biao-ji-cheng</id>
+    <content type="html"><![CDATA[<h2>Single table inheritance (单表继承)</h2>
+
+<p>Active Record allows inheritance by storing the name of the class in a column that by default is named “type” (can be changed by overwriting <code>Base.inheritance_column</code>). This means that an inheritance looking like this:</p>
+
+<pre data-result="[object Object]">class Company &lt; ActiveRecord::Base; end
+class Firm &lt; Company; end
+class Client &lt; Company; end
+class PriorityClient &lt; Client; end</pre>
+
+
+<p>When you do <code>Firm.create(:name =&gt; &ldquo;37signals&rdquo;)</code>, this record will be saved in the companies table with type = “Firm”. You can then fetch this row again using <code>Company.where(:name =&gt; &lsquo;37signals&rsquo;).first</code> and it will return a Firm object.</p>
+
+<p>If you don’t have a type column defined in your table, single-table inheritance won’t be triggered. In that case, it’ll work just like normal subclasses with no special magic for differentiating between them or reloading the right type with find.</p>
+
+<p>Note, all the attributes for all the cases are kept in the same table. Read more: <a href="http://www.martinfowler.com/eaaCatalog/singleTableInheritance.html">www.martinfowler.com/eaaCatalog/singleTableInheritance.html</a></p>
+]]></content>
+  </entry>
+  
+</feed>

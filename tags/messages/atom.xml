@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: messages | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/tags/messages/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[rails - Devise - Handling - devise_error_messages]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/05/30/rails-devise-handling-devise-error-messages/"/>
+    <updated>2012-05-30T13:10:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/05/30/rails-devise-handling-devise-error-messages</id>
+    <content type="html"><![CDATA[<h2>rails &ndash; Devise &ndash; Handling &ndash; devise_error_messages</h2>
+
+<p>in my user edit page, there is a line as follows:</p>
+
+<pre><code>&lt;%= devise_error_messages! %&gt; </code></pre>
+
+
+<p>The problem is this does not output errors the stand way that the rest of the app does:</p>
+
+<pre><code>&lt;% flash.each do |key, value| %&gt;     &lt;divpun" style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; border-image: initial; vertical-align: baseline; background-image: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: transparent; color: rgb(0, 0, 0); "&gt;&lt;%= key %&gt;"&gt;&lt;%= value %&gt;&lt;/div&gt; &lt;% end %&gt; </code></pre>
+
+
+<p>My question, is how to I get the devise error message to work like the others that use the flash.each?</p>
+
+<p>Thanks</p>
+
+<p>I&rsquo;m trying to figure this out myself. I just found this issue logged on Github<a href="https://github.com/plataformatec/devise/issues/issue/504/#comment_574788" rel="nofollow"><a href="https://github.com/plataformatec/devise/issues/issue/504/#comment_574788">https://github.com/plataformatec/devise/issues/issue/504/#comment_574788</a></a></p>
+
+<p>Jose is saying that <code>devise_error_messsages!</code> method is just a <em>stub</em> (though it contains implementation) and that we&rsquo;re supposed to override/replace it. It would have been nice if this was pointed out somewhere in the wiki, which is why i guess there are a few people like us that have been guessing.</p>
+
+<p>So I&rsquo;m going to try reopening the module and redefine the method, effectively overriding the default implementation. I&rsquo;ll let you know how it goes.</p>
+
+<h2>Update</h2>
+
+
+<p>Yep, that works. I created <code>app/helpers/deivse_helper.rb</code> and overrode it like so:</p>
+
+<pre><code>module DeviseHelper   def devise_error_messages!     'KABOOM!'   end end </code></pre>
+
+
+<p>So knowing this, I can modify the method to display error messages the way I want it to.</p>
+
+<p>To help you solve your original problem: Here&rsquo;s the original <a href="https://github.com/plataformatec/devise/blob/master/app/helpers/devise_helper.rb#L6" rel="nofollow"><code>devise_helper.rb</code> on Github</a>. Take a look at how the error messages are being traversed, specifically <a href="https://github.com/plataformatec/devise/blob/master/app/helpers/devise_helper.rb#L5" rel="nofollow">Line 5</a>.</p>
+
+<pre><code>messages = resource.errors.full_messages.map { |msg| content_tag(:li, msg) }.join </code></pre>
+
+
+<p>That should help you get started. :)</p>
+
+<h2>Another update</h2>
+
+
+<p>The <code>resource</code> object is actually the model that is being used by devise (go figure).</p>
+
+<pre><code>resource.class         #=&gt; User resource.errors.class  #=&gt; ActiveModel::Error </code></pre>
+
+
+<p>It also appears to be defined in a higher scope (probably coming from the controller), so it can be accessed in a variety of places.</p>
+
+<p>Anywhere in your Helper</p>
+
+<pre><code>module DeviseHelper   def devise_error_messages1!     resource.errors.full_messages.map { |msg| content_tag(:li, msg) }.join   end   def devise_error_messages2!     resource.errors.full_messages.map { |msg| content_tag(:p, msg) }.join   end end </code></pre>
+
+
+<p>Your View</p>
+
+<pre><code>&lt;div&gt;&lt;%= resource.errors.inspect %&gt;&lt;/div&gt;</code></pre>
+
+
+<p>More info look at <a href="http://stackoverflow.com/questions/4101641/rails-devise-handling-devise-error-messages"><a href="http://stackoverflow.com/questions/4101641/rails-devise-handling-devise-error-messages">http://stackoverflow.com/questions/4101641/rails-devise-handling-devise-error-messages</a></a></p>
+]]></content>
+  </entry>
+  
+</feed>

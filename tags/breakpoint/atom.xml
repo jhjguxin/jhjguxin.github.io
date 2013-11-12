@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: breakpoint | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/tags/breakpoint/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[ruby-debug in 30 seconds (we don't need no stinkin' GUI!) ]]></title>
+    <link href="http://jhjguxin.github.io/blog/2011/12/27/ruby-debug-in-30-seconds-we-dont-need-no-stinkin-gui/"/>
+    <updated>2011-12-27T17:38:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2011/12/27/ruby-debug-in-30-seconds-we-dont-need-no-stinkin-gui</id>
+    <content type="html"><![CDATA[<h2>ruby-debug in 30 seconds (we don&rsquo;t need no stinkin' GUI!)</h2>
+
+<p><code>Many people (including me) have complained about the lack of a good GUI debugger for Ruby. Now that some are finally getting usable, I&rsquo;ve found I actually prefer IRB-style ruby-debug to a GUI.</code></p>
+
+<p>There&rsquo;s good tutorial links on the <a href="http://www.datanoise.com/ruby-debug/">ruby-debug homepage</a>, and a very good <a href="http://cheat.errtheblog.com/s/rdebug/">Cheat sheet</a>, but I wanted to give a bare-bones HOWTO to help you get immediately productive with ruby-debug.</p>
+
+<h1>Install the latest gem</h1>
+
+
+<pre><code>$ gem install ruby-debug </code></pre>
+
+
+<h1>Install the cheatsheet</h1>
+
+
+<pre><code>$ gem install cheat $ cheat rdebug </code></pre>
+
+
+<h1>Set autolist, autoeval, and autoreload as defaults</h1>
+
+
+<pre><code>$ vi ~/.rdebugrc set autolist set autoeval set autoreload </code></pre>
+
+
+<h1>Run Rails (or other app) via rdebug</h1>
+
+
+<pre><code>$ rdebug script/server </code></pre>
+
+
+<h1>Breakpoint from rdebug</h1>
+
+
+<pre><code>(rdb:1) b app/controllers/my_controller.rb:10 </code></pre>
+
+
+<h1>Breakpoint in source</h1>
+
+
+<pre><code>require 'ruby-debug' debugger my_buggy_method('foo') </code></pre>
+
+
+<h1>Catchpoint</h1>
+
+
+<pre><code>(rdb:1) cat RuntimeError </code></pre>
+
+
+<h1>Continue to breakpoint</h1>
+
+
+<pre><code>(rdb:1) c </code></pre>
+
+
+<h1>Next Line (Step Over)</h1>
+
+
+<pre><code>(rdb:1) n </code></pre>
+
+
+<h1>Step Into</h1>
+
+
+<pre><code>(rdb:1) s </code></pre>
+
+
+<h1>Continue</h1>
+
+
+<pre><code>(rdb:1) c </code></pre>
+
+
+<h1>Where (Display Frame / Call Stack)</h1>
+
+
+<pre><code>(rdb:1) where </code></pre>
+
+
+<h1>List current line</h1>
+
+
+<pre><code>(rdb:1) l= </code></pre>
+
+
+<h1>Evaluate any var or expression</h1>
+
+
+<pre><code>(rdb:1) myvar.class </code></pre>
+
+
+<h1>Modify a var</h1>
+
+
+<pre><code>(rdb:1) @myvar = 'foo' </code></pre>
+
+
+<h1>Help</h1>
+
+
+<pre><code>(rdb:1) h </code></pre>
+
+
+<p>There are many other commands, but these are the basics you need to poke around. Check the <a href="http://cheat.errtheblog.com/s/rdebug/">Cheat sheet</a> for details.</p>
+
+<p>This can also be used directly from any IDE that supports input into a running console (such as Intellij Idea).</p>
+
+<p>That should get you started. So, before you stick in another &lsquo;p&rsquo; to debug, try out ruby-debug instead!</p>
+
+<p><code>require &lsquo;rubygems&rsquo;
+require &lsquo;ruby-debug&rsquo;</p>
+
+<h1>$ruby breakpoint_test.rb</h1>
+
+<h1>vim breakpoint_test.rb</h1>
+
+<h1>:!ruby breakpoint_test.rb</h1>
+
+<h1>Next Line (Step Over)</h1>
+
+<h1>(rdb:1) n</h1>
+
+<h1>Step Into</h1>
+
+<h1>(rdb:1) s</h1>
+
+<h1>to debug in a function which is called from other place,before this function call,type &rsquo;s' and you will found your are inside this function.</h1>
+
+<p>def leap_year year
+leap = case
+breakpoint
+when year % 400 == 0: true
+when year % 100 == 0: false
+else year % 4 ==0
+end
+puts leap
+end
+if <strong>FILE</strong> == $0</p>
+
+<h1>tests&hellip;</h1>
+
+<p>puts &ldquo;year=2000&rdquo;
+leap_year 2000
+puts &ldquo;year=2004&rdquo;
+leap_year 2004
+puts &ldquo;year=2002&rdquo;
+leap_year 2002
+end</code></p>
+
+<p>标签： <a href="http://jhjguxin.hwcrazy.com/tag/breakpoint/">breakpoint</a> <a href="http://jhjguxin.hwcrazy.com/tag/debug/">debug</a> <a href="http://jhjguxin.hwcrazy.com/tag/rails/">rails</a> <a href="http://jhjguxin.hwcrazy.com/tag/ruby/">ruby</a> <a href="http://jhjguxin.hwcrazy.com/tag/shell/">shell</a></p>
+]]></content>
+  </entry>
+  
+</feed>

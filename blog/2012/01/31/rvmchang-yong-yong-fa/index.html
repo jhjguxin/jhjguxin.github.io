@@ -1,0 +1,565 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>rvm常用用法 - Francis's Octopress Blog</title>
+  <meta name="author" content="Francis Jiang">
+
+  
+  <meta name="description" content="rvm常用用法 jhjguxin@jhjguxin-virtual-machine:~$ sudo gpasswd -a root rvm
+Adding user root to group rvm
+jhjguxin@jhjguxin-virtual-machine:~$ sudo gpasswd &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jhjguxin.github.io/blog/2012/01/31/rvmchang-yong-yong-fa">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Francis's Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-25901353-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Francis's Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jhjguxin.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/readme">Readme</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Rvm常用用法</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-31T16:43:00+08:00" pubdate data-updated="true">Jan 31<span>st</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>rvm常用用法</h2>
+
+<p><strong>jhjguxin@jhjguxin-virtual-machine:~$ su<span>d</span>o gpassw<span>d</span> -a root rvm</strong>
+<strong>A<span>d</span><span>d</span>ing user root to group rvm</strong>
+<strong>jhjguxin@jhjguxin-virtual-machine:~$ su<span>d</span>o gpassw<span>d</span> -a jhjguxin rvm</strong>
+<strong>A<span>d</span><span>d</span>ing user jhjguxin to group rvm</strong>
+<strong>jhjguxin@jhjguxin-virtual-machine:~$ su<span>d</span>o gpassw<span>d</span> -a www-<span>d</span>ata rvm</strong>
+<strong>A<span>d</span><span>d</span>ing user www-<span>d</span>ata to group rvm</strong></p>
+
+<p><strong>这个是重点如果没有添加group的话则 install 会不成功</strong>
+The installer no longer auto-a<span>d</span><span>d</span>s root or users to the rvm group. A<span>d</span>mins must <span>d</span>o this.
+Also, please note that group memberships are ONLY evaluate<span>d</span> at login time.
+This means that users must log out then back in be<span>f</span>ore group membership takes e<span>f</span><span><span>f</span>e</span>ct!</p>
+
+<ul>
+<li><p>I<span>f</span> you have any questions, issues an<span>d</span>/or i<span>de</span>as <span>f</span>or improvement please
+<span>f</span>ork the project an<span>d</span> issue a pull request.</p></li>
+<li><p>I<span>f</span> you wish to <span>d</span>isable the project .rvmrc <span>f</span>ile <span>f</span>unctionality, set
+rvm_project_rvmrc=0 in either /etc/rvmrc or ~/.rvmrc.
+then log out an<span>d</span> back in.</p></li>
+<li><p>You <em>must</em> rea<span>d</span> &lsquo;rvm requirements&rsquo; <span>f</span>or a<span>d</span><span>d</span>itional OS speci<span>f</span>ic requirements <span>f</span>or
+various rubies, an<span>d</span> native-extension gems. Expect <span>f</span>ailures until those are met!</p></li>
+<li><p><span>F</span>or screen users, please <span>d</span>o not <span>f</span>orget to rea<span>d</span> <a href="https://rvm.beginrescueen">https://rvm.beginrescueen</a><span>d</span>.com/work<span>f</span>low/screen/.
+You will nee<span>d</span> to a<span>d</span><span>d</span> &lsquo;shell &ndash;/bin/bash&rsquo; to your $HOME/.screenrc to properly loa<span>d</span> RVM.</p></li>
+<li><p>rvm_trust_rvmrcs has been change<span>d</span> to rvm_trust_rvmrcs_<span>f</span>lag <span>f</span>or consistency</p></li>
+<li><p>Project rvmrc <span>f</span>iles are now checke<span>d</span> <span>f</span>or trust whenever they change, as
+promise<span>d</span> by the note <span>d</span>isplaye<span>d</span> <span>d</span>uring the review process</p></li>
+<li><p>Ruby package <span>de</span>pen<span>de</span>ncy list <span>f</span>or your OS is given by:
+rvm requirements</p></li>
+<li><p>I<span>f</span> you encounter any issues with a ruby &lsquo;X&rsquo; your best bet is to:
+rvm get hea<span>d</span> &amp;&amp; rvm reinstall X</p></li>
+<li><p>I<span>f</span> you see the <span>f</span>ollowing error message: Unknown alias name: &lsquo;<span style="background-color: #ffd700;">def</span>ault&rsquo;
+re-set your <span style="background-color: #ffd700;">def</span>ault ruby, this is <span>d</span>ue to a change in how <span style="background-color: #ffd700;">def</span>ault works.</p></li>
+<li><p>a<span>f</span>ter_use an<span>d</span> a<span>f</span>ter_c<span>d</span> hook now supports multiple <span>f</span>iles with a<span>f</span>ter<em>*</em>*
+the custom hooks can be easily turne<span>d</span> on/o<span>f</span><span>f</span> by:
+chmo<span>d</span> +x $rvm_path/hooks/a<span>f</span>ter_c<span>d</span><em>[hook_name]
+chmo<span>d</span> -x $rvm_path/hooks/a<span>f</span>ter_use</em>[hook_name]</p></li>
+<li><p>I<span>f</span> your shell exits on entering <span>d</span>irectory with <span>f</span>reshly checke<span>d</span> out sources
+you shoul<span>d</span> up<span>d</span>ate .rvmrc <span>f</span>ile, an<span>d</span> replace any <code>exit</code> with <code>return</code>.</p></li>
+<li><p>I<span>f</span> you wish to use RVM in an interactive <span>f</span>ashion in other shells
+then place the <span>f</span>ollowing line at the en<span>d</span> o<span>f</span> your shell&rsquo;s loa<span>d</span>ing <span>f</span>iles
+(.bashrc or .bash_pro<span>f</span>ile <span>f</span>or bash an<span>d</span> .zshenv <span>f</span>or zsh),
+a<span>f</span>ter all PATH/variable settings:</p></li>
+</ul>
+
+
+<p><strong>in my system</strong></p>
+
+<p>[-s &ldquo;$<em>HOME/.rvm/scripts/rvm&rdquo;</em>] source &ldquo;$HOME/.rvm/scripts/rvm&#8221;  &amp;&amp; echo &#8220;add rvm sucessful …&rdquo; # This loads RVM into a shell session.</p>
+
+<ul>
+<li><p>On some systems (like Ubuntu) rvmsu<span>d</span>o requires <span>f</span>ollowing changes to work properly:
+<a href="http://stackover">http://stackover</a><span>f</span>low.com/questions/257616/su<span>d</span>o-changes-path-why</p></li>
+<li><p>To up<span>d</span>ate RVM loa<span>d</span>ing co<span>de</span> appen<span>d</span> &lsquo;&mdash;auto&rsquo; to &lsquo;rvm get &hellip;&rsquo;</p></li>
+<li><p>In case you have some ol<span>d</span> RVM <span>f</span>iles/rubies in &lsquo;/usr/local/bin&rsquo; or &lsquo;$HOME/bin&rsquo; <span><span>f</span>e</span>el <span>f</span>ree to remove them,
+they were copie<span>d</span> there because o<span>f</span> bug in path <span>de</span>tection.</p></li>
+<li><p>ZSH 4.3.15 is buggy, be care<span>f</span>ul with it, it can break RVM, especially multiuser installations,
+You shoul<span>d</span> consi<span>de</span>r <span>d</span>owngra<span>d</span>ing ZSH to 4.3.12 which has proven to work more reliable with RVM.</p></li>
+</ul>
+
+
+<h1>RVM:  Shell scripts enabling management o<span>f</span> multiple ruby environments.</h1>
+
+<h1>RT<span>F</span>M: <a href="https://rvm.beginrescueen">https://rvm.beginrescueen</a><span>d</span>.com/</h1>
+
+<h1>HELP: <a href="http://webchat.">http://webchat.</a><span>f</span>reeno<span>de</span>.net/?channels=rvm (#rvm on irc.<span>f</span>reeno<span>de</span>.net)</h1>
+
+<h1>Screencast: <a href="http://screencasts.org/episo">http://screencasts.org/episo</a><span>de</span>s/how-to-use-rvm</h1>
+
+<h1>In case o<span>f</span> any issues rea<span>d</span> output o<span>f</span> &lsquo;rvm requirements&rsquo; an<span>d</span>/or &lsquo;rvm notes&rsquo;</h1>
+
+<p>Upgra<span>de</span> o<span>f</span> RVM in /usr/share/ruby-rvm/ is complete.</p>
+
+<h1>jhjguxin,</h1>
+
+<p>#</p>
+
+<h1>   Thank you <span>f</span>or using RVM!</h1>
+
+<h1>   I sincerely hope that RVM helps to make your li<span><span>f</span>e</span> easier an<span>d</span> more enjoyable!!!</h1>
+
+<p>#</p>
+
+<h1>~Wayne</h1>
+
+<p>install <span>De</span>pen<span>de</span>ncies:(# librea<span>d</span>line6-<span>de</span>v is <span>d</span>isable)</p>
+
+<p>su<span>d</span>o apt-get install buil<span>d</span>-essential openssl librea<span>d</span>line6 curl git-core zlib1g zlib1g-<span>de</span>v libssl-<span>de</span>v libyaml-<span>de</span>v libsqlite3-0 libsqlite3-<span>de</span>v sqlite3 libxml2-<span>de</span>v libxslt-<span>de</span>v autocon<span>f</span> libc6-<span>de</span>v ncurses-<span>de</span>v automake libtool bison subversion</p>
+
+<p>I<span>f</span> installation an<span>d</span> con<span>f</span>iguration were success<span>f</span>ul, RVM shoul<span>d</span> now loa<span>d</span> whenever you open a new shell. This can be teste<span>d</span> by executing the <span>f</span>ollowing comman<span>d</span> which shoul<span>d</span> output <em>&lsquo;rvm is a <span>f</span>unction&rsquo;</em> as shown below.</p>
+
+<pre>user$ type rvm | hea<span>d</span> -1
+rvm is a <span>f</span>unction</pre>
+
+
+<p>rvm常用用法
+运行，</p>
+
+<p>安装完成后，配置启动环境，修改~/.bashrc 文件，加入（我这里并不是这个文件但是只要找到就对）</p>
+
+<h1>a<span>d</span><span>d</span> rvm</h1>
+
+<p>i<span>f</span> [[ -s &ldquo;$HOME/.rvm/scripts/rvm&rdquo; ]]  ; then
+source &ldquo;$HOME/.rvm/scripts/rvm&rdquo; ;
+<span>f</span>i</p>
+
+<p>在新的终端里就能看到rvm是否已安装成功：</p>
+
+<p>$  rvm notes</p>
+
+<p>RVM安装完成后，就可以通过TA来安装管理 Ruby 了。用下面一条命令来安装Ruby 1.9.2</p>
+
+<p>$  rvm install 1.9.2</p>
+
+<p>*Ruby包的下载实在太慢了，这里总是中断。有个小技巧，你可以用工具下载好ruby-1.9.2-p0.tar.bz2，然后手工放到~/.rvm/archives 目录下。然后再运行这条命令，就可以直接解压安装了。</p>
+
+<p>&nbsp;</p>
+
+<p>把该版本的Ruby设为默认</p>
+
+<p>rvm &mdash;help
+获得rvm的常用用法：</p>
+
+<p>rvm [<span>F</span>lags] [Options] Action [Implementation[,Implementation[,&hellip;]]
+rvm最常用的Action包括：</p>
+
+<p>对Ruby的操作
+主要包括读取，安装，卸载，更新，读取ruby等.</p>
+
+<p>读取远程可安装的Ruby版本</p>
+
+<h1>获得当前可以用的ruby版本</h1>
+
+<p>rvm list known
+安装Ruby</p>
+
+<h1>安装其中的ruby1.9.2-p290</h1>
+
+<p>rvm install ruby-1.9.2-p290
+使用</p>
+
+<h1>切换到刚刚安装的ruby1.9.2-p290版本</h1>
+
+<p>rvm use ruby1.9.2-p290
+读取</p>
+
+<h1>列出当前rvm下的ruby版本</h1>
+
+<p>rvm list</p>
+
+<h1>查询当前使用的ruby版本路径</h1>
+
+<p>which ruby</p>
+
+<h1>获得当前ruby版本</h1>
+
+<p>ruby -v
+输出rvm当前使用的ruby版本与gemset信息：
+rvm in<span>f</span>o
+在项目文件中使用RVM
+在自己的项目根目录下面，创建一个.rvmrc文件，里面内容可以指定ruby版本与gemset。例如，某项目根目录下面的.rvmrc文件内容如下：</p>
+
+<p>rvm ruby-1.9.2-p290@rails31
+这表示，该项目使用ruby1.9.2p290这个版本的ruby，gem安装在rails31下面。然后iterm的zsh或者bash；或者TextMate中的rubymate,rakemate；以及pow等工具就可以直接调用相应ruby版本与相应gemset。</p>
+
+<p>&nbsp;</p>
+
+<p>使用下面命令对RVM自己进行升级
+$ rvm up<span>d</span>ate</p>
+
+<p>RVM 信息</p>
+
+<p>通过以下几个命令查看当前RVM当前信息</p>
+
+<p>$ rvm in<span>f</span>o
+$ rvm in<span>f</span>o 1.9.2
+Ruby的安装使用与管理
+用这个命令查看有哪些RVM可用的Ruby版本</p>
+
+<p>$ rvm list known
+$ rvm install 1.9.2    # 安装 ruby-1.9.2
+$ rvm install ree   # install Ruby Enterprise E<span>d</span>ition (REE)</p>
+
+<p>安装多个版本的Ruby之后，RVM可以很方便的进行切换。使用下条命令可以设置某一版本为当前使用版本。</p>
+
+<p>$ rvm  ruby-1.8.7-p160 #切换1.8.7-p160为当前使用版本
+$ rvm 1.8.7-p160    #同上面命令一样rvm ruby-1.8.7-p160
+$ ruby -v #查看当前Ruby版本</p>
+
+<p>&nbsp;</p>
+
+<p>查看当前Ruby的安装位置</p>
+
+<p>$ which ruby
+设置默认使用版本
+将某一个版本的ruby设为默认，这样避免每次启动新的Shell都要选择所要使用的Ruby版本。</p>
+
+<p>$ rvm &mdash;default use 1.8.7   #设置1.9.2为默认版本</p>
+
+<p>$ rvm <span style="background-color: #ffd700;">def</span>ault      #通过<span style="background-color: #ffd700;">def</span>ault可以快速回到默认版本
+$ rvm list <span style="background-color: #ffd700;">def</span>ault     #查看当前版本设置信息
+$ rvm reset     #恢复系统默认设置
+查看已安装的Ruby信息
+列出所有已经安装的Ruby的版本信息</p>
+
+<p>$ rvm list      #列出已安装的Ruby版本</p>
+
+<p>$ rvm list rubies     #同上
+$ rvm list <span style="background-color: #ffd700;">def</span>ault    #显示默认Ruby版本信息
+$ rvm list known     #列出RVM所支持的所有Ruby版本的信息</p>
+
+<p>创建别名
+使用带版本号的ruby时，每次切换时都要输入很长的版本号，非常的不方便，通过使用别名功能，可以创建很简短的别名来代替长长的ruby信息。</p>
+
+<p>$ rvm alias create ree<span>d</span> ree-1.8.7-p2010.01    #为ree-187的Ruby版本创建一个别名叫：ree<span>d</span></p>
+
+<p>$ rvm use ree<span>d</span>  #通过别名迅速切换
+$ rvm alias <span>de</span>lete ree<span>d</span>   #删除别名
+$ rvm alias list # 查看所有的别名</p>
+
+<p>删除已安装版本</p>
+
+<p>$ rvm remove ruby-1.9.2-p0</p>
+
+<p>$ rvm uninstall ruby-1.9.2-p0
+管理 Gemsets
+一个gemset就是一个目录，是某一个Ruby版本的Gem使用集，通过环境变量配置，使该gemset下的gem命令导入到Shell。</p>
+
+<p>一个Ruby版本初装时就默认给了一个同名的gemset，也就是说rvm ruyb-1.9.2-p0 命令在执行时，就是使用该环境变量。</p>
+
+<p>创建
+基于指定Ruby版本创建一个新的Gemset</p>
+
+<p>$ rvm 1.9.2  #？？？
+$ rvm gemset create rails3  #创建一个名为rails3的gemset
+使用
+指定某一个gemset作为当前环境使用。</p>
+
+<p>$ rvm 1.9.2  #？？？</p>
+
+<p>$ rvm gemset use rails3   #在当前Ruby下使用rails3这个gemset</p>
+
+<p>$ rvm use ruby-1.9.2-p0@rails3 #或者直接使用这种命名，直接指定ruby和gemset的信息。
+$ rvm use ruby-1.9.2-p0@rails3 &mdash;<span style="background-color: #ffd700;">def</span>ault   #设置默认
+查看Gemsets信息</p>
+
+<p>$ rvm <span style="background-color: #ffd700;">def</span>ault  #选择使用ruby版本</p>
+
+<p>列出当前Ruby版本下所有gemsets的信息r</p>
+
+<p>$ rvm gemset list</p>
+
+<p>列出所有Ruby版本下所有gemsets的信息</p>
+
+<p>$ rvm gemset list_all
+显示当前所使用的gemset信息
+$ rvm gemset name     #当前gemset的名称</p>
+
+<p>rails3
+$ rvm gem<span>d</span>ir   #所在位置
+~/.rvm/gems/ruby-1.9.2-p0@rails3
+删除
+删除一个gemset，默认有确认操作，使用 &mdash;<span>f</span>orce 可跳过该步骤。</p>
+
+<p>$ rvm gemset <span>de</span>lete rails3  #会让确认一次
+$ rvm &mdash;<span>f</span>orce gemset <span>de</span>lete rails3     #直接删除，没有确定步骤
+清空
+可以清空一个Gemset，删除其中的所有的gems包</p>
+
+<p>$ rvm gemset empty rails3
+$ rvm &mdash;<span>f</span>orce gemset empty rails3   #直接删除，没有确定步骤</p>
+
+<p>导出
+将当前gemsets内的信息导出到一个 name.gems文件，gems文件内定义gem的名称，版本号和其信赖关系。</p>
+
+<p>$ rvm gemset export rails3.gems
+导入
+将gems文件所指定的gems安装到当前gemset下。</p>
+
+<p>$ rvm gemset rails 3
+$ rvm gemset import rails3
+复制
+可以将一个gemset内的所有gems包都复制到另一个gemset，很快速的复制一个当前环境。</p>
+
+<p>$ rvm gemset copy 1.8.7@rails3 1.9.2-hea<span>d</span>@rails3</p>
+
+<p>全局 gemsets （global gemsets）</p>
+
+<p>每一个ruby版本都默认创建一个全局的gemset，以ruby_version@global命名，这样基于该ruby版本下所有的gemsets都会包含全局gemset里的gem包。可以起到统一约定的作用，也避免重复创建。
+默认安装的global gemset内仅有一个gem包：rake</p>
+
+<div>标签： <a href="http://jhjguxin.hwcrazy.com/tag/rails/">rails</a> <a href="http://jhjguxin.hwcrazy.com/tag/ruby/">ruby</a> <a href="http://jhjguxin.hwcrazy.com/tag/rvm/">rvm</a></div>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Francis Jiang</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-31T16:43:00+08:00" pubdate data-updated="true">Jan 31<span>st</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://jhjguxin.github.io/blog/2012/01/31/rvmchang-yong-yong-fa/" data-via="jhjguxin" data-counturl="http://jhjguxin.github.io/blog/2012/01/31/rvmchang-yong-yong-fa/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/01/31/bundle-install-and-rbx-require-relative/" title="Previous Post: bundle install and rbx-require-relative">&laquo; bundle install and rbx-require-relative</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/01/31/rvm-on-ubuntu-11-dot-10-install-ruby-1-dot-9-2-error/" title="Next Post: rvm on ubuntu 11.10 install ruby 1.9.2 error">rvm on ubuntu 11.10 install ruby 1.9.2 error &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/">通过mongodump和mongorestore实现Mongodb备份和恢复 --by Chenzhou123520</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes/">Ruby on Rails 4.0 Release Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/rails-active-record-named-scopes/">Rails Active Record Named Scopes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/">晒晒我们的开源项目 ITEYE开源代码</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/">Single Sign-on 单点登录 Sso</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/jhjguxin">@jhjguxin</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'jhjguxin',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Francis Jiang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

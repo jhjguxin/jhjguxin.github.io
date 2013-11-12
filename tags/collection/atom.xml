@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: collection | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/tags/collection/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[How use the collection type model column怎样使用集合类型的模型字段]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/05/17/how-use-the-collection-type-model-columnzen-yang-shi-yong-ji-he-lei-xing-de-mo-xing-zi-duan/"/>
+    <updated>2012-05-17T16:09:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/05/17/how-use-the-collection-type-model-columnzen-yang-shi-yong-ji-he-lei-xing-de-mo-xing-zi-duan</id>
+    <content type="html"><![CDATA[<h2>How use the collection type model column怎样使用集合类型的模型字段</h2>
+
+<p>For example you have bellow code in migrate folder</p>
+
+<p><code>      # 0: &lt;20, 1: 20&lt; &lt;=25 , 2: 25&lt; &lt;=30, 3: 30&lt; &lt;=35, 4: 35&lt; &lt;=40, 5: 40&lt;</p>
+
+<pre><code>add_column :profiles, :agerange, :integer&lt;/code&gt;
+</code></pre>
+
+<p>and then how to use it:</p>
+
+<p>for model file:</p>
+
+<p><code>  # 0: &lt;20, 1: 20&lt; &lt;=25 , 2: 25&lt; &lt;=30, 3: 30&lt; &lt;=35, 4: 35&lt; &lt;=40, 5: 40&lt;
+  A20     = 0
+  A20_25  = 1
+  A25_30  = 2
+  A30_35  = 3
+  A35_40  = 4
+  A40     = 5</p>
+
+<p>  AGERANGE = {</p>
+
+<pre><code>A20        =&gt; "#{I18n.t("activerecord.attributes.profiles.agerange.A20")}",
+A20_25     =&gt; "#{I18n.t("activerecord.attributes.profiles.agerange.A20_25")}",
+A25_30     =&gt; "#{I18n.t("activerecord.attributes.profiles.agerange.A25_30")}",
+A30_35     =&gt; "#{I18n.t("activerecord.attributes.profiles.agerange.A30_35")}",
+A35_40     =&gt; "#{I18n.t("activerecord.attributes.profiles.agerange.A35_40")}",
+A40        =&gt; "#{I18n.t("activerecord.attributes.profiles.agerange.A40")}",
+</code></pre>
+
+<p>  }</p>
+
+<p>  validates_inclusion_of :agerange, :in => AGERANGE.keys,</p>
+
+<pre><code>  :message =&gt; " must be in #{AGERANGE.values.join ','}"
+</code></pre>
+
+<p>  # just a helper method for the view
+  def age_range</p>
+
+<pre><code>AGERANGE[agerange]
+</code></pre>
+
+<p>  end</code></p>
+
+<pre>and then how use them in ‘form‘ and ’show‘ page</pre>
+
+
+<pre>in form.html.erb</pre>
+
+
+<p><code></p>
+
+<pre><code>&lt;%= f.label :agerange, t("activerecord.attributes.profiles.agerange_label") %&gt;
+&lt;%= select_tag(:agerange, options_for_select(Profile::AGERANGE.invert)) %&gt;&lt;/code&gt;
+</code></pre>
+
+<pre>in show.html.erb</pre>
+
+
+<pre><%= s.attribute :age_range %></pre>
+
+]]></content>
+  </entry>
+  
+</feed>

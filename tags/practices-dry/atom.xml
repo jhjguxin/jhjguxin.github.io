@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: Practices，DRY | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/tags/practices-dry/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Ruby on Rails – Programming Best Practices]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/05/04/ruby-on-rails-programming-best-practices/"/>
+    <updated>2012-05-04T13:44:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/05/04/ruby-on-rails-programming-best-practices</id>
+    <content type="html"><![CDATA[<h2>Ruby on Rails – Programming Best Practices</h2>
+
+<p><strong>Don&rsquo;t Repeat Yourself</strong></p>
+
+<p>I&rsquo;m sure most of you have heard of the <a href="http://en.wikipedia.org/wiki/Don%27t_repeat_yourself">DRY principle</a>. It is something Rails has taken to heart, and I&rsquo;m very glad it has. By not repeating yourself you can freely change something in one area of the program without worrying if you need to make the same change in another area. Not only that, but keeping the code DRY usually leads to better design.</p>
+
+<p>Sometimes it is difficult to find duplication in your code. If you find yourself making a similar change in multiple places, you should first remove this duplication so you only need to make the change <strong>in one place</strong>.</p>
+
+<p>This principle should not only be followed in code, but in your database and other areas as well. If you are repeating logic or data in the database, consider changing the design so it is not repeated.</p>
+
+<p>That said, there are times when repeated data is good. For example, if you are building a cart system, the price for the items in the cart should be stored in a separate field than the price for the product. This allows you to change the price of the product without effecting all previous orders.</p>
+
+<p>&nbsp;</p>
+
+<p><strong>Stick to the Conventions</strong></p>
+
+<p>Another extremely important practice taken up by the Rails community: stick to the conventions. From naming variables to structuring files, there are conventions on how to do these things in Rails. If you are unsure of the conventions, check out a Rails book or tutorial &ndash; most of them stick to the conventions.</p>
+
+<p>The advantages of sticking to conventions are almost too numerous to count. In fact, it deserves <a href="http://railsforum.com/viewtopic.php?id=1042">its own article</a>.</p>
+
+<p>&nbsp;</p>
+
+<p><strong>Optimize Later</strong></p>
+
+<p>Performance is a major concern for many people switching to Rails, and rightly so. It is true that Rails is generally slower than other web frameworks. However, it is very scalable, so do not worry about it at the beginning. If you are a large corporation that needs to handle thousands of requests per second, then you may have something to be concerned about, but for the majority of us performance does not need to be considered until near the completion of the application.</p>
+
+<p>Any optimization done early requires guessing. Instead you should wait until you know where the bottlenecks are. Optimizing usually requires extra/complex code, and you should keep the code as clean and simple as possible. Therefore, only optimize where necessary. Also, any performance testing should be done in the <strong>production</strong> environment, as this adds some optimizations which are usually turned off in the <strong>development</strong> environment.</p>
+
+<p>Above all else, don&rsquo;t let fear of poor performance inhibit you from making good design decisions! There are usually good ways to optimize while still keeping the good design, but these ways are hard to see unless you have a good design already in place. In short, don&rsquo;t worry about performance while designing.</p>
+
+<p>&nbsp;</p>
+
+<p><strong>Humans First</strong></p>
+
+<p>Code for humans first, computers second. In other words, make the code as readable as you can. No, I&rsquo;m not talking about cluttering it with comments. Most code should be understandable <strong>without comments</strong>.</p>
+
+<p>How do you make the code more readable without comments? Rename variables, move code into classes/methods, etc. Try to give variables and methods concise, yet descriptive names. Do not abbreviate the names unless the abbreviation is very common.</p>
+
+<p>&nbsp;</p>
+
+<p><strong>Test Driven Development</strong></p>
+
+<p>You&rsquo;ve heard it said: &ldquo;Rails makes testing easy, so you don&rsquo;t have any excuses not to do it.&rdquo;. Well, in my opinion, testing is never easy &ndash; it is just <strong>easier</strong> in Rails.</p>
+
+<p>Seriously, if you have not tried <a href="http://en.wikipedia.org/wiki/Test_driven_development">test driven development</a>, give it a go. Automated tests are a godsend! I find myself rarely going to the web browser anymore to test things out. I just know it works because all of the tests pass. I wouldn&rsquo;t dare code a mildly complex application without testing anymore. It will take some time to get used to testing, but the benefits are far worth it.</p>
+
+<p>&nbsp;</p>
+
+<p><strong>Refactoring</strong></p>
+
+<p>This is my favorite best practice, and for good reason. Refactoring ties all of the things in this list together. Simply put, if you want to become a better programming, learn <a href="http://en.wikipedia.org/wiki/Refactoring">Refactoring</a>. Normally the first time you write a piece of code, it is messy. Whatever you do, <strong>don&rsquo;t leave the messy code as is</strong>. Even if it works correctly, it will be a headache to maintain. You should take some time to clean up the code, make it readable, and improve the design.</p>
+
+<p>Make it beautiful.</p>
+
+<p><em>Last edited by ryanb (2006-10-31 00:13:39)</em></p>
+
+<p>The original <a href="http://www.amazon.com/Refactoring-Improving-Design-Existing-Code/dp/0201485672/">Refactoring</a> book is definitely recommended reading. There is also <a href="http://www.amazon.com/exec/obidos/ASIN/0321293533">Refactoring Databases</a>.</p>
+]]></content>
+  </entry>
+  
+</feed>

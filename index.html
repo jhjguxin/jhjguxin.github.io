@@ -1,1 +1,3343 @@
-My Octopress Page is coming soon &hellip;
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Francis's Octopress Blog</title>
+  <meta name="author" content="Francis Jiang">
+
+  
+  <meta name="description" content="通过mongodump和mongorestore实现Mongodb备份和恢复 &mdash;by chenzhou123520 from http://chenzhou123520.iteye.com/blog/1630993 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jhjguxin.github.io">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Francis's Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-25901353-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Francis's Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jhjguxin.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/readme">Readme</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/">通过mongodump和mongorestore实现Mongodb备份和恢复 &#8211;by Chenzhou123520</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-08T22:29:00+08:00" pubdate data-updated="true">Oct 8<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>通过mongodump和mongorestore实现Mongodb备份和恢复 &mdash;by chenzhou123520</h2>
+
+<p>from <a href="http://chenzhou123520.iteye.com/blog/1630993"><a href="http://chenzhou123520.iteye.com/blog/1630993">http://chenzhou123520.iteye.com/blog/1630993</a></a></p>
+
+<p>Mongodb自带了mongodump和mongorestore这两个工具来实现对数据的备份和恢复。</p>
+
+<p>mongodump能够在Mongodb运行时进行备份，它的工作原理是对运行的Mongodb做查询，然后将所有查到的文档写入磁盘。但是存在的问题时使用mongodump产生的备份不一定是数据库的实时快照，如果我们在备份时对数据库进行了写入操作，则备份出来的文件可能不完全和Mongodb实时数据相等。另外在备份时可能会对其它客户端性能产生不利的影响。</p>
+
+<p>mongodump用法如下：</p>
+
+<pre>[root@localhost mongodb]# ./bin/mongodump --help
+Export MongoDB data to BSON files.
+
+options:
+  --help                   produce help message
+  -v [ --verbose ]         be more verbose (include multiple times for more
+                           verbosity e.g. -vvvvv)
+  --version                print the program&#039;s version and exit
+  -h [ --host ] arg        mongo host to connect to ( &lt;set name&gt;/s1,s2 for
+                           sets)
+  --port arg               server port. Can also use --host hostname:port
+  --ipv6                   enable IPv6 support (disabled by default)
+  -u [ --username ] arg    username
+  -p [ --password ] arg    password
+  --dbpath arg             directly access mongod database files in the given
+                           path, instead of connecting to a mongod  server -
+                           needs to lock the data directory, so cannot be used
+                           if a mongod is currently accessing the same path
+  --directoryperdb         if dbpath specified, each db is in a separate
+                           directory
+  --journal                enable journaling
+  -d [ --db ] arg          database to use
+  -c [ --collection ] arg  collection to use (some commands)
+  -o [ --out ] arg (=dump) output directory or &quot;-&quot; for stdout
+  -q [ --query ] arg       json query
+  --oplog                  Use oplog for point-in-time snapshotting
+  --repair                 try to recover a crashed database
+  --forceTableScan         force a table scan (do not use $snapshot)</pre>
+
+
+<p>参数说明：</p>
+
+<p>-h:指明数据库宿主机的IP</p>
+
+<p>-u:指明数据库的用户名</p>
+
+<p>-p:指明数据库的密码</p>
+
+<p>-d:指明数据库的名字</p>
+
+<p>-c:指明collection的名字</p>
+
+<p>-o:指明到要导出的文件名</p>
+
+<p>-q:指明导出数据的过滤条件</p>
+
+<p>具体使用示例如下：</p>
+
+<pre>[root@localhost mongodb]# ./bin/mongodump -d test -o data/backup
+connected to: 127.0.0.1
+DATABASE: test   to     data/backup/test
+    test.system.indexes to data/backup/test/system.indexes.bson
+         9 objects
+    test.users to data/backup/test/users.bson
+         3 objects
+    test.games to data/backup/test/games.bson
+         1 objects
+    test.blog.post to data/backup/test/blog.post.bson
+         1 objects
+    test.lists to data/backup/test/lists.bson
+         1 objects
+    test.math to data/backup/test/math.bson
+         1 objects
+    test.map to data/backup/test/map.bson
+         8 objects
+    test.my_collection to data/backup/test/my_collection.bson
+         0 objects
+    test.foo to data/backup/test/foo.bson
+         6 objects
+    test.system.users to data/backup/test/system.users.bson
+         1 objects</pre>
+
+
+<p>mongorestore是Mongodb从备份中恢复数据的工具，它主要用来获取mongodump的输出结果，并将备份的数据插入到运行的Mongodb中。</p>
+
+<p>mongorestore命令使用方法如下：</p>
+
+<pre>[root@localhost mongodb]# ./bin/mongorestore --help
+usage: ./bin/mongorestore [options] [directory or filename to restore from]
+options:
+  --help                  produce help message
+  -v [ --verbose ]        be more verbose (include multiple times for more
+                          verbosity e.g. -vvvvv)
+  --version               print the program&#039;s version and exit
+  -h [ --host ] arg       mongo host to connect to ( &lt;set name&gt;/s1,s2 for sets)
+  --port arg              server port. Can also use --host hostname:port
+  --ipv6                  enable IPv6 support (disabled by default)
+  -u [ --username ] arg   username
+  -p [ --password ] arg   password
+  --dbpath arg            directly access mongod database files in the given
+                          path, instead of connecting to a mongod  server -
+                          needs to lock the data directory, so cannot be used
+                          if a mongod is currently accessing the same path
+  --directoryperdb        if dbpath specified, each db is in a separate
+                          directory
+  --journal               enable journaling
+  -d [ --db ] arg         database to use
+  -c [ --collection ] arg collection to use (some commands)
+  --objcheck              validate object before inserting
+  --filter arg            filter to apply before inserting
+  --drop                  drop each collection before import
+  --oplogReplay           replay oplog for point-in-time restore
+  --keepIndexVersion      don&#039;t upgrade indexes to newest version</pre>
+
+
+<p>参数说明：</p>
+
+<p>-h:指明数据库宿主机的IP</p>
+
+<p>-u:指明数据库的用户名</p>
+
+<p>-p:指明数据库的密码</p>
+
+<p>-d:指明数据库的名字</p>
+
+<p>-c:指明collection的名字</p>
+
+<p>-o:指明到要备份的文件名</p>
+
+<p>-q:指明备份数据的过滤条件</p>
+
+<p>&nbsp;</p>
+
+<p>具体使用示例如下：</p>
+
+<pre>[root@localhost mongodb]# ./bin/mongorestore -d test --drop data/backup/test/
+connected to: 127.0.0.1
+Tue Aug 14 01:18:17 data/backup/test/games.bson
+Tue Aug 14 01:18:17      going into namespace [test.games]
+Tue Aug 14 01:18:17      dropping
+1 objects found
+Tue Aug 14 01:18:17 data/backup/test/foo.bson
+Tue Aug 14 01:18:17      going into namespace [test.foo]
+Tue Aug 14 01:18:17      dropping
+6 objects found
+Tue Aug 14 01:18:17 data/backup/test/blog.post.bson
+Tue Aug 14 01:18:17      going into namespace [test.blog.post]
+Tue Aug 14 01:18:17      dropping
+1 objects found
+Tue Aug 14 01:18:17 data/backup/test/lists.bson
+Tue Aug 14 01:18:17      going into namespace [test.lists]
+Tue Aug 14 01:18:17      dropping
+1 objects found
+Tue Aug 14 01:18:17 data/backup/test/map.bson
+Tue Aug 14 01:18:17      going into namespace [test.map]
+Tue Aug 14 01:18:17      dropping
+8 objects found
+Tue Aug 14 01:18:17 data/backup/test/math.bson
+Tue Aug 14 01:18:17      going into namespace [test.math]
+Tue Aug 14 01:18:17      dropping
+1 objects found
+Tue Aug 14 01:18:17 data/backup/test/system.users.bson
+Tue Aug 14 01:18:17      going into namespace [test.system.users]
+1 objects found
+Tue Aug 14 01:18:17 data/backup/test/my_collection.bson
+Tue Aug 14 01:18:17      going into namespace [test.my_collection]
+Tue Aug 14 01:18:17      dropping
+Tue Aug 14 01:18:17 file data/backup/test/my_collection.bson empty, skipping
+Tue Aug 14 01:18:17 data/backup/test/users.bson
+Tue Aug 14 01:18:17      going into namespace [test.users]
+Tue Aug 14 01:18:17      dropping
+3 objects found
+Tue Aug 14 01:18:17 data/backup/test/system.indexes.bson
+Tue Aug 14 01:18:17      going into namespace [test.system.indexes]
+Tue Aug 14 01:18:17      dropping
+Tue Aug 14 01:18:17 { key: { _id: 1 }, ns: &quot;test.users&quot;, name: &quot;_id_&quot; }
+Tue Aug 14 01:18:17 { key: { _id: 1 }, ns: &quot;test.games&quot;, name: &quot;_id_&quot; }
+Tue Aug 14 01:18:17 { key: { _id: 1 }, ns: &quot;test.blog.post&quot;, name: &quot;_id_&quot; }
+Tue Aug 14 01:18:17 { key: { _id: 1 }, ns: &quot;test.lists&quot;, name: &quot;_id_&quot; }
+Tue Aug 14 01:18:17 { key: { _id: 1 }, ns: &quot;test.math&quot;, name: &quot;_id_&quot; }
+Tue Aug 14 01:18:17 { key: { _id: 1 }, ns: &quot;test.map&quot;, name: &quot;_id_&quot; }
+Tue Aug 14 01:18:17 { key: { gps: &quot;2d&quot; }, ns: &quot;test.map&quot;, name: &quot;gps_&quot;, min: -180.0, max: 181.0 }
+Tue Aug 14 01:18:17 { key: { _id: 1 }, ns: &quot;test.foo&quot;, name: &quot;_id_&quot; }
+Tue Aug 14 01:18:17 { key: { _id: 1 }, ns: &quot;test.system.users&quot;, name: &quot;_id_&quot; }
+9 objects found</pre>
+
+
+<p>&nbsp;</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes/">Ruby on Rails 4.0 Release Notes</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-06T19:46:00+08:00" pubdate data-updated="true">Oct 6<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Ruby on Rails 4.0 Release Notes</h2>
+
+<h1>sources:</h1>
+
+
+<p><a href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md"><a href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md">https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md</a></a></p>
+
+<p><a href="http://edgeguides.rubyonrails.org/4_0_release_notes.html"><a href="http://edgeguides.rubyonrails.org/4_0_release_notes.html">http://edgeguides.rubyonrails.org/4_0_release_notes.html</a></a></p>
+
+<h1>Ruby on Rails 4.0 Release Notes</h1>
+
+
+<p>Highlights in Rails 4.0: (WIP)</p>
+
+<ul>
+    <li>Ruby 1.9.3 only</li>
+    <li>Strong Parameters</li>
+    <li>Queue API</li>
+    <li>Caching Improvements</li>
+</ul>
+
+
+<p>These release notes cover the major changes, but do not include each bug-fix and changes. If you want to see everything, check out the <a href="https://github.com/rails/rails/commits/master">list of commits</a> in the main Rails repository on GitHub.</p>
+
+<hr />
+
+
+
+
+<h2><a name="upgrading-to-rails-40" href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md#upgrading-to-rails-40"></a>Upgrading to Rails 4.0</h2>
+
+
+<p>TODO. This is a WIP guide.</p>
+
+<p>If you&rsquo;re upgrading an existing application, it&rsquo;s a great idea to have good test coverage before going in. You should also first upgrade to Rails 3.2 in case you haven&rsquo;t and make sure your application still runs as expected before attempting an update to Rails 4.0. Then take heed of the following changes:</p>
+
+<h3><a name="rails-40-requires-at-least-ruby-193" href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md#rails-40-requires-at-least-ruby-193"></a>Rails 4.0 requires at least Ruby 1.9.3</h3>
+
+
+<p>Rails 4.0 requires Ruby 1.9.3 or higher. Support for all of the previous Ruby versions has been dropped officially and you should upgrade as early as possible.</p>
+
+<h3><a name="what-to-update-in-your-apps" href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md#what-to-update-in-your-apps"></a>What to update in your apps</h3>
+
+
+<ul>
+    <li>Update your Gemfile to depend on
+<ul>
+    <li><code>rails = 4.0.0</code></li>
+    <li><code>sass-rails ~&gt; 3.2.3</code></li>
+    <li><code>coffee-rails ~&gt; 3.2.1</code></li>
+    <li><code>uglifier &gt;= 1.0.3</code></li>
+</ul>
+</li>
+</ul>
+
+
+<p>TODO: Update the versions above.</p>
+
+<ul>
+    <li>Rails 4.0 removes <code>vendor/plugins</code> completely. You have to replace these plugins by extracting them as gems and adding them in your Gemfile. If you choose not to make them gems, you can move them into, say, <code>lib/my_plugin/*</code> and add an appropriate initializer in <code>config/initializers/my_plugin.rb</code>.</li>
+</ul>
+
+
+<p>TODO: Configuration changes in environment files</p>
+
+<h2><a name="creating-a-rails-40-application" href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md#creating-a-rails-40-application"></a>Creating a Rails 4.0 application</h2>
+
+
+<pre>&lt;code&gt; You should have the &#039;rails&#039; rubygem installed $ rails new myapp $ cd myapp &lt;/code&gt;</pre>
+
+
+<h3><a name="vendoring-gems" href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md#vendoring-gems"></a>Vendoring Gems</h3>
+
+
+<p>Rails now uses a <code>Gemfile</code> in the application root to determine the gems you require for your application to start. This <code>Gemfile</code> is processed by the <a href="https://github.com/carlhuda/bundler">Bundler</a> gem, which then installs all your dependencies. It can even install all the dependencies locally to your application so that it doesn&rsquo;t depend on the system gems.</p>
+
+<p>More information: <a href="http://gembundler.com/">Bundler homepage</a></p>
+
+<h3><a name="living-on-the-edge" href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md#living-on-the-edge"></a>Living on the Edge</h3>
+
+
+<p><code>Bundler</code> and <code>Gemfile</code> makes freezing your Rails application easy as pie with the new dedicated <code>bundle</code> command. If you want to bundle straight from the Git repository, you can pass the <code>&mdash;edge</code> flag:</p>
+
+<pre>&lt;code&gt;$ rails new myapp --edge &lt;/code&gt;</pre>
+
+
+<p>If you have a local checkout of the Rails repository and want to generate an application using that, you can pass the <code>&mdash;dev</code> flag:</p>
+
+<pre>&lt;code&gt;$ ruby /path/to/rails/railties/bin/rails new myapp --dev &lt;/code&gt;</pre>
+
+
+<h2><a name="major-features" href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md#major-features"></a>Major Features</h2>
+
+
+<h2><a name="documentation" href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md#documentation"></a>Documentation</h2>
+
+
+<ul>
+    <li>Guides are rewritten in GitHub Flavored Markdown.</li>
+</ul>
+
+
+<h2><a name="railties" href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md#railties"></a>Railties</h2>
+
+
+<ul>
+    <li>Allow scaffold/model/migration generators to accept a <code>polymorphic</code> modifier for <code>references</code>/<code>belongs_to</code>, for instance
+<pre>&lt;code&gt;rails g model Product supplier:references{polymorphic} &lt;/code&gt;</pre>
+will generate the model with <code>belongs_to :supplier, polymorphic: true</code> association and appropriate migration.</li>
+    <li>Set <code>config.active_record.migration_error</code> to <code>:page_load</code> for development.</li>
+    <li>Add runner to <code>Rails::Railtie</code> as a hook called just after runner starts.</li>
+    <li>Add <code>/rails/info/routes</code> path which displays the same information as <code>rake routes</code>.</li>
+    <li>Improved <code>rake routes</code> output for redirects.</li>
+    <li>Load all environments available in <code>config.paths["config/environments"]</code>.</li>
+    <li>Add <code>config.queue_consumer</code> to allow the default consumer to be configurable.</li>
+    <li>Add <code>Rails.queue</code> as an interface with a default implementation that consumes jobs in a separate thread.</li>
+    <li>Remove <code>Rack::SSL</code> in favour of <code>ActionDispatch::SSL</code>.</li>
+    <li>Allow to set class that will be used to run as a console, other than IRB, with <code>Rails.application.config.console=</code>. It&#8217;s best to add it to console block.
+<div>
+<pre># it can be added to config/application.rb
+console do
+  # this block is called only when running console,
+  # so we can safely require pry here
+  require &quot;pry&quot;
+  config.console = Pry
+end</pre>
+</div></li>
+    <li>Add a convenience method <code>hide!</code> to Rails generators to hide the current generator namespace from showing when running<code>rails generate</code>.</li>
+    <li>Scaffold now uses <code>content_tag_for</code> in <code>index.html.erb</code>.</li>
+    <li><code>Rails::Plugin</code> is removed. Instead of adding plugins to <code>vendor/plugins</code>, use gems or bundler with path or git dependencies.</li>
+</ul>
+
+
+<h3><a name="deprecations" href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md#deprecations"></a>Deprecations</h3>
+
+
+<h2><a name="action-mailer" href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md#action-mailer"></a>Action Mailer</h2>
+
+
+<ul>
+    <li>Allow to set default Action Mailer options via <code>config.action_mailer.default_options=</code>.</li>
+    <li>Raise an <code>ActionView::MissingTemplate</code> exception when no implicit template could be found.</li>
+    <li>Asynchronously send messages via the Rails Queue.</li>
+    <li>Delivery Options (such as SMTP Settings) can now be set dynamically per mailer action.Delivery options are set via <tt>:delivery_method_options</tt> key on mail.
+<div>
+<pre>def welcome_mailer(user,company)
+  delivery_options = { user_name: company.smtp_user, password: company.smtp_password, address: company.smtp_host }
+  mail(to: user.email, subject: &quot;Welcome!&quot;, delivery_method_options: delivery_options)
+end</pre>
+</div></li>
+</ul>
+
+
+<h2><a name="action-pack" href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md#action-pack"></a>Action Pack</h2>
+
+
+<h3><a name="action-controller" href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md#action-controller"></a>Action Controller</h3>
+
+
+<ul>
+    <li>Add <code>ActionController::Flash.add_flash_types</code> method to allow people to register their own flash types. e.g.:
+<div>
+<pre>class ApplicationController
+  add_flash_types :error, :warning
+end</pre>
+</div>
+If you add the above code, you can use <code>&lt;%= error %&gt;</code> in an erb, and <code>redirect_to /foo, :error =&gt; 'message'</code> in a controller.</li>
+    <li>Remove Active Model dependency from Action Pack.</li>
+    <li>Support unicode characters in routes. Route will be automatically escaped, so instead of manually escaping:
+<div>
+<pre>get Rack::Utils.escape(&#039;こんにちは&#039;) =&gt; &#039;home#index&#039;</pre>
+</div>
+You just have to write the unicode route:
+<div>
+<pre>get &#039;こんにちは&#039; =&gt; &#039;home#index&#039;</pre>
+</div></li>
+    <li>Return proper format on exceptions.</li>
+    <li>Extracted redirect logic from <code>ActionController::ForceSSL::ClassMethods.force_ssl</code> into<code>ActionController::ForceSSL#force_ssl_redirect</code>.</li>
+    <li>URL path parameters with invalid encoding now raise <code>ActionController::BadRequest</code>.</li>
+    <li>Malformed query and request parameter hashes now raise <code>ActionController::BadRequest</code>.</li>
+    <li><code>respond_to</code> and <code>respond_with</code> now raise <code>ActionController::UnknownFormat</code> instead of directly returning head 406. The exception is rescued and converted to 406 in the exception handling middleware.</li>
+    <li>JSONP now uses <code>application/javascript</code> instead of <code>application/json</code> as the MIME type.</li>
+    <li>Session arguments passed to process calls in functional tests are now merged into the existing session, whereas previously they would replace the existing session. This change may break some existing tests if they are asserting the exact contents of the session but should not break existing tests that only assert individual keys.</li>
+    <li>Forms of persisted records use always PATCH (via the <code>_method</code> hack).</li>
+    <li>For resources, both PATCH and PUT are routed to the <code>update</code> action.</li>
+    <li>Don&#8217;t ignore <code>force_ssl</code> in development. This is a change of behavior - use an <code>:if</code> condition to recreate the old behavior.
+<div>
+<pre>class AccountsController &lt; ApplicationController
+  force_ssl :if =&gt; :ssl_configured?
+
+  def ssl_configured?
+    !Rails.env.development?
+  end
+end</pre>
+</div></li>
+</ul>
+
+
+<h4><a name="deprecations-1" href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md#deprecations-1"></a>Deprecations</h4>
+
+
+<ul>
+    <li>Deprecated <code>ActionController::Integration</code> in favour of <code>ActionDispatch::Integration</code>.</li>
+    <li>Deprecated <code>ActionController::IntegrationTest</code> in favour of <code>ActionDispatch::IntegrationTest</code>.</li>
+    <li>Deprecated <code>ActionController::PerformanceTest</code> in favour of <code>ActionDispatch::PerformanceTest</code>.</li>
+    <li>Deprecated <code>ActionController::AbstractRequest</code> in favour of <code>ActionDispatch::Request</code>.</li>
+    <li>Deprecated <code>ActionController::Request</code> in favour of <code>ActionDispatch::Request</code>.</li>
+    <li>Deprecated <code>ActionController::AbstractResponse</code> in favour of <code>ActionDispatch::Response</code>.</li>
+    <li>Deprecated <code>ActionController::Response</code> in favour of <code>ActionDispatch::Response</code>.</li>
+    <li>Deprecated <code>ActionController::Routing</code> in favour of <code>ActionDispatch::Routing</code>.</li>
+</ul>
+
+
+<h3><a name="action-dispatch" href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md#action-dispatch"></a>Action Dispatch</h3>
+
+
+<ul>
+    <li>Add Routing Concerns to declare common routes that can be reused inside others resources and routes.Code before:
+<div>
+<pre>resources :messages do
+  resources :comments
+end
+
+resources :posts do
+  resources :comments
+  resources :images, only: :index
+end</pre>
+</div>
+Code after:
+<div>
+<pre>concern :commentable do
+  resources :comments
+end
+
+concern :image_attachable do
+  resources :images, only: :index
+end
+
+resources :messages, concerns: :commentable
+
+resources :posts, concerns: [:commentable, :image_attachable]</pre>
+</div></li>
+    <li>Show routes in exception page while debugging a <code>RoutingError</code> in development.</li>
+    <li>Include <code>mounted_helpers</code> (helpers for accessing mounted engines) in <code>ActionDispatch::IntegrationTest</code> by default.</li>
+    <li>Added <code>ActionDispatch::SSL</code> middleware that when included force all the requests to be under HTTPS protocol.</li>
+    <li>Copy literal route constraints to defaults so that url generation know about them. The copied constraints are <code>:protocol</code>,<code>:subdomain</code>, <code>:domain</code>, <code>:host</code> and <code>:port</code>.</li>
+    <li>Allows <code>assert_redirected_to</code> to match against a regular expression.</li>
+    <li>Adds a backtrace to the routing error page in development.</li>
+    <li><code>assert_generates</code>, <code>assert_recognizes</code>, and <code>assert_routing</code> all raise <code>Assertion</code> instead of <code>RoutingError</code>.</li>
+    <li>Allows the route helper root to take a string argument. For example, <code>root 'pages#main'</code> as a shortcut for<code>root to: 'pages#main'</code>.</li>
+    <li>Adds support for the PATCH verb: Request objects respond to <code>patch?</code>. Routes now have a new <code>patch</code> method, and understand <code>:patch</code> in the existing places where a verb is configured, like <code>:via</code>. Functional tests have a new method <code>patch</code>and integration tests have a new method <code>patch_via_redirect</code>. If <code>:patch</code> is the default verb for updates, edits are tunneled as<code>PATCH</code> rather than as <code>PUT</code> and routing acts accordingly.</li>
+    <li>Integration tests support the OPTIONS method.</li>
+    <li><code>expires_in</code> accepts a <code>must_revalidate</code> flag. If true, &#8220;must-revalidate&#8221; is added to the <code>Cache-Control</code> header.</li>
+    <li>Default responder will now always use your overridden block in <code>respond_with</code> to render your response.</li>
+    <li>Turn off verbose mode of <code>rack-cache</code>, we still have <code>X-Rack-Cache</code> to check that info.</li>
+</ul>
+
+
+<h4><a name="deprecations-2" href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md#deprecations-2"></a>Deprecations</h4>
+
+
+<h3><a name="action-view" href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md#action-view"></a>Action View</h3>
+
+
+<ul>
+    <li>Remove Active Model dependency from Action Pack.</li>
+    <li>Allow to use <code>mounted_helpers</code> (helpers for accessing mounted engines) in <code>ActionView::TestCase</code>.</li>
+    <li>Make current object and counter (when it applies) variables accessible when rendering templates with <code>:object</code> or<code>:collection</code>.</li>
+    <li>Allow to lazy load <code>default_form_builder</code> by passing a string instead of a constant.</li>
+    <li>Add index method to <code>FormBuilder</code> class.</li>
+    <li>Adds support for layouts when rendering a partial with a given collection.</li>
+    <li>Remove <code>:disable_with</code> in favor of <code>data-disable-with</code> option from <code>submit_tag</code>, <code>button_tag</code> and <code>button_to</code> helpers.</li>
+    <li>Remove <code>:mouseover</code> option from <code>image_tag</code> helper.</li>
+    <li>Templates without a handler extension now raises a deprecation warning but still defaults to <code>ERb</code>. In future releases, it will simply return the template content.</li>
+    <li>Add a <code>divider</code> option to <code>grouped_options_for_select</code> to generate a separator optgroup automatically, and deprecate prompt as third argument, in favor of using an options hash.</li>
+    <li>Add <code>time_field</code> and <code>time_field_tag</code> helpers which render an <code>input[type="time"]</code> tag.</li>
+    <li>Removed old <code>text_helper</code> apis for <code>highlight</code>, <code>excerpt</code> and <code>word_wrap</code>.</li>
+    <li>Remove the leading \n added by textarea on <code>assert_select</code>.</li>
+    <li>Changed default value for <code>config.action_view.embed_authenticity_token_in_remote_forms</code> to false. This change breaks remote forms that need to work also without JavaScript, so if you need such behavior, you can either set it to true or explicitly pass <code>:authenticity_token =&gt; true</code> in form options.</li>
+    <li>Make possible to use a block in <code>button_to</code> helper if button text is hard to fit into the name parameter:
+<div>
+<pre>&lt;%= button_to [:make_happy, @user] do %&gt;
+  Make happy &lt;strong&gt;&lt;%= @user.name %&gt;&lt;/strong&gt;
+&lt;% end %&gt;
+# =&gt; &quot;&lt;form method=&quot;post&quot; action=&quot;/users/1/make_happy&quot;n&quot; style=&quot;margin: 0px; padding: 0px; border: 0px; &quot;&gt;button_to&quot;&gt;
+#      &lt;div&gt;
+#        &lt;button type=&quot;submit&quot;&gt;
+#          Make happy &lt;strong&gt;Name&lt;/strong&gt;
+#        &lt;/button&gt;
+#      &lt;/div&gt;
+#    &lt;/form&gt;&quot;</pre>
+</div></li>
+    <li>Replace <code>include_seconds</code> boolean argument with <code>:include_seconds =&gt; true</code> option in <code>distance_of_time_in_words</code> and<code>time_ago_in_words</code> signature.</li>
+    <li>Remove <code>button_to_function</code> and <code>link_to_function</code> helpers.</li>
+    <li><code>truncate</code> now always returns an escaped HTML-safe string. The option <code>:escape</code> can be used as <code>false</code> to not escape the result.</li>
+    <li><code>truncate</code> now accepts a block to show extra content when the text is truncated.</li>
+    <li>Add <code>week_field</code>, <code>week_field_tag</code>, <code>month_field</code>, <code>month_field_tag</code>, <code>datetime_local_field</code>,<code>datetime_local_field_tag</code>, <code>datetime_field</code> and <code>datetime_field_tag</code> helpers.</li>
+    <li>Add <code>color_field</code> and <code>color_field_tag</code> helpers.</li>
+    <li>Add <code>include_hidden</code> option to select tag. With <code>:include_hidden =&gt; false</code> select with multiple attribute doesn&#8217;t generate hidden input with blank value.</li>
+    <li>Removed default size option from the <code>text_field</code>, <code>search_field</code>, <code>telephone_field</code>, <code>url_field</code>, <code>email_field</code> helpers.</li>
+    <li>Removed default cols and rows options from the <code>text_area</code> helper.</li>
+    <li>Adds <code>image_url</code>, <code>javascript_url</code>, <code>stylesheet_url</code>, <code>audio_url</code>, <code>video_url</code>, and <code>font_url</code> to assets tag helper. These URL helpers will return the full path to your assets. This is useful when you are going to reference this asset from external host.</li>
+    <li>Allow <code>value_method</code> and <code>text_method</code> arguments from <code>collection_select</code> and <code>options_from_collection_for_select</code> to receive an object that responds to <code>:call</code> such as a proc, to evaluate the option in the current element context. This works the same way with <code>collection_radio_buttons</code> and <code>collection_check_boxes</code>.</li>
+    <li>Add <code>date_field</code> and <code>date_field_tag</code> helpers which render an <code>input[type="date"]</code> tag.</li>
+    <li>Add <code>collection_check_boxes</code> form helper, similar to <code>collection_select</code>:
+<div>
+<pre>collection_check_boxes :post, :author_ids, Author.all, :id, :name
+# Outputs something like:
+&lt;input id=&quot;post_author_ids_1&quot; name=&quot;post[author_ids][]&quot; type=&quot;checkbox&quot; value=&quot;1&quot; /&gt;
+&lt;label for=&quot;post_author_ids_1&quot;&gt;D. Heinemeier Hansson&lt;/label&gt;
+&lt;input id=&quot;post_author_ids_2&quot; name=&quot;post[author_ids][]&quot; type=&quot;checkbox&quot; value=&quot;2&quot; /&gt;
+&lt;label for=&quot;post_author_ids_2&quot;&gt;D. Thomas&lt;/label&gt;
+&lt;input name=&quot;post[author_ids][]&quot; type=&quot;hidden&quot; value=&quot;&quot; /&gt;</pre>
+</div>
+The label/check_box pairs can be customized with a block.</li>
+    <li>Add <code>collection_radio_buttons</code> form helper, similar to <code>collection_select</code>:
+<div>
+<pre>collection_radio_buttons :post, :author_id, Author.all, :id, :name
+# Outputs something like:
+&lt;input id=&quot;post_author_id_1&quot; name=&quot;post[author_id]&quot; type=&quot;radio&quot; value=&quot;1&quot; /&gt;
+&lt;label for=&quot;post_author_id_1&quot;&gt;D. Heinemeier Hansson&lt;/label&gt;
+&lt;input id=&quot;post_author_id_2&quot; name=&quot;post[author_id]&quot; type=&quot;radio&quot; value=&quot;2&quot; /&gt;
+&lt;label for=&quot;post_author_id_2&quot;&gt;D. Thomas&lt;/label&gt;</pre>
+</div>
+The label/radio_button pairs can be customized with a block.</li>
+    <li><code>check_box</code> with an HTML5 attribute <code>:form</code> will now replicate the <code>:form</code> attribute to the hidden field as well.</li>
+    <li>label form helper accepts <code>:for =&gt; nil</code> to not generate the attribute.</li>
+    <li>Add <code>:format</code> option to <code>number_to_percentage</code>.</li>
+    <li>Add <code>config.action_view.logger</code> to configure logger for <code>Action View</code>.</li>
+    <li><code>check_box</code> helper with <code>:disabled =&gt; true</code> will generate a <code>disabled</code> hidden field to conform with the HTML convention where disabled fields are not submitted with the form. This is a behavior change, previously the hidden tag had a value of the disabled checkbox.</li>
+    <li><code>favicon_link_tag</code> helper will now use the favicon in <code>app/assets</code> by default.</li>
+    <li><code>ActionView::Helpers::TextHelper#highlight</code> now defaults to the HTML5 <code>mark</code> element.</li>
+</ul>
+
+
+<h4><a name="deprecations-3" href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md#deprecations-3"></a>Deprecations</h4>
+
+
+<h3><a name="sprockets" href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md#sprockets"></a>Sprockets</h3>
+
+
+<p>Moved into a separate gem <code>sprockets-rails</code>.</p>
+
+<h2><a name="active-record" href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md#active-record"></a>Active Record</h2>
+
+
+<ul>
+    <li>Add <code>add_reference</code> and <code>remove_reference</code> schema statements. Aliases, <code>add_belongs_to</code> and <code>remove_belongs_to</code> are acceptable. References are reversible.
+<div>
+<pre># Create a user_id column
+add_reference(:products, :user)
+
+# Create a supplier_id, supplier_type columns and appropriate index
+add_reference(:products, :supplier, polymorphic: true, index: true)
+
+# Remove polymorphic reference
+remove_reference(:products, :supplier, polymorphic: true)</pre>
+</div></li>
+    <li>Add <code>:default</code> and <code>:null</code> options to <code>column_exists?</code>.
+<div>
+<pre>column_exists?(:testings, :taggable_id, :integer, null: false)
+column_exists?(:testings, :taggable_type, :string, default: &#039;Photo&#039;)</pre>
+</div></li>
+    <li><code>ActiveRecord::Relation#inspect</code> now makes it clear that you are dealing with a <code>Relation</code> object rather than an array:
+<div>
+<pre>User.where(:age =&gt; 30).inspect
+# =&gt; &lt;ActiveRecord::Relation [#&lt;User ...&gt;, #&lt;User ...&gt;]&gt;
+
+User.where(:age =&gt; 30).to_a.inspect
+# =&gt; [#&lt;User ...&gt;, #&lt;User ...&gt;]</pre>
+</div>
+if more than 10 items are returned by the relation, inspect will only show the first 10 followed by ellipsis.</li>
+    <li>Add <code>:collation</code> and <code>:ctype</code> support to PostgreSQL. These are available for PostgreSQL 8.4 or later.
+<div>
+<pre>development:
+  adapter: postgresql
+  host: localhost
+  database: rails_development
+  username: foo
+  password: bar
+  encoding: UTF8
+  collation: ja_JP.UTF8
+  ctype: ja_JP.UTF8</pre>
+</div></li>
+    <li><code>FinderMethods#exists?</code> now returns <code>false</code> with the <code>false</code> argument.</li>
+    <li>Added support for specifying the precision of a timestamp in the postgresql adapter. So, instead of having to incorrectly specify the precision using the <code>:limit</code> option, you may use <code>:precision</code>, as intended. For example, in a migration:
+<div>
+<pre>def change
+  create_table :foobars do |t|
+    t.timestamps :precision =&gt; 0
+  end
+end</pre>
+</div></li>
+    <li>Allow <code>ActiveRecord::Relation#pluck</code> to accept multiple columns. Returns an array of arrays containing the typecasted values:
+<div>
+<pre>Person.pluck(:id, :name)
+# SELECT people.id, people.name FROM people
+# =&gt; [[1, &#039;David&#039;], [2, &#039;Jeremy&#039;], [3, &#039;Jose&#039;]]</pre>
+</div></li>
+    <li>Improve the derivation of HABTM join table name to take account of nesting. It now takes the table names of the two models, sorts them lexically and then joins them, stripping any common prefix from the second table name. Some examples:
+<pre>&lt;code&gt;Top level models (Category &amp;lt;=&amp;gt; Product) Old: categories_products New: categories_products Top level models with a global table_name_prefix (Category &amp;lt;=&amp;gt; Product) Old: site_categories_products New: site_categories_products Nested models in a module without a table_name_prefix method (Admin::Category &amp;lt;=&amp;gt; Admin::Product) Old: categories_products New: categories_products Nested models in a module with a table_name_prefix method (Admin::Category &amp;lt;=&amp;gt; Admin::Product) Old: categories_products New: admin_categories_products Nested models in a parent model (Catalog::Category &amp;lt;=&amp;gt; Catalog::Product) Old: categories_products New: catalog_categories_products Nested models in different parent models (Catalog::Category &amp;lt;=&amp;gt; Content::Page) Old: categories_pages New: catalog_categories_content_pages &lt;/code&gt;</pre>
+</li>
+    <li>Move HABTM validity checks to <code>ActiveRecord::Reflection</code>. One side effect of this is to move when the exceptions are raised from the point of declaration to when the association is built. This is consistant with other association validity checks.</li>
+    <li>Added <code>stored_attributes</code> hash which contains the attributes stored using <code>ActiveRecord::Store</code>. This allows you to retrieve the list of attributes you&#8217;ve defined.
+<div>
+<pre>class User &lt; ActiveRecord::Base
+  store :settings, accessors: [:color, :homepage]
+end
+
+User.stored_attributes[:settings] # [:color, :homepage]</pre>
+</div></li>
+    <li>PostgreSQL default log level is now &#8216;warning&#8217;, to bypass the noisy notice messages. You can change the log level using the<code>min_messages</code> option available in your <code>config/database.yml</code>.</li>
+    <li>Add uuid datatype support to PostgreSQL adapter.</li>
+    <li>Added <code>ActiveRecord::Migration.check_pending!</code> that raises an error if migrations are pending.</li>
+    <li>Added <code>#destroy!</code> which acts like <code>#destroy</code> but will raise an <code>ActiveRecord::RecordNotDestroyed</code> exception instead of returning <code>false</code>.</li>
+    <li>Allow blocks for count with <code>ActiveRecord::Relation</code>, to work similar as <code>Array#count</code>:<code>Person.where("age &gt; 26").count { |person| person.gender == 'female' }</code></li>
+    <li>Added support to <code>CollectionAssociation#delete</code> for passing fixnum or string values as record ids. This finds the records responding to the ids and deletes them.
+<div>
+<pre>class Person &lt; ActiveRecord::Base
+  has_many :pets
+end
+
+person.pets.delete(&quot;1&quot;)  # =&gt; [#&lt;Pet id: 1&gt;]
+person.pets.delete(2, 3) # =&gt; [#&lt;Pet id: 2&gt;, #&lt;Pet id: 3&gt;]</pre>
+</div></li>
+    <li>It&#8217;s not possible anymore to destroy a model marked as read only.</li>
+    <li>Added ability to <code>ActiveRecord::Relation#from</code> to accept other <code>ActiveRecord::Relation</code> objects.</li>
+    <li>Added custom coders support for <code>ActiveRecord::Store</code>. Now you can set your custom coder like this:
+<div>
+<pre>store :settings, accessors: [ :color, :homepage ], coder: JSON</pre>
+</div></li>
+    <li><code>mysql</code> and <code>mysql2</code> connections will set <code>SQL_MODE=STRICT_ALL_TABLES</code> by default to avoid silent data loss. This can be disabled by specifying <code>strict: false</code> in <code>config/database.yml</code>.</li>
+    <li>Added default order to <code>ActiveRecord::Base#first</code> to assure consistent results among different database engines. Introduced<code>ActiveRecord::Base#take</code> as a replacement to the old behavior.</li>
+    <li>Added an <code>:index</code> option to automatically create indexes for <code>references</code> and <code>belongs_to</code> statements in migrations. This can be either a boolean or a hash that is identical to options available to the <code>add_index</code> method:
+<div>
+<pre>create_table :messages do |t|
+  t.references :person, :index =&gt; true
+end</pre>
+</div>
+Is the same as:
+<div>
+<pre>create_table :messages do |t|
+  t.references :person
+end
+add_index :messages, :person_id</pre>
+</div>
+Generators have also been updated to use the new syntax.</li>
+    <li>Added bang methods for mutating <code>ActiveRecord::Relation</code> objects. For example, while <code>foo.where(:bar)</code> will return a new object leaving foo unchanged, <code>foo.where!(:bar)</code> will mutate the foo object.</li>
+    <li>Added <code>#find_by</code> and <code>#find_by!</code> to mirror the functionality provided by dynamic finders in a way that allows dynamic input more easily:
+<div>
+<pre>Post.find_by name: &#039;Spartacus&#039;, rating: 4
+Post.find_by &quot;published_at &lt; ?&quot;, 2.weeks.ago
+Post.find_by! name: &#039;Spartacus&#039;</pre>
+</div></li>
+    <li>Added <code>ActiveRecord::Base#slice</code> to return a hash of the given methods with their names as keys and returned values as values.</li>
+    <li>Remove IdentityMap - IdentityMap has never graduated to be an &#8220;enabled-by-default&#8221; feature, due to some inconsistencies with associations, as described in this <a href="https://github.com/rails/rails/commit/302c912bf6bcd0fa200d964ec2dc4a44abe328a6">commit</a>. Hence the removal from the codebase, until such issues are fixed.</li>
+    <li>Added a feature to dump/load internal state of <code>SchemaCache</code> instance because we want to boot more quickly when we have many models.
+<div>
+<pre># execute rake task.
+RAILS_ENV=production bundle exec rake db:schema:cache:dump
+=&gt; generate db/schema_cache.dump
+
+# add config.use_schema_cache_dump = true in config/production.rb. BTW, true is default.
+
+# boot rails.
+RAILS_ENV=production bundle exec rails server
+=&gt; use db/schema_cache.dump
+
+# If you remove clear dumped cache, execute rake task.
+RAILS_ENV=production bundle exec rake db:schema:cache:clear
+=&gt; remove db/schema_cache.dump</pre>
+</div></li>
+    <li>Added support for partial indices to <code>PostgreSQL</code> adapter.</li>
+    <li>The <code>add_index</code> method now supports a <code>where</code> option that receives a string with the partial index criteria.</li>
+    <li>Added the <code>ActiveRecord::NullRelation</code> class implementing the null object pattern for the Relation class.</li>
+    <li>Implemented <code>ActiveRecord::Relation#none</code> method which returns a chainable relation with zero records (an instance of the<code>NullRelation</code> class). Any subsequent condition chained to the returned relation will continue generating an empty relation and will not fire any query to the database.</li>
+    <li>Added <code>create_join_table</code> migration helper to create HABTM join tables.
+<div>
+<pre>create_join_table :products, :categories
+# =&gt;
+# create_table :categories_products, :id =&gt; false do |td|
+#   td.integer :product_id, :null =&gt; false
+#   td.integer :category_id, :null =&gt; false
+# end</pre>
+</div></li>
+    <li>The primary key is always initialized in the <code>@attributes</code> hash to nil (unless another value has been specified).</li>
+    <li>In previous releases, the following would generate a single query with an OUTER JOIN comments, rather than two separate queries:
+<div>
+<pre>Post.includes(:comments).where(&quot;comments.name = &#039;foo&#039;&quot;)</pre>
+</div>
+This behaviour relies on matching SQL string, which is an inherently flawed idea unless we write an SQL parser, which we do not wish to do. Therefore, it is now deprecated.
+
+To avoid deprecation warnings and for future compatibility, you must explicitly state which tables you reference, when using SQL snippets:
+<div>
+<pre>Post.includes(:comments).where(&quot;comments.name = &#039;foo&#039;&quot;).references(:comments)</pre>
+</div>
+Note that you do not need to explicitly specify references in the following cases, as they can be automatically inferred:
+<div>
+<pre>Post.where(comments: { name: &#039;foo&#039; })
+Post.where(&#039;comments.name&#039; =&gt; &#039;foo&#039;)
+Post.order(&#039;comments.name&#039;)</pre>
+</div>
+You also do not need to worry about this unless you are doing eager loading. Basically, don&#8217;t worry unless you see a deprecation warning or (in future releases) an SQL error due to a missing JOIN.</li>
+    <li>Support for the <code>schema_info</code> table has been dropped. Please switch to <code>schema_migrations</code>.</li>
+    <li>Connections <em>must</em> be closed at the end of a thread. If not, your connection pool can fill and an exception will be raised.</li>
+    <li>Added the <code>ActiveRecord::Model</code> module which can be included in a class as an alternative to inheriting from<code>ActiveRecord::Base</code>:
+<div>
+<pre>class Post
+  include ActiveRecord::Model
+end</pre>
+</div></li>
+    <li>PostgreSQL hstore records can be created.</li>
+    <li>PostgreSQL hstore types are automatically deserialized from the database.</li>
+    <li>Added <code>#update_columns</code> method which updates the attributes from the passed-in hash without calling save, hence skipping validations and callbacks. <code>ActiveRecordError</code> will be raised when called on new objects or when at least one of the attributes is marked as read only.
+<div>
+<pre>post.attributes # =&gt; {&quot;id&quot;=&gt;2, &quot;title&quot;=&gt;&quot;My title&quot;, &quot;body&quot;=&gt;&quot;My content&quot;, &quot;author&quot;=&gt;&quot;Peter&quot;}
+post.update_columns({title: &#039;New title&#039;, author: &#039;Sebastian&#039;}) # =&gt; true
+post.attributes # =&gt; {&quot;id&quot;=&gt;2, &quot;title&quot;=&gt;&quot;New title&quot;, &quot;body&quot;=&gt;&quot;My content&quot;, &quot;author&quot;=&gt;&quot;Sebastian&quot;}</pre>
+</div></li>
+</ul>
+
+
+<h3><a name="deprecations-4" href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md#deprecations-4"></a>Deprecations</h3>
+
+
+<ul>
+    <li>Deprecated most of the &#8216;dynamic finder&#8217; methods. All dynamic methods except for <code>find_by_...</code> and <code>find_by_...!</code> are deprecated. Here&#8217;s how you can rewrite the code:
+<div>
+<pre>find_all_by_... can be rewritten using where(...)
+find_last_by_... can be rewritten using where(...).last
+scoped_by_... can be rewritten using where(...)
+find_or_initialize_by_... can be rewritten using where(...).first_or_initialize
+find_or_create_by_... can be rewritten using where(...).first_or_create
+find_or_create_by_...! can be rewritten using where(...).first_or_create!</pre>
+</div>
+The implementation of the deprecated dynamic finders has been moved to the <code>active_record_deprecated_finders</code> gem.</li>
+    <li>Deprecated the old-style hash based finder API. This means that methods which previously accepted &#8220;finder options&#8221; no longer do. For example this:
+<div>
+<pre>Post.find(:all, :conditions =&gt; { :comments_count =&gt; 10 }, :limit =&gt; 5)</pre>
+</div>
+should be rewritten in the new style which has existed since Rails 3:
+<div>
+<pre>Post.where(comments_count: 10).limit(5)</pre>
+</div>
+Note that as an interim step, it is possible to rewrite the above as:
+<div>
+<pre>Post.scoped(:where =&gt; { :comments_count =&gt; 10 }, :limit =&gt; 5)</pre>
+</div>
+This could save you a lot of work if there is a lot of old-style finder usage in your application.
+
+Calling <code>Post.scoped(options)</code> is a shortcut for <code>Post.scoped.merge(options)</code>. <code>Relation#merge</code> now accepts a hash of options, but they must be identical to the names of the equivalent finder method. These are mostly identical to the old-style finder option names, except in the following cases:
+<pre>&lt;code&gt;:conditions becomes :where :include becomes :includes :extend becomes :extending &lt;/code&gt;</pre>
+The code to implement the deprecated features has been moved out to the <code>active_record_deprecated_finders</code> gem. This gem is a dependency of Active Record in Rails 4.0. It will no longer be a dependency from Rails 4.1, but if your app relies on the deprecated features then you can add it to your own Gemfile. It will be maintained by the Rails core team until Rails 5.0 is released.</li>
+    <li>Deprecate eager-evaluated scopes.Don&#8217;t use this:
+<div>
+<pre>scope :red, where(color: &#039;red&#039;)
+default_scope where(color: &#039;red&#039;)</pre>
+</div>
+Use this:
+<div>
+<pre>scope :red, -&gt; { where(color: &#039;red&#039;) }
+default_scope { where(color: &#039;red&#039;) }</pre>
+</div>
+The former has numerous issues. It is a common newbie gotcha to do the following:
+<div>
+<pre>scope :recent, where(published_at: Time.now - 2.weeks)</pre>
+</div>
+Or a more subtle variant:
+<div>
+<pre>scope :recent, -&gt; { where(published_at: Time.now - 2.weeks) }
+scope :recent_red, recent.where(color: &#039;red&#039;)</pre>
+</div>
+Eager scopes are also very complex to implement within Active Record, and there are still bugs. For example, the following does not do what you expect:
+<div>
+<pre>scope :remove_conditions, except(:where)
+where(...).remove_conditions # =&gt; still has conditions</pre>
+</div></li>
+    <li>Added deprecation for the <code>:dependent =&gt; :restrict</code> association option.</li>
+    <li>Up until now <code>has_many</code> and <code>has_one, :dependent =&gt; :restrict</code> option raised a <code>DeleteRestrictionError</code> at the time of destroying the object. Instead, it will add an error on the model.</li>
+    <li>To fix this warning, make sure your code isn&#8217;t relying on a <code>DeleteRestrictionError</code> and then add<code>config.active_record.dependent_restrict_raises = false</code> to your application config.</li>
+    <li>New rails application would be generated with the <code>config.active_record.dependent_restrict_raises = false</code> in the application config.</li>
+    <li>The migration generator now creates a join table with (commented) indexes every time the migration name contains the word &#8220;join_table&#8221;.</li>
+    <li><code>ActiveRecord::SessionStore</code> is removed from Rails 4.0 and is now a separate <a href="https://github.com/rails/activerecord-session_store">gem</a>.</li>
+</ul>
+
+
+<h2><a name="active-model" href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md#active-model"></a>Active Model</h2>
+
+
+<ul>
+    <li>Changed <code>AM::Serializers::JSON.include_root_in_json</code> default value to false. Now, AM Serializers and AR objects have the same default behaviour.
+<div>
+<pre>class User &lt; ActiveRecord::Base; end
+
+class Person
+  include ActiveModel::Model
+  include ActiveModel::AttributeMethods
+  include ActiveModel::Serializers::JSON
+
+  attr_accessor :name, :age
+
+  def attributes
+    instance_values
+  end
+end
+
+user.as_json
+=&gt; {&quot;id&quot;=&gt;1, &quot;name&quot;=&gt;&quot;Konata Izumi&quot;, &quot;age&quot;=&gt;16, &quot;awesome&quot;=&gt;true}
+# root is not included
+
+person.as_json
+=&gt; {&quot;name&quot;=&gt;&quot;Francesco&quot;, &quot;age&quot;=&gt;22}
+# root is not included</pre>
+</div></li>
+    <li>Passing false hash values to <code>validates</code> will no longer enable the corresponding validators.</li>
+    <li><code>ConfirmationValidator</code> error messages will attach to <code>:#{attribute}_confirmation</code> instead of <code>attribute</code>.</li>
+    <li>Added <code>ActiveModel::Model</code>, a mixin to make Ruby objects work with Action Pack out of the box.</li>
+    <li><code>ActiveModel::Errors#to_json</code> supports a new parameter <code>:full_messages</code>.</li>
+    <li>Trims down the API by removing <code>valid?</code> and <code>errors.full_messages</code>.</li>
+</ul>
+
+
+<h3><a name="deprecations-5" href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md#deprecations-5"></a>Deprecations</h3>
+
+
+<h2><a name="active-resource" href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md#active-resource"></a>Active Resource</h2>
+
+
+<ul>
+    <li>Active Resource is removed from Rails 4.0 and is now a separate <a href="https://github.com/rails/activeresource">gem</a>.</li>
+</ul>
+
+
+<h2><a name="active-support" href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md#active-support"></a>Active Support</h2>
+
+
+<ul>
+    <li>Add default values to all <code>ActiveSupport::NumberHelper</code> methods, to avoid errors with empty locales or missing values.</li>
+    <li><code>Time#change</code> now works with time values with offsets other than UTC or the local time zone.</li>
+    <li>Add <code>Time#prev_quarter</code> and <code>Time#next_quarter</code> short-hands for <code>months_ago(3)</code> and <code>months_since(3)</code>.</li>
+    <li>Remove obsolete and unused <code>require_association</code> method from dependencies.</li>
+    <li>Add <code>:instance_accessor</code> option for <code>config_accessor</code>.
+<div>
+<pre>class User
+  include ActiveSupport::Configurable
+  config_accessor :allowed_access, instance_accessor: false
+end
+
+User.new.allowed_access = true # =&gt; NoMethodError
+User.new.allowed_access        # =&gt; NoMethodError</pre>
+</div></li>
+    <li><code>ActionView::Helpers::NumberHelper</code> methods have been moved to <code>ActiveSupport::NumberHelper</code> and are now available via<code>Numeric#to_s</code>.</li>
+    <li><code>Numeric#to_s</code> now accepts the formatting options :phone, :currency, :percentage, :delimited, :rounded, :human, and :human_size.</li>
+    <li>Add <code>Hash#transform_keys</code>, <code>Hash#transform_keys!</code>, <code>Hash#deep_transform_keys</code> and <code>Hash#deep_transform_keys!</code>.</li>
+    <li>Changed xml type datetime to dateTime (with upper case letter T).</li>
+    <li>Add <code>:instance_accessor</code> option for <code>class_attribute</code>.</li>
+    <li><code>constantize</code> now looks in the ancestor chain.</li>
+    <li>Add <code>Hash#deep_stringify_keys</code> and <code>Hash#deep_stringify_keys!</code> to convert all keys from a <code>Hash</code> instance into strings.</li>
+    <li>Add <code>Hash#deep_symbolize_keys</code> and <code>Hash#deep_symbolize_keys!</code> to convert all keys from a <code>Hash</code> instance into symbols.</li>
+    <li><code>Object#try</code> can&#8217;t call private methods.</li>
+    <li>AS::Callbacks#run_callbacks remove key argument.</li>
+    <li><code>deep_dup</code> works more expectedly now and duplicates also values in <code>Hash</code> instances and elements in <code>Array</code> instances.</li>
+    <li>Inflector no longer applies ice -&gt; ouse to words like slice, police.</li>
+    <li>Add <code>ActiveSupport::Deprecations.behavior = :silence</code> to completely ignore Rails runtime deprecations.</li>
+    <li>Make <code>Module#delegate</code> stop using send - can no longer delegate to private methods.</li>
+    <li>AS::Callbacks deprecate :rescuable option.</li>
+    <li>Adds <code>Integer#ordinal</code> to get the ordinal suffix string of an integer.</li>
+    <li>AS::Callbacks :per_key option is no longer supported.</li>
+    <li>AS::Callbacks#define_callbacks add :skip_after_callbacks_if_terminated option.</li>
+    <li>Add html_escape_once to ERB::Util, and delegate escape_once tag helper to it.</li>
+    <li>Remove <code>ActiveSupport::TestCase#pending</code> method, use <code>skip</code> instead.</li>
+    <li>Deletes the compatibility method <code>Module#method_names</code>, use <code>Module#methods</code> from now on (which returns symbols).</li>
+    <li>Deletes the compatibility method <code>Module#instance_method_names</code>, use <code>Module#instance_methods</code> from now on (which returns symbols).</li>
+    <li>Unicode database updated to 6.1.0.</li>
+    <li>Adds <code>encode_big_decimal_as_string</code> option to force JSON serialization of BigDecimals as numeric instead of wrapping them in strings for safety.</li>
+</ul>
+
+
+<h3><a name="deprecations-6" href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md#deprecations-6"></a>Deprecations</h3>
+
+
+<ul>
+    <li><code>ActiveSupport::Callbacks</code>: deprecate usage of filter object with <code>#before</code> and <code>#after</code> methods as <code>around</code> callback.</li>
+    <li><code>BufferedLogger</code> is deprecated. Use <code>ActiveSupport::Logger</code> or the <code>logger</code> from Ruby stdlib.</li>
+    <li>Deprecates the compatibility method <code>Module#local_constant_names</code> and use <code>Module#local_constants</code> instead (which returns symbols).</li>
+</ul>
+
+
+<h2><a name="credits" href="https://github.com/rails/rails/blob/master/guides/source/4_0_release_notes.md#credits"></a>Credits</h2>
+
+
+<p>See the <a href="http://contributors.rubyonrails.org/">full list of contributors to Rails</a> for the many people who spent many hours making Rails, the stable and robust framework it is. Kudos to all of them.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/06/rails-active-record-named-scopes/">Rails Active Record Named Scopes</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-06T18:56:00+08:00" pubdate data-updated="true">Oct 6<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Rails Active Record Named Scopes</h2>
+
+<p><a href="http://api.rubyonrails.org/classes/ActiveRecord/Scoping.html">Active Record Named Scopes</a></p>
+
+<p><a href="http://api.rubyonrails.org/classes/ActiveRecord/Scoping/ClassMethods.html">Instance Public methods</a></p>
+
+<p><code>with_scope(scope = {}, action = :merge, &amp;block)</code> <code>with_scope</code> lets you apply options to inner block incrementally. It takes a hash and the keys must be <code>:find</code> or <code>:create</code>. <code>:find</code> parameter is Relation while <code>:create</code> parameters are an attributes hash.</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  def self.create_with_scope
+    with_scope(:find =&gt; where(:blog_id =&gt; 1), :create =&gt; { :blog_id =&gt; 1 }) do
+      find(1) # =&gt; SELECT * from articles WHERE blog_id = 1 AND id = 1
+      a = create(1)
+      a.blog_id # =&gt; 1
+    end
+  end
+end</pre>
+</div>
+
+
+<p>In nested scopings, all previous parameters are overwritten by the innermost rule, with the exception of where, includes, and joins operations in Relation, which are merged.</p>
+
+<p>joins operations are uniqued so multiple scopes can join in the same table without table aliasing problems. If you need to join multiple tables, but still want one of the tables to be uniqued, use the array of strings format for your joins.</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  def self.find_with_scope
+    with_scope(:find =&gt; where(:blog_id =&gt; 1).limit(1), :create =&gt; { :blog_id =&gt; 1 }) do
+      with_scope(:find =&gt; limit(10)) do
+        all # =&gt; SELECT * from articles WHERE blog_id = 1 LIMIT 10
+      end
+      with_scope(:find =&gt; where(:author_id =&gt; 3)) do
+        all # =&gt; SELECT * from articles WHERE blog_id = 1 AND author_id = 3 LIMIT 1
+      end
+    end
+  end
+end</pre>
+</div>
+
+
+<p><strong>You can ignore any previous scopings</strong> by using the <code>with_exclusive_scope</code> method.</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  def self.find_with_exclusive_scope
+    with_scope(:find =&gt; where(:blog_id =&gt; 1).limit(1)) do
+      with_exclusive_scope(:find =&gt; limit(10)) do
+        all # =&gt; SELECT * from articles LIMIT 10
+      end
+    end
+  end
+end</pre>
+</div>
+
+
+<p><strong>Note:</strong> the <code>:find</code> scope also has effect on update and deletion methods, like update_all and delete_all.</p>
+
+<p><a href="http://api.rubyonrails.org/classes/ActiveRecord/Scoping/Default/ClassMethods.html">default_scope</a></p>
+
+<p><code>default_scope(scope = {})</code> Use this macro in your model to set a default scope for all operations on the model.</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  default_scope where(:published =&gt; true)
+end
+
+Article.all # =&gt; SELECT * FROM articles WHERE published = true</pre>
+</div>
+
+
+<p>The <code>default_scope</code> is also applied while creating/building a record. It is not applied while updating a record.</p>
+
+<div>
+<pre>Article.new.published    # =&gt; true
+Article.create.published # =&gt; true</pre>
+</div>
+
+
+<p>You can also use <code>default_scope</code> with a block, in order to have it lazily evaluated:</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  default_scope { where(:published_at =&gt; Time.now - 1.week) }
+end</pre>
+</div>
+
+
+<p>(You can also pass any object which responds to call to the <code>default_scope</code> macro, and it will be called when building the default scope.)</p>
+
+<p>If you use multiple <code>default_scope</code> declarations in your model then they will be merged together:</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  default_scope where(:published =&gt; true)
+  default_scope where(:rating =&gt; &#039;G&#039;)
+end
+
+Article.all # =&gt; SELECT * FROM articles WHERE published = true AND rating = &#039;G&#039;</pre>
+</div>
+
+
+<p>This is also the case with inheritance and module includes where the parent or module defines a <code>default_scope</code> and the child or including class defines a second one.</p>
+
+<p>If you need to do more complex things with a default scope, you can alternatively define it as a class method:</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  def self.default_scope
+    # Should return a scope, you can call &#039;super&#039; here etc.
+  end
+end</pre>
+</div>
+
+
+<p><a href="http://api.rubyonrails.org/classes/ActiveRecord/Scoping/Named/ClassMethods.html">activerecord/lib/active_record/scoping/named.rb</a></p>
+
+<p><code>scope(name, scope_options = {})</code> Adds a class method for retrieving and querying objects. A scope represents a narrowing of a database query, such as <code>where(:color =&gt; :red).select(&lsquo;shirts.*&rsquo;).includes(:washing_instructions)</code>.</p>
+
+<div>
+<pre>class Shirt &lt; ActiveRecord::Base
+  scope :red, where(:color =&gt; &#039;red&#039;)
+  scope :dry_clean_only, joins(:washing_instructions).where(&#039;washing_instructions.dry_clean_only = ?&#039;, true)
+end</pre>
+</div>
+
+
+<p>The above calls to scope define class methods <code>Shirt.red</code> and <code>Shirt.dry_clean_only</code>. <code>Shirt.red</code>, in effect, represents the query <code>Shirt.where(:color =&gt; &lsquo;red&rsquo;)</code>.</p>
+
+<p>Note that this is simply ‘syntactic sugar’ for defining an actual class method:</p>
+
+<div>
+<pre>class Shirt &lt; ActiveRecord::Base
+  def self.red
+    where(:color =&gt; &#039;red&#039;)
+  end
+end</pre>
+</div>
+
+
+<p>Unlike <code>Shirt.find(&hellip;)</code>, however, the object returned by <code>Shirt.red</code> is not an Array; it resembles the association object constructed by a has_many declaration. For instance, you can invoke <code>Shirt.red.first</code>, <code>Shirt.red.count</code>,<code>Shirt.red.where(:size =&gt; &lsquo;small&rsquo;)</code>. Also, just as with the association objects, named scopes act like an Array, implementing Enumerable; <code>Shirt.red.each(&amp;block)</code>, <code>Shirt.red.first</code>, and <code>Shirt.red.inject(memo, &amp;block)</code> all behave as if<code>Shirt.red</code> really was an Array.</p>
+
+<p>These named scopes are composable. For instance, <code>Shirt.red.dry_clean_only</code> will produce all shirts that are both red and dry clean only. Nested finds and calculations also work with these compositions: <code>Shirt.red.dry_clean_only.count</code> returns the number of garments for which these criteria obtain. Similarly with <code>Shirt.red.dry_clean_only.average(:thread_count)</code>.</p>
+
+<p>All scopes are available as class methods on the <code>ActiveRecord::Base</code> descendant upon which the scopes were defined. But they are also available to has_many associations. If,</p>
+
+<div>
+<pre>class Person &lt; ActiveRecord::Base
+  has_many :shirts
+end</pre>
+</div>
+
+
+<p>then <code>elton.shirts.red.dry_clean_only</code> will return all of Elton’s red, dry clean only shirts.</p>
+
+<p>Named scopes can also be procedural:</p>
+
+<div>
+<pre>class Shirt &lt; ActiveRecord::Base
+  scope :colored, lambda { |color| where(:color =&gt; color) }
+end</pre>
+</div>
+
+
+<p>In this example, <code>Shirt.colored(&lsquo;puce&rsquo;)</code> finds all puce shirts.</p>
+
+<p>On Ruby 1.9 you can use the ‘stabby lambda’ syntax:</p>
+
+<div>
+<pre>scope :colored, -&gt;(color) { where(:color =&gt; color) }</pre>
+</div>
+
+
+<p>Note that scopes defined with scope will be evaluated when they are defined, rather than when they are used. For example, the following would be incorrect:</p>
+
+<div>
+<pre>class Post &lt; ActiveRecord::Base
+  scope :recent, where(&#039;published_at &gt;= ?&#039;, Time.current - 1.week)
+end</pre>
+</div>
+
+
+<p><strong>The example above would be ‘frozen’ to the <code>Time.current</code> value when the Post class was defined</strong>, and so the resultant SQL query would always be the same. The correct way to do this would be via a lambda, which will re-evaluate the scope each time it is called:</p>
+
+<div>
+<pre>class Post &lt; ActiveRecord::Base
+  scope :recent, lambda { where(&#039;published_at &gt;= ?&#039;, Time.current - 1.week) }
+end</pre>
+</div>
+
+
+<p>Named scopes can also have extensions, just as with has_many declarations:</p>
+
+<div>
+<pre>class Shirt &lt; ActiveRecord::Base
+  scope :red, where(:color =&gt; &#039;red&#039;) do
+    def dom_id
+      &#039;red_shirts&#039;
+    end
+  end
+end</pre>
+</div>
+
+
+<p>Scopes can also be used while creating/building a record.</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  scope :published, where(:published =&gt; true)
+end
+
+Article.published.new.published    # =&gt; true
+Article.published.create.published # =&gt; true</pre>
+</div>
+
+
+<p>Class methods on your model are automatically available on scopes. Assuming the following setup:</p>
+
+<div>
+<pre>class Article &lt; ActiveRecord::Base
+  scope :published, where(:published =&gt; true)
+  scope :featured, where(:featured =&gt; true)
+
+  def self.latest_article
+    order(&#039;published_at desc&#039;).first
+  end
+
+  def self.titles
+    map(&amp;:title)
+  end
+
+end</pre>
+</div>
+
+
+<p>We are able to call the methods like this:</p>
+
+<div>
+<pre>Article.published.featured.latest_article
+Article.featured.titles</pre>
+</div>
+
+
+<p><code>scoped(options = nil)</code> Returns an anonymous scope.</p>
+
+<div>
+<pre>posts = Post.scoped
+posts.size # Fires &quot;select count(*) from  posts&quot; and returns the count
+posts.each {|p| puts p.name } # Fires &quot;select * from posts&quot; and loads post objects
+
+fruits = Fruit.scoped
+fruits = fruits.where(:color =&gt; &#039;red&#039;) if options[:red_only]
+fruits = fruits.limit(10) if limited?</pre>
+</div>
+
+
+<p>Anonymous scopes tend to be useful when procedurally generating complex queries, where passing intermediate values (scopes) around as first-class objects is convenient.</p>
+
+<p><strong>You can define a scope that applies to all finders using <code>ActiveRecord::Base.default_scope</code></strong>.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/">晒晒我们的开源项目 ITEYE开源代码</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-27T08:34:00+08:00" pubdate data-updated="true">Sep 27<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>晒晒我们的开源项目 ITEYE开源代码</h2>
+
+<p>我们的研发团队是一支mini型研发团队，目前共有研发人员13人。由于网站产品维护的历史原因，这13人的研发团队分为4支小组，分别是：Ruby研发小组5人；PHP研发小组4人；.net研发小组2人，Java搜索小组2人。</p>
+
+<p>别看我们研发人员这么少，但是我们研发人员战斗力很强，我们维护和开发着十多条产品线。在我们开发自身产品的过程中，也积累了一些比较通用的组件，一些对大家来说有用的工具。因此从今年下半年开始，我们陆续将一些组件和工具开源出来，哪怕这些项目的质量并不是那么高，也希望能够给社区带来一点点自己的贡献。</p>
+
+<p>以下简要介绍一下我们已经开源的项目，今后我们还会努力开源更多的东西和大家交流和分享：</p>
+
+<p>1、Ansj中文分词 &ndash; 开源的高准确率Java中文分词器</p>
+
+<p>项目Github地址：<a href="https://github.com/ansjsun/ansj_seg" target="_blank"><a href="https://github.com/ansjsun/ansj_seg">https://github.com/ansjsun/ansj_seg</a></a>
+这是基于大名鼎鼎中科院的Ictclas中文分词算法编写的Java实现版本，比常用的开源mmseg4j的分词准确率高。目前我们自己站内的搜索将逐渐从mmseg4j算法替换成Ansj中文分词算法。</p>
+
+<p>2、ServiceFramework &ndash; 开源的羽量级Java Web服务框架</p>
+
+<p>项目Github地址：<a href="https://github.com/allwefantasy/ServiceFramework" target="_blank"><a href="https://github.com/allwefantasy/ServiceFramework">https://github.com/allwefantasy/ServiceFramework</a></a>
+我们基于Java的开源搜索框架lucene编写了网站的分布式搜索和Tag文章分类服务。因为需要向前端的Web应用程序提供搜索和Tag服务接口API，所以我们编写了这个羽量级的Java框架软件。它的优点就是羽量级，自身集成了Jetty服务器，MVC，IoC和ORM，让你只需要编写非常少的代码，就可以快速将你的业务逻辑组件以Web API的方式提供服务。</p>
+
+<p>3、ExportBlog &ndash; 开源的通用博客导出工具</p>
+
+<p>项目Github地址：<a href="https://github.com/sqzhuyi/ExportBlog" target="_blank"><a href="https://github.com/sqzhuyi/ExportBlog">https://github.com/sqzhuyi/ExportBlog</a></a>
+这是一个基于.net Winforms编写的通用博客导出工具，支持导出网站包括：CSDN、ITEYE、博客园、新浪、搜狐、和讯、ChinaUnix、网易、51CTO、开源中国、百度空间、QQ空间等等。导出格式支持CHM、PDF、HTML、TXT和EPUB 5种格式文档。详细介绍：<a href="http://blog.csdn.net/sq_zhuyi/article/details/7924776" target="_blank"><a href="http://blog.csdn.net/sq_zhuyi/article/details/7924776">http://blog.csdn.net/sq_zhuyi/article/details/7924776</a></a></p>
+
+<p>4、Secode_level_cache &ndash; 开源的Rails对象缓存插件</p>
+
+<p>项目Github地址：<a href="https://github.com/csdn-dev/second_level_cache" target="_blank"><a href="https://github.com/csdn-dev/second_level_cache">https://github.com/csdn-dev/second_level_cache</a></a>
+Rails的ActiveRecord自身没有带强大的对象缓存功能，这是AR的一个重大的遗憾。早在2008年开始，我们就借鉴了Java强大的ORM框架Hibernate的二级对象缓存编写了这个Rails的AR对象缓存插件，并且一直作为JavaEye网站缓存优化的秘密武器来使用，取得了非常理想的效果。
+现在我们将这个插件从Rails2.x的版本升级到了3.x版本，并且抽取成了一个通用插件，开始应用于新的Rails3.2的项目之上。有志于AR对象缓存优化的ruby程序员不容错过。</p>
+
+<p>5、limiter － 网站反爬虫和DOS攻击的利器</p>
+
+<p>项目Github地址：<a href="https://github.com/csdn-dev/limiter" target="_blank"><a href="https://github.com/csdn-dev/limiter">https://github.com/csdn-dev/limiter</a></a>
+早年的JavaEye网站曾经深受DOS攻击和爬虫海量抓取造成的负载过高的困扰，我曾经和这个问题进行了为期几年不懈的斗争，并且在总结几年斗争经验后写了一篇总结性博客文章：<a href="http://robbin.iteye.com/blog/451014" target="_blank">互联网网站的反爬虫策略浅析</a> 。当时我基于这个反爬虫策略编写了JavaEye网站的智能防火墙插件，取得了良好的效果。
+现在我们将这个插件从JavaEye的源代码中剥离出来，抽取成一个通用的rackware，便于应用于普通的Rails3.x的项目当中。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/">Single Sign-on 单点登录 Sso</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-26T08:35:00+08:00" pubdate data-updated="true">Sep 26<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Single sign-on 单点登录 sso</h2>
+
+<p>from wiki</p>
+
+<p><strong>Single sign-on</strong> (<strong>SSO</strong>) is a property of <a title="Access control" href="http://en.wikipedia.org/wiki/Access_control">access control</a> of multiple related, but independent <a title="Software" href="http://en.wikipedia.org/wiki/Software">software</a> systems. With this property a user <a title="Login" href="http://en.wikipedia.org/wiki/Login">logs in</a> once and gains access to all systems without being prompted to log in again at each of them. Conversely, <strong>Single sign-off</strong> is the property whereby a single action of signing out terminates access to multiple software systems.</p>
+
+<p>As different applications and resources support different <a title="Authentication" href="http://en.wikipedia.org/wiki/Authentication">authentication</a> mechanisms, single sign-on has to internally translate to and store different credentials compared to what is used for initial authentication.</p>
+
+<p>from baike</p>
+
+<p>单点登录（Single Sign On），简称为 SSO，是目前比较流行的企业业务整合的解决方案之一。SSO的定义是在多个应用系统中，用户只需要登录一次就可以访问所有相互信任的应用系统。</p>
+
+<div></div>
+
+
+<p>企业应用集成（EAI, Enterprise Application Integration）。企业应用集成可以在不同层面上进行：例如在数据存储层面上的“数据大集中”，在传输层面上的“通用数据交换平台”，在应用层面上的“业务流程整合”，和用户界面上的“通用企业门户”等等。事实上，还有一个层面上的集成变得越来越重要，那就是“身份认证”的整合，也就是“单点登录”。</p>
+
+<p>现在普遍使用 oauth 来实现 多个系统的授权 认证</p>
+
+<p><a href="https://github.com/songkick/oauth2-provider"><a href="https://github.com/songkick/oauth2-provider">https://github.com/songkick/oauth2-provider</a></a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/09/15/sharing-a-devise-user-session-across-subdomains-with-rails-3/">Sharing a Devise User Session Across Subdomains With Rails 3</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-15T16:21:00+08:00" pubdate data-updated="true">Sep 15<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Sharing A Devise User Session Across Subdomains With Rails 3</h2>
+
+<pre>to andersen
+  仔细测了一下 Askjane::Application.config.session_store :active_record_store, key: &#039;_askjane_session&#039;, :domain =&gt; &quot;.bbtang.com&quot;在 server上
+  是ok的（效果上也是能共享bbtang.com 和www.bbtang.com的会话的只要端口一致）就是不知道在本地如何因为本地一般不会设置host绑定域名(经测试答案是不能的)，如何（所以需要:all这个设置项）
+to 客服 和 jojo
+ 提一点 你们一些 首页源码的时候 不要把 域名加上去  注意 尼玛 端口不一致 也是不能share 会话的
+ 简而言之 你们写一些html静态源码的时候除非不在 bbtang.com的 项目上 没有必要加 域名的 这会加大 大家的成本（如果说端口不一致就会导致会话丢失，如果没有做多域名兼容也会导致会话丢失能免则免）
+over</pre>
+
+
+<pre></pre>
+
+
+<pre>Francis.J(864248765) 13:57:28
+https://github.com/rails/rails/issues/2483
+Francis.J(864248765) 13:57:55
+尼玛 rails 大爷又 踩雷了
+Francis.J(864248765) 13:59:42
+https://github.com/rails/rails/issues/2483
+Francis.J(864248765) 14:02:27
+https://github.com/rails/rails/pull/7316
+Francis.J(864248765) 14:08:37
+然后 我们看看 究竟用 :cookie_store + :domain =&gt; :all
+还是  :active_record_store + &quot;.bbtang.com&quot; (这里垮子域名估计不会很合适)
+还是 升一下 rails  用  :active_record_store + :domain =&gt; :all</pre>
+
+
+<p>Recently I’ve been working on a Rails application that supports subdomains. I’m using Devise for user authentication and need the user to choose a subdomain to use upon registration.</p>
+
+<p>Similar to the 37signals applications, I want a single sign-on to be persistent across subdomains. Since I didn’t have a clue where to begin with subdomains, I followed <a href="https://github.com/fortuity/rails3-subdomain-devise/wiki/Tutorial-%28Walkthrough%29">this tutorial</a> on my new Rails 3.1 beta 1 application. This tutorial worked like a charm and I omitted the friendly_id and tweaked a few things to my liking.</p>
+
+<p>The gist of it is simple. Create a User model like you would normally do with Devise. You add a Subdomain model that is linked to the Users (in my case I only wanted a single subdomain per user). Configuring the routes is pretty simple as you can simply create a constraint that will match the root and fire it off to the right action and let the rest fall through.</p>
+
+<p>The trick comes into sharing the session between domains. Browsers, of course, will separate out the cookies and store them by separated out by subdomain. What you want to do is edit your config/initializers/session_store.rb file to look like this</p>
+
+<div>
+<table>
+<tbody>
+<tr>
+<td>
+<pre>APPNAMEGOESHERE::Application.config.session_store :cookie_store, :key =&gt; &#039;_tourlyapp_session&#039;, :domain =&gt; &quot;lvh.me&quot;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+<p>The trick here is the <code>:domain</code> option. What this does is sets the level of the TLD (top level domain) and tells Rails how long the domain is. The part you want to watch out for here is that if you set <code>:domain =&gt; :all</code> like is recommend in some places, it simply won’t work unless you’re using localhost. <code>:all</code> defaults to a TLD length of 1, which means if you’re testing with Pow (myapp.dev) it won’t work either because that is a TLD of length 2.</p>
+
+<p>You might get weird things like halfway Devise sessions sharing, but only allowing you to create and destroy the session on the root domain. Using <code>:all</code> works great if you’re using localhost, but when I started using lvh.me:3000 for testing I had those problems (lvh.me stands for local vhost me and is a domain that simply points to localhost which makes for zero-config subdomain development. It’s super handy.).</p>
+
+<p>The best option might be to comment out this line and put it into your individual environment configurations. This way you can keep things configured easily as the <code>:all</code> option. Once you’ve got your domain string added everything should work like a charm.</p>
+
+<p><strong>BONUS PROTIP: </strong>The normal route variables you see used end with _path. These don’t include the domain and therefore ignore the :subdomain option you pass into them. <code>url_for</code>, on the other hand, does support subdomains so you should get into the habit of using root_url instead of root_path and so on.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/09/13/ie-iframe-p3p-cookies-oh-my/">IE, Iframe, P3P, Cookies, Oh My</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-13T22:53:00+08:00" pubdate data-updated="true">Sep 13<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>IE, iframe, P3P, Cookies, oh my</h2>
+
+<p>测试新浪微游戏接口时，发现一个问题：当使用IE浏览器的时候，rails的session无法保存。之前在自己开发服务器上测试时，验证过IE和Firefox都能正常使用session的，觉得很是奇怪。</p>
+
+<p>通 过抓包发现，正常情况下，服务器端在响应客户端访问请求后，在返回的http头中会有Set-Cookies这样的参数，同时在接下来的客户端的http 请求头中，会加上Cookie这样的参数；上述不能正常保存session情况下的抓包分析发现，客户端的http请求头中浏览器没有设置Cookie参 数。</p>
+
+<p>解决方法一：修改IE的默认Cookie设置，设置IE隐私设置中的高级隐私设置，勾选“总是允许回话Cookie”，这样session的值就能正常保存了。不过这样肯定不是最好的解决办法，对大多数用户来说，这样做不合理。</p>
+
+<p>解决方法二：参考方法来自： <a href="http://www.sympact.net/2008/07/rails-and-ifram.html" target="_blank"><a href="http://www.sympact.net/2008/07/rails-and-ifram.html">http://www.sympact.net/2008/07/rails-and-ifram.html</a></a> ，文中描述了具体原因，是因为IFrame中打开的链接和主页面的链接不在同一个域，所以IE默认会认为是不可信任的，则不允许使用Cookie。解决办 法正如文中所示，在controller中的before_filter中增加一个方法，此方法中设置响应的http相应头中增加P3P参数，问题即可解 决。
+大致代码如下：</p>
+
+<pre class="brush: rails; gutter: true"></pre>
+
+
+<div id="LC1">[rails IE, IFRAME, P3P, COOKIES](<a href="https://gist.github.com/3719568">https://gist.github.com/3719568</a>)</div>
+
+
+<div id="LC10">
+<pre class="brush: rails; gutter: true">#userful gem [rack-p3p](https://github.com/hoopla/rack-p3p)
+# encoding: utf-8
+class ApplicationController &lt; ActionController::Base
+  protect_from_forgery
+  before_filter :set_p3p
+  def set_p3p
+    headers[&#039;P3P&#039;] = &quot;policyref=\&quot;/w3c/p3p.xml\&quot;, CP=\&quot;ALL DSP COR CURa ADMa DEVa TAIa OUR BUS IND UNI COM NAV INT\&quot;&quot;
+  end
+end</pre>
+</div>
+
+
+<div id="LC10"></div>
+
+
+<p>I was just banging my head against the wall trying to figure out why internet explorer wasn’t remembering my user’s sessions. Turns out it’s something that has bitten me in the past.</p>
+
+<p>IE doesn’t allow you to set cookies when your site is in an iframe unless your site has set P3P headers. Also, ordering matters – the P3P header must be set <em>before</em> the cookie is set.</p>
+
+<p>If you’re using ruby, this gem works pretty well: <a href="https://github.com/hoopla/rack-p3p"><a href="https://github.com/hoopla/rack-p3p">https://github.com/hoopla/rack-p3p</a></a></p>
+
+<p>Further reading: <a href="http://stackoverflow.com/questions/389456/cookie-blocked-not-saved-in-iframe-in-internet-explorer"><a href="http://stackoverflow.com/questions/389456/cookie-blocked-not-saved-in-iframe-in-internet-explorer">http://stackoverflow.com/questions/389456/cookie-blocked-not-saved-in-iframe-in-internet-explorer</a></a></p>
+
+<p>All the articles I read about setting headers, etags, etc were all really old. Hopefully, if you’re using rails you found this article. Just install the gem and add the line from the README to your application.rb – no monkey patching. Good luck.</p>
+
+<h2>rails IE frame ActionController::InvalidAuthenticityToken</h2>
+
+
+<p>Same problem here with a rails application launched in an iframe I get:</p>
+
+<p>&ldquo;the change you wanted was rejected&rdquo;</p>
+
+<p>In log:</p>
+
+<p>ActionController::InvalidAuthenticityToken<wbr></wbr></p>
+
+<p>Seems that the problem occur in IE when you are developing in an iframe situation where the master page is at a different domain than the inner page. (es: iframed Facebook applications)</p>
+
+<p>This is because IE&rsquo;s default &ldquo;medium&rdquo; privacy setting has an issue with cookies in that situation.</p>
+
+<p>A possible solution is to set a P3P header (try to google: p3p iframe internet explorer) Example, in application_controller.rb:</p>
+
+<pre>&lt;code&gt;before_filter  &lt;wbr&gt;:set_p3p
+
+def set_p3p
+ &lt;wbr&gt; response.headers[&quot;P3P&quot;]=&#039;CP=&quot;CAO PSA OUR&quot;&#039;
+end&lt;/wbr&gt;&lt;/wbr&gt;&lt;/code&gt;</pre>
+
+
+<p>&nbsp;</p>
+
+<h1 id="subject_tpc">php版站内应用在ie浏览器下获取到session值(失效)[已解决]</h1>
+
+
+<div>
+<div id="read_tpc">php版站内应用在ie浏览器下获取到session值(失效)
+首页授权证后保存的session在其它页面获取不到。例如：
+在站内应用的iframe下：
+a.php
+&lt;?php
+session_start();
+$_SESSION[&#8220;user&#8221;]=&#8221;abc&#8221;;
+echo $_SESSION[&#8220;user&#8221;];
+?&gt;
+&lt;a href=&#8221;b.php&#8221;&gt;b.php&lt;/a&gt;
+
+b.php
+&lt;?php
+session_start();
+echo $_SESSION[&#8220;user&#8221;];
+?&gt;
+
+运行a.php后正常显示abc，跳转到b.php显示为空。
+
+这问题纠缠了我很久了，不继地调试，直到今晚终于找到答案了：
+原来这也属于是跨域访问的问题。
+
+以下是解决方案：
+<strong>“用P3P header解决iframe跨域访问cookie/session”的问题</strong>
+理论很简单,而且模式也和大多请求返回状态的SSO差不多.但是有几个地方是要注意一下的.
+1.页面里的COOKIE不能是浏览器进程的COOKIE(包括验证票和不设置超时时间的COOKIE),否则跨域会取不到.这点做跨域COOKIE的人比较少提到.不过实际上留意下几家大学做的方案,有细微的提到他们的验证模块里的COOKIE是有设置超时时间的.
+2.当利用IFRAME时,记得要在相应的动态页的页头添加一下P3P的信息,否则IE会自觉的把IFRAME框里的COOKIE给阻止掉,产生问题.本身不保存自然就取不到了.这个其实是FRAMESET和COOKIE的问题,用FRAME或者IFRAME都会遇到.
+3.测试时输出TRACE,会减少很多测试的工作量.
+只需要设置 P3P HTTP Header，在隐含 iframe 里面跨域设置 cookie 就可以成功。他们所用的内容是：
+P3P: CP=&#8217;CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR&#8217;
+
+ASP直接在头部加了头部申明，测试有效。
+&lt;%Response.AddHeader &#8220;P3P&#8221;, &#8220;CP=CAO PSA OUR&#8221;%&gt;
+
+php的话，我没去试，应该是如下写法：
+header(&#8216;P3P: CP=CAO PSA OUR&#8217;);
+
+ASP.NET的话
+通过在代码上加Response.AddHeader(&#8220;P3P&#8221;, &#8220;CP=CAO PSA OUR&#8221;)或者在Window服务中将ASP.NET State Service 启动。
+JSP:response.setHeader(&#8220;P3P&#8221;,&#8221;CP=CAO PSA OUR&#8221;)
+
+如何在静态页面加头信息 P3P: CP=&#8221;CAO PSA OUR 来解决框架与cookie的问题?
+IIS站点管理器允许你给所有输出的内容都加上任意HTTP Header，你只要在Custom Header里面加上P3P: CP=&#8221;CAO PSA OUR&#8221;
+就ok了
+
+</div>
+</div>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/09/10/zai-cloud-foundry-shang-shi-yong-jruby-for-rails-ying-yong-cheng-xu/">在 Cloud Foundry 上使用 JRuby for Rails 应用程序</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-10T22:28:00+08:00" pubdate data-updated="true">Sep 10<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>在 Cloud Foundry 上使用 JRuby for Rails 应用程序</h2>
+
+<p align="left">[译注]本文翻译自Cloud Foundry英文博客站点，原文题为“<a href="http://blog.cloudfoundry.com/post/13481011043/deploying-jruby-on-rails-applications-on-cloud-foundry"><strong>Using JRuby for Rails Applications on Cloud Foundry</strong></a>”，文章发表时间是 2012 年 4 月 19 日。</p>
+
+
+<p align="left">如今，只需进行一些简单的配置更改，即可将 JRuby Rails 应用程序部署到 CloudFoundry.com。JRuby 应用程序常常通过创建一个包含 Rails 应用程序的 .war 文件来部署到 servlet 容器中。对于 Cloud Foundry，我们将采取同样的做法，同时对数据库配置进行一些更改，以便应用程序还可以访问 CloudFoundry.com 上的数据库服务。</p>
+
+
+
+
+<h4 align="left">将 JRuby on Rails 应用程序部署到 Cloud Foundry 上时需进行的更改</h4>
+
+
+<p align="left">要使 JRuby 应用程序在 CloudFoundry.com 上运行，我们需要完成两项任务。首先，我们需通过修改 configuration 目录中的 database.yml 文件将该应用程序配置为连接到 CloudFoundry.com 上的数据库服务。当我们部署该应用程序时，我们还需要运行“rake db:migrate”的等效命令，以便创建数据库表。我们可以通过在 config/initializers 目录中添加一个初始化程序来做到这一点。</p>
+
+
+<p align="left">环境变量 VCAP_SERVICES 中提供了我们在配置数据库连接时所需的信息。我们可以通过编程方式分析该变量，也可以使用方便的 Cloud Foundry 运行时 gem（请参见<a href="http://cnblog.cloudfoundry.com/?p=234"><strong>将</strong><strong> Cloud Foundry </strong><strong>服务与</strong><strong> Ruby </strong><strong>搭配使用：第</strong><strong> 2 </strong><strong>部分</strong><strong> – </strong><strong>对</strong><strong> Ruby </strong><strong>应用程序的实时支持</strong></a>博文），在本篇博文中我们将采用后者。要使用该 gem，我们需要将它包含在我们的 Gemfile 中：</p>
+
+
+
+
+<div>
+<div id="highlighter_85231">
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>
+<div><code>...</code></div>
+<div><code>gem  </code><code>'cf-runtime'</code></div>
+<div><code>...</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<p align="left">既然我们已经添加了该 gem，我们就可以向 database.yml 文件中添加一些代码段，用以访问生产环境的数据库服务信息。下面是一个 database.yml 文件中的 production 部分，在这个文件中我们使用的是 MySQL 数据库：</p>
+
+
+<p align="left"><strong>config/database.yml</strong></p>
+
+
+
+
+<div>
+<div id="highlighter_84359">
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>
+<div><code>production:</code></div>
+<div><code>    </code><code>adapter: mysql</code></div>
+<div><code>    </code><code>&lt;% require </code><code>'cfruntime/properties'</code> <code>%&gt;</code></div>
+<div><code>    </code><code>&lt;% db_svc = CFRuntime::CloudApp.service_props(</code><code>'mysql'</code><code>) %&gt;</code></div>
+<div><code>    </code><code>database: &lt;%= db_svc[:database] rescue </code><code>'bookshelf_production'</code> <code>%&gt;</code></div>
+<div><code>    </code><code>username: &lt;%= db_svc[:username] rescue </code><code>'root'</code> <code>%&gt;</code></div>
+<div><code>    </code><code>password: &lt;%= db_svc[:password] rescue </code><code>''</code> <code>%&gt;</code></div>
+<div><code>    </code><code>host: &lt;%= db_svc[:host] rescue </code><code>'localhost'</code> <code>%&gt;</code></div>
+<div><code>    </code><code>port: &lt;%= db_svc[:port] rescue </code><code>'3306'</code> <code>%&gt;</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<p align="left">正如您可以看到的那样，我们添加了一个 require 语句来获取 cfruntime/properties，然后我们通过调用 service_props 方法并在调用时传入我们所使用的服务类型来获取服务属性的哈希值。如果仅有一项属于该类型的服务绑定到该应用程序，则无需指定此服务的实际名称。如果您将多项属于同一类型的服务绑定到您的应用程序，您将需要指定实际服务名称。服务属性的哈希值存储在一个名为 db_svc 的变量中，代码会将对应的值提取出来以用作数据库、用户名、密码、主机和端口。其中的每一条语句都有一个 rescue 子句，如果我们并非在 Cloud Foundry 环境中操作，则该语句将提供要使用的值，这种情况下 db_svc 将为 Nil。</p>
+
+
+<p align="left">另外，如果使用的是 PostgreSQL，则该 database.yml 文件的 production 部分将大致如下：</p>
+
+
+
+
+<div>
+<div id="highlighter_152958">
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>
+<div><code>production:</code></div>
+<div><code>   </code><code>adapter: postgresql</code></div>
+<div><code>   </code><code>encoding: unicode</code></div>
+<div><code>   </code><code>&lt;% require </code><code>'cfruntime/properties'</code> <code>%&gt;</code></div>
+<div><code>   </code><code>&lt;% db_svc = CFRuntime::CloudApp.service_props(</code><code>'postgresql'</code><code>) %&gt;</code></div>
+<div><code>   </code><code>database: &lt;%= db_svc[:database] rescue </code><code>'bookshelf_production'</code> <code>%&gt;</code></div>
+<div><code>   </code><code>username: &lt;%= db_svc[:username] rescue </code><code>'bookshelf'</code> <code>%&gt;</code></div>
+<div><code>   </code><code>password: &lt;%= db_svc[:password] rescue </code><code>''</code> <code>%&gt;</code></div>
+<div><code>   </code><code>host: &lt;%= db_svc[:host] rescue </code><code>'localhost'</code> <code>%&gt;</code></div>
+<div><code>   </code><code>port: &lt;%= db_svc[:port] rescue </code><code>'5432'</code> <code>%&gt;</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<p align="left">接下来，我们将注意力转向创建供我们的应用程序使用的表上面。为此，我们在部署该应用程序时需向 config/initializers 目录中添加以下初始化程序。我将该初始化程序命名为 cf_db_migrate.rb：</p>
+
+
+<p align="left"><strong>config/initializers/cf_db_migrate.rb</strong></p>
+
+
+
+
+<div>
+<div id="highlighter_908259">
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>
+<div><code>require </code><code>'cfruntime/properties'</code></div>
+<div></div>
+<div><code># Run the equivalent of rake db:migrate on startup</code></div>
+<div><code>if</code> <code>CFRuntime::CloudApp.running_in_cloud?</code></div>
+<div><code>  </code><code>migrations = Rails.root.join(</code><code>'db'</code><code>,</code><code>'migrate'</code><code>)</code></div>
+<div><code>  </code><code>if</code> <code>migrations.directory?</code></div>
+<div><code>    </code><code>ActiveRecord::Migrator.migrate(migrations)</code></div>
+<div><code>  </code><code>end</code></div>
+<div><code>end</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<p align="left">我们再次使用 cfruntime/properties 来检查我们当前是否在云中运行。接下来，我们将检查 db/migrate 目录是否存在；如果它存在，我们将使用该目录中的迁移文件来运行数据库迁移 (ActiveRecord::Migrator.migrate(migrations))。</p>
+
+
+<p align="left">我们还必须进行的一项更改就是对 warble 配置的更改。默认情况下此配置在生成的 war 文件中不包含 db/migrate 目录，因此我们需要通过指定 config.includes = FileList[&#8220;db/migrate/*&#8221;] 将此目录添加到此配置中。下面是 config/warble.rb 文件的相关内容：</p>
+
+
+<p align="left"><strong>config/warble.rb</strong></p>
+
+
+
+
+<div>
+<div id="highlighter_236881">
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>
+<div><code># Warbler web application assembly configuration file</code></div>
+<div><code>Warbler::Config.</code><code>new</code> <code>do</code> <code>|config|</code></div>
+<div></div>
+<div><code>  </code><code># Application directories to be included in the webapp.</code></div>
+<div><code>  </code><code>config.dirs = %w(app config lib log vendor tmp)</code></div>
+<div></div>
+<div><code>  </code><code># Additional files/directories to include, above those in config.dirs</code></div>
+<div><code>  </code><code>config.includes = FileList[</code><code>"db/migrate/*"</code><code>]</code></div>
+<div></div>
+<div><code>end</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<h4 align="left">一个完整示例</h4>
+
+
+<p><a href="http://jhjguxin.sinaapp.com/?attachment_id=244" rel="attachment wp-att-244"><img title="Example" src="http://cnblog.cloudfoundry.com/wp-content/uploads/2012/07/Example.tif" alt="" /></a></p>
+
+<p align="left">我们从上文中已经了解到需做出哪些更改，那我们就来快速生成一个 Rails 应用程序并做出所需的更改，然后将该应用程序部署到 CloudFoundry.com。如果您尚未安装 JRuby，建议首先参阅 <a href="http://jruby.org/getting-started"><strong>JRuby </strong><strong>入门</strong></a>。</p>
+
+
+
+
+<h3 align="left"><strong>创建</strong><strong> JRuby Rails </strong><strong>应用程序</strong><strong></strong></h3>
+
+
+<p align="left">首先，我们创建新应用程序，并创建具有完整基架的第一个域对象。</p>
+
+
+
+
+<pre>&lt;code&gt;jruby -S rails new bookshelf -d mysql cd bookshelf jruby -S rails generate scaffold Book title:string category:string published:integer price:decimal{10.2} isbn:string &lt;/code&gt;</pre>
+
+
+<p align="left">接下来，我们删除生成的 public/index.html，然后修改 config/routes.rb 以使用“books”作为根目录：</p>
+
+
+
+
+<pre>&lt;code&gt;rm public/index.html vi config/routes.rb&lt;/code&gt;</pre>
+
+
+<p align="left">下面是我在 config/routes.rb 中添加的路由：</p>
+
+
+
+
+<div>
+<div id="highlighter_226813">
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>
+<div><code>Bookshelf::Application.routes.draw </code><code>do</code></div>
+<div><code>  </code><code>resources :books</code></div>
+<div></div>
+<div><code>  </code><code># You can have the root of your site routed with </code><code>"root"</code></div>
+<div><code>  </code><code># just remember to delete </code><code>public</code><code>/index.html.</code></div>
+<div><code>  </code><code># root :to =&gt; </code><code>'welcome#index'</code></div>
+<div><code>  </code><code>root :to =&gt; </code><code>'books#index'</code></div>
+<div></div>
+<div><code>  </code><code># See how all your routes lay out with </code><code>"rake routes"</code></div>
+<div></div>
+<div><code>end</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<p align="left">现在，我们将在本地运行此应用程序以确保它正常运行：</p>
+
+
+
+
+<pre>&lt;code&gt;jruby -S rake db:create jruby -S rake db:migrate jruby -S rails server&lt;/code&gt;</pre>
+
+
+<p align="left"><a href="http://jhjguxin.sinaapp.com/?attachment_id=237" rel="attachment wp-att-237"><img title="1" src="http://cnblog.cloudfoundry.com/wp-content/uploads/2012/07/1.jpg" alt="" width="743" height="475" /></a></p>
+
+
+<p align="left">Book 实体的 Rails 空列表视图表明它确实正常运行。现在，我可以向我的书架添加新书。</p>
+
+
+
+
+<h3 align="left"><strong>修改</strong><strong> JRuby Rails </strong><strong>应用程序以便部署到</strong><strong> CloudFoundry</strong></h3>
+
+
+<p align="left">我们来首先进行我们在上文中提到的以下更改：</p>
+
+
+
+
+<ul>
+    <li>将 gem cf-runtime 添加到 Gemfile</li>
+    <li>修改 config/database.yml 文件的“production:”节，具体见<a href="http://cnblog.cloudfoundry.com/?p=236/#database.yml"><strong>上文</strong></a></li>
+    <li>添加一个名为 config/initializers/cf_db_migrate.rb 的文件，文件内容见<a href="http://cnblog.cloudfoundry.com/?p=236/#cf_db_migrate.rb"><strong>上文</strong></a></li>
+</ul>
+
+
+<p align="left">接下来我们需要生成 Warbler 配置文件，因此我们将运行：</p>
+
+
+
+
+<pre>&lt;code&gt;jruby -S warble config &lt;/code&gt;</pre>
+
+
+<p align="left">现在，我们就可以：</p>
+
+
+
+
+<ul>
+    <li>修改 config/warble.rb 以添加 db/migrate 目录，具体见<a href="http://cnblog.cloudfoundry.com/?p=236/#warble.rb"><strong>上文</strong></a></li>
+</ul>
+
+
+<p align="left">这些便是需要做出的全部更改，我们现在就已万事俱备，可以打包和部署此应用程序了。</p>
+
+
+
+
+<h3 align="left"><strong>打包</strong><strong> JRuby Rails </strong><strong>应用程序并将其部署到</strong><strong> CloudFoundry</strong></h3>
+
+
+<p align="left">我们将使用 <a href="http://kenai.com/projects/warbler/pages/Home"><strong>Warbler</strong></a> 来将此应用程序打包成一个 war，并使用 <a href="http://start.cloudfoundry.com/tools/vmc/installing-vmc.html"><strong>CloudFoundry vmc</strong></a> 命令行实用程序来部署此应用程序。</p>
+
+
+<p align="left">我们用来将此应用程序打包成 war 文件的流程十分简单：捆绑，预编译资产，然后运行 Warbler：</p>
+
+
+
+
+<pre>&lt;code&gt;jruby -S bundle install jruby -S rake assets:precompile jruby -S warble&lt;/code&gt;</pre>
+
+
+<p align="left">这会在我们的 Rails 应用程序的根目录中创建一个 bookshelf.war。目前，将 vmc 命令与 JRuby 一起运行时会存在一些问题，不过我们正在致力于加以修复。同时，我们还可以将此 war 文件移至其他目录，这样我就可以更轻松地改用常规的“C”Ruby。我将创建一个“deploy”目录，并将该目录配置为使用 Ruby 1.9.2-p290（我当前使用的是 rbenv，但您也可以使用 RVM）：</p>
+
+
+
+
+<pre>&lt;code&gt;mkdir deploy mv bookshelf.war deploy/. cd deploy rbenv local 1.9.2-p290 # (if you use RVM the command should be &#039;rvm ruby-1.9.2-p290&#039;)&lt;/code&gt;</pre>
+
+
+<p align="left">现在，我们已准备就绪，可以登录 CloudFoundry 并部署我们的应用程序了。对于此部分，您需要安装<a href="http://start.cloudfoundry.com/tools/vmc/installing-vmc.html"><strong>vmc</strong></a>。</p>
+
+
+
+
+<pre>&lt;code&gt;vmc target api.cloudfoundry.com vmc login cloud@mycompany.com Password: ***** Successfully logged into [http://api.cloudfoundry.com] vmc push bookshelf Would you like to deploy from the current directory? [Yn]: Y Application Deployed URL [bookshelf.cloudfoundry.com]: mybookshelf.cloudfoundry.com Detected a Java Web Application, is this correct? [Yn]: Y Memory reservation (128M, 256M, 512M, 1G, 2G) [512M]: 512M How many instances? [1]: 1 Bind existing services to &#039;bookshelf&#039;? [yN]: N Create services to bind to &#039;bookshelf&#039;? [yN]: Y 1: mongodb 2: mysql 3: postgresql 4: rabbitmq 5: redis What kind of service?: 2 Specify the name of the service [mysql-a4fd7]: mysql-books Create another? [yN]: N Would you like to save this configuration? [yN]: N Creating Application: OK Creating Service [mysql-books]: OK Binding Service [mysql-books]: OK Uploading Application: Checking for available resources: OK Processing resources: OK Packing application: OK Uploading (707K): OK Push Status: OK Staging Application &#039;bookshelf&#039;: OK Starting Application &#039;bookshelf&#039;: OK&lt;/code&gt;</pre>
+
+
+<p align="left">上面已将 vmc 命令突出显示出来。除 URL 以及是否应创建服务外，已接受大部分默认设置。我使用的 URL 为“mybookshelf.cloudfoundry.com”而非默认 URL，以免与现有的书架应用程序冲突。对于是否创建新服务的问题，我回答“Y”；此外我还选择了 (2) mysql 并将其命名为“mysql-books”。</p>
+
+
+<p align="left">现在我们应看到此应用程序正在运行：</p>
+
+
+
+
+<pre>&lt;code&gt;vmc apps +-------------+----+---------+---------------------------------+---------------+ | Application | # | Health | URLS | Services | +-------------+----+---------+---------------------------------+---------------+ | bookshelf | 1 | RUNNING | mybookshelf.cloudfoundry.com | mysql-books | +-------------+----+---------+---------------------------------+---------------+&lt;/code&gt;</pre>
+
+
+<p align="left">因此，我们现在输入“http://mybookshelf.cloudfoundry.com/”，就可以看到此 Bookshelf 应用程序惟妙惟肖地展示出来，我们可以添加一些书籍。</p>
+
+
+<p align="left"><a href="http://jhjguxin.sinaapp.com/2012/02/14/rvm%e4%b8%8b%e5%ae%89%e8%a3%85gem%e7%bc%96%e8%af%91%e5%a4%b1%e8%b4%a5-linecache19/237-revision/" rel="attachment wp-att-238"><img title="2" src="http://cnblog.cloudfoundry.com/wp-content/uploads/2012/07/2.jpg" alt="" width="743" height="475" /></a></p>
+
+
+<p align="left">您可以在 <a href="https://github.com/cloudfoundry-samples/jruby-rails-bookshelf"><strong>cloudfoundry-samples/jruby-rails-bookshelf</strong></a> 位置查看和下载用于此示例的完整源代码；如果您只想了解为在 Cloud Foundry 中部署而需进行的更改，请查看此<a href="https://github.com/cloudfoundry-samples/jruby-rails-bookshelf/commit/b568eac02b1cf50f47d62de0d0c63219c3198fc0"><strong>提交</strong></a>。</p>
+
+
+
+
+<h4 align="left">结论</h4>
+
+
+<p align="left">我们已经证明了可以将一个简单的 JRuby on Rails 应用程序部署到 cloudfoundry 并使用 MySQL 服务作为支持它的数据存储。只需对数据库的应用程序配置进行一些修改，即可做到。</p>
+
+
+<p align="left">我们将发布一篇博文来阐述对于使用 DataMapper 实现持久保留的 JRuby Sinatra 应用程序我们需要进行的类似更改。</p>
+
+
+<p align="left"><em>- Cloud Foundry </em><em>团队</em>
+<em></em><em>Thomas Risberg</em></p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/09/07/new-post/">New-post</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-07T23:37:00+08:00" pubdate data-updated="true">Sep 7<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2></h2>
+
+<h2></h2>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/09/07/ni-ke-neng-cuo-guo-de-rails-ji-qiao-posted-by-bigcircle/">你可能错过的 Rails 技巧 &#8211;Posted by Bigcircle</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-07T23:29:00+08:00" pubdate data-updated="true">Sep 7<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>你可能错过的 Rails 技巧 &mdash;Posted by bigcircle</h2>
+
+<p>记得前段时间 RailsConf2012 之后看过一个不错的pdf，<a href="https://speakerdeck.com/u/jeg2/p/10-things-you-didnt-know-rails-could-do">10 things you didn’t know rails could do</a></p>
+
+<p>说是10个，但是给出了42个实例，这几天抽空又回味了下，料很多，写的很好，顺便总结学习下</p>
+
+<p>Pass 掉第一个 <a href="http://fridayhug.com/">fridayhug</a>，我们是开心拥抱每一天</p>
+
+<p>&nbsp;</p>
+
+<pre class="brush: rails; gutter: true">%w(action_controller/railtie coderay markaby).map &amp;method(:require)
+
+run TheSmallestRailsApp ||= Class.new(Rails::Application) {
+  config.secret_token = routes.append {
+    root to: proc {
+      [200, {&quot;Content-Type&quot; =&gt; &quot;text/html&quot;}, [Markaby::Builder.new.html {
+        title @title = &quot;The Smallest Rails App&quot;
+        h3 &quot;I am #@title!&quot;
+        p &quot;Here is my source code:&quot;
+        div { CodeRay.scan_file(__FILE__).div(line_numbers: :table) }
+        p { a &quot;Make me smaller&quot;, href: &quot;//goo.gl/YdRpy&quot; }
+      }]]
+    }
+  }.to_s
+  initialize!
+}</pre>
+
+
+<p>2 &ndash; 提醒功能 TODO</p>
+
+<pre>class UsersController &lt; ApplicationController
+  # TODO:  Make it possible to create new users.
+end
+
+class User &lt; ActiveRecord::Base
+  # FIXME: Should token really  be accessible?
+  attr_accessible :bil, :email, :name, :token
+end</pre>
+
+
+<p>执行 rake notes</p>
+
+<p>&nbsp;</p>
+
+<pre>app/controllers/users_controller.rb:
+  * [ 2] [TODO] Make it possible to create new users.
+
+app/models/user.rb:
+  * [ 2] [FIXME] Should token really be accessible?
+
+app/views/articles/index.html.erb:
+  * [ 1] [OPTIMIZE] Paginate this listing.</pre>
+
+
+<p>查看单独的 TODO / FIXME / OPTIMIZE</p>
+
+<pre>rake notes:todo
+
+app/controllers/users_controller.rb:
+  * [ 2] Make it possible to create new users.</pre>
+
+
+<p>可以自定义提醒名称</p>
+
+<pre>class Article &lt; ActiveRecord::Base
+  belongs_to :user
+  attr_accessible :body, :subject
+  # JEG2: Add that code from your blog here.
+end</pre>
+
+
+<p>不过需要敲一长串，可以alias个快捷键</p>
+
+<pre>rake notes:custom ANNOTATION=JEG2
+
+app/models/article.rb:
+  * [ 4]Add that code from your blog here.</pre>
+
+
+<p>3 &ndash; 沙箱模式执行 rails c</p>
+
+<pre>rails c --sandbox</pre>
+
+
+<p>沙箱模式会有回滚事务机制，对数据库的操作在退出之前都会自动回滚到之前未修改的数据</p>
+
+<p>4 &ndash; 在 rails c 控制台中使用 rails helper 方法</p>
+
+<pre>$ rails c
+Loading development environment (Rails 3.2.3)
+&gt;&gt; helper.number_to_currency(100)
+=&gt; &quot;$100.00&quot;
+&gt;&gt; helper.time_ago_in_words(3.days.ago)
+=&gt; &quot;3 days&quot;</pre>
+
+
+<p>5 &ndash; 开发模式用 thin 代替 webrick</p>
+
+<pre>group :development do
+  gem &#039;thin&#039;
+end
+
+rails s thin / thin start</pre>
+
+
+<p>6 &ndash; 允许自定义配置</p>
+
+<pre> - lib/custom/railtie.rb
+
+ module Custom
+   class Railtie &lt; Rails::Railtie
+     config.custom = ActiveSupport::OrderedOptions.new
+   end
+ end
+
+ - config/application.rb
+
+ require_relative &quot;../lib/custom/railtie&quot;
+
+ module Blog
+   class Application &lt; Rails::Application
+     # ...
+     config.custom.setting = 42
+   end
+ end</pre>
+
+
+<p>7 &ndash; keep funny</p>
+
+<p>作者给出了个介绍 ruby 以及一些相关 blog的网站 <a href="http://www.rubydramas.com/">rubydramas</a>，搞笑的是这个网站右上角标明</p>
+
+<pre>Powered by PHP</pre>
+
+
+<p>用 <a href="http://isitrails.com/">isitrails.com</a> 检查了下，果然不是用 rails 做的，这个应该是作者分享 ppt 过程中的一个小插曲吧</p>
+
+<p>8 -理解简写的迁移文件</p>
+
+<pre>rails g resources user name:string email:string token:string bio:text</pre>
+
+
+<p>字段会被默认为 string 属性，查看了下 <a href="https://github.com/rails/rails/blob/master/railties/lib/rails/generators/generated_attribute.rb#LC55">源码</a>，果然有初始化定义</p>
+
+<pre>rails g resources user name email token:string{6} bio:text</pre>
+
+
+<p>会生成用样的 migration 文件</p>
+
+<pre>class CreateUsers &lt; ActiveRecord::Migration   def change     create_table :users do |t|       t.string :name       t.string :email       t.string :token, :limit =&gt; 6
+      t.text :bio
+      t.timestamps
+    end
+  end
+end</pre>
+
+
+<p>9 &ndash; 给 migration 添加索引</p>
+
+<pre>rails g resource user name:index email:uniq token:string{6} bio:text</pre>
+
+
+<p>会生成 name 和 email 的索引，同时限定 email 唯一</p>
+
+<pre>class CreateUsers &lt; ActiveRecord::Migration   def change     create_table :users do |t|       t.string :name       t.string :email       t.string :token, :limit =&gt; 6
+      t.text :bio
+      t.timestamps
+    end
+
+    add_index :users, :name
+    add_index :users, :email, :unique =&gt; true
+  end
+end</pre>
+
+
+<p>10 &ndash; 添加关联关系</p>
+
+<pre>rails g resource article user:references subject body:text</pre>
+
+
+<p>会自动关联生成对应的 belongs_to 和 外键，并添加索引</p>
+
+<pre>class CreateArticles &lt; ActiveRecord::Migration
+  def change
+    create_table :articles do |t|
+      t.references :user
+      t.string :subject
+      t.text :body
+      t.timestamps
+    end
+    add_index :articles, :user_id
+  end
+end</pre>
+
+
+<pre>class Article &lt; ActiveRecord::Base
+  belongs_to :user
+  attr_accessible :body, :subject
+end</pre>
+
+
+<p>11 &ndash; 显示数据迁移记录</p>
+
+<pre>rake db:migrate:status</pre>
+
+
+<p>会输出 migration 的状态，这在解决迁移版本冲突的时候很有用</p>
+
+<pre>database: db/development.sqlite3
+
+ status   Migration ID    Migration Name
+ ---------------------------------------
+   up     20120414155612  Create users
+   up     20120414160528  Create articles
+  down    20120414161355  Create comments</pre>
+
+
+<p>12 &ndash; 导入 csv 文件</p>
+
+<p>csv 文件内容如下</p>
+
+<pre>Name,Email
+James,james@example.com
+Dana,dana@example.com
+Summer,summer@example.com</pre>
+
+
+<p>创建 rake 任务导入 users 表</p>
+
+<pre>require &#039;csv&#039;
+namespace :users do
+  desc &quot;Import users from a CSV file&quot;
+  task :import =&gt; :environment do
+    path = ENV.fetch(&quot;CSV_FILE&quot;) {
+      File.join(File.dirname(__FILE__), *%w[.. .. db data users.csv])
+    }
+    CSV.foreach(path, headers: true, header_converters: :symbol) do |row|
+      User.create(row.to_hash)
+    end
+  end
+end</pre>
+
+
+<p>13 &ndash; 数据库中储存 csv</p>
+
+<pre>class Article &lt;  ActiveRecord::Base
+  require &#039;csv&#039;
+  module CSVSerializer
+    module_function
+    def load(field); field.to_s.parse_csv; end
+    def dump(object); Array(object).to_csv; end
+  end
+  serialize :categories, CSVSerializer
+
+  attr_accessible :body, :subject, :categories
+end</pre>
+
+
+<p>serialize 用于在文本字段储存序列化的值，如序列，Hash，Array等，例如</p>
+
+<pre>user = User.create(:preferences =&gt; { &quot;background&quot; =&gt; &quot;black&quot;, &quot;display&quot; =&gt; large })
+User.find(user.id).preferences # =&gt; { &quot;background&quot; =&gt; &quot;black&quot;, &quot;display&quot; =&gt; large }</pre>
+
+
+<p>这个例子中将 CSVSerializer to_csv序列化之后储存在 categories 这个文本类型字段中</p>
+
+<p>14 &ndash; 用 pluck 查询</p>
+
+<pre>$ rails c
+loading development environment(Rails 3.2.3)
+
+&gt;&gt; User.select(:email).map(&amp;:email)
+  User Load(0.1ms) SELECT email FROM &quot;users&quot;
+=&gt; [&quot;james@example.com&quot;, &quot;dana@example.com&quot;, &quot;summer@example.com&quot;]
+&gt;&gt; User.pluck(:email)
+   (0.2ms) SELECT email FROM &quot;users&quot;
+=&gt; [&quot;james@example.com&quot;, &quot;dana@example.com&quot;, &quot;summer@example.com&quot;]
+&gt;&gt; User.uniq.pluck(:email)
+   (0.2ms) SELECT DISTINCT email FROM &quot;users&quot;
+=&gt; [&quot;james@example.com&quot;, &quot;dana@example.com&quot;, &quot;summer@example.com&quot;]</pre>
+
+
+<p>pluck 的实现方式其实也是 select 之后再 map</p>
+
+<pre>def pluck(column_name)
+  column_name = column_name.to_s
+  klass.connection.select_all(select(column_name).arel).map! do |attributes|
+    klass.type_cast_attribute(attributes.keys.first, klass.initialize_attributes(attributes))
+  end
+end</pre>
+
+
+<p>15 &ndash; 使用 group count</p>
+
+<p>创建 article 关联 model event</p>
+
+<pre>rails g resource event article:belongs_to triggle</pre>
+
+
+<p>创建3条 edit 记录和10条 view 记录。 Event.count 标明有13条记录，
+group(:triggle).count 表示统计 triggle group 之后的数量，也可以用 count(:group =&gt; :trigger)</p>
+
+<p>$ rails c</p>
+
+<pre>&amp;gt;&amp;gt; article = Article.last
+=&amp;gt; #&lt;article id:1=&quot;&quot;&gt;&amp;gt;&amp;gt; {edit:3, view:10}.each do |trigger, count| ?&amp;gt; count.times do ?&amp;gt; Event.new(trigger: trigger).tap{ |e| e.article= article; e.save! } ?&amp;gt; end =&amp;gt; {:edit =&amp;gt; 3, :view =&amp;gt; 10} &amp;gt;&amp;gt; Event.count =&amp;gt; 13 &amp;gt;&amp;gt; Event.group(:trigger).count =&amp;gt; {&quot;edit&quot; =&amp;gt; 3, &quot;view&quot; =&amp;gt; 10}&lt;/article&gt;</pre>
+
+
+<p>16 &ndash; 覆盖关联关系</p>
+
+<pre>class Car &lt; ActiveRecord::Base
+  belongs_to :owner
+  belongs_to :previous_owner, class_name: &quot;Owner&quot;
+
+  def owner=(new_owner)
+    self.previous_owner = owner
+    super
+  end
+end</pre>
+
+
+<p>car更改 owner 时，如果有了 new_owner，就把原 owner 赋给 previous_owner，注意要加上 super</p>
+
+<p>17 &ndash; 构造示例数据</p>
+
+<pre>$ rails c
+Loading development environment (Rails 3.2.3)
+&gt;&gt; User.find(1)
+=&gt; #
+￼￼￼￼￼&gt;&gt; jeg2 = User.instantiate(&quot;id&quot; =&gt; 1, &quot;email&quot; =&gt; &quot;
+￼￼￼￼=&gt; #
+&gt;&gt; jeg2.name = &quot;James Edward Gray II&quot;
+￼￼￼￼=&gt; &quot;James Edward Gray II&quot;
+&gt;&gt; jeg2.save!
+=&gt; true
+&gt;&gt; User.find(1)
+￼￼￼￼￼￼james@example.com&quot;, ...&gt;</pre>
+
+
+<p>伪造一条记录，并不是数据库中的真实数据，也不会把原有数据覆盖</p>
+
+<p>18 &ndash; PostgreSQL 中使用无限制的 string</p>
+
+<p>去掉适配器中对 string 长度的限制，这个应该是 PostgreSQL 数据库的特性</p>
+
+<pre>module PsqlApp
+  class Application &lt; Rails::Application
+    # Switch to limitless strings
+    initializer &quot;postgresql.no_default_string_limit&quot; do
+      ActiveSupport.on_load(:active_record) do
+        adapter = ActiveRecord::ConnectionAdapters::PostgreSQLAdapter
+        adapter::NATIVE_DATABASE_TYPES[:string].delete(:limit)
+      end
+    end
+ end
+end</pre>
+
+
+<p>创建 user 表，bio 字符串</p>
+
+<pre>rails g resource user bio</pre>
+
+
+<pre>$ rails c
+Loading development environment (Rails 3.2.3)
+&gt;&gt; very_long_bio = &quot;X&quot; * 10_000; :set
+=&gt; :set
+&gt;&gt; User.create!(bio: very_long_bio)
+=&gt; #
+&gt;&gt; User.last.bio.size
+=&gt; 10000</pre>
+
+
+<p>19 &ndash; PostgreSQL 中使用全文搜</p>
+
+<pre>rails g resource article subject body:text</pre>
+
+
+<p>更改迁移文件，添加索引和 articles_search_update 触发器</p>
+
+<pre>class CreateArticles &lt; ActiveRecord::Migration
+  def change
+    create_table :articles do |t|
+      t.string :subject
+      t.text   :body
+      t.column :search, &quot;tsvector&quot;
+      t.timestamps
+    end
+    execute &lt;</pre>
+
+
+<p>Model 中添加 search 方法</p>
+
+<pre>class Article &lt; ActiveRecord::Base
+  attr_accessible :body, :subject
+  def self.search(query)
+    sql = sanitize_sql_array([&quot;plainto_tsquery(&#039;english&#039;, ?)&quot;, query])
+    where(
+      &quot;search @@ #{sql}&quot;
+    ).order(
+      &quot;ts_rank_cd(search, #{sql}) DESC&quot;
+    )
+  end
+end</pre>
+
+
+<p>PostgreSQL 数据库没用过，这段看例子吧</p>
+
+<pre>$ rails c
+Loading development environment (Rails 3.2.3)
+&amp;gt;&amp;gt; Article.create!(subject: &quot;Full Text Search&quot;)
+=&amp;gt; #&lt;article id:=&quot;&quot; 1=&quot;&quot;&gt;&amp;gt;&amp;gt; Article.create!(body: &quot;A stemmed search.&quot;) =&amp;gt; #&lt;article id:=&quot;&quot; 2=&quot;&quot;&gt;&amp;gt;&amp;gt; Article.create!(body: &quot;You won&#039;t find me!&quot;) =&amp;gt; #&lt;article id:=&quot;&quot; 3=&quot;&quot;&gt;&amp;gt;&amp;gt; Article.search(&quot;search&quot;).map { |a| a.subject || a.body } =&amp;gt; [&quot;Full Text Search&quot;, &quot;A stemmed search.&quot;] &amp;gt;&amp;gt; Article.search(&quot;stemming&quot;).map { |a| a.subject || a.body } =&amp;gt; [&quot;A stemmed search.&quot;]&lt;/article&gt;&lt;/article&gt;&lt;/article&gt;</pre>
+
+
+<p>21 &ndash; 每个用户使用不同的数据库</p>
+
+<pre>- user_database.rb
+
+def connect_to_user_database(name)
+  config = ActiveRecord::Base.configurations[&quot;development&quot;].merge(&quot;database&quot; =&gt; &quot;db/#{name}.sqlite3&quot;)
+  ActiveRecord::Base.establish_connection(config)
+end</pre>
+
+
+<p>创建 rake 任务：新增用户数据库和创建</p>
+
+<pre>require &quot;user_database&quot;
+
+namespace :db do
+  desc &quot;Add a new user database&quot;
+  task :add =&gt; %w[environment load_config] do
+    name = ENV.fetch(&quot;DB_NAME&quot;) { fail &quot;DB_NAME is required&quot; }
+    connect_to_user_database(name)
+    ActiveRecord::Base.connection
+  end
+
+  namespace :migrate do
+    desc &quot;Migrate all user databases&quot;
+    task :all =&gt; %w[environment load_config] do
+      ActiveRecord::Migration.verbose = ENV.fetch(&quot;VERBOSE&quot;, &quot;true&quot;) == &quot;true&quot;
+      Dir.glob(&quot;db/*.sqlite3&quot;) do |file|
+        next if file == &quot;db/test.sqlite3&quot;
+        connect_to_user_database(File.basename(file, &quot;.sqlite3&quot;))
+        ActiveRecord::Migrator.migrate(
+          ActiveRecord::Migrator.migrations_paths,
+          ENV[&quot;VERSION&quot;] &amp;&amp; ENV[&quot;VERSION&quot;].to_i
+        ) do |migration|
+          ENV[&quot;SCOPE&quot;].blank? || (ENV[&quot;SCOPE&quot;] == migration.scope)
+        end
+      end
+    end
+  end
+end</pre>
+
+
+<p>执行几个rake 任务创建不同的数据库</p>
+
+<pre>$ rails g resource user name
+$ rake db:add DB_NAME=ruby_rogues
+$ rake db:add DB_NAME=grays
+$ rake db:migrate:all
+==  CreateUsers: migrating ==================================
+-- create_table(:users)
+   -&gt; 0.0008s
+==  CreateUsers: migrated (0.0008s) =========================
+==  CreateUsers: migrating ==================================
+-- create_table(:users)
+   -&gt; 0.0007s
+==  CreateUsers: migrated (0.0008s) =========================</pre>
+
+
+<p>创建几条记录，为不同的数据库创建不同的数据</p>
+
+<pre>$ rails c
+&gt;&gt; connect_to_user_database(&quot;ruby_rogues&quot;)
+=&gt; #
+&gt;&gt; User.create!(name: &quot;Chuck&quot;)
+=&gt; #
+&gt;&gt; User.create!(name: &quot;Josh&quot;)
+=&gt; #
+&gt;&gt; User.create!(name: &quot;Avdi&quot;)
+=&gt; #
+...
+&gt;&gt; connect_to_user_database(&quot;grays&quot;)
+=&gt; #
+&gt;&gt; User.create!(name: &quot;James&quot;)
+=&gt; #
+&gt;&gt; User.create!(name: &quot;Dana&quot;)
+=&gt; #
+&gt;&gt; User.create!(name: &quot;Summer&quot;)
+=&gt; #</pre>
+
+
+<p>ApplicationController 里面添加 before_filter 根据登陆的二级域名判断连接哪个数据库</p>
+
+<pre>class ApplicationController &lt; ActionController::Base
+  protect_from_forgery
+  before_filter :connect_to_database
+private
+  def connect_to_database
+    connect_to_user_database(request.subdomains.first)
+  end
+end</pre>
+
+
+<p>中场休息时，去找了下 RailsConf 2012 的视频看了看，刚好看到关于 <a href="http://confreaks.com/videos/889-railsconf2012-ten-things-you-didn-t-know-rails-could-do">这篇</a> 的介绍，片子还挺长，41分钟，演讲者长相和声音都很不符合大家对 Rails 的认知，大家有兴趣的可以去听听</p>
+
+<p>21 &ndash; 自动写文件</p>
+
+<pre>class Comment &lt; ActiveRecord::Base
+  # ...
+  Q_DIR = (Rails.root + &quot;comment_queue&quot;).tap(&amp;:mkpath)
+  after_save :queue_comment
+  def queue_comment
+    File.atomic_write(Q_DIR + &quot;#{id}.txt&quot;) do |f|
+      f.puts &quot;Article: #{article.subject}&quot;
+      f.puts &quot;User:    #{user.name}&quot;
+      f.puts body
+    end
+  end
+end</pre>
+
+
+<p>找了下 Api 是 Rails 对 Ruby 基础类的扩展</p>
+
+<p>22 &ndash; 合并嵌套 Hash</p>
+
+<pre>$ rails c
+Loading development environment (Rails 3.2.3)
+&gt;&gt; {nested: {one: 1}}.merge(nested: {two: 2})
+=&gt; {:nested=&gt;{:two=&gt;2}}
+&gt;&gt; {nested: {one: 1}}.deep_merge(nested: {two: 2})
+=&gt; {:nested=&gt;{:one=&gt;1, :two=&gt;2}}</pre>
+
+
+<p>主要是用到了 deep_merge 合并相同的 key</p>
+
+<p>23 &ndash; Hash except</p>
+
+<pre>$ rails c
+Loading development environment (Rails 3.2.3)
+&gt;&gt; params = {controller: &quot;home&quot;, action: &quot;index&quot;, from: &quot;Google&quot;}
+=&gt; {:controller=&gt;&quot;home&quot;, :action=&gt;&quot;index&quot;, :from=&gt;&quot;Google&quot;}
+&gt;&gt; params.except(:controller, :action)
+=&gt; {:from=&gt;&quot;Google&quot;}</pre>
+
+
+<p>这个方法经常会用到，可能用的人也很多</p>
+
+<p>24 &ndash; add defaults to Hash</p>
+
+<pre>$ rails c
+Loading development environment (Rails 3.2.3)
+&gt;&gt; {required: true}.merge(optional: true)
+=&gt; {:required=&gt;true, :optional=&gt;true}
+&gt;&gt; {required: true}.reverse_merge(optional: true)
+=&gt; {:optional=&gt;true, :required=&gt;true}
+&gt;&gt; {required: true, optional: false}.merge(optional: true)
+=&gt; {:required=&gt;true, :optional=&gt;true}
+&gt;&gt; {required: true, optional: false}.reverse_merge(optional: true)
+=&gt; {:optional=&gt;false, :required=&gt;true}</pre>
+
+
+<p>这几个都是对 Hash 类的增强，merge 会替换原有相同 key 的值，但 reverse_merge 不会</p>
+
+<p>从源码就可以看出，会事先 copy 一份 default hash</p>
+
+<pre>def reverse_merge(other_hash)
+  super
+  self.class.new_from_hash_copying_default(other_hash)
+end</pre>
+
+
+<p>25 &ndash; String.value? 方法</p>
+
+<p>看下面的几个例子</p>
+
+<p>$ rails c
+Loading development environment (Rails 3.2.3)
+&gt;&gt; env = Rails.env
+=&gt; &ldquo;development&rdquo;
+&gt;&gt; env.development?
+=&gt; true
+&gt;&gt; env.test?
+=&gt; false
+&gt;&gt; &ldquo;magic&rdquo;.inquiry.magic?
+=&gt; true
+&gt;&gt; article = Article.first
+=&gt; #</p>
+
+<p><article id:="" 1="" status:="" draft="">&gt;&gt; article.draft?
+=&gt; true
+&gt;&gt; article.published?
+=&gt; false</article>&nbsp;</p>
+
+<p>env, “magic” 可以直接使用 value? 的方法，这个扩展是 String#inquiry 方法</p>
+
+<pre>def inquiry
+  ActiveSupport::StringInquirer.new(self)
+end
+
+# 用method_missing 实现
+def method_missing(method_name, *arguments)
+  if method_name.to_s[-1,1] == &quot;?&quot;
+    self == method_name.to_s[0..-2]
+  else
+    super
+  end
+end</pre>
+
+
+<p>类型的一个例子，同样用到了 inquiry 方法</p>
+
+<pre>class Article &lt; ActiveRecord::Base
+  # ...
+  STATUSES = %w[Draft Published]
+  validates_inclusion_of :status, in: STATUSES
+  def method_missing(method, *args, &amp;block)
+    if method =~ /\A#{STATUSES.map(&amp;:downcase).join(&quot;|&quot;)}\?\z/
+      status.downcase.inquiry.send(method)
+    else
+      super
+    end
+  end
+end</pre>
+
+
+<p>&nbsp;</p>
+
+<h6 id="section-1">26 - 让你成为杂志的封面 （暖场之用）</h6>
+
+
+<p>搞笑哥拿出了 DHH 当选 Linux journal 杂志封面的图片，会场也是哄堂大笑 ^.^</p>
+
+<p><img src="http://www.rubyinside.com/wp-content/uploads/2006/05/dhh.png" alt="" /></p>
+
+<p>27 &ndash; 隐藏注释</p>
+
+<pre>
+&lt;h1&gt;Home Page&lt;/h1&gt;
+
+# 生成的 html&lt;!-- HTML comments stay in the rendered content --&gt; 
+
+&lt;h1&gt;Home Page&lt;/h1&gt;
+</pre>
+
+
+<p>这个一下没看懂。。试了下项目里面的代码，原来是隐藏的意思。。 28 &ndash; 理解更短的 erb 语法</p>
+
+<pre># ...
+module Blog
+  class Application &lt; Rails::Application
+
+    # Broken:  config.action_view.erb_trim_mode = &#039;%&#039;
+    ActionView::Template::Handlers::ERB.erb_implementation =
+      Class.new(ActionView::Template::Handlers::Erubis) do
+        include ::Erubis::PercentLineEnhancer
+      end
+    ￼￼￼￼end
+  end
+end</pre>
+
+
+<p>接着在 view 页面替换用 % 表示原来，有点像 slim</p>
+
+<pre>% if current_user.try(:admin?)
+
+% end</pre>
+
+
+<p>29 &ndash; 用 block 避免视图层赋值</p>
+
+<blockquote>
+<pre></pre>
+<pre>&lt;table&gt;
+  &lt;% @cart.products.each do |product| %&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;%= product.name %&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;%= number_to_currency product.price %&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;% end %&gt;
+  &lt;tr&gt;
+    &lt;td&gt;Subtotal&lt;/td&gt;
+    &lt;td&gt;&lt;%= number_to_currency @cart.total %&gt;&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;Tax&lt;/td&gt;
+    &lt;td&gt;&lt;%= number_to_currency(tax = calculate_tax(@cart.total)) %&gt;&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;Total&lt;/td&gt;
+    &lt;td&gt;&lt;%= number_to_currency(@cart.total + tax) %&gt;&lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;</pre>
+</blockquote>
+
+
+<p><code>
+tax = calculate_tax(@cart.total)</code> 会先被赋值再被下面引用 用 block 重构下，把逻辑代码放到 helper 里面</p>
+
+<pre>module CartHelper
+  def calculate_tax(total, user = current_user)
+    tax = TaxTable.for(user).calculate(total)
+    if block_given?
+      yield tax
+    else
+      tax
+    end
+  end
+end</pre>
+
+
+<blockquote>
+<pre>&lt;table&gt;
+  &lt;% @cart.products.each do |product| %&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;%= product.name %&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;%= number_to_currency product.price %&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;% end %&gt;
+  &lt;tr&gt;
+    &lt;td&gt;Subtotal&lt;/td&gt;
+    &lt;td&gt;&lt;%= number_to_currency @cart.total %&gt;&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;% calculate_tax @cart.total do |tax| %&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Tax&lt;/td&gt;
+      &lt;td&gt;&lt;%= number_to_currency tax %&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Total&lt;/td&gt;
+      &lt;td&gt;&lt;%= number_to_currency(@cart.total + tax) %&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;% end %&gt;
+&lt;/table&gt;</pre>
+<pre></pre>
+
+&nbsp;
+</blockquote>
+
+
+<p>30 &ndash; 同时生成多个标签</p>
+
+<blockquote>
+<pre>&lt;h1&gt;Articles&lt;/h1&gt;
+  &lt;% @articles.each do |article| %&gt;
+    &lt;%= content_tag_for(:div, article) do %&gt;
+    &lt;h2&gt;&lt;%= article.subject %&gt;&lt;/h2&gt;
+  &lt;% end %&gt;
+&lt;% end %&gt;</pre>
+<pre>&lt;%= content_tag_for(:div, @articles) do |article| %&gt;
+  &lt;h2&gt;&lt;%= article.subject %&gt;&lt;/h2&gt;
+&lt;% end %&gt;</pre>
+<pre></pre>
+
+&nbsp;
+</blockquote>
+
+
+<p>&nbsp;</p>
+
+<h1></h1>
+
+
+<p>content_tag_for 具体用法可以参考 <a href="http://api.rubyonrails.org/classes/ActionView/Helpers/RecordTagHelper.html#method-i-content_tag_for">Api</a>，意思比较明白 <a href="http://edgeapi.rubyonrails.org/classes/ActiveModel/Conversion.html#method-i-to_partial_path">to_partial_path</a> 是 ActiveModel 內建的实例方法，返回一个和可识别关联对象路径的字符串，原文是这么说的，目前还没看明白这么用的目的在哪</p>
+
+<h2>这篇 <a href="http://blog.plataformatec.com.br/2012/01/my-five-favorite-hidden-features-in-rails-3-2/">blog</a> 介绍了4个最喜欢的 Rails3.2 隐藏特性，</h2>
+
+
+<p>&nbsp;</p>
+
+<h6 id="inspire-theme-songs-about-your-work-">这4条都在这个系列中，作者可能也是从这学来的吧</h6>
+
+
+<p>31 &ndash; Render Any Object</p>
+
+<pre>class Event &lt; ActiveRecord::Base
+  # ...
+  def to_partial_path
+    &quot;events/#{trigger}&quot;  # events/edit or events/view
+  end
+end</pre>
+
+
+<p><a href="http://edgeapi.rubyonrails.org/classes/ActiveModel/Conversion.html#method-i-to_partial_path">to_partial_path</a> 是 ActiveModel 內建的实例方法，返回一个和可识别关联对象路径的字符串，原文是这么说的，目前还没看明白这么用的目的在哪</p>
+
+<p>&nbsp;</p>
+
+<pre>Returns a string identifying the path associated with the object.
+ActionPack uses this to find a suitable partial to represent the object.</pre>
+
+
+<p>32 &ndash; 生成 group option</p>
+
+<pre> %w[One Two Three],
+  &quot;Group B&quot; =&gt; %w[One Two Three]
+) ) %&gt;</pre>
+
+
+<p>这个其实就是用到了 grouped_options_for_select ，我在前面的 博文 提到过这几个 select 的用法</p>
+
+<p>33 -定制你自己喜欢的 form 表单</p>
+
+<pre>class LabeledFieldsWithErrors &lt; ActionView::Helpers::FormBuilder
+  def errors_for(attribute)
+    if (errors = object.errors[attribute]).any?
+      @template.content_tag(:span, errors.to_sentence, class: &quot;error&quot;)
+    end
+  end
+  def method_missing(method, *args, &amp;block)
+    if %r{ \A (?labeled_)?
+              (?\w+?)
+              (?_with_errors)? \z }x =~ method and
+       respond_to?(wrapped) and [labeled, with_errors].any?(&amp;:present?)
+      attribute, tags = args.first, [ ]
+      tags           &lt;&lt; label(attribute) if labeled.present?
+      tags           &lt;&lt; send(wrapped, *args, &amp;block)
+      tags           &lt;&lt; errors_for(attribute) if with_errors.present?
+      tags.join(&quot; &quot;).html_safe
+    else
+      super
+    end
+  end
+end</pre>
+
+
+<p>定义了几个不想去看懂的 method_missing 方法。。 修改 application.rb，添加配置</p>
+
+<pre>class Application &lt; Rails::Application
+  # ...
+  require &quot;labeled_fields_with_errors&quot;
+  config.action_view.default_form_builder = LabeledFieldsWithErrors
+  config.action_view.field_error_proc     = -&gt;(field, _) { field }
+end</pre>
+
+
+<p>创建 form 表单可以这样书写</p>
+
+<blockquote>
+<pre></pre>
+<pre>&lt;%= form_for @article do |f| %&gt;
+  &lt;p&gt;&lt;%= f.text_field
+  &lt;p&gt;&lt;%= f.labeled_text_field
+  &lt;p&gt;&lt;%= f.text_field_with_errors
+  &lt;p&gt;&lt;%= f.labeled_text_field_with_errors :subject %&gt;&lt;/p&gt;
+  &lt;%= f.submit %&gt;
+&lt;% end %&gt;</pre>
+</blockquote>
+
+
+<p>生成如下的 html 页面</p>
+
+<blockquote>
+<pre>&lt;p&gt;&lt;input id=&quot;article_subject&quot; name=&quot;article[subject]&quot; size=&quot;30&quot; type=&quot;text&quot; value=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;label for=&quot;article_subject&quot;&gt;Subject&lt;/label&gt;
+   &lt;input id=&quot;article_subject&quot; name=&quot;article[subject]&quot; size=&quot;30&quot; type=&quot;text&quot; value=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;input id=&quot;article_subject&quot; name=&quot;article[subject]&quot; size=&quot;30&quot; type=&quot;text&quot; value=&quot;&quot; /&gt;
+   &lt;span class=&quot;error&quot;&gt;can&#039;t be blank&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;label for=&quot;article_subject&quot;&gt;Subject&lt;/label&gt;
+   &lt;input id=&quot;article_subject&quot; name=&quot;article[subject]&quot; size=&quot;30&quot; type=&quot;text&quot; value=&quot;&quot; /&gt;
+   &lt;span class=&quot;error&quot;&gt;can&#039;t be blank&lt;/span&gt;&lt;/p&gt;
+&lt;!-- ... --&gt;</pre>
+</blockquote>
+
+
+<p>不是很喜欢这种方式，反而把简单的html搞复杂了，让后来维护的人增加额外的学习成本     不是很喜欢这种方式，反而把简单的html搞复杂了，让后来维护的人增加额外的学习成本</p>
+
+<h6 id="inspire-theme-songs-about-your-work-">34 - Inspire theme songs about your work (再次暖场时刻)</h6>
+
+
+<p>2011年 Farmhouse Conf 上主持人 Ron Evans 专门用口琴演奏了为大神 Tenderlove 写的歌 - <a href="http://www.confreaks.com/videos/529-farmhouseconf-ruby-hero-tenderlove">Ruby Hero Tenderlove! </a>，听了半天不知道唱的啥。。 想找下有没有美女 Rubist, 看了下貌似没有，都是大妈，这位 <a href="http://www.confreaks.com/videos/534-farmhouseconf-meghann-millard">Meghann Millard</a> 尚可远观，大姐装束妖娆，手握纸条，蚊蝇环绕，不时微笑，长的真有点像 gossip girl 里面的 Jenny Humphrey</p>
+
+<h6 id="section">35 - 灵活的异常操作</h6>
+
+
+<p>修改 application.rb 定义</p>
+
+<pre>class Application &lt; Rails::Application
+# ...
+  config.exceptions_app = routes
+end</pre>
+
+
+<p>每次有异常时路由都会被调用，你可以用下面的方法简单 render 404 页面</p>
+
+<pre>match &quot;/404&quot;, :to =&gt; &quot;errors#not_found&quot;</pre>
+
+
+<p>这个例子也在开头提到的那篇博文里面，感兴趣可以去自己研究下</p>
+
+<p>36 &ndash; 给 Sinatra 添加路由</p>
+
+<pre>- Gemfile
+
+source &#039;https://rubygems.org&#039;
+# ...
+gem &quot;resque&quot;, require: &quot;resque/server&quot;
+
+module AdminValidator
+
+  def matches?(request)
+    if (id = request.env[&quot;rack.session&quot;][&quot;user_id&quot;])
+      current_user = User.find_by_id(id)
+      current_user.try(:admin?)
+    else
+      false
+    end
+  end
+end</pre>
+
+
+<p>挂载 Resque::Server 至 /admin/resqu</p>
+
+<pre>Blog::Application.routes.draw do
+  # ...
+  require &quot;admin_validator&quot;
+  constraints AdminValidator do
+    mount Resque::Server, at: &quot;/admin/resque&quot;
+  end
+end</pre>
+
+
+<p>这个也没有试验，不清楚具体用法，sinatra 平时也基本不用</p>
+
+<p>37 &ndash; 导出CSV流</p>
+
+<pre>class ArticlesController &lt; ApplicationController
+  def index
+    respond_to do |format|
+      format.html do
+        @articles = Article.all
+      end
+      format.csv do
+        headers[&quot;Content-Disposition&quot;] = %Q{attachment; filename=&quot;articles.csv&quot;}
+        self.response_body = Enumerator.new do |response|
+          csv  = CSV.new(response, row_sep: &quot;\n&quot;)
+          csv &lt;&lt; %w[Subject Created Status]
+          Article.find_each do |article|
+            csv &lt;&lt; [ article.subject,
+                     article.created_at.to_s(:long),
+                     article.status ]
+        ￼￼  end
+        end
+      end
+    end
+  end
+# ...
+end
+
+导出 csv 是很常用的功能，很多时候报表都需要，这个还是比较实用的
+
+38 - do some work in the background
+
+给 articles 添加文本类型 stats 字段</pre>
+
+
+<pre>rails g migration add_stats_to_articles stats:text</pre>
+
+
+<p>添加一个计算 stats 方法 和 一个 after_create 方法，在创建一条记录后，会把 calculate_stats 添加到 Queue 队列，当队列中有任务时，后台创建一个线程执行该 job</p>
+
+<pre>class Article &lt; ActiveRecord::Base
+  # ...
+  serialize :stats
+  def calculate_stats
+    words = Hash.new(0)
+    body.to_s.scan(/\S+/) { |word| words[word] += 1 }
+    sleep 10  # simulate a lot of work
+    self.stats = {words: words}
+  end
+
+  require &quot;thread&quot;
+  def self.queue; @queue ||= Queue.new end
+  def self.thread
+    @thread ||= Thread.new do
+      while job = queue.pop
+        job.call
+      end
+    end
+  end
+  thread  # start the Thread
+
+  after_create :add_stats
+  def add_stats
+    self.class.queue &lt;&lt; -&gt; { calculate_stats; save }
+  end
+end</pre>
+
+
+<p>添加一条记录，10秒后会自动给该记录 stats 字段添加 words Hash</p>
+
+<pre>$ rails c
+Loading development environment (Rails 3.2.3)
+&gt;&gt; Article.create!(subject: &quot;Stats&quot;, body: &quot;Lorem ipsum...&quot;);
+Time.now.strftime(&quot;%H:%M:%S&quot;)
+=&gt; &quot;15:24:10&quot;
+&gt;&gt; [Article.last.stats, Time.now.strftime(&quot;%H:%M:%S&quot;)]
+=&gt; [nil, &quot;15:24:13&quot;]
+&gt;&gt; [Article.last.stats, Time.now.strftime(&quot;%H:%M:%S&quot;)]
+=&gt;[{:words=&gt;{&quot;Lorem&quot;=&gt;1, &quot;ipsum&quot;=&gt;1, ...}, &quot;15:24:26&quot;]</pre>
+
+
+<p>39 &ndash; 用 Rails 生成静态站点</p>
+
+<p>修改 config/environment/development.rb</p>
+
+<pre>Static::Application.configure do
+  # ...
+  # Show full error reports and disable caching
+  config.consider_all_requests_local       = true
+  config.action_controller.perform_caching = !!ENV[&quot;GENERATING_SITE&quot;]
+  # ...
+  # Don&#039;t fallback to assets pipeline if a precompiled asset is missed
+  config.assets.compile = !ENV[&quot;GENERATING_SITE&quot;]
+  # Generate digests for assets URLs
+  config.assets.digest = !!ENV[&quot;GENERATING_SITE&quot;]
+  # ...
+end
+
+class ApplicationController &lt; ActionController::Base
+  protect_from_forgery
+  if ENV[&quot;GENERATING_SITE&quot;]
+    after_filter do |c|
+      c.cache_page(nil, nil, Zlib::BEST_COMPRESSION)
+    end
+  end
+end</pre>
+
+
+<p>修改 rake static:generate 任务</p>
+
+<pre>require &quot;open-uri&quot;
+namespace :static do
+  desc &quot;Generate a static copy of the site&quot;
+  task :generate =&gt; %w[environment assets:precompile] do
+    site = ENV.fetch(&quot;RSYNC_SITE_TO&quot;) { fail &quot;Must set RSYNC_SITE_TO&quot; }
+    server = spawn( {&quot;GENERATING_SITE&quot; =&gt; &quot;true&quot;},
+                    &quot;bundle exec rails s thin -p 3001&quot; )
+    sleep 10  # FIXME: start when the server is up
+
+    # FIXME: improve the following super crude spider
+    paths = %w[/]
+    files = [ ]
+    while path = paths.shift
+      files &lt;&lt; File.join(&quot;public&quot;, path.sub(%r{/\z}, &quot;/index&quot;) + &quot;.html&quot;)
+      File.unlink(files.last) if File.exist? files.last
+      files &lt;&lt; files.last + &quot;.gz&quot;
+      File.unlink(files.last) if File.exist? files.last
+      page = open(&quot;http://localhost:3001#{path}&quot;) { |url| url.read }
+      page.scan(/]+href=&quot;([^&quot;]+)&quot;/) do |link|
+        paths &lt;&lt; link.first
+      end
+    end
+
+    system(&quot;rsync -a public #{site}&quot;)
+
+    Process.kill(&quot;INT&quot;, server)
+    Process.wait(server)
+    system(&quot;bundle exec rake assets:clean&quot;)
+    files.each do |file|
+      File.unlink(file)
+    end
+  end
+end</pre>
+
+
+<p>生成到某个地方，去查看吧</p>
+
+<pre>rake static:generate RSYNC_SITE_TO=/Users/james/Desktop</pre>
+
+
+<p>后面几个都不感兴趣，没有测试，说好的42个，瞎扯了3个pass掉了，实在是吐血了</p>
+
+<p>Over.</p>
+
+<p>&nbsp;</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/2/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/">通过mongodump和mongorestore实现Mongodb备份和恢复 &#8211;by Chenzhou123520</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes/">Ruby on Rails 4.0 Release Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/rails-active-record-named-scopes/">Rails Active Record Named Scopes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/">晒晒我们的开源项目 ITEYE开源代码</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/">Single Sign-on 单点登录 Sso</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/jhjguxin">@jhjguxin</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'jhjguxin',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Francis Jiang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

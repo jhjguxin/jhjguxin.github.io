@@ -1,0 +1,1112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: 专业 | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/blog/categories/zhuan-ye/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[晒晒我们的开源项目 ITEYE开源代码]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/"/>
+    <updated>2012-09-27T08:34:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma</id>
+    <content type="html"><![CDATA[<h2>晒晒我们的开源项目 ITEYE开源代码</h2>
+
+<p>我们的研发团队是一支mini型研发团队，目前共有研发人员13人。由于网站产品维护的历史原因，这13人的研发团队分为4支小组，分别是：Ruby研发小组5人；PHP研发小组4人；.net研发小组2人，Java搜索小组2人。</p>
+
+<p>别看我们研发人员这么少，但是我们研发人员战斗力很强，我们维护和开发着十多条产品线。在我们开发自身产品的过程中，也积累了一些比较通用的组件，一些对大家来说有用的工具。因此从今年下半年开始，我们陆续将一些组件和工具开源出来，哪怕这些项目的质量并不是那么高，也希望能够给社区带来一点点自己的贡献。</p>
+
+<p>以下简要介绍一下我们已经开源的项目，今后我们还会努力开源更多的东西和大家交流和分享：</p>
+
+<p>1、Ansj中文分词 &ndash; 开源的高准确率Java中文分词器</p>
+
+<p>项目Github地址：<a href="https://github.com/ansjsun/ansj_seg" target="_blank"><a href="https://github.com/ansjsun/ansj_seg">https://github.com/ansjsun/ansj_seg</a></a>
+这是基于大名鼎鼎中科院的Ictclas中文分词算法编写的Java实现版本，比常用的开源mmseg4j的分词准确率高。目前我们自己站内的搜索将逐渐从mmseg4j算法替换成Ansj中文分词算法。</p>
+
+<p>2、ServiceFramework &ndash; 开源的羽量级Java Web服务框架</p>
+
+<p>项目Github地址：<a href="https://github.com/allwefantasy/ServiceFramework" target="_blank"><a href="https://github.com/allwefantasy/ServiceFramework">https://github.com/allwefantasy/ServiceFramework</a></a>
+我们基于Java的开源搜索框架lucene编写了网站的分布式搜索和Tag文章分类服务。因为需要向前端的Web应用程序提供搜索和Tag服务接口API，所以我们编写了这个羽量级的Java框架软件。它的优点就是羽量级，自身集成了Jetty服务器，MVC，IoC和ORM，让你只需要编写非常少的代码，就可以快速将你的业务逻辑组件以Web API的方式提供服务。</p>
+
+<p>3、ExportBlog &ndash; 开源的通用博客导出工具</p>
+
+<p>项目Github地址：<a href="https://github.com/sqzhuyi/ExportBlog" target="_blank"><a href="https://github.com/sqzhuyi/ExportBlog">https://github.com/sqzhuyi/ExportBlog</a></a>
+这是一个基于.net Winforms编写的通用博客导出工具，支持导出网站包括：CSDN、ITEYE、博客园、新浪、搜狐、和讯、ChinaUnix、网易、51CTO、开源中国、百度空间、QQ空间等等。导出格式支持CHM、PDF、HTML、TXT和EPUB 5种格式文档。详细介绍：<a href="http://blog.csdn.net/sq_zhuyi/article/details/7924776" target="_blank"><a href="http://blog.csdn.net/sq_zhuyi/article/details/7924776">http://blog.csdn.net/sq_zhuyi/article/details/7924776</a></a></p>
+
+<p>4、Secode_level_cache &ndash; 开源的Rails对象缓存插件</p>
+
+<p>项目Github地址：<a href="https://github.com/csdn-dev/second_level_cache" target="_blank"><a href="https://github.com/csdn-dev/second_level_cache">https://github.com/csdn-dev/second_level_cache</a></a>
+Rails的ActiveRecord自身没有带强大的对象缓存功能，这是AR的一个重大的遗憾。早在2008年开始，我们就借鉴了Java强大的ORM框架Hibernate的二级对象缓存编写了这个Rails的AR对象缓存插件，并且一直作为JavaEye网站缓存优化的秘密武器来使用，取得了非常理想的效果。
+现在我们将这个插件从Rails2.x的版本升级到了3.x版本，并且抽取成了一个通用插件，开始应用于新的Rails3.2的项目之上。有志于AR对象缓存优化的ruby程序员不容错过。</p>
+
+<p>5、limiter － 网站反爬虫和DOS攻击的利器</p>
+
+<p>项目Github地址：<a href="https://github.com/csdn-dev/limiter" target="_blank"><a href="https://github.com/csdn-dev/limiter">https://github.com/csdn-dev/limiter</a></a>
+早年的JavaEye网站曾经深受DOS攻击和爬虫海量抓取造成的负载过高的困扰，我曾经和这个问题进行了为期几年不懈的斗争，并且在总结几年斗争经验后写了一篇总结性博客文章：<a href="http://robbin.iteye.com/blog/451014" target="_blank">互联网网站的反爬虫策略浅析</a> 。当时我基于这个反爬虫策略编写了JavaEye网站的智能防火墙插件，取得了良好的效果。
+现在我们将这个插件从JavaEye的源代码中剥离出来，抽取成一个通用的rackware，便于应用于普通的Rails3.x的项目当中。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[RVM 下载 加速 -by liuhui998]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/05/14/rvm-xia-zai-jia-su-by-liuhui998/"/>
+    <updated>2012-05-14T15:37:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/05/14/rvm-xia-zai-jia-su-by-liuhui998</id>
+    <content type="html"><![CDATA[<h2>RVM 下载 加速 -by liuhui998</h2>
+
+<p>今天晚上有点时间，我就折腾了一下 rails。</p>
+
+<p>按照这个<a title="教程" href="http://ruby-china.org/wiki/install_ruby_guide">教程</a>，我一步步的进行安装。</p>
+
+<p>正如我之前听说的 <a title="rvm" href="https://rvm.beginrescueend.com/rvm/install/">rvm</a> 下载 ruby 的速度只有不到5KB/s 速度。</p>
+
+<p>在 google 了二圈后，我发现国内外好像没有人解决这个问题。</p>
+
+<p>于是我发扬geek精神，开始打起了 rvm 源代码的主意：</p>
+
+<p>1） rvm 是从 ruby-lang.org 这个站点下载 ruby 的源代码
+rvm 慢的主要是因为 ruby-lang.org 这个网站下载速度慢</p>
+
+<p>2） 如果找到 ruby-lang.org 的更快的镜像网站，并修改 rvm 里面的配置
+这个问题也就解决了</p>
+
+<p>于是找到一个叫 <a title="UK Mirror Service " href="http://www.mirrorservice.org/">UK Mirror Service</a> 的网站，它提供了 ruby-lang.org 镜像服务：</p>
+
+<p><a title="http://www.mirrorservice.org/sites/ftp.ruby-lang.org/" href="http://www.mirrorservice.org/sites/ftp.ruby-lang.org/"><a href="http://www.mirrorservice.org/sites/ftp.ruby-lang.org/">http://www.mirrorservice.org/sites/ftp.ruby-lang.org/</a></a></p>
+
+<p>我测试了一下，平均速度最慢也超过 30KB/s</p>
+
+<p>好的镜像找到了，那么下一步就是在哪里修改 ruby 下载地址。</p>
+
+<div><figure>
+<div>
+<table>
+<tbody>
+<tr>
+<td></td>
+<td>
+<pre><code>cd $rvm_path grep -nR "ruby-lang.org" ./</code></pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure></div>
+
+
+<p>&nbsp;</p>
+
+<p>发现地址是写在 $rvm_path/config/db 文件里</p>
+
+<p>找到这一段：</p>
+
+<div><figure>
+<div>
+<table>
+<tbody>
+<tr>
+<td></td>
+<td>
+<pre><code>ruby_1.0_url=http://ftp.ruby-lang.org/pub/ruby/1.0 ruby_1.2_url=http://ftp.ruby-lang.org/pub/ruby/1.2 ruby_1.3_url=http://ftp.ruby-lang.org/pub/ruby/1.3 ruby_1.4_url=http://ftp.ruby-lang.org/pub/ruby/1.4 ruby_1.5_url=http://ftp.ruby-lang.org/pub/ruby/1.5 ruby_1.6_url=http://ftp.ruby-lang.org/pub/ruby/1.6 ruby_1.7_url=http://ftp.ruby-lang.org/pub/ruby/1.7 ruby_1.8_url=http://ftp.ruby-lang.org/pub/ruby/1.8 ruby_1.9_url=http://ftp.ruby-lang.org/pub/ruby/1.9 ruby_2.0_url=http://ftp.ruby-lang.org/pub/ruby/2.0</code></pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure></div>
+
+
+<p>&nbsp;</p>
+
+<p>改成</p>
+
+<div><figure>
+<div>
+<table>
+<tbody>
+<tr>
+<td></td>
+<td>
+<pre><code>ruby_1.0_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.0 ruby_1.2_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.2 ruby_1.3_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.3 ruby_1.4_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.4 ruby_1.5_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.5 ruby_1.6_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.6 ruby_1.7_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.7 ruby_1.8_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.8 ruby_1.9_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.9 ruby_2.0_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/2.0</code></pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure></div>
+
+
+<p>&nbsp;</p>
+
+<p>我已把这个修攺提交到我们仓库里 <a title="http://github.com/liuhui998/rvm" href="http://github.com/liuhui998/rvm"><a href="http://github.com/liuhui998/rvm">http://github.com/liuhui998/rvm</a></a>
+可以直接点击下载我改好后的 <a title="db 文件" href="https://raw.github.com/liuhui998/rvm/0f0be9a1316d607a9956415110bef8ea9b8a6726/config/db">文件</a></p>
+
+<p>大家改好 $rvm_path/config/db 文件后，最好能重启终端程序后再执行 rvm install 命令
+这样新的 mirror 就会起效。</p>
+
+<p>经过测试，改进后的 rvm， 在家中4M 以太网的速度可以达到200KB/s.</p>
+
+<p>其本上解决了 rvm 下载 ruby 慢的问题。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[NoSQL]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/05/08/nosql/"/>
+    <updated>2012-05-08T17:39:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/05/08/nosql</id>
+    <content type="html"><![CDATA[<h2>NoSQL</h2>
+
+<h2>NoSQL</h2>
+
+
+<p>NoSQL，指的是非关系型的数据库。随着互联网 web2.0 网站的兴起，传统的关系数据库在应付 web2.0 网站，特别是超大规模和高并发的 SNS 类型的 web2.0 纯动态网站已经显得力不从心，暴露了很多难以克服的问题，而非关系型的数据库则由于其本身的特点得到了非常迅速的发展。</p>
+
+<h3><a name="%E7%AE%80%E4%BB%8B" href="https://github.com/jhjguxin/project-manage/blob/master/nosql/nosql-baidubaike.zh-cn.markdown#%E7%AE%80%E4%BB%8B"></a>简介</h3>
+
+
+<p>NoSQL(NoSQL = Not Only SQL )，意即反 SQL 运动，是一项全新的数据库革命性运动，早期就有人提出，发展至 2009 年趋势越发高涨。NoSQL 的拥护者们提倡运用非关系型的数据存储，相对于目前铺天盖地的关系型数据库运用，这一概念无疑是一种全新的思维的注入。</p>
+
+<h3><a name="%E7%8E%B0%E4%BB%8A%E7%8A%B6%E5%86%B5" href="https://github.com/jhjguxin/project-manage/blob/master/nosql/nosql-baidubaike.zh-cn.markdown#%E7%8E%B0%E4%BB%8A%E7%8A%B6%E5%86%B5"></a>现今状况</h3>
+
+
+<p>现今的计算机体系结构在数据存储方面要求具备庞大的水平扩展性，而 NoSQL 致力于改变这一现状。目前 Google 的 BigTable 和 Amazon 的 Dynamo 使用的就是 NoSQL 型数据库。</p>
+
+<p>NoSQL 项目的名字上看不出什么相同之处，但是，它们通常在某些方面相同：它们可以处理超大量的数据。</p>
+
+<p>这场革命目前仍然需要等待。的确，NoSQL 对大型企业来说还不是主流，但是，一两年之后很可能就会变个样子。在 NoSQL 运动的最新一次聚会中，来自世界各地的 150 人挤满了 CBS Interactive 的一间会议室。分享他们如何推翻缓慢而昂贵的关系数据库的暴政，怎样使用更有效和更便宜的方法来管理数据。</p>
+
+<p>“关系型数据库给你强加了太多东西。它们要你强行修改对象数据，以满足 RDBMS （relational database management system，关系型数据库管理系统）的需要。” 在 NoSQL 拥护者们看来，基于 NoSQL 的替代方案 “只是给你所需要的”。</p>
+
+<ol>
+    <li>水平扩展性(horizontal scalability)指能够连接多个软硬件的特性,这样可以将多个服务器从逻辑上看成一个实体。</li>
+</ol>
+
+
+<h3><a name="%E6%88%91%E4%BB%AC%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8nosql%E9%9D%9E%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93" href="https://github.com/jhjguxin/project-manage/blob/master/nosql/nosql-baidubaike.zh-cn.markdown#%E6%88%91%E4%BB%AC%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8nosql%E9%9D%9E%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93"></a>我们为什么要使用NOSQL非关系数据库?</h3>
+
+
+<p>随着互联网 web2.0 网站的兴起，非关系型的数据库现在成了一个极其热门的新领域，非关系数据库产品的发展非常迅速。而传统的关系数据库在应付 web2.0 网站，特别是超大规模和高并发的 SNS 类型的 web2.0 纯动态网站已经显得力不从心，暴露了很多难以克服的问题，<strong>例如</strong>：</p>
+
+<ol>
+    <li>High performance - 对数据库高并发读写的需求 web2.0 网站要根据用户个性化信息来实时生成动态页面和提供动态信息，所以基本上无法使用动态页面静态化技术，因此数据库并发负载非常高，往往要达到每秒上万次读写请求。关系数据库应付上万次 SQL 查询还勉强顶得住，但是应付上万次 SQL 写数据请求，硬盘 IO 就已经无法承受了。其实对于普通的 BBS 网站，往往也存在对高并发写请求的需求。</li>
+    <li>Huge Storage - 对海量数据的高效率存储和访问的需求 对于大型的 SNS 网站，每天用户产生海量的用户动态，以国外的 Friendfeed 为例，一个月就达到了 2.5 亿条用户动态，对于关系数据库来说，在一张 2.5 亿条记录的表里面进行 SQL 查询，效率是极其低下乃至不可忍受的。再例如大型 web 网站的用户登录系统，<strong>例如</strong>腾讯，盛大，动辄数以亿计的帐号，关系数据库也很难应付。</li>
+    <li>High Scalability &amp;&amp; High Availability- 对数据库的高可扩展性和高可用性的需求 在基于 web 的架构当中，数据库是最难进行横向扩展的，当一个应用系统的用户量和访问量与日俱增的时候，你的数据库却没有办法像 web server 和 app server 那样简单的通过添加更多的硬件和服务节点来扩展性能和负载能力。对于很多需要提供 24 小时不间断服务的网站来说，对数据库系统进行升级和扩展是非常痛苦的事情，往往需要停机维护和数据迁移，为什么数据库不能通过不断的添加服务器节点来实现扩展呢？</li>
+</ol>
+
+
+<p>在上面提到的 “三高” 需求面前，关系数据库遇到了难以克服的障碍，而对于 web2.0 网站来说，关系数据库的很多主要特性却往往无用武之地，<strong>例如</strong>：</p>
+
+<ol>
+    <li>数据库事务一致性需求 很多 web 实时系统并不要求严格的数据库事务，对读一致性的要求很低，有些场合对写一致性要求也不高。因此数据库事务管理成了数据库高负载下一个沉重的负担。</li>
+    <li>数据库的写实时性和读实时性需求 对关系数据库来说，插入一条数据之后立刻查询，是肯定可以读出来这条数据的，但是对于很多 web 应用来说，并不要求这么高的实时性。</li>
+    <li>对复杂的SQL查询，特别是多表关联查询的需求 任何大数据量的 web 系统，都非常忌讳多个大表的关联查询，以及复杂的数据分析类型的复杂 SQL 报表查询，特别是 SNS 类型的网站，从需求以及产品设计角度，就避免了这种情况的产生。往往更多的只是单表的主键查询，以及单表的简单条件分页查询，SQL 的功能被极大的弱化了。</li>
+</ol>
+
+
+<p>因此，关系数据库在这些越来越多的应用场景下显得不那么合适了，为了解决这类问题的非关系数据库应运而生。</p>
+
+<p>NoSQL 是非关系型数据存储的广义定义。它打破了长久以来关系型数据库与 ACID 理论大一统的局面。NoSQL 数据存储不需要固定的表结构，通常也不存在连接操作。在大数据存取上具备关系型数据库无法比拟的性能优势。该术语在 2009 年初得到了广泛认同。</p>
+
+<p>当今的应用体系结构需要数据存储在横向伸缩性上能够满足需求。而 NoSQL 存储就是为了实现这个需求。Google 的 BigTable 与 Amazon 的 Dynamo 是非常成功的商业 NoSQL 实现。一些开源的 NoSQL 体系，如 Facebook 的 Cassandra， Apache 的 HBase，也得到了广泛认同。从这些 NoSQL 项目的名字上看不出什么相同之处：Hadoop、Voldemort、Dynomite，还有其它很多。</p>
+
+<h3><a name="nosql-%E4%B8%8E%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%BE%E8%AE%A1%E7%90%86%E5%BF%B5%E6%AF%94%E8%BE%83" href="https://github.com/jhjguxin/project-manage/blob/master/nosql/nosql-baidubaike.zh-cn.markdown#nosql-%E4%B8%8E%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%BE%E8%AE%A1%E7%90%86%E5%BF%B5%E6%AF%94%E8%BE%83"></a>NoSQL 与关系型数据库设计理念比较</h3>
+
+
+<p>关系型数据库中的表都是存储一些格式化的数据结构，每个元组字段的组成都一样，即使不是每个元组都需要所有的字段，但数据库会为每个元组分配所有的字段，这样的结构可以便于表与表之间进行连接等操作，但从另一个角度来说它也是关系型数据库性能瓶颈的一个因素。而非关系型数据库以键值对存储，它的结构不固定，每一个元组可以有不一样的字段，每个元组可以根据需要增加一些自己的键值对，这样就不会局限于固定的结构，可以减少一些时间和空间的开销。</p>
+
+<h3><a name="%E7%89%B9%E7%82%B9" href="https://github.com/jhjguxin/project-manage/blob/master/nosql/nosql-baidubaike.zh-cn.markdown#%E7%89%B9%E7%82%B9"></a>特点</h3>
+
+
+<ul>
+    <li><strong>它们可以处理超大量的数据。</strong></li>
+    <li><strong>它们运行在便宜的PC服务器集群上。</strong></li>
+    <li>PC集群扩充起来非常方便并且成本很低，避免了“sharding”操作的复杂性和成本。</li>
+    <li><strong>它们击碎了性能瓶颈。</strong></li>
+    <li>NoSQL的支持者称，通过NoSQL架构可以省去将Web或Java应用和数据转换成SQL友好格式的时间，执行速度变得更快。</li>
+    <li>“SQL并非适用于所有的程序代码，” 对于那些繁重的重复操作的数据，SQL值得花钱。但是当数据库结构非常简单时，SQL可能没有太大用处。</li>
+    <li><strong>没有过多的操作。</strong></li>
+    <li>虽然NoSQL的支持者也承认关系数据库提供了无可比拟的功能集合，而且在数据完整性上也发挥绝对稳定，他们同时也表示，企业的具体需求可能没有那么多。</li>
+    <li><strong>Bootstrap支持</strong></li>
+    <li>因为NoSQL项目都是开源的，因此它们缺乏供应商提供的正式支持。这一点它们与大多数开源项目一样，不得不从社区中寻求支持。</li>
+</ul>
+
+
+<h3><a name="%E7%BC%BA%E7%82%B9" href="https://github.com/jhjguxin/project-manage/blob/master/nosql/nosql-baidubaike.zh-cn.markdown#%E7%BC%BA%E7%82%B9"></a>缺点</h3>
+
+
+<p>但是一些人承认，没有正式的官方支持，万一出了差错会是可怕的，至少很多管理人员是这样看。</p>
+
+<p>“我们确实需要做一些说服工作，但基本在他们看到我们的第一个原型运行良好之后，我们就能够说服他们，这是条正确的道路。”</p>
+
+<p>此外，nosql并未形成一定标准，各种产品层出不穷，内部混乱，各种项目还需时间来检验</p>
+
+<h2><a name="8-%E7%A7%8D-nosql-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E5%AF%B9%E6%AF%94" href="https://github.com/jhjguxin/project-manage/blob/master/nosql/nosql-baidubaike.zh-cn.markdown#8-%E7%A7%8D-nosql-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E5%AF%B9%E6%AF%94"></a>8 种 Nosql 数据库系统对比</h2>
+
+
+<blockquote>
+<h2><a style="direction: ltr;" href="http://blog.jobbole.com/1344/">resources from</a><span style="direction: ltr;">,</span><a style="direction: ltr;" href="http://kkovacs.eu/cassandra-vs-mongodb-vs-couchdb-vs-redis">english resources</a></h2>
+</blockquote>
+
+
+<p>虽然 SQL 数据库是非常有用的工具，但经历了 15 年的一支独秀之后垄断即将被打破。这只是时间问题：被迫使用关系数据库，但最终发现不能适应需求的情况不胜枚举。</p>
+
+<p>但是 NoSQL 数据库之间的不同，远超过两 SQL 数据库之间的差别。这意味着软件架构师更应该在项目开始时就选择好一个适合的 NoSQL 数据库。针对这种情况，这里对 <a href="http://cassandra.apache.org/">Cassandra</a>、 <a href="http://www.mongodb.org/">Mongodb</a>、<a href="http://couchdb.apache.org/">CouchDB</a>、<a href="http://redis.io/">Redis</a>、 <a href="http://www.basho.com/Riak.html">Riak</a>、 <a href="http://www.couchbase.org/membase">Membase</a>、<a href="http://neo4j.org/">Neo4j</a>和 <a href="http://hbase.apache.org/">HBase</a> 进行了比较：</p>
+
+<ol>
+    <li>CouchDB</li>
+</ol>
+
+
+<ul>
+    <li>所用语言： Erlang</li>
+    <li>特点：DB一致性，易于使用</li>
+    <li>使用许可： Apache</li>
+    <li>协议： HTTP/REST</li>
+    <li>双向数据复制，</li>
+    <li>持续进行或临时处理，</li>
+    <li>处理时带冲突检查，</li>
+    <li>因此，采用的是master-master复制（见编注2）</li>
+    <li>MVCC – 写操作不阻塞读操作</li>
+    <li>可保存文件之前的版本</li>
+    <li>Crash-only（可靠的）设计</li>
+    <li>需要不时地进行数据压缩</li>
+    <li>视图：嵌入式 映射/减少</li>
+    <li>格式化视图：列表显示</li>
+    <li>支持进行服务器端文档验证</li>
+    <li>支持认证</li>
+    <li>根据变化实时更新</li>
+    <li>支持附件处理</li>
+    <li>因此，<a href="http://couchapp.org/">CouchApps</a>（独立的 js应用程序）</li>
+    <li>需要 jQuery程序库
+
+<strong>最佳应用场景</strong>：适用于数据变化较少，执行预定义查询，进行数据统计的应用程序。适用于需要提供数据版本支持的应用程序。
+
+<strong>例如</strong>： CRM、CMS 系统。 master-master 复制对于多站点部署是非常有用的。
+
+（编注2：master-master复制：是一种数据库同步方法，允许数据在一组计算机之间共享数据，并且可以通过小组中任意成员在组内进行数据更新。）</li>
+</ul>
+
+
+<ol>
+    <li>Redis</li>
+</ol>
+
+
+<ul>
+    <li>所用语言：C/C++</li>
+    <li>特点：运行异常快</li>
+    <li>使用许可： BSD</li>
+    <li>协议：类 Telnet</li>
+    <li>有硬盘存储支持的内存数据库，</li>
+    <li>但自2.0版本以后可以将数据交换到硬盘（注意， 2.4以后版本不支持该特性！）</li>
+    <li>Master-slave复制（见编注3）</li>
+    <li>虽然采用简单数据或以键值索引的哈希表，但也支持复杂操作，例如 ZREVRANGEBYSCORE。</li>
+    <li>INCR &amp; co （适合计算极限值或统计数据）</li>
+    <li>支持 sets（同时也支持 union/diff/inter）</li>
+    <li>支持列表（同时也支持队列；阻塞式 pop操作）</li>
+    <li>支持哈希表（带有多个域的对象）</li>
+    <li>支持排序 sets（高得分表，适用于范围查询）</li>
+    <li>Redis支持事务</li>
+    <li>支持将数据设置成过期数据（类似快速缓冲区设计）</li>
+    <li>Pub/Sub允许用户实现消息机制
+
+<strong>最佳应用场景</strong>：适用于数据变化快且数据库大小可遇见（适合内存容量）的应用程序。
+
+<strong>例如</strong>：股票价格、数据分析、实时数据搜集、实时通讯。
+
+（编注3：Master-slave 复制：如果同一时刻只有一台服务器处理所有的复制请求，这被称为 Master-slave 复制，通常应用在需要提供高可用性的服务器集群。）</li>
+</ul>
+
+
+<ol>
+    <li>MongoDB</li>
+</ol>
+
+
+<ul>
+    <li>所用语言：C++</li>
+    <li>特点：保留了 SQL 一些友好的特性（查询，索引）。</li>
+    <li>使用许可： AGPL（发起者： Apache）</li>
+    <li>协议： Custom, binary（BSON）</li>
+    <li>Master/slave复制（支持自动错误恢复，使用 sets 复制）</li>
+    <li>内建分片机制</li>
+    <li>支持 javascript表达式查询</li>
+    <li>可在服务器端执行任意的 javascript函数</li>
+    <li>update-in-place 支持比 CouchDB 更好</li>
+    <li>在数据存储时采用内存到文件映射</li>
+    <li>对性能的关注超过对功能的要求</li>
+    <li>建议最好打开日志功能（参数 –journal）</li>
+    <li>在 32 位操作系统上，数据库大小限制在约2.5Gb</li>
+    <li>空数据库大约占 192Mb</li>
+    <li>采用 GridFS存储大数据或元数据（不是真正的文件系统）
+
+<strong>最佳应用场景</strong>：适用于需要动态查询支持；需要使用索引而不是 map/reduce功能；需要对大数据库有性能要求；需要使用 CouchDB但因为数据改变太频繁而占满内存的应用程序。
+
+<strong>例如</strong>：你本打算采用 MySQL或 PostgreSQL，但因为它们本身自带的预定义栏让你望而却步。</li>
+</ul>
+
+
+<ol>
+    <li>Riak
+<ul>
+    <li>所用语言：Erlang 和 C，以及一些 Javascript</li>
+    <li>特点：具备容错能力</li>
+    <li>使用许可： Apache</li>
+    <li>协议： HTTP/REST 或者 custom binary</li>
+    <li>可调节的分发及复制(N, R, W)</li>
+    <li>用 JavaScript or Erlang 在操作前或操作后进行验证和安全支持。</li>
+    <li>使用 JavaScript 或 Erlang 进行 Map/reduce</li>
+    <li>连接及连接遍历：可作为图形数据库使用</li>
+    <li>索引：输入元数据进行搜索（1.0版本即将支持）</li>
+    <li>大数据对象支持（ Luwak）</li>
+    <li>提供“开源”和“企业”两个版本</li>
+    <li>全文本搜索，索引，通过 Riak搜索服务器查询（ beta版）</li>
+    <li>支持Masterless多站点复制及商业许可的 SNMP 监控</li>
+</ul>
+<strong>最佳应用场景</strong>：适用于想使用类似 Cassandra（类似Dynamo）数据库但无法处理 bloat及复杂性的情况。适用于你打算做多站点复制，但又需要对单个站点的扩展性，可用性及出错处理有要求的情况。
+
+<strong>例如</strong>：销售数据搜集，工厂控制系统；对宕机时间有严格要求；可以作为易于更新的 web服务器使用。</li>
+    <li>Membase
+<ul>
+    <li>所用语言： Erlang和C</li>
+    <li>特点：兼容 Memcache，但同时兼具持久化和支持集群</li>
+    <li>使用许可： Apache 2.0</li>
+    <li>协议：分布式缓存及扩展</li>
+    <li>非常快速（200k+/秒），通过键值索引数据</li>
+    <li>可持久化存储到硬盘</li>
+    <li>所有节点都是唯一的（ master-master复制）</li>
+    <li>在内存中同样支持类似分布式缓存的缓存单元</li>
+    <li>写数据时通过去除重复数据来减少 IO</li>
+    <li>提供非常好的集群管理 web界面</li>
+    <li>更新软件时软无需停止数据库服务</li>
+    <li>支持连接池和多路复用的连接代理</li>
+</ul>
+<strong>最佳应用场景</strong>：适用于需要低延迟数据访问，高并发支持以及高可用性的应用程序
+
+<strong>例如</strong>：低延迟数据访问比如以广告为目标的应用，高并发的 web 应用比如网络游戏（例如 Zynga）</li>
+    <li>Neo4j
+<ul>
+    <li>所用语言： Java</li>
+    <li>特点：基于关系的图形数据库</li>
+    <li>使用许可： GPL，其中一些特性使用 AGPL/商业许可</li>
+    <li>协议： HTTP/REST（或嵌入在 Java中）</li>
+    <li>可独立使用或嵌入到 Java应用程序</li>
+    <li>图形的节点和边都可以带有元数据</li>
+    <li>很好的自带web管理功能</li>
+    <li>使用多种算法支持路径搜索</li>
+    <li>使用键值和关系进行索引</li>
+    <li>为读操作进行优化</li>
+    <li>支持事务（用 Java api）</li>
+    <li>使用 Gremlin图形遍历语言</li>
+    <li>支持 Groovy脚本</li>
+    <li>支持在线备份，高级监控及高可靠性支持使用 AGPL/商业许可</li>
+</ul>
+<strong>最佳应用场景</strong>：适用于图形一类数据。这是 Neo4j与其他nosql数据库的最显著区别
+
+<strong>例如</strong>：社会关系，公共交通网络，地图及网络拓谱</li>
+    <li>Cassandra
+<ul>
+    <li>所用语言： Java</li>
+    <li>特点：对大型表格和 Dynamo支持得最好</li>
+    <li>使用许可： Apache</li>
+    <li>协议： Custom, binary (节约型)</li>
+    <li>可调节的分发及复制(N, R, W)</li>
+    <li>支持以某个范围的键值通过列查询</li>
+    <li>类似大表格的功能：列，某个特性的列集合</li>
+    <li>写操作比读操作更快</li>
+    <li>基于 Apache分布式平台尽可能地 Map/reduce</li>
+    <li>我承认对 Cassandra有偏见，一部分是因为它本身的臃肿和复杂性，也因为 Java的问题（配置，出现异常，等等）</li>
+</ul>
+<strong>最佳应用场景</strong>：当使用写操作多过读操作（记录日志）如果每个系统组建都必须用 Java编写（没有人因为选用 Apache的软件被解雇）
+
+<strong>例如</strong>：银行业，金融业（虽然对于金融交易不是必须的，但这些产业对数据库的要求会比它们更大）写比读更快，所以一个自然的特性就是实时数据分析
+
+<strong>最佳应用场景</strong>：当使用写操作多过读操作（记录日志）如果每个系统组建都必须用 Java编写（没有人因为选用 Apache的软件被解雇）
+
+<strong>例如</strong>：银行业，金融业（虽然对于金融交易不是必须的，但这些产业对数据库的要求会比它们更大）写比读更快，所以一个自然的特性就是实时数据分析</li>
+    <li>HBase
+<blockquote>（配合 ghshephard 使用）</blockquote>
+<ul>
+    <li>所用语言： Java</li>
+    <li>特点：支持数十亿行X上百万列</li>
+    <li>使用许可： Apache</li>
+    <li>协议：HTTP/REST （支持 Thrift，见编注4）</li>
+    <li>在 BigTable之后建模</li>
+    <li>采用分布式架构 Map/reduce</li>
+    <li>对实时查询进行优化</li>
+    <li>高性能 Thrift网关</li>
+    <li>通过在server端扫描及过滤实现对查询操作预判</li>
+    <li>支持 XML, Protobuf, 和binary的HTTP</li>
+    <li>Cascading, hive, and pig source and sink modules</li>
+    <li>基于 Jruby（ JIRB）的shell</li>
+    <li>对配置改变和较小的升级都会重新回滚</li>
+    <li>不会出现单点故障</li>
+    <li>堪比MySQL的随机访问性能</li>
+</ul>
+<strong>最佳应用场景</strong>：适用于偏好BigTable:)并且需要对大数据进行随机、实时访问的场合。
+
+<strong>例如</strong>： Facebook消息数据库（更多通用的用例即将出现）
+
+编注4：Thrift 是一种接口定义语言，为多种其他语言提供定义和创建服务，由Facebook开发并开源。
+
+当然，所有的系统都不只具有上面列出的这些特性。这里我仅仅根据自己的观点列出一些我认为的重要特性。与此同时，技术进步是飞速的，所以上述的内容肯定需要不断更新。我会尽我所能地更新这个列表。</li>
+</ol>
+
+
+<p>&nbsp;</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[十个免费的Web压力测试工具]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/05/03/shi-ge-mian-fei-de-webya-li-ce-shi-gong-ju/"/>
+    <updated>2012-05-03T11:15:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/05/03/shi-ge-mian-fei-de-webya-li-ce-shi-gong-ju</id>
+    <content type="html"><![CDATA[<h2>十个免费的Web压力测试工具</h2>
+
+<p>relate resources:</p>
+
+<p><a href="http://ruby-china.org/topics/3027">如何测试 rails 网站在高并发下的性能？</a></p>
+
+<p>两天，jnj在本站发布了《<a href="http://coolshell.cn/articles/2574.html" rel="bookmark" target="_blank">如何在低速率网络中测试 Web 应用</a>》，那是测试网络不好的情况。而下面是十个免费的可以用来进行Web的负载/压力测试的工具，这样，你就可以知道你的服务器以及你的WEB应用能够顶得住多少的并发量，以及你的网站的性能。我相信，北京奥组委的订票网站的开发团队并不知道有这样的测试工具。</p>
+
+<p><strong><a href="http://grinder.sourceforge.net/" target="_blank">Grinder</a></strong> –  Grinder是一个开源的JVM负载测试框架，它通过很多负载注射器来为分布式测试提供了便利。 支持用于执行测试脚本的Jython脚本引擎HTTP测试可通过HTTP代理进行管理。根据项目网站的说法，Grinder的 主要目标用户是“理解他们所测代码的人——Grinder不仅仅是带有一组相关响应时间的‘黑盒’测试。由于测试过程可以进行编码——而不是简单地脚本 化，所以程序员能测试应用中内部的各个层次，而不仅仅是通过用户界面测试响应时间。</p>
+
+<p><strong><a href="http://www.pylot.org/" target="_blank">Pylot</a></strong> -Pylot是一款开源的测试web service性能和扩展性的工具，它运行HTTP 负载测试，这对容量计划，确定基准点，分析以及系统调优都很有用处。Pylot产生并发负载（HTTP Requests），检验服务器响应，以及产生带有metrics的报表。通过GUI或者shell/console来执行和监视test suites。</p>
+
+<p><a href="http://www.iis.net/community/default.aspx?tabid=34&amp;i=1466&amp;g=6" target="_blank"><strong>Web Capacity Analysis Tool (WCAT)</strong></a> – 这是一种轻量级负载生成实用工具，不仅能够重现对 Web 服务器（或负载平衡服务器场）的脚本 HTTP 请求，同时还可以收集性能统计数据供日后分析之用。WCAT 是多线程应用程序，并且支持从单个源控制多个负载测试客户端，因此您可以模拟数千个并发用户。该实用工具利用您的旧机器作为测试客户端，其中每个测试客户 端又可以产生多个虚拟客户端（最大数量取决于客户端机器的网络适配器和其他硬件）。您可以选择使用 HTTP 1.0 还是 HTTP 1.1 请求，以及是否使用 SSL。并且，如果测试方案需要，您还可以使用脚本执行的基本或 NTLM 身份验证来访问站点的受限部分。（如果您的站点使用 cookie、表单或基于会话的身份验证，那您可以创建正确的 GET 或 POST 请求来对测试用户进行身份验证。）WCAT 还可管理您站点可能设置的任何 cookie，所以配置文件和会话信息将永久保存。</p>
+
+<p>&nbsp;</p>
+
+<p><strong><a href="http://fwptt.sourceforge.net/index.html" target="_blank">fwptt</a></strong> – fwptt 也是一个用来进行WEB应用负载测试的工具。它可以记录一般的请求，也可以记录Ajax请求。它可以用来测试 asp.net， jsp， php 或是其它的Web应用。</p>
+
+<p><strong><a href="http://jcrawler.sourceforge.net/" target="_blank">JCrawler</a></strong> – JCrawler是一个开源(<a href="http://www.opensource.org/licenses/cpl.php" target="_blank"> CPL</a>) 的WEB应用压力测试工具。通过其名字，你就可以知道这是一个用Java写的像网页爬虫一样的工具。只要你给其几个URL，它就可以开始爬过去了，它用一 种特殊的方式来产生你WEB应用的负载。这个工具可以用来测试搜索引擎对你站点产生的负载。当然，其还有另一功能，你可以建立你的网站地图和再点击一下， 将自动提交Sitemap给前5名的搜索引擎！</p>
+
+<p><strong><a href="http://jakarta.apache.org/jmeter/" target="_blank">Apache JMeter</a></strong> – Apache JMeter是一个专门为运行和服务器装载测试而设计的、100％的纯Java桌面运行程序。原先它是为Web/HTTP测试而设计的，但是它已经扩展以 支持各种各样的测试模块。它和用于HTTP和SQL数据库（使用JDBC）的模块一起运送。它可以用来测试静止资料库或者活动资料库中的服务器的运行情 况，可以用来模拟对服务器或者网络系统加以重负荷以测试它的抵抗力，或者用来分析不同负荷类型下的所有运行情况。它也提供了一个可替换的界面用来定制数据 显示，测试同步及测试的创建和执行。</p>
+
+<p><strong><a href="http://www.joedog.org/index/siege-home" target="_blank">Siege</a></strong> -Siege（英文意思是围攻）是一个压力测试和评测工具，设计用于WEB开发这评估应用在压力下的承受能力：可以根据配置对一个WEB站点进行多用户的 并发访问，记录每个用户所有请求过程的相应时间，并在一定数量的并发访问下重复进行。 Siege 支持基本的认证，cookies， HTTP 和 HTTPS 协议。</p>
+
+<p><strong><a href="http://www.acme.com/software/http_load/" target="_blank">http_load</a></strong> – http_load 以并行复用的方式运行，用以测试web服务器的吞吐量与负载。但是它不同于大多数压力测试工具，它可以以一个单一的进程运行，一般不会把客户机搞死。可以可以测试HTTPS类的网站请求。</p>
+
+<p><strong><a href="http://www.web-polygraph.org/" target="_blank">Web Polygraph</a></strong> – Web Polygraph这个软件也是一个用于测试WEB性能的工具，这个工具是很多公司的标准测试工具，包括微软在分析其软件性能的时候，也是使用这个工具做为基准工具的。很多招聘测试员的广告中都注明需要熟练掌握这个测试工具。</p>
+
+<p><strong><a href="http://opensta.org/" target="_blank">OpenSTA</a></strong> – OpenSTA是一个免费的、开放源代码的web性能测试工具，能录制功能非常强大的脚本过程，执行性能测试。例如虚拟多个不同的用户同时登陆被测试网 站。其还能对录制的测试脚本进行,按指定的语法进行编辑。在录制完测试脚本后，可以对测试脚本进行编辑，以便进行特定的性能指标分析。其较为丰富的图形化 测试结果大大提高了测试报告的可阅读性。OpenSTA 基于CORBA 的结构体系，它通过虚拟一个proxy，使用其专用的脚本控制语言，记录通过 proxy 的一切HTTP/S traffic。通过分析OpenSTA的性能指标收集器收集的各项性能指标，以及HTTP 数据，对系统的性能进行分析。</p>
+
+<p>欢迎您留下你认为不错的WEB应用性能测试的工具。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Markdown语法]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/04/24/markdownyu-fa/"/>
+    <updated>2012-04-24T14:52:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/04/24/markdownyu-fa</id>
+    <content type="html"><![CDATA[<h2>Markdown语法</h2>
+
+<h2 id="overview">概述</h2>
+
+
+<h3 id="philosophy">哲学</h3>
+
+
+<p>Markdown 的目标是易读易写。</p>
+
+<p>Markdown强调可读性高于一切。一份Markdown格式的文档应该能直接以纯文本方式发布，而不致一眼看过去满眼都是标签和格式化指令。Markdown的语法确实受了几种现有的text转HTML过滤器影响－－包括 <a href="http://docutils.sourceforge.net/mirror/setext.html" target="_blank">Setext</a>, <a href="http://www.aaronsw.com/2002/atx/" target="_blank">atx</a>, <a href="http://textism.com/tools/textile/" target="_blank">Textile</a>, <a href="http://docutils.sourceforge.net/rst.html" target="_blank">reStructuredText</a>,<a href="http://www.triptico.com/software/grutatxt.html" target="_blank">Grutatext</a>, 和 <a href="http://ettext.taint.org/doc/" target="_blank">EtText</a> &mdash; 其中对Markdown语法影响最大的单一来源是纯文本的Email格式。</p>
+
+<p>为实现这一目标，Markdown的语法几乎全部由标点符号构成，这些标点符号都是精心挑选而来，尽量做到能望文生义。如星号括着一个单词（Markdown中表示强调）看上去就像 <em>强调</em>。Markdown的列表看上去就像列表；Markdown的引文就象引文，和你使用email时的感觉一样。</p>
+
+<h3 id="html">内嵌HTML</h3>
+
+
+<p>Markdown的语法为“方便地在网上写作”这一目标而生。</p>
+
+<p>Markdown不是HTML替代品，也不是为了终接HTML。它的语法非常简单，只相当于HTML标签的一个非常非常小的子集。它并非是为了更容易输入HTML标签而创造一种新语法。在我看来，HTML标签已经够容易书写的了。Markdown的目标是让（在网上）让读文章、写文章、修改文章更容易。HTML是一种适合发表的格式；而Markdown是一种书写格式。正因如此，Markdown的格式化语法仅需解决用纯文本表达的问题。</p>
+
+<p>对Markdown语法无法支持的格式，你可以直接用HTML。你不需要事先声明或者使用什么定界符来告诉Markdown要写HTML了，你直接写就是了。</p>
+
+<p>唯一的限制是那些块级HTML元素 &mdash; 如 <code>&lt;div&gt;</code>,<code>&lt;table&gt;</code>, <code>&lt;pre&gt;</code>, <code>&lt;p&gt;</code>等等 &mdash; 必须使用空行与相邻内容分开，并且块元素的开始和结束标签之前不要留有空格或TAB。Markdown足够聪明不会添加额外的(也是不必要的)<code>&lt;p&gt;</code>标签包住这些块元素标签。</p>
+
+<p>下面这个例子，在一篇Markdown文章中添加了一个HTML表格：</p>
+
+<pre><code>这是一个普通的段落。 &lt;table&gt; &lt;tr&gt; &lt;td&gt;Foo&lt;/td&gt; &lt;/tr&gt; &lt;/table&gt; 这是另一个普通的段落。</code></pre>
+
+
+<p>注意一点，不要在块级HTML元素内使用Markdown格式化命令，Markdown不会处理它们。比如你不要在一个HTML块中使用 <code><em>emphasis</em></code> 这样的Markdown格式化命令。</p>
+
+<p>行内HTML标签 &mdash; 如 <code>&lt;span&gt;</code>, <code>&lt;cite&gt;</code>, 或 <code>&lt;del&gt;</code> &mdash; 在一个Markdown段落里、列表中、或者标题中－－随便用。 如果需要，你甚至可以用HTML标签代替Markdown格式化命令。比方你可以直接用HTML标签 <code>&lt;a&gt;</code> 或 <code>&lt;img&gt;</code> 而不使用Markdown的链接和图片语法，随你的便。</p>
+
+<p>不同于这些块级HTML元素，在HTML行内元素内的Markdown语法标记会被正确处理。</p>
+
+<h3 id="autoescape">自动转换特殊字符</h3>
+
+
+<p>在HTML中，有两个字符需要特殊对待：<code>&lt;</code>和 <code>&amp;</code>。<code>&lt;</code>用于标签开始，<code>&amp;</code>用于标识HTML实体。如果打算把它们当成普通字符，你必须使用反引号转义它们，如<code>&lt;</code>和<code>&amp;</code>。</p>
+
+<p>对一些互联网作家来说，<code>&amp;</code>符号特别使人烦恼。如果你打算写'AT&amp;T'，你就得写 &lsquo;<code>AT&amp;amp;T</code>'。甚至在URL中也得想着转义<code>&amp;</code>符号。比方你打算写：</p>
+
+<pre><code>http://images.google.com/images?num=30&amp;q=larry+bird</code></pre>
+
+
+<p>你就得在A标签中把<code>href</code>属性中的URL编码成：</p>
+
+<pre><code>http://images.google.com/images?num=30&amp;amp;q=larry+bird</code></pre>
+
+
+<p>不用说，这很容易忘。这往往是那些良构HTML站点中最容易出错的地方。</p>
+
+<p>在Markdown中，你尽管自然的使用这些字符，只需要关心那些必要的转义。如果使用在HTML实体中使用&amp;符号，它会保持不变；而在其它场合，它会转换成<code>&amp;</code>。</p>
+
+<p>所以，如果你打算在文章中书写版权符号，你可以这样写：</p>
+
+<pre><code>&amp;copy;</code></pre>
+
+
+<p>Markdown不会碰它。然而如果你书写</p>
+
+<pre><code>AT&amp;T</code></pre>
+
+
+<p>Markdown就会把它翻译成：</p>
+
+<pre><code>AT&amp;amp;T</code></pre>
+
+
+<p>类似的，既然Markdown支持内嵌HTML，如果你使用<code>&lt;</code>作为HTML标签定界符，Markdown就会把它们当成HTML标签定界符。可是如果你书写：</p>
+
+<pre><code>4 &lt; 5</code></pre>
+
+
+<p>Markdown就会把它翻译成：</p>
+
+<pre><code>4 &amp;lt; 5</code></pre>
+
+
+<p>然而，在Mardown代码行内标记和块级标记之中，<code>&lt;</code>和<code>&amp;</code><em>始终</em>会被自动编码。这使得在Markdown文件中书写HTML代码更容易.(相对于纯HTML。如果想在纯在纯HTML里贴一段HTML代码，那才是糟糕透顶，必须对代码中的每一个<code>&lt;</code>和<code>&amp;</code>都转义才成。)</p>
+
+<hr />
+
+
+
+
+<h2 id="block">块级元素</h2>
+
+
+<h3 id="p">段落和换行</h3>
+
+
+<p>一个段落由一行或多个相关文本行构成。段落之间用一个或多个空行分隔。（一个空行就是一个看上去什么也没有的行－－如果一行什么也没有或者只有空格和TAB都会被视为空行）正常的段落不要以空白或TAB字符开始。</p>
+
+<p>一行或多个相关文本行意味着Markdown支持“硬折行”。这一点与其它text转HTML的程序完全不同（包括Moveable Type的“Convert Line Breaks”选项），它们会将段落中的每一个换行符转换成<code>&lt;br /&gt;</code>标签。</p>
+
+<p>如果你<em>确实</em>需要使用Markdown插入一个<code>&lt;br /&gt;</code>换行符，只需要在每一行的末尾以两个或更多个空格符号结束，然后再打回车键。</p>
+
+<p>没错，在Markdown里生成一个<code>&lt;br /&gt;</code>稍稍有一点麻烦，但那种简单的“把每一个换行符都转换成<code>&lt;br /&gt;</code>规则”并不适用于Markdown。Markdown Email风格的 blockquoting 和 multi-paragraph list items更好用 &mdash; 并且更美观 &mdash; 在你用换行符对其格式化时。</p>
+
+<h3 id="header">标题</h3>
+
+
+<p>Markdown 支持两种风格的标题，<a href="http://docutils.sourceforge.net/mirror/setext.html" target="_blank">Setext</a> 和 <a href="http://www.aaronsw.com/2002/atx/" target="_blank">atx</a>.</p>
+
+<p>Setext-风格的一级标题下面一行使用等号符号，二级标题下面使用连字符符号，例如：</p>
+
+<pre><code>这是一个一级标题 ============= 这是一个二级标题 -------------</code></pre>
+
+
+<p>至少有一个<code>=</code>和<code>&ndash;</code>就能正常工作。</p>
+
+<p>Atx-风格的标题在每行的开头使用1－6个井号字符，分别对应标题级别1－6。例如：</p>
+
+<pre><code># 这是一级标题 ## 这是二级标题 ###### 这是六级标题</code></pre>
+
+
+<p>如果愿意, 你也可以 &ldquo;结束&rdquo; atx-风格的标题。这纯粹是美观考虑&mdash;如果你觉得这样会看上更舒服些的话。结束用的井号个数随便，不必与起始井号数量相同 (起始井号的数量决定标题级别)：</p>
+
+<pre><code># 这是一级标题 # ## 这是二级标题 ## ### 这是三级标题 ######</code></pre>
+
+
+<h3 id="blockquote">引用块</h3>
+
+
+<p>Markdown使用Email风格的 <code>&gt;</code> 字符引用块。如果你熟悉Email中的引用块，你就知道在Markdown中如何使用引用块。如果每一行你都使用硬换行并在行首放一个<code>&gt;</code>符号，看上去会很美观：</p>
+
+<pre><code>&gt; This is a blockquote with two paragraphs. Lorem ipsum dolor sit amet, &gt; consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus. &gt; Vestibulum enim wisi, viverra nec, fringilla in, laoreet vitae, risus. &gt; &gt; Donec sit amet nisl. Aliquam semper ipsum sit amet velit. Suspendisse &gt; id sem consectetuer libero luctus adipiscing.</code></pre>
+
+
+<p>（如果觉得每行写一个<code>&gt;</code>太累，）Markdown允许你偷懒，你只需在硬换行段落的第一行之前放一个<code>&gt;</code>号:</p>
+
+<pre><code>&gt; This is a blockquote with two paragraphs. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus. Vestibulum enim wisi, viverra nec, fringilla in, laoreet vitae, risus. &gt; Donec sit amet nisl. Aliquam semper ipsum sit amet velit. Suspendisse id sem consectetuer libero luctus adipiscing.</code></pre>
+
+
+<p>只需要多加一个<code>&gt;</code>，就得到嵌套的引用块(即引用块中的引用块):</p>
+
+<pre><code>&gt; This is the first level of quoting. &gt; &gt; &gt; This is nested blockquote. &gt; &gt; Back to the first level.</code></pre>
+
+
+<p>引用块中可包含其它Markdown元素，如标题、列表和代码块：</p>
+
+<pre><code>&gt; ## This is a header. &gt; &gt; 1. This is the first list item. &gt; 2. This is the second list item. &gt; &gt; Here's some example code: &gt; &gt; return shell_exec("echo $input | $markdown_script");</code></pre>
+
+
+<p>是个象样的文本编辑器都能实现Email风格的引用。比如在BBEdit里，你就可以选中一些文字之后从Text菜单里选择引用级别。</p>
+
+<h3 id="list">列表</h3>
+
+
+<p>Markdown 支持有序列表和无序列表</p>
+
+<p>无序列表可使用星号、加号和连字符（这几个符号是等价的，你喜欢哪个就用哪个）作为列表标记：</p>
+
+<pre><code>* Red * Green * Blue</code></pre>
+
+
+<p>等同于：</p>
+
+<pre><code>+ Red + Green + Blue</code></pre>
+
+
+<p>也等同于：</p>
+
+<pre><code>- Red - Green - Blue</code></pre>
+
+
+<p>有序列表则使用数字加英文句点：</p>
+
+<pre><code>1. Bird 2. McHale 3. Parish</code></pre>
+
+
+<p>有一点需要注意，你在列表中输入的标记数字并不会反映到Markdown输出的HTML之中。上面这个列表Markdown会输出为：</p>
+
+<pre><code>&lt;ol&gt; &lt;li&gt;Bird&lt;/li&gt; &lt;li&gt;McHale&lt;/li&gt; &lt;li&gt;Parish&lt;/li&gt; &lt;/ol&gt;</code></pre>
+
+
+<p>即使你写成下面这样：</p>
+
+<pre><code>1. Bird 1. McHale 1. Parish</code></pre>
+
+
+<p>甚至这样：</p>
+
+<pre><code>3. Bird 1. McHale 8. Parish</code></pre>
+
+
+<p>都会得到一模一样（但正确的）输出。要点在于，如果你愿意，就在你的Markdown有序列表里顺序使用数字（这样源代码里的顺序和生成的顺序会一致），如果你希望省点儿事，你就不用费心（去手工编号）。</p>
+
+<p>如果你打算偷懒，记住列表的第一行使用数字 1。以后Markdown或许会支持有序列表从任意数字开始（译者注：这儿和前面的例子有点矛盾，原文如此）。</p>
+
+<p>列表标记通常从左边界开始，至多可以有三个空格的缩进。列表标记之后至少要跟一个空格或TAB。</p>
+
+<p>为了让列表看起来美观，你可以使用TAB缩进列表项内容，使其整齐:</p>
+
+<pre><code>* Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus. Vestibulum enim wisi, viverra nec, fringilla in, laoreet vitae, risus. * Donec sit amet nisl. Aliquam semper ipsum sit amet velit. Suspendisse id sem consectetuer libero luctus adipiscing.</code></pre>
+
+
+<p>不过如果你很懒，下面这样也行：</p>
+
+<pre><code>* Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus. Vestibulum enim wisi, viverra nec, fringilla in, laoreet vitae, risus. * Donec sit amet nisl. Aliquam semper ipsum sit amet velit. Suspendisse id sem consectetuer libero luctus adipiscing.</code></pre>
+
+
+<p>如果列表项之间用空行分隔，Markdown就会在HTML输出中使用<code>&lt;p&gt;</code>标签包裹列表项。比如：</p>
+
+<pre><code>* Bird * Magic</code></pre>
+
+
+<p>生成的HTML如下：</p>
+
+<pre><code>&lt;ul&gt; &lt;li&gt;Bird&lt;/li&gt; &lt;li&gt;Magic&lt;/li&gt; &lt;/ul&gt;</code></pre>
+
+
+<p>而这个：</p>
+
+<pre><code>* Bird * Magic</code></pre>
+
+
+<p>生成的HTML是这样：</p>
+
+<pre><code>&lt;ul&gt; &lt;li&gt;&lt;p&gt;Bird&lt;/p&gt;&lt;/li&gt; &lt;li&gt;&lt;p&gt;Magic&lt;/p&gt;&lt;/li&gt; &lt;/ul&gt;</code></pre>
+
+
+<p>列表项有可能由多个段落组成，列表项的每个后续段落必须缩进至少4个空格或者一个TAB：</p>
+
+<pre><code>1. This is a list item with two paragraphs. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus. Vestibulum enim wisi, viverra nec, fringilla in, laoreet vitae, risus. Donec sit amet nisl. Aliquam semper ipsum sit amet velit. 2. Suspendisse id sem consectetuer libero luctus adipiscing.</code></pre>
+
+
+<p>像上面这样缩进后续段落的每一行看起来很美观（但稍有些麻烦），如果你比较懒（和我一样），没问题，Markdown支持你：</p>
+
+<pre><code>* This is a list item with two paragraphs. This is the second paragraph in the list item. You're only required to indent the first line. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. * Another item in the same list.</code></pre>
+
+
+<p>要在列表项中使用引用，引用定界符 <code>&gt;</code> 需要缩进：</p>
+
+<pre><code>* A list item with a blockquote: &gt; This is a blockquote &gt; inside a list item.</code></pre>
+
+
+<p>要在列表项中使用代码块，代码块需要缩进<em>两次</em> &mdash; 8个空格或者两个TAB：</p>
+
+<pre><code>* A list item with a code block: &lt;code goes here&gt;</code></pre>
+
+
+<p>有时候不小心会触发一个有序列表，比方在写类似下面这样的东西时：</p>
+
+<pre><code>1986. What a great season.</code></pre>
+
+
+<p>换言之， 以<em>数字＋句点＋空格</em> 序列起始的行会触发有序列表。为避免此情况，要对句点符号进行转义：</p>
+
+<pre><code>1986\. What a great season.</code></pre>
+
+
+<h3 id="precode">代码块</h3>
+
+
+<p>我们经常在写有关编程或标记语言源代码时用到预格式化的代码块。不像格式化普通段落，代码块中的行会按字面进行解释。Markdown对代码块同时使用<code>&lt;pre&gt;</code> 和 <code>&lt;code&gt;</code>标签包裹：</p>
+
+<p>在Markdown中要生成一个代码块，只需要在代码块内容的每一行缩进至少四个空格或者一个TAB。比如：</p>
+
+<pre><code>This is a normal paragraph: This is a code block.</code></pre>
+
+
+<p>Markdown会生成：</p>
+
+<pre><code>&lt;p&gt;This is a normal paragraph:&lt;/p&gt; &lt;pre&gt;&lt;code&gt;This is a code block. &lt;/code&gt;&lt;/pre&gt;</code></pre>
+
+
+<p>Markdown会从生成的代码块中删除一级缩进 &mdash; 4个空格或者1个TAB。看下面这个例子：</p>
+
+<pre><code>Here is an example of AppleScript: tell application "Foo" beep end tell</code></pre>
+
+
+<p>会得到：</p>
+
+<pre><code>&lt;p&gt;Here is an example of AppleScript:&lt;/p&gt; &lt;pre&gt;&lt;code&gt;tell application "Foo" beep end tell &lt;/code&gt;&lt;/pre&gt;</code></pre>
+
+
+<p>代码块在遇到没有缩进的一行，或者文件末尾时自动结束。</p>
+
+<p>在代码块中，<code>&amp;</code>符号和<code>&lt;</code>、<code>&gt;</code>会自动转换成HTML实体。因此在Markdown中包含HTML源代码只是小菜一碟－－粘贴进去，缩进一下。剩下的脏活累活Markdown自会处理。看下面这个例子：</p>
+
+<pre><code> &lt;div class="sample_footer"&gt; &amp;copy; 2004 Foo Corporation &lt;/div&gt;</code></pre>
+
+
+<p>Markdown会生成：</p>
+
+<div>© 2004 Foo Corporation</div>
+
+
+<pre> </pre>
+
+
+<p>&nbsp;</p>
+
+<p>Markdown不会解析代码块中的Markdown标记。如代码块中的星号就是星号，失去了它原来的Markdown含义。这意味着你能够使用Markdown编写Markdown自己的语法教程。（就象这篇文章一样）。</p>
+
+<h3 id="hr">水平线</h3>
+
+
+<p>如果在一行里只放三个或更多个连字符，或星号或下划线，你就会得到一个水平线标记(<code>&lt;hr /&gt;</code>)。下面每一行都会得到一个水平线：</p>
+
+<pre><code>* * * *** ***** - - - ---------------------------------------</code></pre>
+
+
+
+
+<hr />
+
+
+
+
+<h2 id="span">行内元素</h2>
+
+
+<h3 id="link">链接</h3>
+
+
+<p>Markdown 支持两种风格的链接： <em>行内链接</em> 和 <em>引用链接</em>.</p>
+
+<p>两种风格的链接，链接文本都放在中括号之内[square brackets]。</p>
+
+<p>要生成一个行内链接，在链接文本之后紧跟用一对小括号。小括号里放链接地址和<em>可选的</em>的链接title。如果提供链接title的话，链接title要用引号包起来。例如：</p>
+
+<pre><code>这是一个 [an example](http://example.com/ "Title") 行内链接。 [这个链接](http://example.net/) 没有title属性。</code></pre>
+
+
+<p>Markdown会生成：</p>
+
+<pre><code>&lt;p&gt;This is &lt;a href="http://example.com/" title="Title"&gt; an example&lt;/a&gt; inline link.&lt;/p&gt; &lt;p&gt;&lt;a href="http://example.net/"&gt;This link&lt;/a&gt; has no title attribute.&lt;/p&gt;</code></pre>
+
+
+<p>如果你打算引用一个本地资源或者同一站点的资源，可以使用相对路径：</p>
+
+<pre><code>如果想进一步了解我，请参阅我的 [关于我](/about/) 页。</code></pre>
+
+
+<p>引用风格的链接，在链接文本之后紧跟又一对中括号。这对中括号里放的是该链接的标识符（可以理解为别名）：</p>
+
+<pre><code>这是一个引用型链接 [示例][id]。</code></pre>
+
+
+<p>如果你嫌弃两对中括号过于亲密，Markdown允许你在两对中括号之间放一个空格：</p>
+
+<pre><code>这是一个引用型链接 [示例] [id]。</code></pre>
+
+
+<p>然后，我们可以在文档的任意位置，像下面这样定义链接标识与链接的对应关系（一行一个链接）：</p>
+
+<pre><code>[id]: http://example.com/ "Optional Title Here"</code></pre>
+
+
+<p>即：</p>
+
+<ul>
+    <li>中括号内放链接标识符(行前可选缩进，至多不超过三个空格)；</li>
+    <li>之后紧跟一个冒号；</li>
+    <li>再后面是一个或多个空格（TAB也行）；</li>
+    <li>接下来是链接URL；</li>
+    <li>最后面是可选的用双引号或单引号或小括号括起来的链接title。</li>
+</ul>
+
+
+<p>下面三种链接定义方式是等价的：</p>
+
+<pre><code>[foo]: http://example.com/ "Optional Title Here" [foo]: http://example.com/ 'Optional Title Here' [foo]: http://example.com/ (Optional Title Here)</code></pre>
+
+
+<p><strong>注意：</strong> Markdown.pl 1.0.1 版本有一个已知的bug，用单引号作为链接title的定界符会出问题。</p>
+
+<p>至于链接URL，还支持使用一对可选的尖括号包裹起来：</p>
+
+<pre><code>[id]: &lt;http://example.com/&gt; "Optional Title Here"</code></pre>
+
+
+<p>你也可以将链接的title属性放在下一行并使用额外的空格或TAB填充，这样较长的URL会比较美观：</p>
+
+<pre><code>[id]: http://example.com/longish/path/to/resource/here "Optional Title Here"</code></pre>
+
+
+<p>链妆定义仅供Markdown解析器使用。最终输出的HTML当中不会包含链接定义。</p>
+
+<p>链接标识符可以由字母、数字、空格和标点符号组成－－不区分大小写。下面这两个链接：</p>
+
+<pre><code>[link text][a] [link text][A]</code></pre>
+
+
+<p>是等价的。</p>
+
+<p><em>隐式链接标识</em> 允许我们省略链接标识，这时链接文本本身就是链接标识。在链接文本之后加一对空的中括号－－例如，使用"Google"文本链接到google.com站点，可以这样写：</p>
+
+<pre><code>[Google][]</code></pre>
+
+
+<p>然后这样定义它的链接：</p>
+
+<pre><code>[Google]: http://google.com/</code></pre>
+
+
+<p>链接名字有可能包含空格，不过没问题，这种情况照样正常工作：</p>
+
+<pre><code>Visit [Daring Fireball][] for more information.</code></pre>
+
+
+<p>然后这样定义这个链接：</p>
+
+<pre><code>[Daring Fireball]: http://daringfireball.net/</code></pre>
+
+
+<p>链接定义可放于Markdown文档的任意位置。我建议把它们就近放到最先使用它的段落之后。不过如果你更喜欢放到文档末尾，当成某种形式的尾注，随你的便。</p>
+
+<p>下面是一些引用链接的例子：</p>
+
+<pre><code>I get 10 times more traffic from [Google] [11] than from [Yahoo] [12] or [MSN] [13]. [1]: http://google.com/ "Google" [2]: http://search.yahoo.com/ "Yahoo Search" [3]: http://search.msn.com/ "MSN Search"</code></pre>
+
+
+<p>换成隐式链接标识，也可以这么写：</p>
+
+<pre><code>I get 10 times more traffic from [Google][] than from [Yahoo][] or [MSN][]. [google]: http://google.com/ "Google" [yahoo]: http://search.yahoo.com/ "Yahoo Search" [msn]: http://search.msn.com/ "MSN Search"</code></pre>
+
+
+<p>上面两种写法最终得到HTML输出是一样的：</p>
+
+<pre><code>&lt;p&gt;I get 10 times more traffic from &lt;a href="http://google.com/" title="Google"&gt;Google&lt;/a&gt; than from &lt;a href="http://search.yahoo.com/" title="Yahoo Search"&gt;Yahoo&lt;/a&gt; or &lt;a href="http://search.msn.com/" title="MSN Search"&gt;MSN&lt;/a&gt;.&lt;/p&gt;</code></pre>
+
+
+<p>作为比较，下面这个段落使用Markdown的行内链接风格编写：</p>
+
+<pre><code>I get 10 times more traffic from [Google](http://google.com/ "Google") than from [Yahoo](http://search.yahoo.com/ "Yahoo Search") or [MSN](http://search.msn.com/ "MSN Search").</code></pre>
+
+
+<p>引用型链接的亮点并不在于它更容易书写，而在于引用型链接让你的文档可读性更好。看看上面的例子：使用引用型链接，段落本身仅81个字符；而使用行内链接的例子，是176个字符。最终输出的HTML则有234个字符。纯HTML中标记字符甚至超过了文本本身。</p>
+
+<p>使用Markdown的引用型链接，源文档更接近于最终的浏览器输出效果。再加上Markdown允许将标记有关的元数据移到段落之外，你尽管添加链接，而不必担心打断文件的故事情节。</p>
+
+<h3 id="em">强调</h3>
+
+
+<p>Markdown使用星号(<code><em></code>)和下划线(<code>_</code>)作为表示强调。用一个 <code></em></code> 或 <code><em></code> 包裹的文本会使用 HTML <code>&lt;em&gt;</code> 标签包裹; 用两个 <code>*</code> 或 <code></em></code>包裹的文本会使用HTML<code>&lt;strong&gt;</code> 标签包裹。如：</p>
+
+<pre><code>*single asterisks* _single underscores_ **double asterisks** __double underscores__</code></pre>
+
+
+<p>将会输出为：</p>
+
+<pre><code>&lt;em&gt;single asterisks&lt;/em&gt; &lt;em&gt;single underscores&lt;/em&gt; &lt;strong&gt;double asterisks&lt;/strong&gt; &lt;strong&gt;double underscores&lt;/strong&gt;</code></pre>
+
+
+<p>你喜欢哪一种风格就用哪一种，唯一的限制就是起始字符与关闭字符必须一致。</p>
+
+<p>强调符号可用于一个单词的一部分：</p>
+
+<pre><code>un*frigging*believable</code></pre>
+
+
+<p>不过如果你用空格包裹单独的 <code>*</code> 或 <code>_</code>，它们就失去了强调的含义，而成为字面上的星号或下划线。</p>
+
+<p>如果不想让Markdown解释这两个元字符，就转义它：</p>
+
+<pre><code>\*this text is surrounded by literal asterisks\*</code></pre>
+
+
+<h3 id="code">代码</h3>
+
+
+<p>要在行内表示部分代码，用反引号(<code>`</code>)包住它。与预格式代码块不同和，行内代码用于段落之内。例如：</p>
+
+<pre><code>Use the `printf()` function.</code></pre>
+
+
+<p>会生成：</p>
+
+<pre><code>&lt;p&gt;Use the &lt;code&gt;printf()&lt;/code&gt; function.&lt;/p&gt;</code></pre>
+
+
+<p>要在一个行内代码中使用反引号（<code>`</code>）本身，用多个反引号作为定界符包住它：</p>
+
+<pre><code>``There is a literal backtick (`) here.``</code></pre>
+
+
+<p>这样就会得到：</p>
+
+<pre><code>&lt;p&gt;&lt;code&gt;There is a literal backtick (`) here.&lt;/code&gt;&lt;/p&gt;</code></pre>
+
+
+<p>包住行内代码的反引号定界符可以包括空格－－即在起始反引号之后，结束反引号之前可以有一个空格。这使得我们能够在行内代码的开始或结束处使用反引号：</p>
+
+<pre><code>A single backtick in a code span: `` ` `` A backtick-delimited string in a code span: `` `foo` ``</code></pre>
+
+
+<p>会生成：</p>
+
+<pre><code>&lt;p&gt;A single backtick in a code span: &lt;code&gt;`&lt;/code&gt;&lt;/p&gt; &lt;p&gt;A backtick-delimited string in a code span: &lt;code&gt;`foo`&lt;/code&gt;&lt;/p&gt;</code></pre>
+
+
+<p>在行内代码中，<code>&amp;</code>和<code>&lt;</code>和<code>&gt;</code>会自动编码为HTML实体，以方便包含HTML标签。Markdown会把下面这行：</p>
+
+<pre><code>Please don't use any `&lt;blink&gt;` tags.</code></pre>
+
+
+<p>转换为：</p>
+
+<pre><code>&lt;p&gt;Please don't use any &lt;code&gt;&lt;blink&gt;&lt;/code&gt; tags.&lt;/p&gt;</code></pre>
+
+
+<p>你也可以这样写：</p>
+
+<pre><code>`&amp;#8212;` is the decimal-encoded equivalent of `&amp;mdash;`.</code></pre>
+
+
+<p>会得到：</p>
+
+<pre><code>&lt;p&gt;&lt;code&gt;&amp;#8212;&lt;/code&gt; is the decimal-encoded equivalent of &lt;code&gt;&amp;mdash;&lt;/code&gt;.&lt;/p&gt;</code></pre>
+
+
+<h3 id="img">图片</h3>
+
+
+<p>必须承认，要以“自然的”语法把一个图片放到一个纯文本文档之中，确实是一个挑战。</p>
+
+<p>Markdown使用了类似链接语法来表示图片，同样有两种风格：<em>行内图片</em>和<em>引用图片</em>。</p>
+
+<p>行内图片语法示例：</p>
+
+<pre><code>![Alt text](/path/to/img.jpg) ![Alt text](/path/to/img.jpg "Optional title")</code></pre>
+
+
+<p>即：</p>
+
+<ul>
+    <li>一个感叹号<code>!</code>开头；</li>
+    <li>其后紧跟一对中括号，中括号内存放图片的alt`属性；</li>
+    <li>其后紧跟一对小括号，小括号内存放图片的URL或路径，及可选的用双引号或单引号或小括号括起来的图片<code>title</code></li>
+</ul>
+
+
+<p>引用图片语法如下：</p>
+
+<pre><code>![Alt text][id]</code></pre>
+
+
+<p>这里 &ldquo;id&rdquo; 是图片引用标识。图片引用定义的语法与链接定义完全相同：</p>
+
+<pre><code>[id]: url/to/image "Optional title attribute"</code></pre>
+
+
+<p>在写这篇文章时，Markdown还没有语法指定图片的大小，如果这一点对你特别重要，你可以直接使用<code>&lt;img&gt;</code>标签。</p>
+
+<hr />
+
+
+
+
+<h2 id="misc">杂七杂八</h2>
+
+
+<h3 id="autolink">自动链接</h3>
+
+
+<p>Markdown提供了一种快捷方式"自动地"定义链接和Email地址：直接用一对尖括号把URL或Email地址包住。这表示链接文本就是URL本身，Email文本就是Email本身。这样你就得到了一个可点击的链接，如：</p>
+
+<pre><code>&lt;http://example.com/&gt;</code></pre>
+
+
+<p>Markdown会将它转换为：</p>
+
+<pre><code>&lt;a href="http://example.com/"&gt;http://example.com/&lt;/a&gt;</code></pre>
+
+
+<p>自动Email地址工作方式相似，只有一点不同。Markdown自动的用一些十进制和十六进制数字表示你的Email，以防止遭遇垃圾邮件袭击。 例如：</p>
+
+<pre><code>&lt;address@example.com&gt;</code></pre>
+
+
+<p>会被转换为：</p>
+
+<pre><code>&lt;a href="&amp;#x6D;&amp;#x61;i&amp;#x6C;&amp;#x74;&amp;#x6F;:&amp;#x61;&amp;#x64;&amp;#x64;&amp;#x72;&amp;#x65; &amp;#115;&amp;#115;&amp;#64;&amp;#101;&amp;#120;&amp;#x61;&amp;#109;&amp;#x70;&amp;#x6C;e&amp;#x2E;&amp;#99;&amp;#111; &amp;#109;"&gt;&amp;#x61;&amp;#x64;&amp;#x64;&amp;#x72;&amp;#x65;&amp;#115;&amp;#115;&amp;#64;&amp;#101;&amp;#120;&amp;#x61; &amp;#109;&amp;#x70;&amp;#x6C;e&amp;#x2E;&amp;#99;&amp;#111;&amp;#109;&lt;/a&gt;</code></pre>
+
+
+<p>浏览器会将它渲染为一个可点击的链接，并正确显示 &ldquo;<a href="&#x6d;&#x61;&#105;&#108;&#116;&#111;&#x3a;&#97;&#100;&#100;&#114;&#101;&#115;&#115;&#64;&#101;&#x78;&#97;&#x6d;&#112;&#108;&#x65;&#46;&#99;&#111;&#x6d;">&#x61;&#100;&#x64;&#114;&#x65;&#115;&#x73;&#x40;&#101;&#x78;&#x61;&#109;&#x70;&#x6c;&#101;&#46;&#99;&#111;&#109;</a>"。</p>
+
+<p>(这种实体编码的小方法可以骗过一些收集邮件地址的机器人，不过它确实无法骗过所有的机器人。有总比没有强，聊胜于无。能阻止一点就阻止一点好了。)</p>
+
+<h3 id="backslash">反斜线转义</h3>
+
+
+<p>Markdown允许你使用反斜线转义那些Markdown元字符，让它们失去原有的“魔力”。举个例子，如果你确实想用星号包住一个词组（而不是想得到<code>&lt;em&gt;</code>标签），就可以在星号之前使用反斜线将其转义。即：</p>
+
+<pre><code>\*literal asterisks\*</code></pre>
+
+
+<p>Markdown中，以下字符支持使用反斜线转义：</p>
+
+<pre><code>\ 反斜线 ` 反引号 * 星号 _ 下划线 {} 大括号 [] 中括号 () 小括号 # 井号 + 加号 - 减号（连字符） . 句点 ! 感叹号</code></pre>
+
+]]></content>
+  </entry>
+  
+</feed>

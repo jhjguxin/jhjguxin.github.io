@@ -1,0 +1,344 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>使用 ri 命令查看 API - Francis's Octopress Blog</title>
+  <meta name="author" content="Francis Jiang">
+
+  
+  <meta name="description" content="使用 ri 命令查看 API 经常去 APIDOCK.COM 查询标准 API，今天访问时忽然变得很慢，忽然想起 Ruby 有自己的 Rdoc，是不是能自己生成一个本地的文档呢。 隐约记得有两种方法查看本地文档，一个是使用 ri 命令，一个是用 Rdoc 生成 Html 格式的文件在浏览器中查询。 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jhjguxin.github.io/blog/2012/01/18/shi-yong-ri-ming-ling-cha-kan-api">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Francis's Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-25901353-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Francis's Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jhjguxin.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/readme">Readme</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">使用 Ri 命令查看 API</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-18T12:02:00+08:00" pubdate data-updated="true">Jan 18<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>使用 ri 命令查看 API</h2>
+
+<div>
+
+经常去 APIDOCK.COM 查询标准 API，今天访问时忽然变得很慢，忽然想起 Ruby 有自己的 Rdoc，是不是能自己生成一个本地的文档呢。
+
+隐约记得有两种方法查看本地文档，一个是使用 ri 命令，一个是用 Rdoc 生成 Html 格式的文件在浏览器中查询。ri 文档基于 Rdoc 来生成。我更喜欢使用命令行格式的，不过直接 ri 了一下，只有几个 gem 的文档，没有 Ruby 核心和标准库的。我用的是 rvm，rvm 安装 rubies 后并不会自动生成 rdoc，还需要手动生成。
+<h2>删除 gem 文档</h2>
+因为 <code>ri method</code> 会列出所有包含 method 的 gem，为了不让输出显得凌乱，需要把默认的 gem 的 doc 全部去掉，这些 gem 很多只是为了解决依赖自动下载的并不常用，也不需要。先贴一下 gem 环境
+<div>
+<div id="highlighter_16375">
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>
+<div><code>abc@abc-desktop:~$ gem </code><code>env</code></div>
+<div><code>RubyGems Environment: </code></div>
+<div><code>  </code><code>- RUBYGEMS VERSION: 1.6.2 </code></div>
+<div><code>  </code><code>- RUBY VERSION: 1.9.2 (2011-02-18 patchlevel 180) [i686-linux] </code></div>
+<div><code>  </code><code>- INSTALLATION DIRECTORY: </code><code>/home/abc/</code><code>.rvm</code><code>/gems/ruby-1</code><code>.9.2-p180 </code></div>
+<div><code>  </code><code>- RUBY EXECUTABLE: </code><code>/home/abc/</code><code>.rvm</code><code>/rubies/ruby-1</code><code>.9.2-p180</code><code>/bin/ruby</code></div>
+<div><code>  </code><code>- EXECUTABLE DIRECTORY: </code><code>/home/abc/</code><code>.rvm</code><code>/gems/ruby-1</code><code>.9.2-p180</code><code>/bin</code></div>
+<div><code>  </code><code>- RUBYGEMS PLATFORMS: </code></div>
+<div><code>    </code><code>- ruby </code></div>
+<div><code>    </code><code>- x86-linux </code></div>
+<div><code>  </code><code>- GEM PATHS: </code></div>
+<div><code>     </code><code>- </code><code>/home/abc/</code><code>.rvm</code><code>/gems/ruby-1</code><code>.9.2-p180 </code></div>
+<div><code>     </code><code>- </code><code>/home/abc/</code><code>.rvm</code><code>/gems/ruby-1</code><code>.9.2-p180@global </code></div>
+<div><code>  </code><code>- GEM CONFIGURATION: </code></div>
+<div><code>     </code><code>- :update_sources =&gt; </code><code>true</code></div>
+<div><code>     </code><code>- :verbose =&gt; </code><code>true</code></div>
+<div><code>     </code><code>- :benchmark =&gt; </code><code>false</code></div>
+<div><code>     </code><code>- :backtrace =&gt; </code><code>false</code></div>
+<div><code>     </code><code>- :bulk_threshold =&gt; 1000 </code></div>
+<div><code>  </code><code>- REMOTE SOURCES: </code></div>
+<div><code>     </code><code>- http:</code><code>//rubygems</code><code>.org/</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+进入 GEM PATHS 即 ~/.rvm/gems/ruby-1.9.2-p180/doc 中执行 <code>rm -rf</code> 删除掉所有文档。
+
+gem 安装时选择 <code>gem install <em>gemname</em> --no-ri --no-rdoc</code> 可以避免生成文档，如果不想每次麻烦输入，执行 <code>echo 'install: --no-rdoc --no-ri' &gt; ~/.gemrc</code> 新建并写入配置文件即可。
+
+rvm 的 gem 默认会从 ~/.vimrc 以及 $ruby_path/etc/gemrc 下读取配置文件。后者可以通过 IRB 中执行 <code>Gem::ConfigFile::SYSTEM_WIDE_CONFIG_FILE</code> 查看。
+<h2>安装 Rdoc/ri 文档</h2>
+删除 gem 文档后，使用 <code>rvm doc generate</code> 生成当前版本 Ruby 的文档，涵盖核心类和标准库。生成的 Html 文档会存放在 /.rvm/docs 下。
+
+命令 ri 的使用示例：
+<div>
+<div id="highlighter_187585">
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>
+<div><code>ri Array</code><code>#sort </code></div>
+<div><code>ri IO.readlines </code></div>
+<div><code>ri String </code></div>
+<div><code>ri gsub </code></div>
+<div><code>ri File::</code><code>dirname</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+还可以加入一些常用的 gem 的文档，比如 nokogiri，<code>gem rdoc nokogiri -v 1.5.0</code>
+<div>标签： <a href="http://jhjguxin.hwcrazy.com/tag/doc/">doc</a> <a href="http://jhjguxin.hwcrazy.com/tag/rails/">rails</a> <a href="http://jhjguxin.hwcrazy.com/tag/ruby/">ruby</a></div>
+</div>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Francis Jiang</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-18T12:02:00+08:00" pubdate data-updated="true">Jan 18<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/wei-fen-lei/'>未分类</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://jhjguxin.github.io/blog/2012/01/18/shi-yong-ri-ming-ling-cha-kan-api/" data-via="jhjguxin" data-counturl="http://jhjguxin.github.io/blog/2012/01/18/shi-yong-ri-ming-ling-cha-kan-api/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/01/09/phusion-passenger-users-guide/" title="Previous Post: Phusion Passenger users guide">&laquo; Phusion Passenger users guide</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/01/29/posttest/" title="Next Post: posttest">posttest &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/">通过mongodump和mongorestore实现Mongodb备份和恢复 --by Chenzhou123520</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes/">Ruby on Rails 4.0 Release Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/rails-active-record-named-scopes/">Rails Active Record Named Scopes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/">晒晒我们的开源项目 ITEYE开源代码</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/">Single Sign-on 单点登录 Sso</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/jhjguxin">@jhjguxin</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'jhjguxin',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Francis Jiang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

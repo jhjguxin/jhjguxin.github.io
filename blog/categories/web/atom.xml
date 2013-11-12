@@ -1,0 +1,637 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: web | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/blog/categories/web/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[晒晒我们的开源项目 ITEYE开源代码]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/"/>
+    <updated>2012-09-27T08:34:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma</id>
+    <content type="html"><![CDATA[<h2>晒晒我们的开源项目 ITEYE开源代码</h2>
+
+<p>我们的研发团队是一支mini型研发团队，目前共有研发人员13人。由于网站产品维护的历史原因，这13人的研发团队分为4支小组，分别是：Ruby研发小组5人；PHP研发小组4人；.net研发小组2人，Java搜索小组2人。</p>
+
+<p>别看我们研发人员这么少，但是我们研发人员战斗力很强，我们维护和开发着十多条产品线。在我们开发自身产品的过程中，也积累了一些比较通用的组件，一些对大家来说有用的工具。因此从今年下半年开始，我们陆续将一些组件和工具开源出来，哪怕这些项目的质量并不是那么高，也希望能够给社区带来一点点自己的贡献。</p>
+
+<p>以下简要介绍一下我们已经开源的项目，今后我们还会努力开源更多的东西和大家交流和分享：</p>
+
+<p>1、Ansj中文分词 &ndash; 开源的高准确率Java中文分词器</p>
+
+<p>项目Github地址：<a href="https://github.com/ansjsun/ansj_seg" target="_blank"><a href="https://github.com/ansjsun/ansj_seg">https://github.com/ansjsun/ansj_seg</a></a>
+这是基于大名鼎鼎中科院的Ictclas中文分词算法编写的Java实现版本，比常用的开源mmseg4j的分词准确率高。目前我们自己站内的搜索将逐渐从mmseg4j算法替换成Ansj中文分词算法。</p>
+
+<p>2、ServiceFramework &ndash; 开源的羽量级Java Web服务框架</p>
+
+<p>项目Github地址：<a href="https://github.com/allwefantasy/ServiceFramework" target="_blank"><a href="https://github.com/allwefantasy/ServiceFramework">https://github.com/allwefantasy/ServiceFramework</a></a>
+我们基于Java的开源搜索框架lucene编写了网站的分布式搜索和Tag文章分类服务。因为需要向前端的Web应用程序提供搜索和Tag服务接口API，所以我们编写了这个羽量级的Java框架软件。它的优点就是羽量级，自身集成了Jetty服务器，MVC，IoC和ORM，让你只需要编写非常少的代码，就可以快速将你的业务逻辑组件以Web API的方式提供服务。</p>
+
+<p>3、ExportBlog &ndash; 开源的通用博客导出工具</p>
+
+<p>项目Github地址：<a href="https://github.com/sqzhuyi/ExportBlog" target="_blank"><a href="https://github.com/sqzhuyi/ExportBlog">https://github.com/sqzhuyi/ExportBlog</a></a>
+这是一个基于.net Winforms编写的通用博客导出工具，支持导出网站包括：CSDN、ITEYE、博客园、新浪、搜狐、和讯、ChinaUnix、网易、51CTO、开源中国、百度空间、QQ空间等等。导出格式支持CHM、PDF、HTML、TXT和EPUB 5种格式文档。详细介绍：<a href="http://blog.csdn.net/sq_zhuyi/article/details/7924776" target="_blank"><a href="http://blog.csdn.net/sq_zhuyi/article/details/7924776">http://blog.csdn.net/sq_zhuyi/article/details/7924776</a></a></p>
+
+<p>4、Secode_level_cache &ndash; 开源的Rails对象缓存插件</p>
+
+<p>项目Github地址：<a href="https://github.com/csdn-dev/second_level_cache" target="_blank"><a href="https://github.com/csdn-dev/second_level_cache">https://github.com/csdn-dev/second_level_cache</a></a>
+Rails的ActiveRecord自身没有带强大的对象缓存功能，这是AR的一个重大的遗憾。早在2008年开始，我们就借鉴了Java强大的ORM框架Hibernate的二级对象缓存编写了这个Rails的AR对象缓存插件，并且一直作为JavaEye网站缓存优化的秘密武器来使用，取得了非常理想的效果。
+现在我们将这个插件从Rails2.x的版本升级到了3.x版本，并且抽取成了一个通用插件，开始应用于新的Rails3.2的项目之上。有志于AR对象缓存优化的ruby程序员不容错过。</p>
+
+<p>5、limiter － 网站反爬虫和DOS攻击的利器</p>
+
+<p>项目Github地址：<a href="https://github.com/csdn-dev/limiter" target="_blank"><a href="https://github.com/csdn-dev/limiter">https://github.com/csdn-dev/limiter</a></a>
+早年的JavaEye网站曾经深受DOS攻击和爬虫海量抓取造成的负载过高的困扰，我曾经和这个问题进行了为期几年不懈的斗争，并且在总结几年斗争经验后写了一篇总结性博客文章：<a href="http://robbin.iteye.com/blog/451014" target="_blank">互联网网站的反爬虫策略浅析</a> 。当时我基于这个反爬虫策略编写了JavaEye网站的智能防火墙插件，取得了良好的效果。
+现在我们将这个插件从JavaEye的源代码中剥离出来，抽取成一个通用的rackware，便于应用于普通的Rails3.x的项目当中。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Single sign-on 单点登录 sso]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/"/>
+    <updated>2012-09-26T08:35:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso</id>
+    <content type="html"><![CDATA[<h2>Single sign-on 单点登录 sso</h2>
+
+<p>from wiki</p>
+
+<p><strong>Single sign-on</strong> (<strong>SSO</strong>) is a property of <a title="Access control" href="http://en.wikipedia.org/wiki/Access_control">access control</a> of multiple related, but independent <a title="Software" href="http://en.wikipedia.org/wiki/Software">software</a> systems. With this property a user <a title="Login" href="http://en.wikipedia.org/wiki/Login">logs in</a> once and gains access to all systems without being prompted to log in again at each of them. Conversely, <strong>Single sign-off</strong> is the property whereby a single action of signing out terminates access to multiple software systems.</p>
+
+<p>As different applications and resources support different <a title="Authentication" href="http://en.wikipedia.org/wiki/Authentication">authentication</a> mechanisms, single sign-on has to internally translate to and store different credentials compared to what is used for initial authentication.</p>
+
+<p>from baike</p>
+
+<p>单点登录（Single Sign On），简称为 SSO，是目前比较流行的企业业务整合的解决方案之一。SSO的定义是在多个应用系统中，用户只需要登录一次就可以访问所有相互信任的应用系统。</p>
+
+<div></div>
+
+
+<p>企业应用集成（EAI, Enterprise Application Integration）。企业应用集成可以在不同层面上进行：例如在数据存储层面上的“数据大集中”，在传输层面上的“通用数据交换平台”，在应用层面上的“业务流程整合”，和用户界面上的“通用企业门户”等等。事实上，还有一个层面上的集成变得越来越重要，那就是“身份认证”的整合，也就是“单点登录”。</p>
+
+<p>现在普遍使用 oauth 来实现 多个系统的授权 认证</p>
+
+<p><a href="https://github.com/songkick/oauth2-provider"><a href="https://github.com/songkick/oauth2-provider">https://github.com/songkick/oauth2-provider</a></a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Sharing A Devise User Session Across Subdomains With Rails 3]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/09/15/sharing-a-devise-user-session-across-subdomains-with-rails-3/"/>
+    <updated>2012-09-15T16:21:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/09/15/sharing-a-devise-user-session-across-subdomains-with-rails-3</id>
+    <content type="html"><![CDATA[<h2>Sharing A Devise User Session Across Subdomains With Rails 3</h2>
+
+<pre>to andersen
+  仔细测了一下 Askjane::Application.config.session_store :active_record_store, key: &#039;_askjane_session&#039;, :domain =&gt; &quot;.bbtang.com&quot;在 server上
+  是ok的（效果上也是能共享bbtang.com 和www.bbtang.com的会话的只要端口一致）就是不知道在本地如何因为本地一般不会设置host绑定域名(经测试答案是不能的)，如何（所以需要:all这个设置项）
+to 客服 和 jojo
+ 提一点 你们一些 首页源码的时候 不要把 域名加上去  注意 尼玛 端口不一致 也是不能share 会话的
+ 简而言之 你们写一些html静态源码的时候除非不在 bbtang.com的 项目上 没有必要加 域名的 这会加大 大家的成本（如果说端口不一致就会导致会话丢失，如果没有做多域名兼容也会导致会话丢失能免则免）
+over</pre>
+
+
+<pre></pre>
+
+
+<pre>Francis.J(864248765) 13:57:28
+https://github.com/rails/rails/issues/2483
+Francis.J(864248765) 13:57:55
+尼玛 rails 大爷又 踩雷了
+Francis.J(864248765) 13:59:42
+https://github.com/rails/rails/issues/2483
+Francis.J(864248765) 14:02:27
+https://github.com/rails/rails/pull/7316
+Francis.J(864248765) 14:08:37
+然后 我们看看 究竟用 :cookie_store + :domain =&gt; :all
+还是  :active_record_store + &quot;.bbtang.com&quot; (这里垮子域名估计不会很合适)
+还是 升一下 rails  用  :active_record_store + :domain =&gt; :all</pre>
+
+
+<p>Recently I’ve been working on a Rails application that supports subdomains. I’m using Devise for user authentication and need the user to choose a subdomain to use upon registration.</p>
+
+<p>Similar to the 37signals applications, I want a single sign-on to be persistent across subdomains. Since I didn’t have a clue where to begin with subdomains, I followed <a href="https://github.com/fortuity/rails3-subdomain-devise/wiki/Tutorial-%28Walkthrough%29">this tutorial</a> on my new Rails 3.1 beta 1 application. This tutorial worked like a charm and I omitted the friendly_id and tweaked a few things to my liking.</p>
+
+<p>The gist of it is simple. Create a User model like you would normally do with Devise. You add a Subdomain model that is linked to the Users (in my case I only wanted a single subdomain per user). Configuring the routes is pretty simple as you can simply create a constraint that will match the root and fire it off to the right action and let the rest fall through.</p>
+
+<p>The trick comes into sharing the session between domains. Browsers, of course, will separate out the cookies and store them by separated out by subdomain. What you want to do is edit your config/initializers/session_store.rb file to look like this</p>
+
+<div>
+<table>
+<tbody>
+<tr>
+<td>
+<pre>APPNAMEGOESHERE::Application.config.session_store :cookie_store, :key =&gt; &#039;_tourlyapp_session&#039;, :domain =&gt; &quot;lvh.me&quot;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+<p>The trick here is the <code>:domain</code> option. What this does is sets the level of the TLD (top level domain) and tells Rails how long the domain is. The part you want to watch out for here is that if you set <code>:domain =&gt; :all</code> like is recommend in some places, it simply won’t work unless you’re using localhost. <code>:all</code> defaults to a TLD length of 1, which means if you’re testing with Pow (myapp.dev) it won’t work either because that is a TLD of length 2.</p>
+
+<p>You might get weird things like halfway Devise sessions sharing, but only allowing you to create and destroy the session on the root domain. Using <code>:all</code> works great if you’re using localhost, but when I started using lvh.me:3000 for testing I had those problems (lvh.me stands for local vhost me and is a domain that simply points to localhost which makes for zero-config subdomain development. It’s super handy.).</p>
+
+<p>The best option might be to comment out this line and put it into your individual environment configurations. This way you can keep things configured easily as the <code>:all</code> option. Once you’ve got your domain string added everything should work like a charm.</p>
+
+<p><strong>BONUS PROTIP: </strong>The normal route variables you see used end with _path. These don’t include the domain and therefore ignore the :subdomain option you pass into them. <code>url_for</code>, on the other hand, does support subdomains so you should get into the habit of using root_url instead of root_path and so on.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[IE, iframe, P3P, Cookies, oh my]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/09/13/ie-iframe-p3p-cookies-oh-my/"/>
+    <updated>2012-09-13T22:53:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/09/13/ie-iframe-p3p-cookies-oh-my</id>
+    <content type="html"><![CDATA[<h2>IE, iframe, P3P, Cookies, oh my</h2>
+
+<p>测试新浪微游戏接口时，发现一个问题：当使用IE浏览器的时候，rails的session无法保存。之前在自己开发服务器上测试时，验证过IE和Firefox都能正常使用session的，觉得很是奇怪。</p>
+
+<p>通 过抓包发现，正常情况下，服务器端在响应客户端访问请求后，在返回的http头中会有Set-Cookies这样的参数，同时在接下来的客户端的http 请求头中，会加上Cookie这样的参数；上述不能正常保存session情况下的抓包分析发现，客户端的http请求头中浏览器没有设置Cookie参 数。</p>
+
+<p>解决方法一：修改IE的默认Cookie设置，设置IE隐私设置中的高级隐私设置，勾选“总是允许回话Cookie”，这样session的值就能正常保存了。不过这样肯定不是最好的解决办法，对大多数用户来说，这样做不合理。</p>
+
+<p>解决方法二：参考方法来自： <a href="http://www.sympact.net/2008/07/rails-and-ifram.html" target="_blank"><a href="http://www.sympact.net/2008/07/rails-and-ifram.html">http://www.sympact.net/2008/07/rails-and-ifram.html</a></a> ，文中描述了具体原因，是因为IFrame中打开的链接和主页面的链接不在同一个域，所以IE默认会认为是不可信任的，则不允许使用Cookie。解决办 法正如文中所示，在controller中的before_filter中增加一个方法，此方法中设置响应的http相应头中增加P3P参数，问题即可解 决。
+大致代码如下：</p>
+
+<pre class="brush: rails; gutter: true"></pre>
+
+
+<div id="LC1">[rails IE, IFRAME, P3P, COOKIES](<a href="https://gist.github.com/3719568">https://gist.github.com/3719568</a>)</div>
+
+
+<div id="LC10">
+<pre class="brush: rails; gutter: true">#userful gem [rack-p3p](https://github.com/hoopla/rack-p3p)
+# encoding: utf-8
+class ApplicationController &lt; ActionController::Base
+  protect_from_forgery
+  before_filter :set_p3p
+  def set_p3p
+    headers[&#039;P3P&#039;] = &quot;policyref=\&quot;/w3c/p3p.xml\&quot;, CP=\&quot;ALL DSP COR CURa ADMa DEVa TAIa OUR BUS IND UNI COM NAV INT\&quot;&quot;
+  end
+end</pre>
+</div>
+
+
+<div id="LC10"></div>
+
+
+<p>I was just banging my head against the wall trying to figure out why internet explorer wasn’t remembering my user’s sessions. Turns out it’s something that has bitten me in the past.</p>
+
+<p>IE doesn’t allow you to set cookies when your site is in an iframe unless your site has set P3P headers. Also, ordering matters – the P3P header must be set <em>before</em> the cookie is set.</p>
+
+<p>If you’re using ruby, this gem works pretty well: <a href="https://github.com/hoopla/rack-p3p"><a href="https://github.com/hoopla/rack-p3p">https://github.com/hoopla/rack-p3p</a></a></p>
+
+<p>Further reading: <a href="http://stackoverflow.com/questions/389456/cookie-blocked-not-saved-in-iframe-in-internet-explorer"><a href="http://stackoverflow.com/questions/389456/cookie-blocked-not-saved-in-iframe-in-internet-explorer">http://stackoverflow.com/questions/389456/cookie-blocked-not-saved-in-iframe-in-internet-explorer</a></a></p>
+
+<p>All the articles I read about setting headers, etags, etc were all really old. Hopefully, if you’re using rails you found this article. Just install the gem and add the line from the README to your application.rb – no monkey patching. Good luck.</p>
+
+<h2>rails IE frame ActionController::InvalidAuthenticityToken</h2>
+
+
+<p>Same problem here with a rails application launched in an iframe I get:</p>
+
+<p>&ldquo;the change you wanted was rejected&rdquo;</p>
+
+<p>In log:</p>
+
+<p>ActionController::InvalidAuthenticityToken<wbr></wbr></p>
+
+<p>Seems that the problem occur in IE when you are developing in an iframe situation where the master page is at a different domain than the inner page. (es: iframed Facebook applications)</p>
+
+<p>This is because IE&rsquo;s default &ldquo;medium&rdquo; privacy setting has an issue with cookies in that situation.</p>
+
+<p>A possible solution is to set a P3P header (try to google: p3p iframe internet explorer) Example, in application_controller.rb:</p>
+
+<pre>&lt;code&gt;before_filter  &lt;wbr&gt;:set_p3p
+
+def set_p3p
+ &lt;wbr&gt; response.headers[&quot;P3P&quot;]=&#039;CP=&quot;CAO PSA OUR&quot;&#039;
+end&lt;/wbr&gt;&lt;/wbr&gt;&lt;/code&gt;</pre>
+
+
+<p>&nbsp;</p>
+
+<h1 id="subject_tpc">php版站内应用在ie浏览器下获取到session值(失效)[已解决]</h1>
+
+
+<div>
+<div id="read_tpc">php版站内应用在ie浏览器下获取到session值(失效)
+首页授权证后保存的session在其它页面获取不到。例如：
+在站内应用的iframe下：
+a.php
+&lt;?php
+session_start();
+$_SESSION["user"]="abc";
+echo $_SESSION["user"];
+?&gt;
+&lt;a href="b.php"&gt;b.php&lt;/a&gt;
+
+b.php
+&lt;?php
+session_start();
+echo $_SESSION["user"];
+?&gt;
+
+运行a.php后正常显示abc，跳转到b.php显示为空。
+
+这问题纠缠了我很久了，不继地调试，直到今晚终于找到答案了：
+原来这也属于是跨域访问的问题。
+
+以下是解决方案：
+<strong>“用P3P header解决iframe跨域访问cookie/session”的问题</strong>
+理论很简单,而且模式也和大多请求返回状态的SSO差不多.但是有几个地方是要注意一下的.
+1.页面里的COOKIE不能是浏览器进程的COOKIE(包括验证票和不设置超时时间的COOKIE),否则跨域会取不到.这点做跨域COOKIE的人比较少提到.不过实际上留意下几家大学做的方案,有细微的提到他们的验证模块里的COOKIE是有设置超时时间的.
+2.当利用IFRAME时,记得要在相应的动态页的页头添加一下P3P的信息,否则IE会自觉的把IFRAME框里的COOKIE给阻止掉,产生问题.本身不保存自然就取不到了.这个其实是FRAMESET和COOKIE的问题,用FRAME或者IFRAME都会遇到.
+3.测试时输出TRACE,会减少很多测试的工作量.
+只需要设置 P3P HTTP Header，在隐含 iframe 里面跨域设置 cookie 就可以成功。他们所用的内容是：
+P3P: CP='CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR'
+
+ASP直接在头部加了头部申明，测试有效。
+&lt;%Response.AddHeader "P3P", "CP=CAO PSA OUR"%&gt;
+
+php的话，我没去试，应该是如下写法：
+header('P3P: CP=CAO PSA OUR');
+
+ASP.NET的话
+通过在代码上加Response.AddHeader("P3P", "CP=CAO PSA OUR")或者在Window服务中将ASP.NET State Service 启动。
+JSP:response.setHeader("P3P","CP=CAO PSA OUR")
+
+如何在静态页面加头信息 P3P: CP="CAO PSA OUR 来解决框架与cookie的问题?
+IIS站点管理器允许你给所有输出的内容都加上任意HTTP Header，你只要在Custom Header里面加上P3P: CP="CAO PSA OUR"
+就ok了
+
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[在 Cloud Foundry 上使用 JRuby for Rails 应用程序]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/09/10/zai-cloud-foundry-shang-shi-yong-jruby-for-rails-ying-yong-cheng-xu/"/>
+    <updated>2012-09-10T22:28:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/09/10/zai-cloud-foundry-shang-shi-yong-jruby-for-rails-ying-yong-cheng-xu</id>
+    <content type="html"><![CDATA[<h2>在 Cloud Foundry 上使用 JRuby for Rails 应用程序</h2>
+
+<p align="left">[译注]本文翻译自Cloud Foundry英文博客站点，原文题为“<a href="http://blog.cloudfoundry.com/post/13481011043/deploying-jruby-on-rails-applications-on-cloud-foundry"><strong>Using JRuby for Rails Applications on Cloud Foundry</strong></a>”，文章发表时间是 2012 年 4 月 19 日。</p>
+
+
+<p align="left">如今，只需进行一些简单的配置更改，即可将 JRuby Rails 应用程序部署到 CloudFoundry.com。JRuby 应用程序常常通过创建一个包含 Rails 应用程序的 .war 文件来部署到 servlet 容器中。对于 Cloud Foundry，我们将采取同样的做法，同时对数据库配置进行一些更改，以便应用程序还可以访问 CloudFoundry.com 上的数据库服务。</p>
+
+
+
+
+<h4 align="left">将 JRuby on Rails 应用程序部署到 Cloud Foundry 上时需进行的更改</h4>
+
+
+<p align="left">要使 JRuby 应用程序在 CloudFoundry.com 上运行，我们需要完成两项任务。首先，我们需通过修改 configuration 目录中的 database.yml 文件将该应用程序配置为连接到 CloudFoundry.com 上的数据库服务。当我们部署该应用程序时，我们还需要运行“rake db:migrate”的等效命令，以便创建数据库表。我们可以通过在 config/initializers 目录中添加一个初始化程序来做到这一点。</p>
+
+
+<p align="left">环境变量 VCAP_SERVICES 中提供了我们在配置数据库连接时所需的信息。我们可以通过编程方式分析该变量，也可以使用方便的 Cloud Foundry 运行时 gem（请参见<a href="http://cnblog.cloudfoundry.com/?p=234"><strong>将</strong><strong> Cloud Foundry </strong><strong>服务与</strong><strong> Ruby </strong><strong>搭配使用：第</strong><strong> 2 </strong><strong>部分</strong><strong> – </strong><strong>对</strong><strong> Ruby </strong><strong>应用程序的实时支持</strong></a>博文），在本篇博文中我们将采用后者。要使用该 gem，我们需要将它包含在我们的 Gemfile 中：</p>
+
+
+
+
+<div>
+<div id="highlighter_85231">
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>
+<div><code>...</code></div>
+<div><code>gem  </code><code>'cf-runtime'</code></div>
+<div><code>...</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<p align="left">既然我们已经添加了该 gem，我们就可以向 database.yml 文件中添加一些代码段，用以访问生产环境的数据库服务信息。下面是一个 database.yml 文件中的 production 部分，在这个文件中我们使用的是 MySQL 数据库：</p>
+
+
+<p align="left"><strong>config/database.yml</strong></p>
+
+
+
+
+<div>
+<div id="highlighter_84359">
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>
+<div><code>production:</code></div>
+<div><code>    </code><code>adapter: mysql</code></div>
+<div><code>    </code><code>&lt;% require </code><code>'cfruntime/properties'</code> <code>%&gt;</code></div>
+<div><code>    </code><code>&lt;% db_svc = CFRuntime::CloudApp.service_props(</code><code>'mysql'</code><code>) %&gt;</code></div>
+<div><code>    </code><code>database: &lt;%= db_svc[:database] rescue </code><code>'bookshelf_production'</code> <code>%&gt;</code></div>
+<div><code>    </code><code>username: &lt;%= db_svc[:username] rescue </code><code>'root'</code> <code>%&gt;</code></div>
+<div><code>    </code><code>password: &lt;%= db_svc[:password] rescue </code><code>''</code> <code>%&gt;</code></div>
+<div><code>    </code><code>host: &lt;%= db_svc[:host] rescue </code><code>'localhost'</code> <code>%&gt;</code></div>
+<div><code>    </code><code>port: &lt;%= db_svc[:port] rescue </code><code>'3306'</code> <code>%&gt;</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<p align="left">正如您可以看到的那样，我们添加了一个 require 语句来获取 cfruntime/properties，然后我们通过调用 service_props 方法并在调用时传入我们所使用的服务类型来获取服务属性的哈希值。如果仅有一项属于该类型的服务绑定到该应用程序，则无需指定此服务的实际名称。如果您将多项属于同一类型的服务绑定到您的应用程序，您将需要指定实际服务名称。服务属性的哈希值存储在一个名为 db_svc 的变量中，代码会将对应的值提取出来以用作数据库、用户名、密码、主机和端口。其中的每一条语句都有一个 rescue 子句，如果我们并非在 Cloud Foundry 环境中操作，则该语句将提供要使用的值，这种情况下 db_svc 将为 Nil。</p>
+
+
+<p align="left">另外，如果使用的是 PostgreSQL，则该 database.yml 文件的 production 部分将大致如下：</p>
+
+
+
+
+<div>
+<div id="highlighter_152958">
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>
+<div><code>production:</code></div>
+<div><code>   </code><code>adapter: postgresql</code></div>
+<div><code>   </code><code>encoding: unicode</code></div>
+<div><code>   </code><code>&lt;% require </code><code>'cfruntime/properties'</code> <code>%&gt;</code></div>
+<div><code>   </code><code>&lt;% db_svc = CFRuntime::CloudApp.service_props(</code><code>'postgresql'</code><code>) %&gt;</code></div>
+<div><code>   </code><code>database: &lt;%= db_svc[:database] rescue </code><code>'bookshelf_production'</code> <code>%&gt;</code></div>
+<div><code>   </code><code>username: &lt;%= db_svc[:username] rescue </code><code>'bookshelf'</code> <code>%&gt;</code></div>
+<div><code>   </code><code>password: &lt;%= db_svc[:password] rescue </code><code>''</code> <code>%&gt;</code></div>
+<div><code>   </code><code>host: &lt;%= db_svc[:host] rescue </code><code>'localhost'</code> <code>%&gt;</code></div>
+<div><code>   </code><code>port: &lt;%= db_svc[:port] rescue </code><code>'5432'</code> <code>%&gt;</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<p align="left">接下来，我们将注意力转向创建供我们的应用程序使用的表上面。为此，我们在部署该应用程序时需向 config/initializers 目录中添加以下初始化程序。我将该初始化程序命名为 cf_db_migrate.rb：</p>
+
+
+<p align="left"><strong>config/initializers/cf_db_migrate.rb</strong></p>
+
+
+
+
+<div>
+<div id="highlighter_908259">
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>
+<div><code>require </code><code>'cfruntime/properties'</code></div>
+<div></div>
+<div><code># Run the equivalent of rake db:migrate on startup</code></div>
+<div><code>if</code> <code>CFRuntime::CloudApp.running_in_cloud?</code></div>
+<div><code>  </code><code>migrations = Rails.root.join(</code><code>'db'</code><code>,</code><code>'migrate'</code><code>)</code></div>
+<div><code>  </code><code>if</code> <code>migrations.directory?</code></div>
+<div><code>    </code><code>ActiveRecord::Migrator.migrate(migrations)</code></div>
+<div><code>  </code><code>end</code></div>
+<div><code>end</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<p align="left">我们再次使用 cfruntime/properties 来检查我们当前是否在云中运行。接下来，我们将检查 db/migrate 目录是否存在；如果它存在，我们将使用该目录中的迁移文件来运行数据库迁移 (ActiveRecord::Migrator.migrate(migrations))。</p>
+
+
+<p align="left">我们还必须进行的一项更改就是对 warble 配置的更改。默认情况下此配置在生成的 war 文件中不包含 db/migrate 目录，因此我们需要通过指定 config.includes = FileList["db/migrate/*"] 将此目录添加到此配置中。下面是 config/warble.rb 文件的相关内容：</p>
+
+
+<p align="left"><strong>config/warble.rb</strong></p>
+
+
+
+
+<div>
+<div id="highlighter_236881">
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>
+<div><code># Warbler web application assembly configuration file</code></div>
+<div><code>Warbler::Config.</code><code>new</code> <code>do</code> <code>|config|</code></div>
+<div></div>
+<div><code>  </code><code># Application directories to be included in the webapp.</code></div>
+<div><code>  </code><code>config.dirs = %w(app config lib log vendor tmp)</code></div>
+<div></div>
+<div><code>  </code><code># Additional files/directories to include, above those in config.dirs</code></div>
+<div><code>  </code><code>config.includes = FileList[</code><code>"db/migrate/*"</code><code>]</code></div>
+<div></div>
+<div><code>end</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<h4 align="left">一个完整示例</h4>
+
+
+<p><a href="http://jhjguxin.sinaapp.com/?attachment_id=244" rel="attachment wp-att-244"><img title="Example" src="http://cnblog.cloudfoundry.com/wp-content/uploads/2012/07/Example.tif" alt="" /></a></p>
+
+<p align="left">我们从上文中已经了解到需做出哪些更改，那我们就来快速生成一个 Rails 应用程序并做出所需的更改，然后将该应用程序部署到 CloudFoundry.com。如果您尚未安装 JRuby，建议首先参阅 <a href="http://jruby.org/getting-started"><strong>JRuby </strong><strong>入门</strong></a>。</p>
+
+
+
+
+<h3 align="left"><strong>创建</strong><strong> JRuby Rails </strong><strong>应用程序</strong><strong></strong></h3>
+
+
+<p align="left">首先，我们创建新应用程序，并创建具有完整基架的第一个域对象。</p>
+
+
+
+
+<pre>&lt;code&gt;jruby -S rails new bookshelf -d mysql cd bookshelf jruby -S rails generate scaffold Book title:string category:string published:integer price:decimal{10.2} isbn:string &lt;/code&gt;</pre>
+
+
+<p align="left">接下来，我们删除生成的 public/index.html，然后修改 config/routes.rb 以使用“books”作为根目录：</p>
+
+
+
+
+<pre>&lt;code&gt;rm public/index.html vi config/routes.rb&lt;/code&gt;</pre>
+
+
+<p align="left">下面是我在 config/routes.rb 中添加的路由：</p>
+
+
+
+
+<div>
+<div id="highlighter_226813">
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>
+<div><code>Bookshelf::Application.routes.draw </code><code>do</code></div>
+<div><code>  </code><code>resources :books</code></div>
+<div></div>
+<div><code>  </code><code># You can have the root of your site routed with </code><code>"root"</code></div>
+<div><code>  </code><code># just remember to delete </code><code>public</code><code>/index.html.</code></div>
+<div><code>  </code><code># root :to =&gt; </code><code>'welcome#index'</code></div>
+<div><code>  </code><code>root :to =&gt; </code><code>'books#index'</code></div>
+<div></div>
+<div><code>  </code><code># See how all your routes lay out with </code><code>"rake routes"</code></div>
+<div></div>
+<div><code>end</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<p align="left">现在，我们将在本地运行此应用程序以确保它正常运行：</p>
+
+
+
+
+<pre>&lt;code&gt;jruby -S rake db:create jruby -S rake db:migrate jruby -S rails server&lt;/code&gt;</pre>
+
+
+<p align="left"><a href="http://jhjguxin.sinaapp.com/?attachment_id=237" rel="attachment wp-att-237"><img title="1" src="http://cnblog.cloudfoundry.com/wp-content/uploads/2012/07/1.jpg" alt="" width="743" height="475" /></a></p>
+
+
+<p align="left">Book 实体的 Rails 空列表视图表明它确实正常运行。现在，我可以向我的书架添加新书。</p>
+
+
+
+
+<h3 align="left"><strong>修改</strong><strong> JRuby Rails </strong><strong>应用程序以便部署到</strong><strong> CloudFoundry</strong></h3>
+
+
+<p align="left">我们来首先进行我们在上文中提到的以下更改：</p>
+
+
+
+
+<ul>
+    <li>将 gem cf-runtime 添加到 Gemfile</li>
+    <li>修改 config/database.yml 文件的“production:”节，具体见<a href="http://cnblog.cloudfoundry.com/?p=236/#database.yml"><strong>上文</strong></a></li>
+    <li>添加一个名为 config/initializers/cf_db_migrate.rb 的文件，文件内容见<a href="http://cnblog.cloudfoundry.com/?p=236/#cf_db_migrate.rb"><strong>上文</strong></a></li>
+</ul>
+
+
+<p align="left">接下来我们需要生成 Warbler 配置文件，因此我们将运行：</p>
+
+
+
+
+<pre>&lt;code&gt;jruby -S warble config &lt;/code&gt;</pre>
+
+
+<p align="left">现在，我们就可以：</p>
+
+
+
+
+<ul>
+    <li>修改 config/warble.rb 以添加 db/migrate 目录，具体见<a href="http://cnblog.cloudfoundry.com/?p=236/#warble.rb"><strong>上文</strong></a></li>
+</ul>
+
+
+<p align="left">这些便是需要做出的全部更改，我们现在就已万事俱备，可以打包和部署此应用程序了。</p>
+
+
+
+
+<h3 align="left"><strong>打包</strong><strong> JRuby Rails </strong><strong>应用程序并将其部署到</strong><strong> CloudFoundry</strong></h3>
+
+
+<p align="left">我们将使用 <a href="http://kenai.com/projects/warbler/pages/Home"><strong>Warbler</strong></a> 来将此应用程序打包成一个 war，并使用 <a href="http://start.cloudfoundry.com/tools/vmc/installing-vmc.html"><strong>CloudFoundry vmc</strong></a> 命令行实用程序来部署此应用程序。</p>
+
+
+<p align="left">我们用来将此应用程序打包成 war 文件的流程十分简单：捆绑，预编译资产，然后运行 Warbler：</p>
+
+
+
+
+<pre>&lt;code&gt;jruby -S bundle install jruby -S rake assets:precompile jruby -S warble&lt;/code&gt;</pre>
+
+
+<p align="left">这会在我们的 Rails 应用程序的根目录中创建一个 bookshelf.war。目前，将 vmc 命令与 JRuby 一起运行时会存在一些问题，不过我们正在致力于加以修复。同时，我们还可以将此 war 文件移至其他目录，这样我就可以更轻松地改用常规的“C”Ruby。我将创建一个“deploy”目录，并将该目录配置为使用 Ruby 1.9.2-p290（我当前使用的是 rbenv，但您也可以使用 RVM）：</p>
+
+
+
+
+<pre>&lt;code&gt;mkdir deploy mv bookshelf.war deploy/. cd deploy rbenv local 1.9.2-p290 # (if you use RVM the command should be &#039;rvm ruby-1.9.2-p290&#039;)&lt;/code&gt;</pre>
+
+
+<p align="left">现在，我们已准备就绪，可以登录 CloudFoundry 并部署我们的应用程序了。对于此部分，您需要安装<a href="http://start.cloudfoundry.com/tools/vmc/installing-vmc.html"><strong>vmc</strong></a>。</p>
+
+
+
+
+<pre>&lt;code&gt;vmc target api.cloudfoundry.com vmc login cloud@mycompany.com Password: ***** Successfully logged into [http://api.cloudfoundry.com] vmc push bookshelf Would you like to deploy from the current directory? [Yn]: Y Application Deployed URL [bookshelf.cloudfoundry.com]: mybookshelf.cloudfoundry.com Detected a Java Web Application, is this correct? [Yn]: Y Memory reservation (128M, 256M, 512M, 1G, 2G) [512M]: 512M How many instances? [1]: 1 Bind existing services to &#039;bookshelf&#039;? [yN]: N Create services to bind to &#039;bookshelf&#039;? [yN]: Y 1: mongodb 2: mysql 3: postgresql 4: rabbitmq 5: redis What kind of service?: 2 Specify the name of the service [mysql-a4fd7]: mysql-books Create another? [yN]: N Would you like to save this configuration? [yN]: N Creating Application: OK Creating Service [mysql-books]: OK Binding Service [mysql-books]: OK Uploading Application: Checking for available resources: OK Processing resources: OK Packing application: OK Uploading (707K): OK Push Status: OK Staging Application &#039;bookshelf&#039;: OK Starting Application &#039;bookshelf&#039;: OK&lt;/code&gt;</pre>
+
+
+<p align="left">上面已将 vmc 命令突出显示出来。除 URL 以及是否应创建服务外，已接受大部分默认设置。我使用的 URL 为“mybookshelf.cloudfoundry.com”而非默认 URL，以免与现有的书架应用程序冲突。对于是否创建新服务的问题，我回答“Y”；此外我还选择了 (2) mysql 并将其命名为“mysql-books”。</p>
+
+
+<p align="left">现在我们应看到此应用程序正在运行：</p>
+
+
+
+
+<pre>&lt;code&gt;vmc apps +-------------+----+---------+---------------------------------+---------------+ | Application | # | Health | URLS | Services | +-------------+----+---------+---------------------------------+---------------+ | bookshelf | 1 | RUNNING | mybookshelf.cloudfoundry.com | mysql-books | +-------------+----+---------+---------------------------------+---------------+&lt;/code&gt;</pre>
+
+
+<p align="left">因此，我们现在输入“http://mybookshelf.cloudfoundry.com/”，就可以看到此 Bookshelf 应用程序惟妙惟肖地展示出来，我们可以添加一些书籍。</p>
+
+
+<p align="left"><a href="http://jhjguxin.sinaapp.com/2012/02/14/rvm%e4%b8%8b%e5%ae%89%e8%a3%85gem%e7%bc%96%e8%af%91%e5%a4%b1%e8%b4%a5-linecache19/237-revision/" rel="attachment wp-att-238"><img title="2" src="http://cnblog.cloudfoundry.com/wp-content/uploads/2012/07/2.jpg" alt="" width="743" height="475" /></a></p>
+
+
+<p align="left">您可以在 <a href="https://github.com/cloudfoundry-samples/jruby-rails-bookshelf"><strong>cloudfoundry-samples/jruby-rails-bookshelf</strong></a> 位置查看和下载用于此示例的完整源代码；如果您只想了解为在 Cloud Foundry 中部署而需进行的更改，请查看此<a href="https://github.com/cloudfoundry-samples/jruby-rails-bookshelf/commit/b568eac02b1cf50f47d62de0d0c63219c3198fc0"><strong>提交</strong></a>。</p>
+
+
+
+
+<h4 align="left">结论</h4>
+
+
+<p align="left">我们已经证明了可以将一个简单的 JRuby on Rails 应用程序部署到 cloudfoundry 并使用 MySQL 服务作为支持它的数据存储。只需对数据库的应用程序配置进行一些修改，即可做到。</p>
+
+
+<p align="left">我们将发布一篇博文来阐述对于使用 DataMapper 实现持久保留的 JRuby Sinatra 应用程序我们需要进行的类似更改。</p>
+
+
+<p align="left"><em>- Cloud Foundry </em><em>团队</em>
+<em></em><em>Thomas Risberg</em></p>
+
+]]></content>
+  </entry>
+  
+</feed>

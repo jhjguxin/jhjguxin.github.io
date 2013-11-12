@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: assignment | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/tags/assignment/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Mass assignment vulnerability - how to force dev. define attr_accesible? by homakov]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/03/06/mass-assignment-vulnerability-how-to-force-dev-define-attr-accesible-by-homakov/"/>
+    <updated>2012-03-06T19:03:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/03/06/mass-assignment-vulnerability-how-to-force-dev-define-attr-accesible-by-homakov</id>
+    <content type="html"><![CDATA[<h2>Mass assignment vulnerability &ndash; how to force dev. define attr_accesible? by homakov</h2>
+
+<div>
+<div>
+
+Those who don't know methods attr_accesible / protected - check that article out <a href="http://enlightsolutions.com/articles/whats-new-in-edge-scoped-mass-assignment-in-rails-3-1">http://enlightsolutions.com/articles/whats-new-in-edge-scoped-mass-assignment-in-rails-3-1</a>
+
+Let's view at typical situation - middle level rails developer builds website for customer, w/o any special protections in model(Yeah! they don't write it! I have asked few my friends - they dont!)
+Next, people use this website but if any of them has an idea that developer didnt specify "attr_accesible" - hacker can just add an http field in params, e.g. we have pursue's name edition. POST request at pursues#update
+
+id = 333 (target's pursues id)
+pursue['name'] = 'my purses name'
+pursue['user_id'] = 412(hacker id)
+
+if code is scaffolded than likely we got Pursue.find(params[:id]).update_attributes(params[:pursue]) in the controller. And that is what I worry about.
+
+After execution that POST we got hacker owning target's pursue!
+
+I don't mean that it is Rails problem, of course not. But let's get it real(Getting Real ok) - most of developers are middle/junior level and most of them don't write important but not very neccessary things: tests, role checks etc including topic - attr_accesible
+
+how to avoid injections ? What should Rails framework do to force people to keep their rails websites safe? Making attr_accesible necessary field in model? What do you think guys.
+
+</div>
+</div>
+
+
+<div id="method-i-attr_accessible"><a name="method-i-attr_accessible"></a><strong>attr_accessible</strong>(*args)</div>
+
+
+<div>
+<div>
+
+Specifies a white list of model attributes that can be set via mass-assignment.指定一个model属性的白名单，其可以通过来定制（白名单里面的的值）。
+
+Like <code>attr_protected</code>, a role for the attributes is optional, if no role is provided then :default is used. A role can be defined by using the :as option.
+
+如同<code>attr_protected，添加的attributes 是他的一个选项，如果没有角色被提供，那么会使用:default选项。一个属性role可以在定义的时候使用:as选项（定制别名）</code>
+
+This is the opposite of the <code>attr_protected</code> macro: Mass-assignment will only set attributes in this list, to assign to the rest of attributes you can use direct writer methods. This is meant to protect sensitive attributes from being overwritten by malicious users tampering with URLs or forms. If you’d rather start from an all-open default and restrict attributes as needed, have a look at <code>attr_protected</code>.
+
+这是<code>attr_protected</code> macro（宏）的相反操作: Mass-assignment 将会仅仅只能设定在这个名单中的attributes ，要分派其余的属性的值你可以使用直接的写方法（赋值然后save）。这里意图去保护敏感的attributes防止其被恶意的用户重写或篡改通过forms的URLs。如果你宁愿开始一个默认全部开放以及需要限制某些属性，去看一看<code>attr_protected</code>.
+
+class Customer
+  include ActiveModel::MassAssignmentSecurity
+
+</div>
+</div>
+
+
+<p>  attr_accessor :name, :credit_rating</p>
+
+<p>  attr_protected :credit_rating, :last_login
+  attr_protected :last_login, :as =&gt; :admin</p>
+
+<p>  def assign_attributes(values, options = {})
+    sanitize_for_mass_assignment(values, options[:as]).each do |k, v|
+      send(&ldquo;#{k}=&rdquo;, v)
+    end
+  end
+end
+When using the :default role :</p>
+
+<p>customer = Customer.new
+customer.assign_attributes({ &ldquo;name&rdquo; =&gt; &ldquo;David&rdquo;, &ldquo;credit_rating&rdquo; =&gt; &ldquo;Excellent&rdquo;,:last_login =&gt; 1.day.ago }, :as =&gt; :default)
+customer.name # =&gt; &ldquo;David&rdquo;
+customer.credit_rating # =&gt; nil
+customer.last_login # =&gt; nil</p>
+
+<p>customer.credit_rating = &ldquo;Average&rdquo;
+customer.credit_rating # =&gt; &ldquo;Average&rdquo;
+And using the :admin role :</p>
+
+<p>customer = Customer.new
+customer.assign_attributes({ &ldquo;name&rdquo; =&gt; &ldquo;David&rdquo;, &ldquo;credit_rating&rdquo; =&gt; &ldquo;Excellent&rdquo;, :last_login =&gt; 1.day.ago }, :as =&gt; :admin)
+customer.name # =&gt; &ldquo;David&rdquo;
+customer.credit_rating # =&gt; &ldquo;Excellent&rdquo;
+customer.last_login # =&gt; nil
+To start from an all-closed default and enable attributes as needed, have a look at attr_accessible.</p>
+
+<p>Note that using Hash#except or Hash#slice in place of attr_protected to sanitize attributes won’t provide sufficient protection.</p>
+]]></content>
+  </entry>
+  
+</feed>

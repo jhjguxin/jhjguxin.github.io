@@ -1,0 +1,583 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>How To: Allow users to sign in using their username or email address - Francis's Octopress Blog</title>
+  <meta name="author" content="Francis Jiang">
+
+  
+  <meta name="description" content="How To: Allow users to sign in using their username or email address For this example, we will assume your model is called User Create a username &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jhjguxin.github.io/blog/2012/05/18/how-to-allow-users-to-sign-in-using-their-username-or-email-address">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Francis's Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-25901353-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Francis's Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jhjguxin.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/readme">Readme</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">How to: Allow Users to Sign in Using Their Username or Email Address</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-18T14:58:00+08:00" pubdate data-updated="true">May 18<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>How To: Allow users to sign in using their username or email address</h2>
+
+<p>For this example, we will assume your model is called <code>User</code></p>
+
+<h3>Create a username field in the <code>users</code> table</h3>
+
+
+<ol>
+    <li>Create a migration:
+<div>
+<pre> rails generate migration add_username_to_users username:string</pre>
+</div></li>
+    <li>Run the migration:
+<div>
+<pre> rake db:migrate</pre>
+</div></li>
+    <li>Modify the <code>User</code> model and add username to attr_accessible
+<div>
+<pre> attr_accessible :username</pre>
+</div></li>
+</ol>
+
+
+<h3>Create a login virtual attribute in Users</h3>
+
+
+<ol>
+    <li>Add login as an attr_accessor
+<div>
+<pre># Virtual attribute for authenticating by either username or email
+# This is in addition to a real persisted field like 'username'
+attr_accessor :login</pre>
+</div></li>
+    <li>Add login to attr_accessible
+<div>
+<pre>attr_accessible :login</pre>
+</div></li>
+</ol>
+
+
+<h3>Tell Devise to use :login in the authentication_keys</h3>
+
+
+<ol>
+    <li>Modify config/initializers/devise.rb to have:
+<div>
+<pre> config.authentication_keys = [ :login ]</pre>
+</div></li>
+</ol>
+
+
+<ul>
+    <li>If you are using multiple models with Devise, it is best to set the authentication_keys on the model itself if the keys may differ:
+<div>
+<pre>devise :database_authenticatable, :registerable,
+       :recoverable, :rememberable, :trackable, 
+       :validatable, :authentication_keys =&gt; [:login]</pre>
+</div></li>
+</ul>
+
+
+<ol>
+    <li>Overwrite Devise’s find_for_database_authentication method in Users model</li>
+</ol>
+
+
+<ul>
+    <li>For ActiveRecord:
+<div>
+<pre> def self.find_for_database_authentication(warden_conditions)
+   conditions = warden_conditions.dup
+   login = conditions.delete(:login)
+   where(conditions).where(["lower(username) = :value OR lower(email) = :value", { :value =&gt; login.strip.downcase }]).first
+ end</pre>
+</div></li>
+    <li>For Mongoid:
+Note: This code for Mongoid does some small things differently then the ActiveRecord code above. Would be great if someone could port the complete functionality of the ActiveRecord code over to Mongoid [basically you need to port the ‘where(conditions)’]. It is not required but will allow greater flexibility.
+<div>
+<pre>field :email
+
+def self.find_for_database_authentication(conditions)
+  login = conditions.delete(:login)
+  self.any_of({ :username =&gt; login }, { :email =&gt; login }).first
+end</pre>
+</div></li>
+</ul>
+
+
+<ul>
+    <li>For MongoMapper:
+<div>
+<pre>def self.find_for_database_authentication(conditions)
+  login = conditions.delete(:login).downcase
+  where('$or' =&gt; [{:username =&gt; login}, {:email =&gt; login}]).first
+end</pre>
+</div></li>
+</ul>
+
+
+<h3>Update your views</h3>
+
+
+<ol>
+    <li>Make sure you have the Devise views in your project so that you can customize them
+Rails 3:
+<div>
+<pre> rails g devise:views</pre>
+</div>
+Rails 2:
+<div>
+<pre> script/generate devise_views</pre>
+</div></li>
+    <li>Modify the views
+<ul>
+    <li>sessions/new.html.erb:
+<div>
+<pre>-  &lt;p&gt;&lt;%= f.label :email %&gt;&lt;br /&gt;
+-  &lt;%= f.email_field :email %&gt;&lt;/p&gt;
++  &lt;p&gt;&lt;%= f.label :login %&gt;&lt;br /&gt;
++  &lt;%= f.text_field :login %&gt;&lt;/p&gt;</pre>
+</div></li>
+    <li>registrations/new.html.erb
+<div>
+<pre>+  &lt;p&gt;&lt;%= f.label :username %&gt;&lt;br /&gt;
++  &lt;%= f.text_field :username %&gt;&lt;/p&gt;
+   &lt;p&gt;&lt;%= f.label :email %&gt;&lt;br /&gt;
+   &lt;%= f.email_field :email %&gt;&lt;/p&gt;</pre>
+</div></li>
+    <li>registrations/edit.html.erb
+<div>
+<pre>+  &lt;p&gt;&lt;%= f.label :username %&gt;&lt;br /&gt;
++  &lt;%= f.text_field :username %&gt;&lt;/p&gt;
+   &lt;p&gt;&lt;%= f.label :email %&gt;&lt;br /&gt;
+   &lt;%= f.email_field :email %&gt;&lt;/p&gt;</pre>
+</div></li>
+</ul>
+</li>
+</ol>
+
+
+<h3>Manipulate the :login label that Rails will display</h3>
+
+
+<ol>
+    <li>Modify config/locales/en.yml to contain something like:
+Rails 2:
+<div>
+<pre>activemodel:
+  attributes:
+    user:
+      login: "Username or email"</pre>
+</div>
+Rails 3:
+<div>
+<pre>en:
+  activerecord:
+    attributes:
+      user:  
+        login: "Username or email"</pre>
+</div></li>
+</ol>
+
+
+<h2>Allow users to recover their password using either username or email address</h2>
+
+
+<p>This section assumes you have run through the steps in Allow users to Sign In using their username or password.</p>
+
+<h3>Tell Devise to use :login in the reset_password_keys</h3>
+
+
+<ol>
+    <li>Modify config/initializers/devise.rb to have:
+<div>
+<pre> config.reset_password_keys = [ :login ]</pre>
+</div></li>
+</ol>
+
+
+<h3>Overwrite Devise’s finder methods in Users</h3>
+
+
+<ul>
+    <li>For ActiveRecord:
+<div>
+<pre> protected
+
+ # Attempt to find a user by it's email. If a record is found, send new
+ # password instructions to it. If not user is found, returns a new user
+ # with an email not found error.
+ def self.send_reset_password_instructions(attributes={})
+   recoverable = find_recoverable_or_initialize_with_errors(reset_password_keys, attributes, :not_found)
+   recoverable.send_reset_password_instructions if recoverable.persisted?
+   recoverable
+ end 
+
+ def self.find_recoverable_or_initialize_with_errors(required_attributes, attributes, error=:invalid)
+   (case_insensitive_keys || []).each { |k| attributes[k].try(:downcase!) }
+
+   ###the has some error in my issue, my you should comment two line bellow
+   attributes = attributes.slice(*required_attributes)
+   attributes.delete_if { |key, value| value.blank? }
+
+   if attributes.size == required_attributes.size
+     if attributes.has_key?(:login)
+        login = attributes.delete(:login)
+        record = find_record(login)
+     else  
+       record = where(attributes).first
+     end  
+   end  
+
+   unless record
+     record = new
+
+     required_attributes.each do |key|
+       value = attributes[key]
+       record.send("#{key}=", value)
+       record.errors.add(key, value.present? ? error : :blank)
+     end  
+   end  
+   record
+ end
+
+ def self.find_record(login)
+   where(["username = :value OR email = :value", { :value =&gt; login }]).first
+ end</pre>
+</div></li>
+    <li>For Mongoid:</li>
+</ul>
+
+
+<div>
+<pre>def self.find_record(login)
+  found = where(:username =&gt; login).to_a
+  found = where(:email =&gt; login).to_a if found.empty?
+  found
+end</pre>
+</div>
+
+
+<p>For Mongoid this can be optimized using a <a href="http://omarqureshi.net/posts/2010/06/17/mongoid-or-query/" rel="nofollow">custom javascript function</a></p>
+
+<div>
+<pre>def self.find_record(login)
+  where("function() {return this.username == '#{login}' || this.email == '#{login}'}")
+end</pre>
+</div>
+
+
+<ul>
+    <li>For MongoMapper:</li>
+</ul>
+
+
+<div>
+<pre>def self.find_record(login)
+  (self.where(:email =&gt; login[:login]).first || self.where(:username =&gt; login[:login]).first) rescue nil
+end</pre>
+</div>
+
+
+<h3>Update your views</h3>
+
+
+<ol>
+    <li>Modify the views
+<ul>
+    <li>passwords/new.html.erb:
+<div>
+<pre>-  &lt;p&gt;&lt;%= f.label :email %&gt;&lt;br /&gt;
+-  &lt;%= f.email_field :email %&gt;&lt;/p&gt;
++  &lt;p&gt;&lt;%= f.label :login %&gt;&lt;br /&gt;
++  &lt;%= f.text_field :login %&gt;&lt;/p&gt;</pre>
+</div></li>
+</ul>
+</li>
+</ol>
+
+
+<h2>Gmail or me.com Style</h2>
+
+
+<p>Another way to do this is me.com and gmail style. You allow an email or the username of the email. For public facing accounts, this has more security. Rather than allow some hacker to enter a username and then just guess the password, they would have no clue what the user’s email is. Just to make it easier on the user for logging in, allow a short form of their email to be used e.g “someone@domain.com” or just “someone” for short.</p>
+
+<div>
+<pre>before_create :create_login
+
+  def create_login             
+    email = self.email.split(/@/)
+    login_taken = User.where( :login =&gt; email[0]).first
+    unless login_taken
+      self.login = email[0]
+    else    
+      self.login = self.email
+    end        
+  end
+
+  def self.find_for_database_authentication(conditions)
+    self.where(:login =&gt; conditions[:email]).first || self.where(:email =&gt; conditions[:email]).first
+  end</pre>
+</div>
+
+
+<p>For the Rails 2 version (1.0 tree): There is no <code>find_for_database_authentication</code> method, so use <code>self.find_for_authentication</code> as the finding method.</p>
+
+<div>
+<pre>def self.find_for_authentication(conditions)
+  conditions = ["username = ? or email = ?", conditions[authentication_keys.first], conditions[authentication_keys.first]]
+  super
+end</pre>
+</div>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Francis Jiang</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-18T14:58:00+08:00" pubdate data-updated="true">May 18<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://jhjguxin.github.io/blog/2012/05/18/how-to-allow-users-to-sign-in-using-their-username-or-email-address/" data-via="jhjguxin" data-counturl="http://jhjguxin.github.io/blog/2012/05/18/how-to-allow-users-to-sign-in-using-their-username-or-email-address/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/05/17/how-use-the-collection-type-model-columnzen-yang-shi-yong-ji-he-lei-xing-de-mo-xing-zi-duan/" title="Previous Post: How use the collection type model column怎样使用集合类型的模型字段">&laquo; How use the collection type model column怎样使用集合类型的模型字段</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/05/20/shi-yong-rubyjie-xi-chun-zhen-ipku-qqwry-dot-dat/" title="Next Post: 使用ruby解析纯真IP库-qqwry.dat">使用ruby解析纯真IP库-qqwry.dat &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/">通过mongodump和mongorestore实现Mongodb备份和恢复 --by Chenzhou123520</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes/">Ruby on Rails 4.0 Release Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/rails-active-record-named-scopes/">Rails Active Record Named Scopes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/">晒晒我们的开源项目 ITEYE开源代码</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/">Single Sign-on 单点登录 Sso</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/jhjguxin">@jhjguxin</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'jhjguxin',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Francis Jiang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

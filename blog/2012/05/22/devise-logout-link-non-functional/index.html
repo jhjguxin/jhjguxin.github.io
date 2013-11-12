@@ -1,0 +1,355 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Devise logout link non-functional - Francis's Octopress Blog</title>
+  <meta name="author" content="Francis Jiang">
+
+  
+  <meta name="description" content="Devise logout link non-functional Resources: http://stackoverflow.com/questions/6110047/rails-devise-override-sessionscontroller the problem: In a &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jhjguxin.github.io/blog/2012/05/22/devise-logout-link-non-functional">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Francis's Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-25901353-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Francis's Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jhjguxin.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/readme">Readme</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Devise Logout Link Non-functional</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-22T13:37:00+08:00" pubdate data-updated="true">May 22<span>nd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>Devise logout link non-functional</h2>
+
+<p>Resources: <a href="http://stackoverflow.com/questions/6110047/rails-devise-override-sessionscontroller"><a href="http://stackoverflow.com/questions/6110047/rails-devise-override-sessionscontroller">http://stackoverflow.com/questions/6110047/rails-devise-override-sessionscontroller</a></a></p>
+
+<p>the problem: In a nutshell, when I try to install a logout link to my app it fails to work. Here&rsquo;s as much context as I can think to put here (if you want anything else, please poke me)&hellip;</p>
+
+<p>I&rsquo;ve got this in a haml view:</p>
+
+<pre><code>= link_to("Logout", destroy_user_session_path, :method =&gt; :delete) </code></pre>
+
+
+<p>It generates this in the view:</p>
+
+<pre><code>&lt;a href="/users/sign_out" data-method="delete" rel="nofollow"&gt;Logout&lt;/a&gt; </code></pre>
+
+
+<p>I verified that in my config/initializers/devise.rb I have this setting uncommented and correct:</p>
+
+<pre><code>config.sign_out_via = :delete </code></pre>
+
+
+<p>I validated the following route:</p>
+
+<pre><code>destroy_user_session DELETE /users/sign_out(.:format) {:action=&gt;"destroy", :controller=&gt;"devise/sessions"} </code></pre>
+
+
+<p>I also have this bit of trickery in my routes.rb, and I suspect this is related to my issue:</p>
+
+<pre><code>devise_for :users, :controllers =&gt; {:sessions =&gt; "devise/sessions", :registrations =&gt; "users"} resources :users </code></pre>
+
+
+<p>This last bit is because I want to manage (edit, create and delete) users in my own controller.</p>
+
+<p>The error message I&rsquo;m getting is as follows:</p>
+
+<pre><code>ActiveRecord::RecordNotFound in UsersController#show Couldn't find User with ID=sign_out Rails.root: /home/jaydel/projects/mbsquared-projects/Wilson-Goldrick app/controllers/users_controller.rb:16:in `show' </code></pre>
+
+
+<p>In my server logs I see this for the request:</p>
+
+<pre><code>Started GET "/users/sign_out" for 127.0.0.1 at 2011-08-04 13:08:51 -0500   Processing by UsersController#show as HTML   Parameters: {"id"=&gt;"sign_out"} </code></pre>
+
+
+<p>Outside it&rsquo;s slightly overcast and in the mid 80s. I&rsquo;m wearing a red shirt.</p>
+
+<p>Anyone have any ideas?</p>
+
+<p>1</p>
+
+<blockquote>The problem lies in the fact that in your logs the signout request is a GET request.
+<pre><code>Started GET "/users/sign_out" </code></pre>
+But the signout route is a DELETE
+<pre><code>destroy_user_session DELETE /users/sign_out(.:format) </code></pre>
+The reason why you are getting the exception is that is it getting confused with one of the routes created by <code>resources :users</code> which would be something like
+<pre><code>edit_user GET /users/(:id)(.:format) {:action=&gt;"edit", :controller=&gt;"users"} </code></pre>
+Basically &#8216;sign_out&#8217; is being mistaken as a id.
+
+I&#8217;m not sure why the delete link is not going through as a DELETE request. Though changing
+<pre><code>config.sign_out_via = :delete </code></pre>
+to be :get might solve the problem.</blockquote>
+
+
+<p>2</p>
+
+<blockquote>I think the more correct way to fix this, REST-wise, would be to change your logout links to use the DELETE method. It&#8217;s a very easy fix, changing this:
+
+link_to &#8220;Log out&#8221;, destroy_user_session_path
+
+to this:
+
+link_to &#8220;Log out&#8221;, destroy_user_session_path, :method =&gt; :delete</blockquote>
+
+
+<p>3</p>
+
+<blockquote>I had the same problem with rails 3.2 when I deleted from <code>application.js</code> this line:
+<pre><code>//= require jquery_ujs </code></pre>
+So, I think you have to insert this line in your <code>application.js</code> if you haven&#8217;t it there.
+
+PS. This behavior means that rails adapter for <code>jquery</code> doesn&#8217;t function. So you should make sure if it is loaded in your html in browser. You should test it in development mode because you will have compressed js in production and it will be very difficult to find something there.
+
+&nbsp;</blockquote>
+
+
+<p>&nbsp;</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Francis Jiang</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-22T13:37:00+08:00" pubdate data-updated="true">May 22<span>nd</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://jhjguxin.github.io/blog/2012/05/22/devise-logout-link-non-functional/" data-via="jhjguxin" data-counturl="http://jhjguxin.github.io/blog/2012/05/22/devise-logout-link-non-functional/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/05/21/shu-ju-qian-yi-%28rake-%29/" title="Previous Post: 数据迁移（rake ）">&laquo; 数据迁移（rake ）</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/05/23/parse-a-web-page-and-extract-some-json-arrays/" title="Next Post: Parse a web page and extract some json arrays">Parse a web page and extract some json arrays &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/">通过mongodump和mongorestore实现Mongodb备份和恢复 --by Chenzhou123520</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes/">Ruby on Rails 4.0 Release Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/rails-active-record-named-scopes/">Rails Active Record Named Scopes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/">晒晒我们的开源项目 ITEYE开源代码</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/">Single Sign-on 单点登录 Sso</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/jhjguxin">@jhjguxin</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'jhjguxin',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Francis Jiang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: json | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/tags/json/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Parse a web page and extract some json arrays]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/05/23/parse-a-web-page-and-extract-some-json-arrays/"/>
+    <updated>2012-05-23T10:29:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/05/23/parse-a-web-page-and-extract-some-json-arrays</id>
+    <content type="html"><![CDATA[<h2>Parse a web page and extract some json arrays</h2>
+
+<p>So I have some basic code below, which fetches the json from <a href="http://www.highcharts.com/demo/" rel="nofollow"><a href="http://www.highcharts.com/demo/">http://www.highcharts.com/demo/</a></a>. But I want to be able to extract a hash, more specifically this:</p>
+
+<pre><code>series: [{
+                    name: 'Tokyo',
+                    data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
+                }, {
+                    name: 'New York',
+                    data: [-0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5]
+                }, {
+                    name: 'Berlin',
+                    data: [-0.9, 0.6, 3.5, 8.4, 13.5, 17.0, 18.6, 17.9, 14.3, 9.0, 3.9, 1.0]
+                }, {
+                    name: 'London',
+                    data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
+                }]
+            });</code></pre>
+
+
+<p>&nbsp;</p>
+
+<p>Into to a hash so that I can access the different data points. Currently the script just spits out everything. Code below:</p>
+
+<pre><code>require "json"
+require "open-uri"
+
+
+$LOAD_PATH &lt;&lt; File.dirname(__FILE__)
+
+result = JSON.parse(open("http://www.highcharts.com/demo/").read)</code></pre>
+
+
+<p>&nbsp;</p>
+
+<p>There is no direct conversion since source is JavaScript code (not even valid JSON). There are many ways to accomplish this task (one ways more strict than others, generic escaping control may be tricky), but that&rsquo;s how I&rsquo;d do it: HTML &ndash;&gt; JS &ndash;&gt; JSON &ndash;&gt; Ruby array.</p>
+
+<pre><code>require 'open-uri'
+require 'json'
+
+html = open("http://www.highcharts.com/demo/").read
+js = html.match(/series: (\[\{.*?\}\])/m)[1]
+json = js.gsub(/(\w+):/i, '"\1":').gsub(/'/, '"')
+series = JSON.parse(json)
+# =&gt; [{"name"=&gt;"Tokyo", "data"=&gt;[7.0, 6.9, 9.5, 14.5, 18.2, ... </code></pre>
+
+
+<p>&nbsp;</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[理解JSON：3分钟课程]]></title>
+    <link href="http://jhjguxin.github.io/blog/2011/12/28/li-jie-json%3A3fen-zhong-ke-cheng/"/>
+    <updated>2011-12-28T18:57:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2011/12/28/li-jie-json:3fen-zhong-ke-cheng</id>
+    <content type="html"><![CDATA[<h2>理解JSON：3分钟课程</h2>
+
+<p>如果你跟我一样(我担心你就是)，那么，到目前为止，这应该是你对JSON的经验：</p>
+
+<ol>
+    <li>两个月前你<strong>从没</strong>听说过JSON</li>
+    <li>一个月前你听说了这个词但没有留意</li>
+    <li>一周前你发现这个词被提到多次，开始想，<em>没错 … 又有一些垃圾东西要学了</em></li>
+    <li>今天你被心灵深处的一个闹铃闹醒，心想：<strong>这该死的json究竟是个什么东西？为什么突然间到处都是它了！</strong></li>
+</ol>
+
+
+<p>于是晚上我乘坐了一辆慢腾腾的公交回到家(周五通常都是很慢)，然后给自己找了一大堆关于JSON资料。所以我可以文雅的带你进入JSON的大门。</p>
+
+<p>这就开始了 …</p>
+
+<h3>这几个字母是什么意思？</h3>
+
+
+<p><strong>J</strong>ava<strong>S</strong>cript <strong>O</strong>bject <strong>N</strong>otation.</p>
+
+<p>[一个滑稽的名字。它应该被称作<strong>L</strong>ightweight <strong>E</strong>cmascript <strong>O</strong>bject <strong>N</strong>otation, 或简称 &lsquo;LEON'。 <img src="http://www.linuxeden.com/upimg/allimg/110526/0S53B127-0.gif" alt=";-)" /> ]</p>
+
+<h3>它是个什么东西？</h3>
+
+
+<p>JSON是一种传递对象的语法，对象可以是name/value对，数组和其他对象。</p>
+
+<p>下面是一小段JSON代码：</p>
+
+<pre>点击收起{"skillz": {
+    "web":[
+        {"name": "html",
+         "years": "5"
+        },
+        {"name": "css",
+         "years": "3"
+        }],
+    "database":[
+        {"name": "sql",
+         "years": "7"
+        }]
+}}</pre>
+
+
+<p>你看懂了吧？那么当你再看到它时就知道它是JSON了。主要部分：</p>
+
+<h3>花括弧，方括弧，冒号和逗号</h3>
+
+
+<ol>
+    <li>花括弧表示一个“容器”</li>
+    <li>方括号装载数组</li>
+    <li>名称和值用冒号隔开</li>
+    <li>数组元素通过逗号隔开</li>
+</ol>
+
+
+<h3>把它想成“得了厌食症的XML”</h3>
+
+
+<p>(如果你跟我一样老，可以把它想成有层次关系的’.INI’文件)</p>
+
+<p>(如果你是个自以为是的Lisp小丑，可以把它想成”S-expressions”，自以为是吧)</p>
+
+<h3>JSON很像XML，因为：</h3>
+
+
+<ol>
+    <li>他们都“自我描述”，这意味着值都是可列举的，是“人类可读”的</li>
+    <li>都是有层级的。(例如你可以在值里再存放值)</li>
+    <li>都能被多种的编程语言解析和使用</li>
+    <li>都能使用AJAX方法来传递(例如httpWebRequest)</li>
+</ol>
+
+
+<h3>JSON跟XML不一样，因为：</h3>
+
+
+<ol>
+    <li>XML里在元素的开始和结尾处有尖括号和标签名：JSON使用花括号，而且只在数据的开始和结束时使用。</li>
+    <li>JSON更简练，毫无疑问更适合人类书写，也许也能让我们更快速的阅读。</li>
+    <li>JSON可以在JavaScript里简单的传递到eval()方法里使用</li>
+    <li>JSON里有数组{每个元素没有自己的名称}</li>
+    <li>在XML里你可以对一个元素使用任意想要的名称，在JSON里你不能使用Javascript里的保留字</li>
+</ol>
+
+
+<h3>可是为什么？它有什么好的？</h3>
+
+
+<p>当你写ajax之类的东西时，如果你使用JSON，你就勉去了手工拼写XML。更迅速。</p>
+
+<p>同样，当你写ajax之类的东西时，怎样最简单？XML方式还是JSON方式：</p>
+
+<div>
+<h3>XML方式：</h3>
+<ol>
+    <li>取回一个XML文件</li>
+    <li>循环它，从中提取值</li>
+    <li>处理这些值，等</li>
+</ol>
+<h3>对比</h3>
+<h3>JSON方式：</h3>
+<ol>
+    <li>取回JSON字符串。</li>
+    <li>‘eval’ JSON数据</li>
+</ol>
+</div>
+
+
+<h3>它是面向对象的吗？</h3>
+
+
+<p>No，严格的说，不是。</p>
+
+<p>就像是VB6里的面向对象一样。它提供了很好的封装机制，你可以使用它把数据和方法分离出来，但它不提供任何的继承，多型，接口，或其它类似的面向对象的东西</p>
+
+<p>很显然，它是使javascript变得更易于维护，分析和复用的方向上前进了一步。</p>
+
+<p><a href="http://www.thomasfrank.se/" target="_blank">Thomas Frank</a>写了一个<a title="classyJSON" href="http://www.thomasfrank.se/classy_json.html" target="_blank">灵巧的javascript库</a>，叫做<em>classyJSON</em>，它在JSON代码上增加了继承和定义范围等特征。</p>
+
+<h3>它只是用在客户端吗？</h3>
+
+
+<p>是，也不是。在服务器端你可以容易的把对象序列化成JSON或反之。对于<code>.net</code>，程序员可以使用类似<a href="http://www.newtonsoft.com/products/json/" target="_blank">Json.net</a>的类库使这些操作自动化(我估计是使用反射机制)，或你使用自己的程序来做这些事，可能会更快些。</p>
+
+<h3>3分钟将近结束….</h3>
+
+
+<p>就我所知，JSON是由一个叫做<a href="http://www.crockford.com/" target="_blank">Douglas Crockford</a>的家伙发明的。如果你喜欢的话，可以看一下<a href="http://www.crockford.com/" target="_blank">他的网站</a>，他非常的有趣。</p>
+
+<div>
+<h3>现在去读一下懂JSON的人写的东西</h3>
+(从<a href="http://del.icio.us/help/json" target="_blank">Delicious using JSON</a>上搜刮来的！)
+<ul>
+    <li><a href="http://homepages.nildram.co.uk/%7E9jack9/base2/speedtest/" target="_blank">DOM Query Speed Test</a></li>
+    <li><a href="http://24ways.org/advent/dont-be-eval" target="_blank">24 ways: Don’t be eval()</a></li>
+    <li><a href="http://www.aqee.net/2011/05/26/understanding-json-the-3-minute-lesson/" target="_blank">Understanding JSON: the 3 minute lesson</a></li>
+    <li><a href="http://www.hanselman.com/blog/SerializingObjectsAsJavaScriptUsingAtlasJSONNETAndAjaxPro.aspx" target="_blank">Serializing Objects as JavaScript using Atlas, JSON.NET and AjaxPro</a></li>
+    <li><a href="http://en.wikipedia.org/wiki/JSON" target="_blank">JSON – Wikipedia, the free encyclopedia</a></li>
+    <li><a href="http://www.ajaxprojects.com/ajax/tutorialdetails.php?itemid=11" target="_blank">Introduction to JSON</a></li>
+    <li><a href="http://www.xml.com/pub/a/2005/12/21/json-dynamic-script-tag.html" target="_blank">XML.com: JSON and the Dynamic Script Tag: Easy, XML-less Web Services for JavaScript</a></li>
+    <li><a href="http://www.thomasfrank.se/classy_json.html" target="_blank">Classy JSON</a></li>
+    <li><a href="http://simpletutorials.com/w3/index.php?pagename=Simple%20AJAX%20%28PHP%29%20tutorial" target="_blank">ajax json tutoral</a></li>
+    <li><a href="http://www.thomasfrank.se/xml_to_json.html" target="_blank">XML to JSON – a converter</a></li>
+</ul>
+</div>
+
+
+<h3>这就是全部。</h3>
+
+
+<p>我在几分钟的时间里只能整理出这些东西——所有我说的有些东西可能完全是错的。如果是这样，请留言告诉我，告诉我我有多傻。我会很高兴的纠正任何一个错误。祝你好运！</p>
+
+<p>(边注：如果你把 { 和 } 替换成”&lt;” 和 “/&gt;”，把”:” 换成 “/”… 你会得到一个非常像<a href="http://secretgeek.net/gaXml.asp" target="_blank">gaXml</a>的东西。有趣的世界。</p>
+
+<p>(边注2：<a href="http://en.wikipedia.org/wiki/Jason" target="_blank">Jason</a> 和 <a href="http://en.wikipedia.org/wiki/Ajax_%28mythology%29" target="_blank">Ajax</a> 都是希腊神话中的英雄。预告：另外一些即将出现的技术垃圾包括：Heracles, Perseus, Deucalion, Theseus
+and Bellerophon。)</p>
+]]></content>
+  </entry>
+  
+</feed>

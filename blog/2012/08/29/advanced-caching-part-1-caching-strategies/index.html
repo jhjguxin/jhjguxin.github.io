@@ -1,0 +1,761 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Advanced Caching: Part 1 - Caching Strategies - Francis's Octopress Blog</title>
+  <meta name="author" content="Francis Jiang">
+
+  
+  <meta name="description" content="Advanced Caching: Part 1 &ndash; Caching Strategies First, let&rsquo;s start with a brief overview of the different types of caching. We&rsquo;ll &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jhjguxin.github.io/blog/2012/08/29/advanced-caching-part-1-caching-strategies">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Francis's Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-25901353-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Francis's Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jhjguxin.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/readme">Readme</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Advanced Caching: Part 1 - Caching Strategies</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-29T23:15:00+08:00" pubdate data-updated="true">Aug 29<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>Advanced Caching: Part 1 &ndash; Caching Strategies</h2>
+
+<p>First, let&rsquo;s start with a brief overview of the different types of caching. We&rsquo;ll start from 50,000ft and work our way down.</p>
+
+<p>HTTP Caching: Uses HTTP headers (Last-Modified, ETag, If-Modified-Since, If-None-Match, Cache-Control) to determine if the browser can use a locally stored version of the response or if it needs to request a fresh copy from the origin server. Rails makes it easy to use HTTP caching, however the cache is managed outside your application. You may have notice the config.cache_control and Rack::Cache, Rack::ETag, Rack::ConditionalGet middlewares. These are used for HTTP caching.</p>
+
+<p>Page Caching: PRAISE THE GODS if you actually can use page caching in your application. Page caching is the holy grail. Save the entire thing. Don&rsquo;t hit the stack &amp; give some prerendered stuff back. Great for worthless applications without authentication and other highly dynamic aspects. This essentially works like HTTP caching, but the response will always contain the entire page. With page caching the application is skipping the work.</p>
+
+<p>Action Caching: Essentially the same as page caching, except all the before filters are run allowing you to check authentication and other stuff that may have prevented the request form rendering.</p>
+
+<p>Fragment Caching: Store parts of views in the cache. Usually for caching partials or large bits of HTML that are independent from other parts. IE, a list of top stories or something like that.</p>
+
+<p>Rails.cache: All cached content except cached pages are stored in the Rails.cache. We&rsquo;ll use this fact that later. You can cache arbitrary content in the Rails cache. You may cache a large complicated query that you don&rsquo;t want to wait to reinstantiate a ton of ActiveRecord::Base objects.</p>
+
+<p>Under the Hood
+All the caching layers are built on top of the next one. Page caching and HTTP caching are different because they do not use Rails.cache The cache is essentially a key-value store. Different things can be persisted. Strings are most common (for HTML fragments). More complicated objects can be persisted as well. Let&rsquo;s go through some examples of manually using the cache to store things. I am using memcached with dalli for all these examples. Dalli is the default memcached driver.</p>
+
+<h1>Rails.cache.write takes two values: key and a value</h1>
+
+<blockquote><p>Rails.cache.write &lsquo;foo&rsquo;, &lsquo;bar&rsquo;
+=> true</p></blockquote>
+
+<h1>We can read an object back</h1>
+
+<blockquote><p>Rails.cache.read &lsquo;foo&rsquo;
+=> &ldquo;bar&rdquo;</p></blockquote>
+
+<h1>We can store a complicated object as well</h1>
+
+<blockquote><p>hash = { :this => { :is => &lsquo;a hash&rsquo; }}
+Rails.cache.write &lsquo;complicated-object&rsquo;, object
+Rails.cache.read &lsquo;complicated-object&rsquo;
+=> {:this=>{:is=>&ldquo;a hash&rdquo;}}</p></blockquote>
+
+<h1>If we want something that doesn&rsquo;t exist, we get nil</h1>
+
+<blockquote><p>Rails.cache.read &lsquo;we-havent-cached-this-yet&rsquo;
+=> nil</p></blockquote>
+
+<h1>&ldquo;Fetch&rdquo; is the most common pattern. You give it a key and a block</h1>
+
+<h1>to execute to store if the cache misses. The blocks&rsquo;s return value is</h1>
+
+<h1>then written to the cache. The block is not executed if there is a</h1>
+
+<h1>hit.</h1>
+
+<blockquote><p>Rails.cache.fetch &lsquo;huge-array&rsquo; do</p>
+
+<pre><code>huge_array = Array.new
+1000000.times { |i| huge_array &lt;&lt; i }
+huge_array # retrun value is stored in cache
+</code></pre>
+
+<p>  end
+=> [huge array] # took some time to generate
+Rails.cache.read &lsquo;huge-array&rsquo;
+=> [huge array] # but returned instantly</p></blockquote>
+
+<h1>You can also delete everything from the cache</h1>
+
+<blockquote><p>Rails.cache.clear
+=> [true]
+Those are the basics of interacting with the Rails cache. The rails cache is a wrapper around whatever functionality is provided by the underlying storage system. Now we are ready to move up a layer.</p></blockquote>
+
+<p>Understanding Fragment Caching
+Fragment caching is taking rendered HTML fragments and storing them in the cache. Rails provides a cache view helper for this. Its most basic form takes no arguments besides a block. Whatever is rendered during the block will be written back to the cache. The basic principle behind fragment caching is that it takes much less time fetch pre-rendered HTML from the cache, then it takes to generate a fresh copy. This is appallingly true. If you haven&rsquo;t noticed, view generation can be very costly. If you have cachable content and are not using fragment caching then you need to implement this right away! Let&rsquo;s say you have generated a basic scaffold for a post:</p>
+
+<p>$ rails g scaffold post title:string content:text author:string
+Let&rsquo;s start with the most common use case: caching information specific to one thing. IE: One post. Here is a show view:</p>
+
+<!-- nothing fancy going on here -->
+
+
+<p><p>
+  <b>Title:</b>
+  &lt;%= @post.title %>
+</p></p>
+
+<p><p>
+  <b>Content:</b>
+  &lt;%= @post.content %>
+</p>
+Let&rsquo;s say we wanted to cache fragment. Simply wrap it in cache and Rails will do it.</p>
+
+<p>&lt;%= cache &ldquo;post-#{@post.id}&rdquo; do %>
+  <p></p>
+
+<pre><code>&lt;b&gt;Title:&lt;/b&gt;
+&lt;%= @post.title %&gt;
+</code></pre>
+
+<p>  </p></p>
+
+<p>  <p></p>
+
+<pre><code>&lt;b&gt;Content:&lt;/b&gt;
+&lt;%= @post.content %&gt;
+</code></pre>
+
+<p>  </p>
+&lt;% end %>
+The first argument is the key for this fragment. The rendered HTML is stored with this key: views/posts-1. Wait what? Where did that &lsquo;views&rsquo; come from? The cache view helper automatically prepends &lsquo;views&rsquo; to all keys. This is important later. When you first load the page you&rsquo;ll see this in the log:</p>
+
+<p>Exist fragment? views/post-2 (1.6ms)
+Write fragment views/post-2 (0.9ms)
+You can see the key and the operations. Rails is checking to see if the specific key exists. It will fetch or write it. In this case, it has not been stored so it is written. When you reload the page, you&rsquo;ll see a cache hit:</p>
+
+<p>Exist fragment? views/post-2 (0.6ms)
+Read fragment views/post-2 (0.0ms)
+There we go. We got HTML from the cache instead of rendering it. Look at the response times for the two requests:</p>
+
+<p>Completed 200 OK in 17ms (Views: 11.6ms | ActiveRecord: 0.1ms)
+Completed 200 OK in 16ms (Views: 9.7ms | ActiveRecord: 0.1ms)
+Very small differences in this case. 2ms different in view generation. This is a very simple example, but it can make a world of difference in more complicated situations.</p>
+
+<p>You are probably asking the question: &ldquo;What happens when the post changes?&rdquo; This is an excellent question! What well if the post changes, the cached content will not be correct. It is up to us to remove stuff from the cache or figure out a way to get new content from the cache. Let&rsquo;s assume that our blog posts now have comments. What happens when a comment is created? How can handle this?</p>
+
+<p>This is a very simple problem. What if we could figure out a solution to this problem: How can we create a cache miss when the associated object changes? We&rsquo;ve already demonstrated how we can explicitly set a cache key. What if we made a key that&rsquo;s dependent on the time the object was last updated? We can create a key composed of the record&rsquo;s ID and its updated_at timestamp! This way the cache key will change as the content changes and we will not have to expire things manually. (We&rsquo;ll come back to sweepers later). Let&rsquo;s change our cache key to this:</p>
+
+<p>&lt;% cache &ldquo;post-#{@post.id}&rdquo;, @post.updated_at.to_i do %>
+Now we can see we have a new cache key that&rsquo;s dependent on the object&rsquo;s timestamp. Check out the rails log:</p>
+
+<p>Exist fragment? views/post-2/1304291241 (0.5ms)
+Write fragment views/post-2/1304291241 (0.4ms)
+Cool! Now let&rsquo;s make it so creating a comment updates the post&rsquo;s timestamp:</p>
+
+<p>class Comment &lt; ActiveRecord::Base
+  belongs_to :post, :touch => true
+end
+Now all comments will touch the post and change the updated_at timestamp. You can see this in action by touch&#8217;ing a post.</p>
+
+<p>Post.find(1).touch</p>
+
+<p>Exist fragment? views/post-2/1304292445 (0.4ms)
+Write fragment views/post-2/1304292445 (0.4ms)
+This concept is known as: auto expiring cache keys. You create a composite key with the normal key and a time stamp. This will create some memory build up as objects are updated and no longer fresh. Here&rsquo;s an example. You have that fragment. It is cached. Then someone updates the post. You now have two versions of the fragment cached. If there are 10 updates, then there are 10 different versions. Luckily for you, this is not a problem for memcached! Memcached uses a LRU replacement policy. LRU stands for Least Recently Used. That means the key that hasn&rsquo;t been requested in the longest time will be replaced by newer content when needed. For example, assume your cache can only hold 10 posts. The next update will create a new key and hence new content. Version 0 will be deleted and version 11 will be stored in the cache. The total amount of memory is cycled between things that are requested. There are two things to consider in this approach. 1: You will not be able to ensure that content is kept in the cache as long as possible. 2. You will never have to worry about expiring things manually as long as timestamps are updated in the model layer. I&rsquo;ve found it is orders of magnitude easier to add a few :touch => true&rsquo;s to my relationships than it is to maintain sweepers. More on sweepers later. We must continue exploring cache keys.</p>
+
+<p>Rails uses auto-expiring cache keys by default. The problem is they are not mentioned at all the documentation or in the guides. There is one very handy method: ActiveRecord::Base.cache_key. This will generate a key like this: posts/2-20110501232725. This is the exact same thing we did ourselves. This method is very important because depending on what type of arguments you pass into the cache method, a different key is generated. For the time being, this code is functionally equal to our previous examples.</p>
+
+<p>&lt;%= cache @post do %>
+The cache helper takes different forms for arguments. Here are some examples:</p>
+
+<p>cache &lsquo;explicit-key&rsquo;      # views/explicit-key
+cache @post               # views/posts/2-1283479827349
+cache [@post, &lsquo;sidebar&rsquo;]  # views/posts/2-2348719328478/sidebar
+cache [@post, @comment]   # views/posts/2-2384193284878/comments/1-2384971487
+cache :hash => :of_things # views/localhost:3000/posts/2?hash_of_things
+If an Array is the first arguments, Rails will use cache key expansion to generate a string key. This means calling doing logic on each object then joining each result together with a &lsquo;/&rsquo;. Essentially, if the object responds to cache_key, it will use that. Else it will do various things. Here&rsquo;s the source for expand_cache_key:</p>
+
+<p>def self.expand_cache_key(key, namespace = nil)
+  expanded_cache_key = namespace ? &ldquo;#{namespace}/&rdquo; : &ldquo;&rdquo;</p>
+
+<p>  prefix = ENV[&ldquo;RAILS_CACHE_ID&rdquo;] || ENV[&ldquo;RAILS_APP_VERSION&rdquo;]
+  if prefix</p>
+
+<pre><code>expanded_cache_key &lt;&lt; "#{prefix}/"
+</code></pre>
+
+<p>  end</p>
+
+<p>  expanded_cache_key &lt;&lt;</p>
+
+<pre><code>if key.respond_to?(:cache_key)
+  key.cache_key
+elsif key.is_a?(Array)
+  if key.size &gt; 1
+    key.collect { |element| expand_cache_key(element) }.to_param
+  else
+    key.first.to_param
+  end
+elsif key
+  key.to_param
+end.to_s
+</code></pre>
+
+<p>  expanded_cache_key
+end
+This is where all the magic happens. Our simple fragment caching example could easily be converted into an idea like this: The post hasn&rsquo;t changed, so cache the entire result of /posts/1. You can do with this action caching or page caching.</p>
+
+<p>Moving on to Action Caching
+Action caching is an around filter for specific controller actions. It is different from page caching since before filters are run and may prevent access to certain pages. For example, you may only want to cache if the user is logged in. If the user is not logged in they should be redirected to the log in page. This is different than page caching. Page caching bypasses the rails stack completely. Most web applications of legitimate complexity cannot use page caching. Action caching is the next logical step for most web applications. Let&rsquo;s break the idea down: If the post hasn&rsquo;t changed, return the entire cached page as the HTTP response, else render the show view, cache it, and return that as the HTTP response. Or in code:</p>
+
+<h1>Note: you cannot run this code! This is just an example of what&rsquo;s</h1>
+
+<h1>happening under the covers using concepts we&rsquo;ve already covered.</h1>
+
+<p>Rails.cache.fetch &lsquo;views/localhost:3000/posts/1&rsquo; do
+  @post = Post.find params[:id]
+  render :show
+end
+Declaring action caching is easy. Here&rsquo;s how you can cache the show action:</p>
+
+<p>class PostsController &lt; ApplicationController</p>
+
+<p>  caches_action :show</p>
+
+<p>  def show</p>
+
+<pre><code># do stuff
+</code></pre>
+
+<p>  end
+end
+Now refresh the page and look at what&rsquo;s been cached.</p>
+
+<p>Started GET &ldquo;/posts/2&rdquo; for 127.0.0.1 at 2011-05-01 16:54:43 -0700
+  Processing by PostsController#show as HTML
+  Parameters: {&ldquo;id&rdquo;=>&ldquo;2&rdquo;}
+Read fragment views/localhost:3000/posts/2 (0.5ms)
+Rendered posts/show.html.erb within layouts/application (6.1ms)
+Write fragment views/localhost:3000/posts/2 (0.5ms)
+Completed 200 OK in 16ms (Views: 8.6ms | ActiveRecord: 0.1ms)
+Now that the show action for post #2 is cached, refresh the page and see what happens.</p>
+
+<p>Started GET &ldquo;/posts/2&rdquo; for 127.0.0.1 at 2011-05-01 16:55:27 -0700
+  Processing by PostsController#show as HTML
+  Parameters: {&ldquo;id&rdquo;=>&ldquo;2&rdquo;}
+Read fragment views/localhost:3000/posts/2 (0.6ms)
+Completed 200 OK in 1ms
+Damn. 16ms vs 1ms. You can see the difference! You can also see Rails reading that cache key. The cache key is generated from the url with action caching. Action caching is a combination of a before and around filter. The around filter is used to capture the output and the before filter is used to check to see if it&rsquo;s been cached. It works like this:</p>
+
+<p>Execute before filter to check to see if cache key exists?
+Key exists? &ndash; Read from cache and return HTTP Response. This triggers a render and prevents any further code from being executed.
+No key? &ndash; Call all controller and view code. Cache output using Rails.cache and return HTTP response.
+Now you are probably asking the same question as before: &ldquo;What do we do when the post changes?&rdquo; We do the same thing as before: we create a composite key with a string and a time stamp. The question now is, how do we generate a special key using action caching?</p>
+
+<p>Action caching generates a key from the current url. You can pass extra options using the :cache_path option. Whatever is in this value is passed into url_for using the current parameters. Remember in the view cache key examples what happened when we passed in a hash? We get a much different key than before:</p>
+
+<p>views/localhost:3000/posts/2?hash_of_things
+Rails generated a URL based key instead of the standard views key. This is because you may different servers. This ensures that each server has it&rsquo;s own cache key. IE, server one does not collide with server two. We could generate our own url for this resource by doing something like this:</p>
+
+<p>url_for(@post, :tag => @post.updated_at.to_i)
+This will generate this url:</p>
+
+<p><a href="http://localhost:3000/posts/1?tag=234897123978">http://localhost:3000/posts/1?tag=234897123978</a>
+Notice the ?tag=23481329847. This is a hack that aims to stop browsers from using HTTP caching on specific urls. If the URL has changed (timestamp changes) then the browser knows it must request a fresh copy. Rails 2 used to do this for assets like CSS and JS. Things have changed with the asset pipeline.</p>
+
+<p>Here&rsquo;s an example of generating a proper auto expring key for use with action caching.</p>
+
+<p>caches_action :show, :cache_path => proc { |c|
+  # c is the instance of the controller. Since action caching
+  # is declared at the class level, we don&rsquo;t have access to instance
+  # variables. If cache_path is a proc, it will be evaluated in the
+  # the context of the current controller. This is the same idea
+  # as validations with the :if and :unless options
+  #
+  # Remember, what is returned from this block will be passed in as
+  # extra parameters to the url_for method.
+  post = Post.find c.params[:id]
+  { :tag => post.updated_at.to_i }
+end
+This calls url_for with the parameters already assigned by it through the router and whatever is returned by the block. Now if you refresh the page, you&rsquo;ll have this:</p>
+
+<p>Started GET &ldquo;/posts/2&rdquo; for 127.0.0.1 at 2011-05-01 17:11:22 -0700
+  Processing by PostsController#show as HTML
+  Parameters: {&ldquo;id&rdquo;=>&ldquo;2&rdquo;}
+Read fragment views/localhost:3000/posts/2?tag=1304292445 (0.5ms)
+Rendered posts/show.html.erb within layouts/application (1.7ms)
+Write fragment views/localhost:3000/posts/2?tag=1304292445 (0.5ms)
+Completed 200 OK in 16ms (Views: 4.4ms | ActiveRecord: 0.1ms)
+And volia! Now we have an expiring cache key for our post! Let&rsquo;s dig a little deeper. We know the key. Let&rsquo;s look into the cache and see what it actually is! You can see the key from the log. Look it up in the cache.</p>
+
+<blockquote><p>Rails.cache.read &lsquo;views/localhost:3000/posts/2?tag=1304292445&rsquo;
+=> &ldquo;&lt;!DOCTYPE html>\n<html>\n<head>&hellip;..&rdquo;
+It&rsquo;s just a straight HTML string. Easy to use and return as the body. This method works well for singular resources. How can we handle the index action? I&rsquo;ve created 10,000 posts. It takes a good amount of time to render that page on my computer. It takes over 10 seconds. The question is, how can we cache this? We could use the most recently updated post for the time stamp. That way, when one post is updated, it will move to the top and create a new cache key. Here is the code without any action caching:</p></blockquote>
+
+<p>Started GET &ldquo;/posts&rdquo; for 127.0.0.1 at 2011-05-01 17:18:11 -0700
+  Processing by PostsController#index as HTML
+  Post Load (54.1ms)  SELECT &ldquo;posts&rdquo;.* FROM &ldquo;posts&rdquo; ORDER BY updated_at DESC LIMIT 1
+Read fragment views/localhost:3000/posts?tag=1304292445 (1.5ms)
+Rendered posts/index.html.erb within layouts/application (9532.3ms)
+Write fragment views/localhost:3000/posts?tag=1304292445 (36.7ms)
+Completed 200 OK in 10088ms (Views: 9535.6ms | ActiveRecord: 276.2ms)
+Now with action caching:</p>
+
+<p>Started GET &ldquo;/posts&rdquo; for 127.0.0.1 at 2011-05-01 17:20:47 -0700
+  Processing by PostsController#index as HTML
+Read fragment views/localhost:3000/posts?tag=1304295632 (1.0ms)
+Completed 200 OK in 11ms
+Here&rsquo;s the code for action caching:</p>
+
+<p>caches_action :index, :cache_path => proc {|c|
+  { :tag => Post.maximum(&lsquo;updated_at&rsquo;) }
+}
+We&rsquo;ll come back to this situation later. This is a better way to do this. Points to the reader if they know the problem.</p>
+
+<p>These are simple examples designed to show you who can create auto expiring keys for different situations. At this point we have not had to expire any thing ourselves! The keys have done it all for us. However, there are some times when you want more precise control over how things exist in the cache. Enter Sweepers.</p>
+
+<p>Sweepers
+Sweepers are HTTP request dependent observers. They are loaded into controllers and observe models the same way standard observers do. However there is one very important different. They are only used during HTTP requests. This means if you have things being created outside the context of HTTP requests sweepers will do you no good. For example, say you have a background process running that syncs with an external system. Creating a new model will not make it to any sweeper. So, if you have anything cached. It is up to you to expire it. Everything I&rsquo;ve demonstrated so far can be done with sweepers.</p>
+
+<p>Each cache<em>* method has an opposite expire</em>* method. Here&rsquo;s the mapping:</p>
+
+<p>caches_page , expire_page
+caches_action , expire_action
+cache , expire_fragment
+Their arguments work the same with using cache key expansion to find a key to read or delete. Depending on the complexity of your application, it may be easy to use sweepers or it may be impossible. It&rsquo;s easy to use sweepers with these examples. We only need to tie into the save event. For example, when a update or delete happens we need to expire the cache for that specific post. When a create, update, or delete happens we need to expire the index action. Here&rsquo;s what the sweeper would look like:</p>
+
+<p>class PostSweeper &lt; ActionController::Caching::Sweeper
+  observe Post</p>
+
+<p>  def after_create(post)</p>
+
+<pre><code>expire_action :index
+expire_action :show, :id =&gt; post
+# this is the same as the previous line
+expire_action :controller =&gt; :posts, :action =&gt; :show, :id =&gt; @post.id
+</code></pre>
+
+<p>  end
+end</p>
+
+<h1>then in the controller, load the sweeper</h1>
+
+<p>class PostsController &lt; ApplicationController
+  cache_sweeper :post_sweeper
+end
+I will not go into much depth on sweepers because they are the only thing covered in the rails caching guide. The work, but I feel they are clumsy for complex applications. Let&rsquo;s say you have comments for posts. What do you do when a comment is created for a post? Well, you have to either create a comment sweeper or load the post sweeper into the comments controller. You can do either. However, depending on the complexity of your model layer, it may quickly become infeasible to do cache expiration with sweepers. For example, let say you have a Customer. A customer has 15 different types of associated things. Do you want to put the sweeper into 15 different controllers? You can, but you may forget to at some point.</p>
+
+<p>The real problem with sweepers is that they cannot be used once your application works outside of HTTP requests. They can also be clumsy. I personally feel it&rsquo;s much easier to create auto expiring cache keys and only uses sweepers when I want to tie into very specific events. I&rsquo;d also argue that any well designed system does not need sweepers (or at least in very minimally).</p>
+
+<p>Now you should have a good grasp on how the Rails caching methods work. We&rsquo;ve covered how fragment caching uses the current view to generate a cache key. We introduced the concept of auto expiring cache keys using ActiveRecord#cache_key to automatically expire cached content. We introduced action caching and how it uses url_for to generate a cache key. Then we covered how you can pass things into url_for to generate a time stamped key to expire actions automatically. Now that we understand these lower levels we can move up to page caching and HTTP caching.</p>
+
+<p>Page Caching
+Page caching bypasses the entire application by serving up a file in /public from disk. It is different from action or fragment caching for a two reasons: content is not stored in memory and content is stored directly on the disk. You use page caching the same way you use action caching. This means you can use sweepers and and all the other things associated with them. Here&rsquo;s how it works.</p>
+
+<p>Webserver accepts an incoming request: GET /posts
+File exists: /public/posts.html
+posts.html is returned
+Your application code is never called.
+Since pages are written like public assets they are served as such. You will expliclity have to expire them. Warning! Forgetting to expire pages will cause you greif because you application code will not be called. Here&rsquo;s an example of page caching:</p>
+
+<p>PostsController &lt; ApplicationController
+  caches_page :index</p>
+
+<p>  def index</p>
+
+<pre><code># do stuff
+</code></pre>
+
+<p>  end
+When the server receives a request to GET /posts it will write the response from the application to /public/posts.html. The .html part is the format for that request. For example you can use page caching with JSON. GET /posts.json would generate /public/posts.json.</p>
+
+<p>Page caching is basically poor man&rsquo;s HTTP caching without any real benefits. HTTP caching is more useful.</p>
+
+<p>I&rsquo;ve not covered page caching in much depth because it&rsquo;s very likely that if you&rsquo;re reading this page caching is not applicable to your application. The Rails guides cover page caching in decent fashion. Follow up there if you need more information.</p>
+
+<p>HTTP Caching
+HTTP caching is the most complex and powerful caching strategy you can use. With great power comes great responsiblity. HTTP caching works at the protocol level. You can configure HTTP caching so the browser doesn&rsquo;t even need to contact your server at all. There are many ways HTTP caching can be configured. I will not cover them all here. I will give you an overview on how the system works and cover some common use cases.</p>
+
+<p>How It Works
+HTTP caching works at the protocol level. It uses a combination of headers and response codes to indicate weather the user agent should make a request or use a locally stored copy instead. The invalidation or expiring is based on ETags and Last-Modified timestamps. ETag stands for &ldquo;entity tag&rdquo;. It&rsquo;s a unique fingerprint for this request. It&rsquo;s usually a checksum of the respnose body. Origin servers (computers sending the source content) can set either of these fields along with a Cache-Control header. The Cache-Control header tells the user agent what it can do with this response. It answers questions like: how long can I cache this for and am I allowed to cache it? When the user agent needs to make a request again it sends the ETag and/or the Last-Modified date to the origin server. The origin server decides based on the ETag and/or Last-Modified date if the user agent can use the cached copy or if it should use new content. If the server says use the cached content it will return status 304: Not Modified (aka fresh). If not it should return a 200 (cache is stale) and the new content which can be cached.</p>
+
+<p>Let&rsquo;s use curl to see how this works out:</p>
+
+<p>$ curl -I <a href="http://www.example.com">http://www.example.com</a>
+HTTP/1.1 200 OK
+Cache-Control: max-age=0, private, must-revalidate
+Content-length: 822
+Content-Type: text/html
+Date: Mon, 09 Jul 2012 22:46:29 GMT
+Last-Modified: Mon, 09 Jul 2012 21:22:11 GMT
+Status: 200 OK
+Vary: Accept-Encoding
+Connection: keep-alive
+The Cache-Control header is a tricky thing. There are many many ways it can be configured. Here&rsquo;s the two easiest ways to break it down: private means only the final user agent can store the response. Public means any server can cache this content. (You know requests may go through many proxies right?). You can specify an age or TTL. This is how long it can be cached for. Then there is another common situation: Don&rsquo;t check with the server or do check with the server. This particular Cache-Control header means: this is a private (think per user cache) and check with the server everytime before using it.</p>
+
+<p>We can trigger a cache hit by sending the apporiate headers with the next request. This response only has a Last-Modified date. We can send this date for the server to compare. Send this value in the If-Modified-Since header. If the content hasn&rsquo;t changed since that date the server should return a 304. Here&rsquo;s an example using curl:</p>
+
+<p>$ curl -I -H &ldquo;If-Modified-Since: Mon, 09 Jul 2012 21:22:11 GMT&rdquo; <a href="http://www.example.com">http://www.example.com</a>
+HTTP/1.1 304 Not Modified
+Cache-Control: max-age=0, private, must-revalidate
+Date: Mon, 09 Jul 2012 22:55:53 GMT
+Status: 304 Not Modified
+Connection: keep-alive
+This response has no body. It simply tells the user agent to use the locally stored version. We could change the date and get a different response.</p>
+
+<p>$ curl -I -H &ldquo;If-Modified-Since: Sun, 08 Jul 2012 21:22:11 GMT&rdquo; <a href="http://www.example.com">http://www.example.com</a>
+HTTP/1.1 200 OK
+Cache-Control: max-age=0, private, must-revalidate
+Content-length: 822
+Content-Type: text/html
+Date: Mon, 09 Jul 2012 22:57:19 GMT
+Last-Modified: Mon, 09 Jul 2012 21:22:11 GMT
+Status: 200 OK
+Vary: Accept-Encoding
+Connection: keep-alive
+Caches determine freshness based on the If-None-Match and/or If-Modified-Since date. Using our existing 304 response we can supply a random etag to trigger a cache miss:</p>
+
+<p>$ curl -I -H &lsquo;If-None-Match: &ldquo;foo&rdquo;&rsquo; -H &ldquo;If-Modified-Since: Mon, 09 Jul 2012 21:22:11 GMT&rdquo; <a href="http://www.example.com">http://www.example.com</a>
+HTTP/1.1 304 Not Modified
+Cache-Control: max-age=0, private, must-revalidate
+Date: Mon, 09 Jul 2012 22:55:53 GMT
+Status: 304 Not Modified
+Connection: keep-alive
+Etags are sent using the If-None-Match header. Now that we understand the basics we can move onto higher level discussion.</p>
+
+<p>Rack::Cache
+HTTP caching is implemented in the webserver itself or at the application level. It is implemented at the application level in Rails. Rack::Cache is a middleware that sits at the top of the stack and intercepts requests. It will pass requests down to your app and store their contents. Or will it call down to your app and see what ETag and/or timestamps it returns for validation purposes. Rack::Cache acts as a proxy cache. This means it must respect caching rules described in the Cache-Control headers coming out of your app. This means it cannot cache private content but it can cache public content. Cachable content is stored in memcached. Rails configures this automatically.</p>
+
+<p>I&rsquo;ll cover one use case to illustrate how code flows through middleware stack to the actual app code and back up. Let&rsquo;s use a private per user cache example. Here&rsquo;s the cache control header: max-age-0, private, must-revalidate. Pretend this is some JSON API.</p>
+
+<p>The client sends initial request to /api/tweets.json
+Rack::Cache sees the request and ignores it since there is no caching information along with it.
+Application code is called. It returns a 200 response with a date and the some Cache-Control header.
+The client makes another request to /api/tweets.json with an If-Modified-Since header matching the date from the previous request.
+Rack::Cache sees that his request has cache information associated with it. It checks to see how it should handle this request. According to the Cache-Control header it has expired and needs to be checked to see if it&rsquo;s ok to use. Rack::Cache calls the application code.
+Application returns a response with the same date.
+Rack::Cache recieves the response, compares the dates and determines that it&rsquo;s a hit. Rack::Cache sends a 304 back.
+The client uses response body from request in step 1.
+HTTP Caching in Rails
+Rails makes it easy to implement HTTP caching inside your controllers. Rails provides two methods: stale? and fresh_when. They both do the same thing but in opposite ways. I prefer to use stale? because it makes more sense to me. stale? reminds more of Rails.cache.fetch so I stick with that. stale? works like this: checks to see if the incoming request ETag and/or Last-Modified date matches. If they match it calls head :not_modified. If not it can call a black of code to render a response. Here is an example:</p>
+
+<p>def show
+  @post = Post.find params[:id]
+  stale? @post do</p>
+
+<pre><code>respond_with @post
+</code></pre>
+
+<p>  end
+end
+Using stale? with an ActiveRecord object will automatically set the ETag and Last-Modified headers. The Etag is set to a MD5 hash of the objects cache_key method. The Last-Modified date is set to the object&rsquo;s updated_at method. The Cache-Control header is set to max-age=0, private, must-revalidate by default. All these values can be changed by passing in options to stale? or fresh_when. The methods take three options: :etag, :last_modified, and :public. Here are some more examples:</p>
+
+<h1>allow proxy caches to store this result</h1>
+
+<p>stale? @post, :public => true do
+  respond_with @post
+end</p>
+
+<h1>Let&rsquo;s stay your posts are frozen and have no modifications</h1>
+
+<p>stale? @post, :etag => @post.posted_at do
+  respond_with @post
+end
+Now you should understand how HTTTP caching works. Here are the important bits of code inside Rails showing it all works.</p>
+
+<h1>File actionpack/lib/action_controller/metal/conditional_get.rb, line 39</h1>
+
+<p>def fresh_when(record_or_options, additional_options = {})
+  if record_or_options.is_a? Hash</p>
+
+<pre><code>options = record_or_options
+options.assert_valid_keys(:etag, :last_modified, :public)
+</code></pre>
+
+<p>  else</p>
+
+<pre><code>record  = record_or_options
+options = { :etag =&gt; record, :last_modified =&gt; record.try(:updated_at) }.merge(additional_options)
+</code></pre>
+
+<p>  end</p>
+
+<p>  response.etag          = options[:etag]          if options[:etag]
+  response.last_modified = options[:last_modified] if options[:last_modified]
+  response.cache_control[:public] = true if options[:public]</p>
+
+<p>  head :not_modified if request.fresh?(response)
+end
+Here is the code for fresh?. This code should help you if you are confused on how resquests are validated. I found this code much easier to understand than the official spec.</p>
+
+<p>def fresh?(response)
+  last_modified = if_modified_since
+  etag          = if_none_match</p>
+
+<p>  return false unless last_modified || etag</p>
+
+<p>  success = true
+  success &amp;&amp;= not_modified?(response.last_modified) if last_modified
+  success &amp;&amp;= etag_matches?(response.etag) if etag
+  success
+end</p>
+
+<p><h2>Index</h2>
+<ol></p>
+
+<pre><code>&lt;li&gt;&lt;a href="http://www.broadcastingadam.com/2012/07/advanced_caching_part_1-caching_strategies"&gt;Caching Strategies&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.broadcastingadam.com/2012/07/advanced_caching_part_2-using_strategies"&gt;Using Strategies Effectively&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.broadcastingadam.com/2012/07/advanced_caching_part_3-static_assets"&gt;Handling Static Assets&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.broadcastingadam.com/2012/07/advanced_caching_part_4-stepping_outside_the_http_request"&gt;Stepping Outside the HTTP Request&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.broadcastingadam.com/2012/07/advanced_caching_part_5-tag_based_caching"&gt;Tag Based Caching&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.broadcastingadam.com/2012/07/advanced_caching_part_6-fast_json_apis"&gt;Fast JSON APIs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.broadcastingadam.com/2012/07/advanced_caching_part_7-tips_and_tricks"&gt;Tips and Tricks&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.broadcastingadam.com/2012/07/advanced_caching_part_8-conclusion"&gt;Conclusion&lt;/a&gt;&lt;/li&gt;
+</code></pre>
+
+<p></ol>
+<h3>Contact Me</h3>
+Find a problem or have a question about this post? <a href="http://twitter.com/adman65/">@adman65</a> on Twitter or Adman65 on #freenode. Find me in (#rubyonrails or #sproutcore). You can find my code on <a href="http://github.com/twinturbo/">GitHub</a> or hit me up on <a href="https://plus.google.com/u/0/116377228668850173159">Google+</a>.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Francis Jiang</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-29T23:15:00+08:00" pubdate data-updated="true">Aug 29<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>, <a class='category' href='/blog/categories/web/'>web</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://jhjguxin.github.io/blog/2012/08/29/advanced-caching-part-1-caching-strategies/" data-via="jhjguxin" data-counturl="http://jhjguxin.github.io/blog/2012/08/29/advanced-caching-part-1-caching-strategies/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/08/27/rails-counter-cache/" title="Previous Post: Rails counter cache">&laquo; Rails counter cache</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/08/30/google-chrome-keyboard-and-mouse-shortcuts/" title="Next Post: Google Chrome Keyboard and mouse shortcuts">Google Chrome Keyboard and mouse shortcuts &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/">通过mongodump和mongorestore实现Mongodb备份和恢复 --by Chenzhou123520</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes/">Ruby on Rails 4.0 Release Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/rails-active-record-named-scopes/">Rails Active Record Named Scopes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/">晒晒我们的开源项目 ITEYE开源代码</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/">Single Sign-on 单点登录 Sso</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/jhjguxin">@jhjguxin</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'jhjguxin',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Francis Jiang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

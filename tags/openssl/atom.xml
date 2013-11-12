@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: openssl | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/tags/openssl/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[rvm on ubuntu 11.10 install ruby 1.9.2 error]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/01/31/rvm-on-ubuntu-11-dot-10-install-ruby-1-dot-9-2-error/"/>
+    <updated>2012-01-31T22:42:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/01/31/rvm-on-ubuntu-11-dot-10-install-ruby-1-dot-9-2-error</id>
+    <content type="html"><![CDATA[<h2>rvm on ubuntu 11.10 install ruby 1.9.2 error</h2>
+
+<div>
+
+When trying to install ruby 1.9.2 using rvm I got a nasty suprise:
+<div>
+<pre>ossl_ssl.c:110:1: error: ‘SSLv2_method’ undeclared here (not in a function)
+ossl_ssl.c:111:1: error: ‘SSLv2_server_method’ undeclared here (not in a function)
+ossl_ssl.c:112:1: error: ‘SSLv2_client_method’ undeclared here (not in a function)
+make[1]: *** [ossl_ssl.o] Error 1
+make[1]: Leaving directory `/var/cache/ruby-rvm/src/ruby-1.9.2-p180/ext/openssl'
+make: *** [mkmain.sh] Error 1</pre>
+</div>
+<h2>The solution</h2>
+<div>
+<pre>sudo apt-get install ruby-rvm
+# make sure we have $rvm_path
+source /etc/profile
+# don't use ubuntus openssl
+rvm package install openssl
+or
+rvm pkg install openssl
+rvm install 1.9.2 --with-openssl-dir=$rvm_path/usr</pre>
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+</feed>

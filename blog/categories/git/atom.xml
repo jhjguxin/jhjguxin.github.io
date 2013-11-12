@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Git | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/blog/categories/git/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[git branch]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/01/30/git-branch/"/>
+    <updated>2012-01-30T14:13:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/01/30/git-branch</id>
+    <content type="html"><![CDATA[<h2>理解分支</h2>
+
+<p>git在创建分支的时候，实际上是从整个提交历史里的某个起点开始（该起点被记录为分支的祖先，标识分支的起始位置），创建提交历史树的枝干。</p>
+
+<p>由于git每次提交的时候均会记录当次提交的校检和，配合将数据打包存储，记录当前仓库相对于前一版本的变化。所以git的分支，实际上只是一串包含对象校检和（SHA-1）的文件。通过这个校检和，得出分支在提交历史树上的走向。</p>
+
+<p>git里创建删除分支变得非常简单。这一点不像svn那样每创建一个分支就需要整个目录拷贝一份。在git上非常推荐频繁使用分支。</p>
+
+<p>甚至可以一个issue(bug)一个分支，解决完切回主分支合并；没解决完就让分支继续走，主分支继续正常任务。</p>
+
+<h3>基本操作</h3>
+
+<ol>
+<li>创建和销毁</li>
+<li>分支列表：</li>
+</ol>
+
+
+<!-- more -->
+
+
+<p><code>
+$: git branch
+* master
+  prepub
+  product
+</code></p>
+
+<h3>创建分支：</h3>
+
+<pre><code>$: git branch prepub
+</code></pre>
+
+<h3>切换已有分支：</h3>
+
+<pre><code>$: git checkout prepub
+Switched to branch 'prepub'
+</code></pre>
+
+<h3>创建并切换分支：</h3>
+
+<p><code>
+$: git checkout -b issue1234
+Switched to branch 'issue1234'
+</code></p>
+
+<h3>删除分支：</h3>
+
+<p><code>
+$: git branch -d issue1234
+Deleted branch issue1234 (was b904c07).
+</code></p>
+
+<h3>合并和冲突</h3>
+
+<p>合并前要先切回 要并入 的分支。</p>
+
+<p>以下表示issue1234分支合并入master分支</p>
+
+<p><code>
+$: git checkout master
+$: git merge issue1234
+Merge made by recursive.
+ README |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+</code></p>
+
+<p>冲突的时候，git会报出哪些文件冲突，这时候需要手动解决完冲突方可提交。</p>
+
+<p><code>
+$: git merge issue1234
+Auto-merging index.html
+CONFLICT (content): Merge conflict in index.html
+Automatic merge failed; fix conflicts and then commit the result.
+</code></p>
+
+<p>通过git status查看冲突文件。</p>
+
+<p>```
+$: git status
+index.html: needs merge</p>
+
+<h1>On branch master</h1>
+
+<h1>Changed but not updated:</h1>
+
+<h1>(use &ldquo;git add <file>&hellip;&rdquo; to update what will be committed)</h1>
+
+<h1>(use &ldquo;git checkout &mdash; <file>&hellip;&rdquo; to discard changes in working directory)</h1>
+
+<p>#</p>
+
+<h1>unmerged:   index.html</h1>
+
+<p>#
+```</p>
+
+<p>打开index.html，git会在冲突位置做上标示。</p>
+
+<p>```
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD:index.html</p>
+
+<div id="footer">contact : email.support@github.com</div>
+
+
+<p>=======</p>
+
+<div id="footer">
+  please contact us at support@github.com
+</div>
+
+
+<blockquote><blockquote><blockquote><blockquote><blockquote><blockquote><blockquote><p>iss53:index.html
+```</p></blockquote></blockquote></blockquote></blockquote></blockquote></blockquote></blockquote>
+
+<p>解决完冲突，这时候需要手动标识该冲突已经解决，类似svn的resolved。</p>
+
+<p>```
+$: git add index.html
+$: git status</p>
+
+<h1>On branch master</h1>
+
+<h1>Changed but not updated:</h1>
+
+<h1>(use &ldquo;git add <file>&hellip;&rdquo; to update what will be committed)</h1>
+
+<h1>(use &ldquo;git checkout &mdash; <file>&hellip;&rdquo; to discard changes in working directory)</h1>
+
+<p>#</p>
+
+<h1>modified:   index.html</h1>
+
+<p>#
+```</p>
+
+<p>这时候就可以提交了。</p>
+
+<p><code>
+$: git commit -m "合并issue1234"
+[master e3ece67] 合并issue1234
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+</code></p>
+
+<h3>管理多个分支</h3>
+
+<p>前面提到，git非常推荐频繁使用分支，在大量分支的情况下，我们需要对分支做好管理（曾经一次上线，开了13个分支 = =）</p>
+
+<p>通过-v可以看到最后一次提交日志。</p>
+
+<p><code>
+$: git branch -v
+* master          b904c07 把丘迟的产品搜改动合并一下
+  p4popt          8b93380 p4p加上refpid，开发给出来的配置是 P4P_refpid
+  prepub          a6cc66b P4P解析参数少一次替换，顺便解决\!失效的问题
+  product         301ae4e rankbar图片换成data uri
+</code></p>
+
+<p>通过&mdash;merged和&mdash;no-merged来查看分支是否已经合并完成。</p>
+
+<p><code>
+$: git branch --merged
+* master
+  p4popt
+$: git branch --no-merged
+  prepub
+  product
+</code></p>
+
+<p>未合并的分支，在删除时会提示分支未合并。</p>
+
+<p>```
+$: git branch -d product
+warning: deleting branch &lsquo;product&rsquo; that has been merged to</p>
+
+<pre><code>     'refs/remotes/s/product', but it is not yet merged to HEAD.
+</code></pre>
+
+<p>Deleted branch product (was 301ae4e).
+```</p>
+
+<h3>分支管理流程</h3>
+
+<p>一般情况下，分支可以划分为长分支和短分支两种。</p>
+
+<p>长分支
+长期任务
+prepub：上线前合并，根据上线列表，从各个分支中集中到该分支，统一部署提测
+master：上线后合并，长期保留一个稳定可用的分支应付紧急任务
+项目
+较难解决的bug
+新特性试验田
+重构
+长分支，经常会落后其他分支一大截，需要养成习惯，适时从其他重要分支进行合并， 尤其是项目分支 。</p>
+
+<p>短分支
+临时需求
+小bug
+分支可视化
+git本身的log提供&mdash;gragh选项，可以提供字符界面的分支可视化视图。</p>
+
+<p><code>
+$: git log --graph --pretty=oneline
+| *   50cc7a78b7f2704a2014afa3667f6ac5b5b47374 merging refs/remotes/origin/prepub into HEAD
+| |\
+| | * 8f685bd1be3757effe32d6ff37f86bd07dd2b549 又被无情地冲掉了代码
+| * | 75a17b4ad610327a9b0e1eecfc6c4bf9cade7359 修改icon
+| |/
+| *   146a0990de450c854b1a7d9995e12979fff2d537 merging refs/remotes/origin/prepub into HEAD
+| |\
+| | *   93b379680796eb443961bb8c59008f8ae5678be4 Merge branch 'prepub' of search.ued.taobao.net:projects/search into prepub
+| | |\
+| | * | 8b93380ccfb9020bf8f8e1e8a4a553601de3c788 p4p加上refpid，开发给出来的配置是 P4P_refpid
+| * | | 08201de89834f6fecb195c2b7c3546b5cafccc85 秒杀折扣浮动层样式
+| | |/
+| |/|
+| * | 0f4d1df17f79c7aa3ca3d36ab848c10b78029010 修改icon
+| * | ae719fc29cc550321f284323db06a294b97c1398 p4p创意优化
+| |/
+| * a6d4501e1456589d30ab1a5800b651876629c8ca 修改icon
+</code></p>
+
+<p>git还有很多GUI工具，可以提供可视化地分支走势图，比如gitk，qgit，GitX等等。</p>
+
+<p>远程分支
+至今为止，前面所有提到的概念都是直接本地操作的，并不需要任何网络连接。</p>
+
+<p>而git本身是一个分布式代码管理工具(DVCS)，所以分支管理上，存在本地分支和远程分支两种概念。</p>
+
+<p>可以简单的理解，远程分支就是别人的本地分支push到服务器上的时候产生的。比如master就是一个最典型的远程分支（默认）。</p>
+
+<pre><code>$: git push origin master
+</code></pre>
+
+<p>除了master之外，我们还可以随便创建分支，然后push到服务器上去。</p>
+
+<p><code>
+$: git push origin prepub
+Counting objects: 27, done.
+Delta compression using up to 2 threads.
+Compressing objects: 100% (15/15), done.
+Writing objects: 100% (15/15), 7.30 KiB, done.
+Total 15 (delta 10), reused 0 (delta 0)
+To git@search.ued.taobao.net:projects/search.git
+   1b95a57..779dbe1  prepub -&gt; prepub
+</code></p>
+
+<p>远程分支的标识形式为{remote/branch}，比如origin/product。</p>
+
+<p><code>
+$: git branch -a
+  master
+  p4popt
+* prepub
+  product
+  remotes/origin/HEAD -&gt; origin/master
+  remotes/origin/master
+  remotes/origin/p4popt
+  remotes/origin/prepub
+  remotes/origin/product
+</code></p>
+
+<p>远程分支和本地分支需要区分，所以，在从服务器上拉取特定分支的时候，需要指定本地分支名字。</p>
+
+<p><code>
+$: git branch product origin/product
+Branch product set up to track remote branch product from origin.
+</code></p>
+
+<p>而1.6.2以上版本的git，可以通过&mdash;track选项，简化这一过程。这也是为什么直接执行git clone的时候，会自动创建本地master分支的原因。（实际上，pull操作相当于fetch+merge。）</p>
+
+<p><code>
+$: git checkout --track origin/product
+Branch product set up to track remote branch refs/remotes/origin/product.
+Switched to a new branch "product"
+</code></p>
+
+<p>远程分支和本地分支是松散的结构，可以把任意远程分支合并到任意本地分支里；同样，也可以把任意本地分支push到任意远程分支上。</p>
+
+<p>```</p>
+
+<h1>THIS WILL MESS UP YOUR REPO!!</h1>
+
+<p>$: git branch
+  master
+* prepub
+  p4popt
+  product
+$: git pull origin product
+$: git push origin master
+```</p>
+
+<p>同步本地远程分支。</p>
+
+<pre><code>$: git fetch origin
+</code></pre>
+
+<p>删除远程分支。</p>
+
+<pre><code>$: git push origin :p4popt
+To git@search.ued.taobao.net
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[posttest]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/01/29/posttest/"/>
+    <updated>2012-01-29T23:49:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/01/29/posttest</id>
+    <content type="html"><![CDATA[<h1>Liquid template engine</h1>
+
+<h2>Introduction</h2>
+
+<p>Liquid is a template engine which was written with very specific requirements:</p>
+
+<ul>
+<li>It has to have beautiful and simple markup. Template engines which don&rsquo;t produce good looking markup are no fun to use.</li>
+<li>It needs to be non evaling and secure. Liquid templates are made so that users can edit them. You don&rsquo;t want to run code on your server which your users wrote.</li>
+<li>It has to be stateless. Compile and render steps have to be seperate so that the expensive parsing and compiling can be done once and later on you can just render it passing in a hash with local variables and objects.</li>
+</ul>
+
+
+<h2>Why you should use Liquid</h2>
+
+<ul>
+<li>You want to allow your users to edit the appearance of your application but don&rsquo;t want them to run <strong>insecure code on your server</strong>.</li>
+<li>You want to render templates directly from the database</li>
+<li>You like smarty (PHP) style template engines</li>
+<li>You need a template engine which does HTML just as well as emails</li>
+<li>You don&rsquo;t like the markup of your current templating engine</li>
+</ul>
+
+
+<!-- more -->
+
+
+<h2>What does it look like?</h2>
+
+<p><code></p>
+
+<ul id="products">
+  
+</ul>
+
+
+<p></code></p>
+
+<h2>Howto use Liquid</h2>
+
+<p>Liquid supports a very simple API based around the Liquid::Template class.
+For standard use you can just pass it the content of a file and call render with a parameters hash.</p>
+
+<p><code>ruby
+@template = Liquid::Template.parse("hi ") # Parses and compiles the template
+@template.render('name' =&gt; 'tobi')                # =&gt; "hi tobi"
+</code></p>
+
+<p><a href="http://travis-ci.org/Shopify/liquid"><img src="https://secure.travis-ci.org/Shopify/liquid.png" alt="Build Status" /></a></p>
+
+<h1>Template Data</h1>
+
+<p>Jekyll traverses your site looking for files to process. Any files with [[YAML Front Matter]] are subject to processing. For each of these files, Jekyll makes a variety of data available to the pages via the &ldquo; templating system&rdquo;:<a href="http://wiki.github.com/shopify//-for-designers.">http://wiki.github.com/shopify//-for-designers.</a> The following is a reference of the available data.</p>
+
+<p>h2. Global</p>
+
+<p>| <em>Variable</em> | <em>Description</em> |
+| @site@ | Sitewide information + Configuration settings from @_config.yml@ |
+| @page@ | This is just the [[YAML Front Matter]] with 2 additions: @url@ and @content@. |
+| @content@ | In layout files, this contains the content of the subview(s). This is the variable used to insert the rendered content into the layout. This is not used in post files or page files. |
+| @paginator@| When the @paginate@ configuration option is set, this variable becomes available for use. |</p>
+
+<p>h2. Site</p>
+
+<p>| <em>Variable</em> | <em>Description</em> |
+| @site.time@ | The current Time (when you run the jekyll command). |
+| @site.posts@ | A reverse chronological list of all Posts. |
+| @site.related_posts@ |If the page being processed is a Post, this contains a list of up to ten related Posts. By default, these are low quality but fast to compute. For high quality but slow to compute results, run the jekyll command with the @&mdash;lsi@ (latent semantic indexing) option. |
+| @site.categories.CATEGORY@ | The list of all Posts in category @CATEGORY@. |
+| @site.tags.TAG@ | The list of all Posts with tag @TAG@. |
+| @site.[CONFIGURATION_DATA]@ | As of <em>0.5.2</em>, all data inside of your @<em>config.yml@ is now available through the @site@ variable. So for example, if you have @url: <a href="http://mysite.com@">http://mysite.com@</a> in your configuration file, then in your posts and pages it can be used like so: <code>http://jhjguxin.github.io</code>. Jekyll does not parse a changed @</em>config.yml@ in @auto@ mode, you have to restart jekyll. |</p>
+
+<p>h2. Page</p>
+
+<p>| <em>Variable</em> | <em>Description</em> |
+| @page.url@ | The URL of the Page without the domain. e.g. @/es/index.html@ |
+| @page.content@ | The un-rendered content of the Page. |</p>
+
+<p>Note: Any custom front matter that you specify will be available under @page@. For example, if you specify @custom_css: true@ in a page&rsquo;s front matter, that value will be available in templates as @page.custom_css@</p>
+
+<p>h2. Post</p>
+
+<p>| <em>Variable</em> | <em>Description</em> |
+| @post.title@ | The title of the Post. |
+| @post.url@ | The URL of the Post without the domain. e.g. @/2008/12/14/my-post.html@ |
+| @post.date@ | The Date assigned to the Post. This can be overridden in a post&rsquo;s front matter by specifying a new date/time in the format @YYYY-MM-DD HH:MM:SS@ |
+| @post.id@ | An identifier unique to the Post (useful in RSS feeds). e.g. @/2008/12/14/my-post@ |
+| @post.categories@ | The list of categories to which this post belongs. Categories are derived from the directory structure above the ==<em>posts== directory. For example, a post at @/work/code/</em>posts/2008-12-24-closures.textile@ would have this field set to @[&lsquo;work&rsquo;, &lsquo;code&rsquo;]@. These can also be specified in the [[YAML Front Matter]] |
+| @post.tags@ | The list of tags to which this post belongs. These can be specified in the [[YAML Front Matter]] |
+| @post.content@ | The rendered content of the Post. |</p>
+
+<p>h2. Paginator</p>
+
+<p><em>note: only available in index files, can be in subdirectory /blog/index.html</em></p>
+
+<p>| <em>Variable</em> | <em>Description</em> |
+| @paginator.per_page@ | Number of posts per page. |
+| @paginator.posts@ | Posts available for that page. |
+| @paginator.total_posts@ | Total number of posts. |
+| @paginator.total_pages@ | Total number of pages. |
+| @paginator.page@ | The number of the current page. |
+| @paginator.previous_page@ | The number of the previous page. |
+| @paginator.next_page@ | The number of the next page. |</p>
+]]></content>
+  </entry>
+  
+</feed>

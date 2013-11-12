@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: linecache19 | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/tags/linecache19/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[rvm下安装gem编译失败 linecache19]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/02/14/rvmxia-an-zhuang-gembian-yi-shi-bai-linecache19/"/>
+    <updated>2012-02-14T15:41:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/02/14/rvmxia-an-zhuang-gembian-yi-shi-bai-linecache19</id>
+    <content type="html"><![CDATA[<h2>rvm下安装gem编译失败 linecache19</h2>
+
+<p>报错:An error occured while installing linecache19 (0.5.12), and Bundler cannot continue.</p>
+
+<p>以下引用stackoverflow中的解答</p>
+
+<p>ruby -v</p>
+
+<p>then manually use &mdash;force to bypass version check:</p>
+
+<p>gem install ruby_core_source</p>
+
+<p>gem install linecache19 &mdash;force</p>
+
+<p>if you faced with another error starting with following lines:</p>
+
+<p>checking for vm_core.h&hellip; no</p>
+
+<p><strong><em> extconf.rb failed </em></strong></p>
+
+<p>You have to explicitly set the source path to vm_core.h</p>
+
+<p>In my case:</p>
+
+<p>$ which ruby</p>
+
+<p>/<span style="background-color: #ffd700;">User</span>s/Reza/.rvm/rubies/ruby-1.9.2-rc2/bin/ruby</p>
+
+<p>$ echo $rvm_path</p>
+
+<p>/<span style="background-color: #ffd700;">User</span>s/Reza/.rvm/</p>
+
+<p>so to install linecache19 :</p>
+
+<p>gem install ruby_core_source</p>
+
+<p>gem install linecache19 &mdash;force &mdash; &mdash;with-ruby-include=$rvm_path/src/ruby-1.9.2-rc2/</p>
+
+<p>ruby-debug19 has a similar issue:</p>
+
+<p>gem install ruby-debug19 &mdash;force &mdash; &mdash;with-ruby-include=$rvm_path/src/ruby-1.9.2-rc2/</p>
+
+<p>That&rsquo;s all!</p>
+
+<p>=====================================</p>
+
+<p>关键地方:</p>
+
+<p>gem install ruby_core_source</p>
+
+<p>if cannot <code>rvm pkg install openssl</code>
+  <code>sudo rvm pkg install openssl</code>
+end</p>
+
+<p>rvm remove 1.9.2-p290
+rvm install 1.9.2-p290 &mdash;with-openssl-dir=$rvm_path/usr</p>
+
+<h2>ruby-debug and ruby 1.9</h2>
+
+
+<p>If you have trouble installing ruby-debug19 try installing with the following command:</p>
+
+<pre>$ rvm reinstall 1.9.2 --patch debug --force-autoconf
+#可以先试试下面这个命令
+$ gem install ruby-debug19 -- --with-ruby-include="${MY_RUBY_HOME/rubies/src}"</pre>
+
+]]></content>
+  </entry>
+  
+</feed>

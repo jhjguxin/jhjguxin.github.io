@@ -1,0 +1,1617 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Francis's Octopress Blog</title>
+  <meta name="author" content="Francis Jiang">
+
+  
+  <meta name="description" content="rails 3.1.0 ActionView::Template::Errror (application.css isn&rsquo;t precompiled) I made a basic rails app with a simple pages controller with an &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jhjguxin.github.io/blog/page/10">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Francis's Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-25901353-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Francis's Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jhjguxin.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/readme">Readme</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/02/23/rails-3-dot-1-0-actionview-template-errror-application-dot-css-isnt-precompiled/">Rails 3.1.0 ActionView::Template::Errror (application.css Isn&#8217;t Precompiled)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-23T16:30:00+08:00" pubdate data-updated="true">Feb 23<span>rd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>rails 3.1.0 ActionView::Template::Errror (application.css isn&rsquo;t precompiled)</h2>
+
+<p>I made a basic rails app with a simple pages controller with an index function and when I load the page I get:</p>
+
+<p>ActionView::Template::Error (application.css isn&rsquo;t precompiled):
+app/views/layouts/application.html.erb:5:in `_app_views_layouts_application_html</p>
+
+<p>By default Rails assumes that you have your files precompiled in the production environment, if you want use live compiling (compile your assets during runtime) in production you must set the config.assets.compile to true.</p>
+
+<p> Demo</p>
+
+<h1>config/environments/production.rb</h1>
+
+<p>&hellip;
+config.assets.compile = true
+&hellip;
+You can use this option to fallback to Sprockets when you are using precompiled assets but there are any missing precompiled files.</p>
+
+<p>If config.assets.compile option is set to false and there are missing precompiled files you will get an &ldquo;AssetNoPrecompiledError&rdquo; indicating the name of the missing file.</p>
+
+<p><strong>You will get better performance in production if you set config.assets.compile to false in production.rb and precompile your assets. You can precompile with this rake task:</strong></p>
+
+<p>bundle exec rake assets:precompile</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/02/16/ubuntuxia-cha-kan-jin-cheng-duan-kou/">Ubuntu下查看进程端口</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-16T15:08:00+08:00" pubdate data-updated="true">Feb 16<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>ubuntu下查看进程端口</h2>
+
+<h1>查看所有打开的端口及服务名（注意这里显示的服务名只是标准端口对应的服务名，可能并不准确）</h1>
+
+<p>nmap localhost</p>
+
+<h1>查看哪些进程打开了指定端口port（对于守护进程必须以root用户执行才能查看到）</h1>
+
+<p>lsof -i:port             +sudo比较好</p>
+
+<h1>查看哪些进程打开了指定端口port，最后一列是进程ID（此方法对于守护进程作用不大）</h1>
+
+<p>netstat -nap|grep port</p>
+
+<h1>查看端口号对应的系统服务名称</h1>
+
+<p>cat /etc/services</p>
+
+<h1>启动｜停止｜重启系统服务</h1>
+
+<p>sudo /etc/init.d/service start|stop|restart</p>
+
+<p>常见端口详细说明</p>
+
+<p>服务及对应端口　　　 　　　　　　服务及对应端口　　　
+Echo（7）　　　　　　　　　　　　　　　　　FTP（21）
+Ssh（22）　　　　　　　　　　　　　　　　　Telnet（23）
+SMTP（25）　　　　　　　　　　　　　　　　 DNS（53）
+HTTP（80）　　　　　　　　　　　　　　　　 MTA-X.400 over TCP/IP（102）
+pop3（110）　　　　　　　　　　　　　　　　NETBIOS Name Service（137、
+138、139）
+IMAP v2（143）　　　　　　　　　　　　　　 SNMP（161）
+LDAP、ILS（389）　　　　　　　　　　　　　 Https（443）
+IMAP(993)                                SQL(1433)
+NetMeeting T.120(1503)                   NetMeeting(1720)
+NetMeeting Audio Call Control(1731)      超级终端(3389)<br/>
+QQ客户端(4000)                            pcAnywere(5631)
+RealAudio(6970)                           Sygate (7323)
+OICQ(8000)                               Wingate(8010)
+代理端口(8080)
+1、端口：7
+服务：Echo
+说明：能看到许多人搜索Fraggle放大器时，发送到X.X.X.0和X.X.X.255的信息。
+2、端口：21
+服务：FTP
+说明：FTP服务器所开放的端口，用于上传、下载。最常见的攻击者用于寻找打开anonymous的FTP服务器的方法。这些服务器带有可读写的目录。木马Doly Trojan、Fore、Invisible FTP、WebEx、WinCrash和Blade Runner所开放的端口。
+3、端口：22
+服务：Ssh
+说明：PcAnywhere建立的TCP和这一端口的连接可能是为了寻找ssh。这一服务有许多弱点，如果配置成特定的模式，许多使用RSAREF库的版本就会有不少的漏洞
+存在。
+4、端口：23
+服务：Telnet
+说明：远程登录，入侵者在搜索远程登录UNIX的服务。大多数情况下扫描这一端口是为了找到机器运行的操作系统。还有使用其他技术，入侵者也会找到密码。木马Tiny Telnet Server就开放这个端口。
+5、端口：25
+服务：SMTP
+说明：SMTP服务器所开放的端口，用于发送邮件。入侵者寻找SMTP服务器是为了传递他们的SPAM。入侵者的帐户被关闭，他们需要连接到高带宽的E-MAIL服务器上，将简单的信息传递到不同的地址。木马Antigen、Email Password Sender、Haebu Coceda、Shtrilitz Stealth、WinPC、WinSpy都开放这个端口。
+6、端口：53
+服务：Domain Name Server（DNS）
+说明：DNS服务器所开放的端口，入侵者可能是试图进行区域传递（TCP），欺骗DNS（UDP）或隐藏其他的通信。因此防火墙常常过滤或记录此端口。
+7、端口：80
+服务：HTTP
+说明：用于网页浏览。木马Executor开放此端口。
+8、端口：102
+服务：Message transfer agent(MTA)-X.400 over TCP/IP
+说明：消息传输代理。
+9、端口：110
+服务：pop3
+说明：POP3(Post Office Protocol 3)服务器开放此端口，用于接收邮件，客户端访问服务器端的邮件服务。POP3服务有许多公认的弱点。关于用户名和密码交换缓冲区溢出的弱点至少有20个，这意味着入侵者可以在真正登陆前进入系统。成功登陆后还有其他缓冲区溢出错误。
+10、端口：137、138、139
+服务：NETBIOS Name Service
+说明：其中137、138是UDP端口，当通过网上邻居传输文件时用这个端口。而139端口：通过这个端口进入的连接试图获得NetBIOS/SMB服务。这个协议被用于windows文件和打印机共享和SAMBA。还有WINS Regisrtation也用它。
+11、端口：143
+服务：Interim Mail Access Protocol v2
+说明：和POP3的安全问题一样，许多IMAP服务器存在有缓冲区溢出漏洞。记住：
+一种LINUX蠕虫（admv0rm）会通过这个端口繁殖，因此许多这个端口的扫描来自不知情的已经被感染的用户。当REDHAT在他们的LINUX发布版本中默认允许IMAP后，这些漏洞变的很流行。这一端口还被用于IMAP2，但并不流行。
+12、端口：161
+服务：SNMP
+说明：SNMP允许远程管理设备。所有配置和运行信息的储存在数据库中，通过SNMP可获得这些信息。许多管理员的错误配置将被暴露在Internet。Cackers将试图使用默认的密码public、private访问系统。他们可能会试验所有可能的组合。
+SNMP包可能会被错误的指向用户的网络。
+13、端口：389
+服务：LDAP、ILS
+说明：轻型目录访问协议和NetMeeting Internet Locator Server共用这一端口 。
+14、端口：443
+服务：Https
+说明：网页浏览端口，能提供加密和通过安全端口传输的另一种HTTP。
+15、端口：993
+服务：IMAP
+说明：SSL（Secure Sockets layer）
+16、端口：1433
+服务：SQL
+说明：Microsoft的SQL服务开放的端口。
+17、端口：1503
+服务：NetMeeting T.120
+说明：NetMeeting T.120
+18、端口：1720
+服务：NetMeeting
+说明：NetMeeting H.233 call Setup。
+19、端口：1731
+服务：NetMeeting Audio Call Control
+说明：NetMeeting音频调用控制。
+20、端口：3389
+服务：超级终端
+说明：WINDOWS 2000终端开放此端口。
+21、端口：4000
+服务：QQ客户端
+说明：腾讯QQ客户端开放此端口。
+22、端口：5631
+服务：pcAnywere
+说明：有时会看到很多这个端口的扫描，这依赖于用户所在的位置。当用户打开pcAnywere时，它会自动扫描局域网C类网以寻找可能的代理（这里的代理是指agent而不是proxy）。入侵者也会寻找开放这种服务的计算机。，所以应该查看这种扫描的源地址。一些搜寻pcAnywere的扫描包常含端口22的UDP数据包。
+23、端口：6970
+服务：RealAudio
+说明：RealAudio客户将从服务器的6970-7170的UDP端口接收音频数据流。这是由TCP-7070端口外向控制连接设置的。
+24、端口：7323
+服务：[NULL]
+说明：Sygate服务器端。
+25、端口：8000
+服务：OICQ
+说明：腾讯QQ服务器端开放此端口。
+26、端口：8010
+服务：Wingate
+说明：Wingate代理开放此端口。
+27、端口：8080
+服务：代理端口
+说明：WWW代理开放此端口</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/02/15/railsxue-xi-bi-ji-rake-xiang-guan-ming-ling/">Rails学习笔记: Rake 相关命令</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-15T18:23:00+08:00" pubdate data-updated="true">Feb 15<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>rails学习笔记: rake  相关命令</h2>
+
+<p>命令行
+rake db：*****
+script/generate model task name:string priority:integer <br/>
+script/generate migration add_description_to_task description:string <br/>
+script/generate migration remove_description_from_task description:string</p>
+
+<p>类似的概念里有叫做“迁移 (migration)”的东西，Rails的世界里，指的是改变数据库的结构（schema）。这个通过db/migrate目录下面的 Ruby 脚本执行。</p>
+
+<p>另一方面，db/seeds.rb 也向数据库插入数据。例如，在希望从开始状态准备初期管理者帐户的情况下使用。</p>
+
+<p>在此之前这样的代码只在迁移脚本内描述，我想对此感觉不方便的不止我一个人。</p>
+
+<p>db/seeds.rb 是像下面的例子一样的普通的 Rails 脚本：</p>
+
+<p>Administrator.create(:name => &lsquo;root&rsquo;, :password => &lsquo;&rsquo;)专用的 Rake 任务 db:seeds 也具备。</p>
+
+<p>数据类型
+引用</p>
+
+<h1>:string, :text, :integer, :float,:decimal, :datetime, :timestamp, :time, :date,</h1>
+
+<h1>:binary, :boolean</h1>
+
+<p>与db有关的rake任务</p>
+
+<p>db:charset 检索当前环境下数据库的字符设置 <br/>
+db:collation 检索当前环境下数据库的校对 <br/>
+db:create 用config\database.yml中的定义创建当前 RAILS_ENV 项目环境下的数据库 <br/>
+db:create:all 用config\database.yml中的定义创建所有数据库 <br/>
+db:drop 删除当前 RAILS_ENV项目环境中的数据库 <br/>
+db:drop:all 删除所有在 config\database.yml中定义的数据库 <br/>
+db:reset 从db\schema.rb中为当前环境重建数据库（先删后建）. <br/>
+db:rollback 回滚(清华出版社一本SQLSERVER书的名词[很奇怪为什么不直接用滚回])数据库到前一个版本. 指定回滚到哪一步要用 STEP=n 参数 <br/>
+db:version 检索当前模式下的版本</p>
+
+<p>备份数据库
+rake db:backup:create 根据database.yml的信息备份数据库
+rake db:backup:destroy 默认删除一天前的备份数据
+rake db:backup:rebuild 默认恢复最新的备份数据</p>
+
+<p>注意：这里设置的备份目录是db的backup目录，可以修改</p>
+
+<p>添加索引
+引用</p>
+
+<p>add_index :acls, [&ldquo;action_id&rdquo;,&ldquo;group_id&rdquo;],:unique=>true
+add_index :acls, :action_id</p>
+
+<p>drop all tables 删除全部表
+rake db:migrate VERSION=0</p>
+
+<p>指定恢复/删除：
+rake db:migrate:down/up VERSION = version_of_migrati</p>
+
+<p>定义数字精确度
+t.integer :total_price, :precision=>8,:scale=>2,:default=>0</p>
+
+<p>========================================================================================================================================================
+rake db:abort_if_pending_migrations  # Raises an error if there are pending migrations
+rake db:charset                      # Retrieves the charset for the current environment&rsquo;s database
+rake db:collation                    # Retrieves the collation for the current environment&rsquo;s database
+rake db:create                       # Create the database defined in config/database.yml for the current RAILS_ENV
+rake db:create:all                   # Create all the local databases defined in config/database.yml
+rake db:drop                         # Drops the database for the current RAILS_ENV
+rake db:drop:all                     # Drops all the local databases defined in config/database.yml
+rake db:fixtures:identify            # Search for a fixture given a LABEL or ID.
+rake db:fixtures:load                # Load fixtures into the current environment&rsquo;s database.
+rake db:migrate                      # Migrate the database through scripts in db/migrate.
+rake db:migrate:down                 # Runs the &ldquo;down&rdquo; for a given migration VERSION.
+rake db:migrate:redo                 # Rollbacks the database one migration and re migrate up.
+rake db:migrate:reset                # Resets your database using your migrations for the current environment
+rake db:migrate:up                   # Runs the &ldquo;up&rdquo; for a given migration VERSION.
+rake db:reset                        # Drops and recreates the database from db/schema.rb for the current environment.
+rake db:rollback                     # Rolls the schema back to the previous version.
+rake db:schema:dump                  # Create a db/schema.rb file that can be portably used against any DB supported by AR
+rake db:schema:load                  # Load a schema.rb file into the database
+rake db:sessions:clear               # Clear the sessions table
+rake db:sessions:create              # Creates a sessions migration for use with CGI::Session::ActiveRecordStore
+rake db:structure:dump               # Dump the database structure to a SQL file
+rake db:test:clone                   # Recreate the test database from the current environment&rsquo;s database schema
+rake db:test:clone_structure         # Recreate the test databases from the development structure
+rake db:test:load                    # Recreate the test database from the current schema.rb
+rake db:test:prepare                 # Check for pending migrations and load the test schema
+rake db:test:purge                   # Empty the test database
+rake db:version                      # Retrieves the current schema version number
+rake doc:app                         # Build the app HTML Files
+rake doc:clobber_app                 # Remove rdoc products
+rake doc:clobber_plugins             # Remove plugin documentation
+rake doc:clobber_rails               # Remove rdoc products
+rake doc:guides                      # Generate Rails guides
+rake doc:plugins                     # Generate documentation for all installed plugins
+rake doc:rails                       # Build the rails HTML Files
+rake doc:reapp                       # Force a rebuild of the RDOC files
+rake doc:rerails                     # Force a rebuild of the RDOC files
+rake gems                            # List the gems that this rails application depends on
+rake gems:build                      # Build any native extensions for unpacked gems
+rake gems:install                    # Installs all required gems for this application.
+rake gems:refresh_specs              # Regenerate gem specifications in correct format.
+rake gems:unpack                     # Unpacks the specified gem into vendor/gems.
+rake gems:unpack:dependencies        # Unpacks the specified gems and its dependencies into vendor/gems
+rake log:clear                       # Truncates all <em>.log files in log/ to zero bytes
+rake notes                           # Enumerate all annotations
+rake notes:custom                    # Enumerate a custom annotation, specify with ANNOTATION=WTFHAX
+rake notes:fixme                     # Enumerate all FIXME annotations
+rake notes:optimize                  # Enumerate all OPTIMIZE annotations
+rake notes:todo                      # Enumerate all TODO annotations
+rake rails:freeze:edge               # Lock to latest Edge Rails, for a specific release use RELEASE=1.2.0
+rake rails:freeze:gems               # Lock this application to the current gems (by unpacking them into vendor/rails)
+rake rails:unfreeze                  # Unlock this application from freeze of gems or edge and return to a fluid use of system gems
+rake rails:update                    # Update both configs, scripts and public/javascripts from Rails
+rake rails:update:configs            # Update config/boot.rb from your current rails install
+rake rails:update:javascripts        # Update your javascripts from your current rails install
+rake rails:update:scripts            # Add new scripts to the application script/ directory
+rake routes                          # Print out all defined routes in match order, with names.
+rake secret                          # Generate a crytographically secure secret key.
+rake stats                           # Report code statistics (KLOCs, etc) from the application
+rake test                            # Run all unit, functional and integration tests
+rake test:benchmark                  # Run tests for benchmarkdb:test:prepare / Benchmark the performance tests
+rake test:functionals                # Run tests for functionalsdb:test:prepare / Run the functional tests in test/functional
+rake test:integration                # Run tests for integrationdb:test:prepare / Run the integration tests in test/integration
+rake test:plugins                    # Run tests for pluginsenvironment / Run the plugin tests in vendor/plugins/</em>/**/test (or specify with PLUGIN=name)
+rake test:profile                    # Run tests for profiledb:test:prepare / Profile the performance tests
+rake test:recent                     # Run tests for recentdb:test:prepare / Test recent changes
+rake test:uncommitted                # Run tests for uncommitteddb:test:prepare / Test changes since last checkin (only Subversion and Git)
+rake test:units                      # Run tests for unitsdb:test:prepare / Run the unit tests in test/unit
+rake time:zones:all                  # Displays names of all time zones recognized by the Rails TimeZone class, grouped by offset.
+rake time:zones:local                # Displays names of time zones recognized by the Rails TimeZone class with the same offset as the system local time
+rake time:zones:us                   # Displays names of US time zones recognized by the Rails TimeZone class, grouped by offset.
+rake tmp:cache:clear                 # Clears all files and directories in tmp/cache
+rake tmp:clear                       # Clear session, cache, and socket files from tmp/
+rake tmp:create                      # Creates tmp directories for sessions, cache, and sockets
+rake tmp:pids:clear                  # Clears all files in tmp/pids
+rake tmp:sessions:clear              # Clears all files in tmp/sessions
+rake tmp:sockets:clear               # Clears all files in tmp/sockets</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/02/14/rvmxia-an-zhuang-gembian-yi-shi-bai-linecache19/">Rvm下安装gem编译失败 Linecache19</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-14T15:41:00+08:00" pubdate data-updated="true">Feb 14<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>rvm下安装gem编译失败 linecache19</h2>
+
+<p>报错:An error occured while installing linecache19 (0.5.12), and Bundler cannot continue.</p>
+
+<p>以下引用stackoverflow中的解答</p>
+
+<p>ruby -v</p>
+
+<p>then manually use &mdash;force to bypass version check:</p>
+
+<p>gem install ruby_core_source</p>
+
+<p>gem install linecache19 &mdash;force</p>
+
+<p>if you faced with another error starting with following lines:</p>
+
+<p>checking for vm_core.h&hellip; no</p>
+
+<p><strong><em> extconf.rb failed </em></strong></p>
+
+<p>You have to explicitly set the source path to vm_core.h</p>
+
+<p>In my case:</p>
+
+<p>$ which ruby</p>
+
+<p>/<span style="background-color: #ffd700;">User</span>s/Reza/.rvm/rubies/ruby-1.9.2-rc2/bin/ruby</p>
+
+<p>$ echo $rvm_path</p>
+
+<p>/<span style="background-color: #ffd700;">User</span>s/Reza/.rvm/</p>
+
+<p>so to install linecache19 :</p>
+
+<p>gem install ruby_core_source</p>
+
+<p>gem install linecache19 &mdash;force &mdash; &mdash;with-ruby-include=$rvm_path/src/ruby-1.9.2-rc2/</p>
+
+<p>ruby-debug19 has a similar issue:</p>
+
+<p>gem install ruby-debug19 &mdash;force &mdash; &mdash;with-ruby-include=$rvm_path/src/ruby-1.9.2-rc2/</p>
+
+<p>That&rsquo;s all!</p>
+
+<p>=====================================</p>
+
+<p>关键地方:</p>
+
+<p>gem install ruby_core_source</p>
+
+<p>if cannot <code>rvm pkg install openssl</code>
+  <code>sudo rvm pkg install openssl</code>
+end</p>
+
+<p>rvm remove 1.9.2-p290
+rvm install 1.9.2-p290 &mdash;with-openssl-dir=$rvm_path/usr</p>
+
+<h2>ruby-debug and ruby 1.9</h2>
+
+
+<p>If you have trouble installing ruby-debug19 try installing with the following command:</p>
+
+<pre>$ rvm reinstall 1.9.2 --patch debug --force-autoconf
+#可以先试试下面这个命令
+$ gem install ruby-debug19 -- --with-ruby-include="${MY_RUBY_HOME/rubies/src}"</pre>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/02/13/rails-rakezhi-nan/">Rails Rake指南</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-13T13:47:00+08:00" pubdate data-updated="true">Feb 13<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Rails Rake指南</h2>
+
+<p>这是Rails Envy网站的一篇Rake指南，你可以在这里找到原文。</p>
+
+<p>作为RoR开发者，你对Rake一定不会陌生，你可能用它来完成你的单元测试，也可能是迁移数据库，但是你真正理解这些Rake任务到底是怎么运作的吗？你有尝试过创建你自己的Rake任务吗？</p>
+
+<p>在这篇文章中，我们将会介绍Rake的由来，以及如何在Rails中使用它，通过这篇文章的学习，你将掌握如何使用Rake创建你自己的任务。</p>
+
+<p>为什么要有Rake</p>
+
+<p>要理解Rake，我们首先得来了解一下Rake的历史悠远的祖先：Make。因此我们需要暂且回到解释型语言产生之前的久远年代，在那个时代，所有代码都需 要被编译，然后才能够被执行，所以当你从Internet下载到一个相当庞大的程序后，一般来说，除了源代码，程序包中还会包含一个类似 “install_me.sh”的Shell脚本，它会负责帮你完成源代码的编译，并生成最终的可执行文件。</p>
+
+<p>这看起来很完美，不是吗？对用户来说可能如此，但对于开发者来说，这却是个相当粗笨的方法，因为即使你只是修改了一个文件中的一小段代码，”install_me.sh”也必须将所有的源代码都重新编译一遍，才能生成最终的可执行文件。</p>
+
+<p>因此，针对这个问题，Bell实验室的Stuart Feldman创造了Make：</p>
+
+<p>Make可以识别自上次编译之后那些文件发生了改变，从而在下次编译时只对这些发生改变的文件进行编译，而忽略那些没有变化的文件，从而大大降低了程序的编译时间。
+Make同时支持依赖关系追踪，也就是你可以告诉编译器，文件A依赖于文件B，因此当文件B发生改变后，文件A也会被重新编译，并且如果编译文件A时，文件B还没有被编译，那么Make会告诉编译器应该先编译文件B。
+Make 实际上是一个跟ls和dir差不多的可执行文件，只不过你需要提供一个Makefile文件给它作为输入，Makefile中对每个需要编译的文件及它们 的依赖关系进行定义，Makefile的语法类似于Shell脚本，但又有些不同，这里我们不需要关心Makefile的语法。</p>
+
+<p>随着Make的语言中立性，任何语言的程序都可以使用它来作为构建（build）系统，事实上，在Rake产生之前，许多Ruby项目也是采用Make作为构建系统的。</p>
+
+<p>你可能会奇怪：“Ruby程序并不需要被编译，为何还要使用Make呢？”，是的，Ruby的确不需要编译，事实上，Ruby程序员使用Make是出于以下两个原因：</p>
+
+<p>创 建任务，对于大型程序来说，编译完成并不意味着可以了事，往往你需要编写一大堆的脚本来控制它的运行，或者查看它的运行状态等等，这种情况下，你就可以创 建一个Makefile来管理所有这些任务，然后你就可以使用诸如“make stupid”，“make clever”来分别运行糊涂和聪明任务了。
+依 赖关系追踪，当你开始写一个库的时候，你可能会发现，越来越的的任务存在重复，比如”migrate“和”shema: dump“就都需要连接数据库，这时你就可以抽象出一个”connect_to_db”任务，并设置”migrate”和”shema: dump”任务都依赖于”connect_to_db”，这样当你单独运行”migrate”或者”shema:dump”任务时， “connect_to_db”任务都会被首先调用，如果你同时运行这两个任务，那么”connect_to_db”任务只会被执行一次。
+Rake是怎么来的？</p>
+
+<p>很多年以前，当 Jim Weirich还在为一个Java项目工作时，他最初的选择也是Makefile，但是很快他意识到：要是能够在Makefile中嵌入Ruby代码，那会是多么的方便呀，于是，Rake就这么产生了。</p>
+
+<p>Rake支持任务创建，任务依赖关系追踪，以及文件编译时间识别。最后一个功能对Ruby程序员应该用不到，但如果你同时还是一个C程序员，那么你可以尝试使用Rake来替代Make。</p>
+
+<p>Rake如何工作</p>
+
+<p>让我们通过一个例子来说明吧，假设我今天很郁闷，想要借酒消愁，这个过程涉及以下几个任务：</p>
+
+<p>买酒
+买下酒菜
+搞掂它们
+假设使用Rake来管理这3个任务，那么我首先需要创建一个Rakefile文件：</p>
+
+<p>task :purchaseAlcohol do
+  puts &ldquo;来瓶五粮液&rdquo;
+end
+task :mixDrink do
+  puts &ldquo;上盘花生米&rdquo;
+end
+task :getSmashed do
+  puts &ldquo;老板, 啥时学的分身术, 很强嘛?&rdquo;
+end</p>
+
+<p>然后我就可以从Rakefile文件所在的目录来完成这些任务了：</p>
+
+<p>$ rake purchaseAlcohol
+来瓶五粮液
+$ rake mixDrink
+上盘花生米
+$ rake getSmashed
+老板, 啥时学的分身术, 很强嘛?</p>
+
+<p>很简单吧！但是有些问题，我可不想还没喝酒吃东西就看到老板的分身，这会被人当作精神不正常。</p>
+
+<p>如何组织任务的依赖关系</p>
+
+<p>很简单：</p>
+
+<p>task :purchaseAlcohol do
+  puts &ldquo;来瓶五粮液&rdquo;
+end
+task :mixDrink => :purchaseAlcohol do
+  puts &ldquo;上盘花生米&rdquo;
+end
+task :getSmashed => :mixDrink do
+  puts &ldquo;老板, 啥时学的分身术, 很强嘛?&rdquo;
+end</p>
+
+<p>搞掂，现在再试试：</p>
+
+<p>$ rake purchaseAlcohol
+来瓶五粮液
+$ rake mixDrink
+来瓶五粮液
+上盘花生米
+$ rake getSmashed
+来瓶五粮液
+上盘花生米
+老板, 啥时学的分身术, 很强嘛?</p>
+
+<p>就像你看到的，现在我想要醉必须得先喝点酒吃点花生才行，不过一个人喝酒总归有些无聊，所以我想喊些哥们一起来喝，但是我又懒得跟他们解释为啥突然喊他们来喝酒（本人平时比较吝啬），我想到一个偷懒的办法，给他们看文档，但是究竟该怎么为我的Rake任务生成文档呢？</p>
+
+<p>为Rake任务生成文档
+再简单不过了：</p>
+
+<p>desc &ldquo;工作郁闷，想喝点酒&rdquo;
+task :purchaseAlcohol do
+  puts &ldquo;来瓶五粮液&rdquo;
+end
+desc &ldquo;得有点下酒菜&rdquo;
+task :mixDrink => :purchaseAlcohol do
+  puts &ldquo;来盘花生米&rdquo;
+end
+desc &ldquo;开喝，不醉不归&rdquo;
+task :getSmashed => :mixDrink do
+  puts &ldquo;老板, 啥时学的分身术, 很强嘛?&rdquo;
+end</p>
+
+<p>就像你看到的，我的每个任务都有了一个desc字段，现在我和我的朋友们就可以通过rake -T或者rake –task来查看每个任务的文档了：</p>
+
+<p>$ rake &mdash;tasks
+rake getSmashed # 开喝，不醉不归
+rake mixDrink # 得有点下酒菜
+rake purchaseAlcohol # 工作郁闷，想喝点酒</p>
+
+<p>Rake命名空间</p>
+
+<p>一旦养成了工作郁闷就喝酒的好习惯之后，你很快就会发现，自己成了个酒鬼，因此你不得不写一大堆Rake任务来集结你的狐朋狗友们，这时你就会发现命名空间的重要性：</p>
+
+<p>namespace :alcoholic do
+  desc &ldquo;工作郁闷，想喝点酒&rdquo;
+  task :purchaseAlcohol do</p>
+
+<pre><code>puts "来瓶五粮液"
+</code></pre>
+
+<p>  end
+  desc &ldquo;得有点下酒菜&rdquo;
+  task :mixDrink => :purchaseAlcohol do</p>
+
+<pre><code>puts "来盘花生米"
+</code></pre>
+
+<p>  end
+  desc &ldquo;开喝，不醉不归&rdquo;
+  task :getSmashed => :mixDrink do</p>
+
+<pre><code>puts "老板, 啥时学的分身术, 很强嘛?"
+</code></pre>
+
+<p>  end
+end
+namespace :girlfriend do
+  desc &ldquo;那个，喝点红酒吧&rdquo;
+  task :purchaseAlcohol do</p>
+
+<pre><code>puts "来瓶干红"
+</code></pre>
+
+<p>  end
+end</p>
+
+<p>命名空间允许你将你的任务进行分类，你可以在一个Rakefile内创建多个命名空间，现在输入rake –tasks你会得到如下输出：</p>
+
+<p>rake alcoholic:getSmashed # 开喝，不醉不归
+rake alcoholic:mixDrink # 得有点下酒菜
+rake alcoholic:purchaseAlcohol # 工作郁闷，想喝点酒
+rake girlfriend:purchaseAlcohol # 那个，喝点红酒吧</p>
+
+<p>有用的任务</p>
+
+<p>上面都是扯淡，毕竟人生除了喝酒还有更重要的事情等着我们去做，下面，我们来干点正经事，假设我们需要完成这样一个任务，给定一组目录，如果不存在，就创建它们，我创建的Rake任务如下：</p>
+
+<p>desc &ldquo;Create blank directories if they don&rsquo;t already exist&rdquo;
+task(:create_directories) do
+  # The folders I need to create
+  shared_folders = [&ldquo;icons&rdquo;,&ldquo;images&rdquo;,&ldquo;groups&rdquo;]</p>
+
+<pre><code>for folder in shared_folders
+# Check to see if it exists
+if File.exists?(folder)
+  puts "#{folder} exists"
+else
+  puts "#{folder} doesn't exist so we're creating"
+  Dir.mkdir "#{folder}"
+end
+</code></pre>
+
+<p>  end
+end</p>
+
+<p>默认情况下，Rake具有所有File Utils包的功能，当然你也可以通过引用其他库来做任何你想做的事情，那么下一个问题就是：我应该如何在Rails中使用Rake呢？</p>
+
+<p>在Rails中使用Rake</p>
+
+<p>每个Rails应用本身都在带有许多预定义的Rake任务，你可以通过在你的Rails应用的根目录下执行rake –tasks来查看可用的rake任务，别以后了，现在就试试吧，我等你！</p>
+
+<p>要创建新的Rake任务，你只需打开你的Rails应用的lib/tasks目录，并将你的Rakefile命名为”somethins.rake”即可，它会自动被主Rakefile引用，然后你就可以在主目录下调用你的rake任务了，让我们继续上面那个例子：</p>
+
+<p>utils.rake</p>
+
+<p>namespace :utils do
+  desc &ldquo;Create blank directories if they don&rsquo;t already exist&rdquo;
+ task(:create_directories) do
+  # The folders I need to create
+  shared_folders = [&ldquo;icons&rdquo;,&ldquo;images&rdquo;,&ldquo;groups&rdquo;]
+  for folder in shared_folders
+   # Check to see if it exists
+   if File.exists?(&ldquo;#{RAILS_ROOT}/public/#{folder}&rdquo;)</p>
+
+<pre><code>puts "#{RAILS_ROOT}/public/#{folder} exists"
+</code></pre>
+
+<p>   else</p>
+
+<pre><code>puts "#{RAILS_ROOT}/public/#{folder} doesn't exist so we're creating"
+Dir.mkdir "#{RAILS_ROOT}/public/#{folder}"
+</code></pre>
+
+<p>   end
+  end
+ end
+end</p>
+
+<p>再次执行rake –tasks，你会看到如下结果</p>
+
+<p>&hellip;&hellip;
+rake tmp:pids:clear # Clears all files in tmp/pids
+rake tmp:sessions:clear # Clears all files in tmp/sessions
+rake tmp:sockets:clear # Clears all files in tmp/sockets
+rake utils:create_directories # Create blank directories if they
+don&rsquo;t already exist</p>
+
+<p>从Rake任务中可以访问rails model吗？</p>
+
+<p>是的，当然可以，这是我使用Rake最主要的用途：运行一些需要手动执行的任务，或者是需要脱离Rails定期运行的任务，下面是一个简单的例子：</p>
+
+<p>namespace :utils do
+  desc &ldquo;Finds soon to expire subscriptions and emails users&rdquo;
+  task(:send_expire_soon_emails => :environment) do</p>
+
+<pre><code># Find users to email
+for user in User.members_soon_to_expire
+  puts "Emailing #{user.name}"
+  UserNotifier.deliver_expire_soon_notification(user)
+end
+</code></pre>
+
+<p>  end
+end</p>
+
+<p>实在是很简单，你只需要在你的任务之前执行”=> :environment“就可以了。</p>
+
+<p>如果需要在开发模式执行这个任务，直接敲”rake utils:send_expire_soon_emails”就可以了，如果是产品模式，敲”rake RAILS_ENV=production utils:send_expire_soon_emails”，现在如果我想让这个任务每天晚上运行一次，那么，我只需要在cronjob文件中加入下面这行就可以了：</p>
+
+<p>0 0 * * * cd /var/www/apps/rails_app/ &amp;&amp; /usr/local/bin/rake RAILS_ENV=production utils:send_expire_soon_emails</p>
+
+<p>还有更多的例子吗？</p>
+
+<pre>
+<code>namespace :sunspot do
+  namespace :solr do
+    desc 'Start the Solr instance'
+    task :start => :environment do
+      case RUBY_PLATFORM
+      when /w(in)?32$/, /java$/
+        abort("This command is not supported on #{RUBY_PLATFORM}. " +
+              "Use rake sunspot:solr:run to run Solr in the foreground.")
+      end
+
+      if defined?(Sunspot::Rails::Server)
+        Sunspot::Rails::Server.new.start
+      else
+        Sunspot::Solr::Server.new.start
+      end
+
+      puts "Successfully started Solr ..."
+    end
+
+    desc 'Run the Solr instance in the foreground'
+    task :run => :environment do
+      if defined?(Sunspot::Rails::Server)
+        Sunspot::Rails::Server.new.run
+      else
+        Sunspot::Solr::Server.new.run
+      end
+    end
+
+    desc 'Stop the Solr instance'
+    task :stop => :environment do
+      case RUBY_PLATFORM
+      when /w(in)?32$/, /java$/
+        abort("This command is not supported on #{RUBY_PLATFORM}. " +
+              "Use rake sunspot:solr:run to run Solr in the foreground.")
+      end
+
+      if defined?(Sunspot::Rails::Server)
+        Sunspot::Rails::Server.new.stop
+      else
+        Sunspot::Solr::Server.new.stop
+      end
+
+      puts "Successfully stopped Solr ..."
+    end
+
+    # for backwards compatibility
+    task :reindex => :"sunspot:reindex"
+  end
+end</code>
+</pre>
+
+
+<p>不用担心，只要你有时间，并且愿意看，例子大把：</p>
+
+<p>These brand new rake tasks in Edge Rails create and reset your databases for you. Neato!
+Craig Ambrose wrote a Rake task to do database backups, which you can use.
+Adam Greene put together a set of Rake tasks that allow you to backup all your data to Amazon S3
+Jay Fields made a good point when he talked about testing rake tasks
+Err the blog talks about a new way of setting the RAILS_ENV and teaches how to use rake to boot you into a Mysql shell (be sure to read the comments if you browse this one).
+Last, but not least, there’s the Rake Bookshelf Books and Martin Fowler’s Using the Rake Build Language tutorial . Both of these are pretty thorough, but also a little dated</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/02/10/tracking-rails-3-dot-1-and-asset-pipeline-problems-with-apache/">Tracking Rails 3.1 and Asset Pipeline Problems With Apache</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-10T14:30:00+08:00" pubdate data-updated="true">Feb 10<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Tracking Rails 3.1 and asset pipeline problems with Apache</h2>
+
+<p>ubuneu install apache module
+<code>sudo apt-get install libapache2-mod-xsendfile</code></p>
+
+<h1>enki_apache_passenger.conf</h1>
+
+<pre>
+<code>
+LoadModule rewrite_module /usr/lib/apache2/modules/mod_rewrite.so
+LoadModule passenger_module /usr/share/ruby-rvm/gems/ruby-1.8.7-p357/gems/passenger-3.0.11/ext/apache2/mod_passenger.so
+#sudo apt-get install libapache2-mod-xsendfile
+LoadModule xsendfile_module /usr/lib/apache2/modules/mod_xsendfile.so
+PassengerRoot /usr/share/ruby-rvm/gems/ruby-1.8.7-p357/gems/passenger-3.0.11
+PassengerRuby /usr/share/ruby-rvm/rubies/ruby-1.8.7-p357/bin/ruby</code>
+
+# PassengerMaxPoolSize 10
+
+#ServerName www.yourhost.com
+# DocumentRoot /var/www/enki/public
+XSendFile On
+
+RewriteEngine On
+
+# AllowOverride all
+# Options -MultiViews
+# THIS IS REALLY IMPORTANT
+XSendFilePath /var/www/enki
+
+LoadModule headers_module /usr/lib/apache2/modules/mod_headers.so
+LoadModule expires_module /usr/lib/apache2/modules/mod_expires.so
+
+# Some browsers still send conditional-GET requests if there&#8217;s a
+# Last-Modified header or an ETag header even if they haven&#8217;t
+# reached the expiry date sent in the Expires header.
+Header unset Last-Modified
+Header unset ETag
+# This required etag module to be enabled. Comment out
+FileETag None
+# RFC says only cache for 1 year
+ExpiresActive On
+ExpiresDefault &#8220;access plus 1 year&#8221;
+</code>
+</pre>
+
+
+<p>If you have a module version &lt; 0.10, add this to the virtual host config that needs to send files:
+<code>
+XSendFile On
+XSendFileAllowAbove On
+</code>
+This allows any file path (not only those below your VHost root) to be sent through X-Sendfile, which is sort of bad practice. You can either live with it or compile a newer version of the module.</p>
+
+<p>If you got a module version &gt;= 0.10 you can whitelist the allowed paths instead:
+<code>
+XSendFile On
+XSendFilePath /opt/www/awesome-project
+</code></p>
+
+<p><h2>Migrating my blog over to Rails 3.1 beta<h2></p>
+
+<h1>Enable the asset pipeline</h1>
+
+<p>config.assets.enabled = true</p>
+
+<p>config/environments/development.rb (remove or comment out the following line)
+<pre>
+<code>#config.action_view.debug_rjs             = true
+</code>
+</pre></p>
+
+<p>config/environments/production.rb (add these lines)
+<pre>
+<code># Compress both stylesheets and JavaScripts
+config.assets.js_compressor  = :uglifier
+config.assets.css_compressor = :scss
+</code>
+</pre></p>
+
+<p><pre>
+<code>mkdir app/assets
+git mv public/images app/assets/images
+git mv public/javascripts app/assets/javascripts
+git mv public/stylesheets app/assets/stylesheets
+</code>
+</pre></p>
+
+<p>Finally, in your production environment, don’t forget to statically generate your compiled assets with this Rake task:
+<pre>
+<code>RAILS_ENV=production bundle exec rake assets:precompile
+</code>
+</pre>
+It will create files such as these:</p>
+
+<p><pre>
+<code>
+public/assets/application-2a8947193a591b79c885c52fbc6b01d3.css
+</code>
+</pre></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/02/09/ruby-yi-chang-chu-li-begin-dot-dot-dot-end/">Ruby 异常处理 Begin &#8230;end</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-09T14:24:00+08:00" pubdate data-updated="true">Feb 9<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Ruby 异常处理 begin &hellip;end</h2>
+
+<p>在java中，异常的捕捉是在try &hellip; catch当中进行，而ruby则是在begin &hellip; end代码块中进行异常的捕捉，在该代码块中使用rescue关键字进行捕捉异常类型，注意哦，这个是关键字，而不是方法。
+Ruby代码
+begin
+   &hellip;&hellip;                                #可能出现异常的代码 <br/>
+rescue   errorType1             #要捕捉的异常类型 <br/>
+   &hellip;&hellip;                                #处理异常的代码 <br/>
+rescue   errorType2             #要捕捉的异常类型 <br/>
+   &hellip;&hellip;                                #处理异常的代码 <br/>
+end
+以上代码就是一个大概的捕捉异常的例子，在begin和end代码块中通过rescue进行异常类型的捕捉然后进行适当的处理，可是如果抛出的异常类型并没有显示的捕捉如何处理呢？那就是在最后使用else，如下：
+Ruby代码
+begin
+   &hellip;&hellip;                                #可能出现异常的代码 <br/>
+rescue   errorType1             #要捕捉的异常类型 <br/>
+   &hellip;&hellip;                                #处理异常的代码 <br/>
+rescue   errorType2             #要捕捉的异常类型 <br/>
+   &hellip;&hellip;                                #处理异常的代码 <br/>
+else
+   &hellip;&hellip;                                #如果以上代码类型都没有捕捉到，则运行该段代码 <br/>
+end</p>
+
+<p>这时又有一个问题，如果我想获取异常信息又该如何做呢？请看下面的代码：
+Ruby代码
+begin
+   raise ArgumentError, &ldquo;Bad data&rdquo;
+rescue => err <br/>
+   puts err <br/>
+end
+通 过rescue => variable的方式，就可以将异常保存为一个variable了。又解决了一个问题，还有什么问题呢？啊，对了，在java的使用当中，比如使用 Connection进行数据库连接后，最后一定要进行资源的清理，都是在finally块当中进行的，可是在ruby中又如何进行这些资源的清理呢？看 看下面的代码：
+Ruby代码
+begin
+   raise ArgumentError, &ldquo;Bad data&rdquo;
+rescue => err <br/>
+   puts err <br/>
+ensure
+   &hellip;                        #执行清理工作 <br/>
+end</p>
+
+<pre>
+module GitHelper
+  def list_user_repos(user="jhjguxin", options={})
+    skip_fork = options[:skip_fork] || false
+    sort_by = options[:sort_by] || "created_at"
+    github = Github.new
+    begin 
+      repos=github.repos.list_repos :user => user
+    #rescue   errorType1             #要捕捉的异常类型
+    #......                                #处理异常的代码 
+    rescue => err   
+      puts err
+      return repos=[]
+    ensure #这里的代码在总是被执行，可以做一些清理工作
+      puts "process finished ..."
+    end
+    if skip_fork
+      repos.each do |r|
+        repos.delete(r) if r.fork==true
+        #breakpoint
+      end
+
+    else
+      repos
+    end
+  end
+end
+</pre>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/02/08/rails-form-for-with-associations-defined-and-multipart-set-to-true-not-working/">Rails Form_for With Associations Defined and Multipart Set to True Not Working</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-08T22:26:00+08:00" pubdate data-updated="true">Feb 8<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Rails form_for with associations defined and multipart set to true not working</h2>
+
+<p>So I have one form:</p>
+
+<p>&lt;%= form_for([@document, @comment]) do |f| %></p>
+
+<p>Showing /home/jhjguxin/enki/app/views/posts/show.html.erb where line #31 raised:</p>
+
+<p>wrong number of arguments (2 for 1)
+Any ideas? Running Rails 3.1.3 with Ruby 1.9.2p180
+Bellow will fix it</p>
+
+<p>&lt;%= form_for (@comment, :url => [@document, @comment]) do |f| %></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/02/03/errno-econnrefused-connection-refused-connect-2-while-connecting-to-a-remote-solr-instance-from-sunspot/">Errno::ECONNREFUSED: Connection Refused - Connect(2) While Connecting to a Remote Solr Instance From Sunspot</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-03T20:10:00+08:00" pubdate data-updated="true">Feb 3<span>rd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Errno::ECONNREFUSED:  Connection refused &ndash; connect(2) while connecting to a remote solr instance from Sunspot</h2>
+
+<h2>Quickstart with Rails 3</h2>
+
+
+<p>Add to Gemfile:</p>
+
+<div>
+<code>gem 'sunspot_rails'
+gem 'sunspot_solr' # optional pre-packaged Solr distribution for use in development</code>
+</div>
+
+
+<p>Bundle it!</p>
+
+<div>
+<pre>bundle install</pre>
+</div>
+
+
+<p>Generate a default configuration file:</p>
+
+<div>
+<pre>rails generate sunspot_rails:install</pre>
+</div>
+
+
+<p>If <code>sunspot_solr</code> was installed, start the packaged Solr distribution with:</p>
+
+<p><code>bundle exec rake sunspot:solr:start # or sunspot:solr:run to start in foreground</code></p>
+
+<p>Now that Sunspot knows how to index the <code>Post</code> model, we need to get the existing data into Solr. Any time a <code>Post</code> is created, updated, or destroyed, Sunspot::Rails will automatically make the change to the index; you only need to do a full reindex if you’ve added or changed a <code>searchable</code> definition for a model.</p>
+
+<p><code>$ rake sunspot:reindex</code></p>
+
+<p>If <code>sunspot_solr</code> was installed, start the packaged Solr distribution with:</p>
+
+<div>
+<code>jhjguxin@jhjguxin-Aspire-4750:~$ heroku run:detached rake sunspot:solr:start RAILS_ENV=production rake sunspot:solr:start --app francisjiang
+or type:sunspot-solr start -- -p 8983 or sunspot-solr start -- -p 8983 -d data/solr/myapp</code>
+Try to start the solr
+<pre>
+<code>##with apache+solr+rails
+jhjguxin@jhjguxin-virtual-machine:/var/www/enki$ sudo gem install sunspot_solr
+Successfully installed escape-0.0.4
+Successfully installed sunspot_solr-1.3.0
+2 gems installed
+Installing ri documentation for escape-0.0.4...
+Installing ri documentation for sunspot_solr-1.3.0...
+Installing RDoc documentation for escape-0.0.4...
+Installing RDoc documentation for sunspot_solr-1.3.0...
+jhjguxin@jhjguxin-virtual-machine:/var/www/enki$ sudo sunspot-solr start -- -p 8983 -d solr/data/
+[sudo] password for jhjguxin: 
+java version "1.6.0_23"
+OpenJDK Runtime Environment (IcedTea6 1.11pre) (6b23~pre11-0ubuntu1.11.10.1)
+OpenJDK Client VM (build 20.0-b11, mixed mode, sharing)
+</code>
+</pre>
+
+Solr服务控制
+将以上内容添加到Rakefile后，将会多出4个task出来
+
+服务器启动:
+rake sunspot:solr:start
+初次启动，会安装一个embed的solr程序，那么开发环境中省去了安装配置Solr环境繁琐步骤。不过，production环境里可不要使用这个embed版。
+
+服务器停止:
+rake sunspot:solr:stop
+全部重建索引：
+rake sunspot:reindex
+如果你想看到运行日志，把服务跑在前端。可以使用一下命令:
+rake sunspot:solr:run
+使用以上命令，就能完成对Sunspot的控制。
+
+</div>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/02/01/zai-herokushang-bu-shu-%28tuo-guan-%29ni-de-railsying-yong/">在Heroku上部署（托管）你的Rails应用</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-01T14:56:00+08:00" pubdate data-updated="true">Feb 1<span>st</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>在Heroku上部署（托管）你的Rails应用</h2>
+
+<p>Heroku 是Ruby on Rails的托管提供商，提供运行Ruby on Rails应用的整套环境。和传统的托管商相比，他并不仅仅是提供一个服务器给你，而且提供有趣的工具和接口来帮助你更加容易的工作，使你从繁重的安装、配置、管理和保证服务器安全中解脱出来。
+Heroku是用git来管理项目的，另外还要用到ssh来登录，这两个工具在Linux环境下的安装方法如下：
+git安装</p>
+
+<p>ssh安装</p>
+
+<p>当然要使用Heroku，你就要到其 官方网 注册一个账号；
+以上工作完成后，并可进行如下操作，将你的Rails应用托管到Heroku：</p>
+
+<p>以来内容转自： <a href="http://hi.baidu.com/haifreeidea/blog/item/e09279c53b7d06c338db49c9.html">http://hi.baidu.com/haifreeidea/blog/item/e09279c53b7d06c338db49c9.html</a></p>
+
+<p>①、＄ gem install heroku</p>
+
+<p>②、先要生成一个公钥，使用命令:
+$ ssh-keygen -t rsa
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/user/.ssh/id_rsa):
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /home/user/.ssh/id_rsa.
+Your public key has been saved in /home/user/.ssh/id_rsa.pub.
+The key fingerprint is:
+a6:88:0a:bb:74:70:c6:e0:d5:49:65:e3:04:d5:6c:3e <a href="&#109;&#x61;&#x69;&#x6c;&#x74;&#x6f;&#x3a;&#x75;&#115;&#x65;&#x72;&#x40;&#x77;&#111;&#114;&#107;&#x73;&#x74;&#97;&#x74;&#x69;&#x6f;&#x6e;&#46;&#x6c;&#111;&#x63;&#97;&#x6c;">&#x75;&#x73;&#101;&#114;&#64;&#x77;&#x6f;&#114;&#x6b;&#x73;&#116;&#97;&#116;&#x69;&#x6f;&#110;&#x2e;&#x6c;&#x6f;&#x63;&#x61;&#108;</a></p>
+
+<p>把公钥加入到Heroku
+$ heroku keys:add
+Uploading ssh public key /home/user/.ssh/id_rsa.pub</p>
+
+<p>如果想删除公钥，可以用命令：
+$ heroku keys:remove <a href="&#109;&#97;&#105;&#108;&#x74;&#111;&#58;&#x75;&#115;&#x65;&#114;&#64;&#119;&#x6f;&#x72;&#x6b;&#x73;&#116;&#97;&#x74;&#105;&#x6f;&#110;&#x2e;&#x6c;&#x6f;&#99;&#x61;&#108;">&#x75;&#x73;&#x65;&#x72;&#x40;&#x77;&#111;&#114;&#x6b;&#115;&#116;&#x61;&#116;&#105;&#x6f;&#x6e;&#x2e;&#108;&#111;&#99;&#x61;&#x6c;</a></p>
+
+<p>查看公钥，用命令：
+$ heroku keys</p>
+
+<p>③、现在就可以创建一个项目了(预先要安装好rails)。
+$ rails myapp            (如果是已有的应用，这一步可以跳过)</p>
+
+<p>$ cd myapp
+$ git init
+$ git add .
+$ git commit -m &ldquo;my first commit&rdquo;
+Created initial commit 5df2d09: my first commit
+44 files changed, 8393 insertions(+), 0 deletions(&ndash;)
+create mode 100644 README
+create mode 100644 Rakefile
+create mode 100644 app/controllers/application.rb
+&hellip;</p>
+
+<h2>In heroku how to control the ruby version</h2>
+
+
+<p>Usage: heroku stack</p>
+
+<p>show the list of available stacks</p>
+
+<p>&mdash;all  # include deprecated stacks</p>
+
+<p>Additional commands, type &ldquo;heroku help COMMAND&rdquo; for more details:</p>
+
+<p>stack:migrate STACK  # prepare migration of this app to a new stack</p>
+
+<p>use heroku create &mdash;stack to creat the stack</p>
+
+<p>heroku create &mdash;stack bamboo-ree-1.8.7</p>
+
+<p>&nbsp;</p>
+
+<p>④、把这个项目创建到Heroku上。
+＄ heroku create myapp
+Enter your Heroku credentials.
+Email: <a href="&#109;&#97;&#x69;&#108;&#x74;&#x6f;&#58;&#117;&#x73;&#101;&#114;&#64;&#x65;&#x78;&#97;&#109;&#x70;&#x6c;&#101;&#x2e;&#99;&#111;&#x6d;">&#x75;&#115;&#x65;&#114;&#64;&#x65;&#x78;&#97;&#x6d;&#x70;&#x6c;&#x65;&#46;&#99;&#111;&#x6d;</a>
+Password:
+Uploading ssh public key /home/user/.ssh/id_rsa.pub
+（当第一次运行heroku命令时，要求输入Email，password，这个是你在Heroku注册的Email和密码，以便创建~/.heroku/credentials文件，这个文件记录了你输入的用户名和密码，以后就不再需要输入了。）</p>
+
+<p>⑤、接下来运行：
+$ git push heroku master
+Counting objects: 65, done.
+Compressing objects: 100% (58/58), done.
+Writing objects: 100% (65/65), 80.54 KiB, done.
+Total 65 (delta 14), reused 0 (delta 0)</p>
+
+<p>&mdash;&mdash;&ndash;&gt; Heroku receiving push
+&mdash;&mdash;&ndash;&gt; Rails app detected
+Compiled slug size is 0.1MB
+&mdash;&mdash;&ndash;&gt; Launching&hellip;&hellip;. done
+App deployed to Heroku</p>
+
+<p>To git@heroku.com:vivid-mountain-91.git
+* [new branch]      master &ndash;&gt; master</p>
+
+<p>⑥、再做一个数据库迁移：
+$ heroku rake db:migrate</p>
+
+<p>现在就可以像平常使用Rails一样编写程序了。</p>
+
+<p>更新代码可以用：
+$ git push heroku</p>
+
+<p>The rake db:reset task is not supported. Heroku apps do not have permission to drop and create databases. Use the heroku pg:reset command instead.</p>
+
+<p>将本地数据更新到Heroku网站上:
+$ heroku db:push
+（这个命令会使用taps，如果没有安装，请先安装。）</p>
+
+<p>要打开网页浏览，就可以用
+$ heroku open</p>
+
+<p><strong>Permission denied (publickey) when deploying heroku code. fatal: The remote end hung up unexpectedly</strong></p>
+
+<p>jhjguxin@jhjguxin-virtual-machine:~/heroku_enki$ git push heroku master
+Permission denied (publickey).
+fatal: The remote end hung up unexpectedly
+jhjguxin@jhjguxin-virtual-machine:~/heroku_enki$ heroku keys:add ~/.ssh/id_rsa.pub
+Uploading ssh public key /home/jhjguxin/.ssh/id_rsa.pub
+jhjguxin@jhjguxin-virtual-machine:~/heroku_enki$ git push heroku masterCounting objects: 460, done.
+Delta compression using up to 2 threads.
+Compressing objects: 100% (418/418), done.
+Writing objects: 100% (460/460), 447.32 KiB | 141 KiB/s, done.
+Total 460 (delta 55), reused 0 (delta 0)</p>
+
+<p>about db</p>
+
+<p>To ease deployment of typical Rails applications, Heroku automatically generates a new database.yml file on deployment. This auto-generated database.yml file configures your RACK_ENV environment to your selected postgres db. This enables you to simply push a Rails app up to Heroku and have it automatically connect to your database.</p>
+
+<p>I had the same problem, and although I did not solve the problem, I found a workaround.</p>
+
+<p>Instead of using:</p>
+
+<p>heroku run rake db:migrate</p>
+
+<p>You can use:</p>
+
+<p>heroku run:detached rake db:migrate</p>
+
+<p>This runs the command in the background, writing the output to the log. When it is finished you can view the log for the result.</p>
+
+<p>自己生成的git地址不好看，最好在<strong>本地</strong>改</p>
+
+<div id="">
+<ol start="1">
+    <li>heroku rename newname</li>
+</ol>
+</div>
+
+
+<p>帐号下改完要</p>
+
+<ol start="1">
+    <li>$ git remote rm heroku</li>
+    <li>$ git remote add heroku git@heroku.com:newname.git</li>
+</ol>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/11/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/9/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/">通过mongodump和mongorestore实现Mongodb备份和恢复 &#8211;by Chenzhou123520</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes/">Ruby on Rails 4.0 Release Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/rails-active-record-named-scopes/">Rails Active Record Named Scopes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/">晒晒我们的开源项目 ITEYE开源代码</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/">Single Sign-on 单点登录 Sso</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/jhjguxin">@jhjguxin</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'jhjguxin',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Francis Jiang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

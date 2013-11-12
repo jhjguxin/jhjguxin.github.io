@@ -1,0 +1,578 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>TomDoc for Ruby - Version 1.0.0-rc1 - Francis's Octopress Blog</title>
+  <meta name="author" content="Francis Jiang">
+
+  
+  <meta name="description" content="TomDoc for Ruby &ndash; Version 1.0.0-rc1 Purpose
+TomDoc is a code documentation specification that helps you write precise documentation that is &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jhjguxin.github.io/blog/2012/03/15/tomdoc-for-ruby-version-1-dot-0-0-rc1">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Francis's Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-25901353-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Francis's Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jhjguxin.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/readme">Readme</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">TomDoc for Ruby - Version 1.0.0-rc1</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-15T10:54:00+08:00" pubdate data-updated="true">Mar 15<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>TomDoc for Ruby &ndash; Version 1.0.0-rc1</h2>
+
+<p>Purpose
+TomDoc is a code documentation specification that helps you write precise documentation that is nice to read in plain text, yet structured enough to be automatically extracted and processed by a machine.</p>
+
+<p>The key words &ldquo;MUST&rdquo;, &ldquo;MUST NOT&rdquo;, &ldquo;REQUIRED&rdquo;, &ldquo;SHALL&rdquo;, &ldquo;SHALL NOT&rdquo;, &ldquo;SHOULD&rdquo;, &ldquo;SHOULD NOT&rdquo;, &ldquo;RECOMMENDED&rdquo;, &ldquo;MAY&rdquo;, and &ldquo;OPTIONAL&rdquo; in this document are to be interpreted as described in RFC 2119.</p>
+
+<p>Method Documentation
+A quick example will serve to best illustrate the TomDoc method documentation format:</p>
+
+<h1>Public: Duplicate some text an arbitrary number of times.</h1>
+
+<p>#</p>
+
+<h1>text  &ndash; The String to be duplicated.</h1>
+
+<h1>count &ndash; The Integer number of times to duplicate the text.</h1>
+
+<p>#</p>
+
+<h1>Examples</h1>
+
+<p>#</p>
+
+<h1>multiplex(&lsquo;Tom&rsquo;, 4)</h1>
+
+<h1># => &lsquo;TomTomTomTom&rsquo;</h1>
+
+<p>#</p>
+
+<h1>Returns the duplicated String.</h1>
+
+<p>def multiplex(text, count)
+  text * count
+end
+TomDoc for a specific method consists of a block of single comment markers (#) that appears directly above the method. There SHOULD NOT be a blank line between the comment block and the method definition. A TomDoc method block consists of five optional sections: a description section, an arguments section, a yields section, an examples section, a returns section, and a signature section. Lines that contain text MUST be separated from the comment marker by a single space. Lines that do not contain text SHOULD consist of just a comment marker (no trailing spaces).</p>
+
+<p>The Description Section
+The description section SHOULD be in plain sentences. Each sentence SHOULD end with a period. Good descriptions explain what the code does at a high level. Make sure to explain any unexpected behavior that the method may have, or any pitfalls that the user may experience. Paragraphs SHOULD be separated with blank lines. Code within the description section should be indented three spaces from the starting comment symbol. Lines SHOULD be wrapped at 80 characters.</p>
+
+<p>To describe the status of a method, you SHOULD use one of several prefixes:</p>
+
+<p>Public: Indicates that the method is part of the project&rsquo;s public API. This annotation is designed to let developers know which methods are considered stable. You SHOULD use this to document the public API of your project. This information can then be used along with Semantic Versioning to inform decisions on when major, minor, and patch versions should be incremented.</p>
+
+<h1>Public: Initialize a new Widget.</h1>
+
+<p>Internal: Indicates that the method is part of the project&rsquo;s internal API. These are methods that are intended to be called from other classes within the project but not intended for public consumption. For example:</p>
+
+<h1>Internal: Normalize the filename.</h1>
+
+<p>Deprecated: Indicates that the method is deprecated and will be removed in a future version. You SHOULD use this to document methods that were Public but will be removed at the next major version.</p>
+
+<h1>Deprecated: Resize an object to the given dimensions.</h1>
+
+<p>An example description that includes all of these elements might look something like the following.</p>
+
+<h1>Public: Format some data with the given format. Possible format</h1>
+
+<h1>identifiers include:</h1>
+
+<p>#</p>
+
+<h1>%i   &ndash; Output the Integer i.</h1>
+
+<h1>%f.n &ndash; Output a Float f with n decimal places rounded.</h1>
+
+<p>#</p>
+
+<h1>The format String may include any text. To escape a percent sign, prefix</h1>
+
+<h1>it with a backslash:</h1>
+
+<p>#</p>
+
+<h1>&ldquo;The sale price was %f.n\% off retail.&rdquo;</h1>
+
+<p>The Arguments Section
+The arguments section consists of a list of arguments. Each list item MUST be comprised of the name of the argument, a dash, and an explanation of the argument in plain sentences. The expected type (or types) of each argument SHOULD be clearly indicated in the explanation. When you specify a type, use the proper classname of the type (for instance, use &lsquo;String&rsquo; instead of &lsquo;string&rsquo; to refer to a String type). If the argument has other constraints (e.g. duck-typed method requirements), simply state those requirements. The dashes following each argument name SHOULD be lined up in a single column. Lines SHOULD be wrapped at 80 columns. If an explanation is longer than that, additional lines MUST be indented at least two spaces but SHOULD be indented to match the indentation of the explanation. For example:</p>
+
+<h1>element &ndash; The Symbol representation of the element. The Symbol should</h1>
+
+<h1>contain only lowercase ASCII alpha characters.</h1>
+
+<p>An argument that is String-like might look like this:</p>
+
+<h1>actor &ndash; An object that responds to to_s. Represents the actor that</h1>
+
+<h1>will be output in the log.</h1>
+
+<p>All arguments are assumed to be required. If an argument is optional, you MUST specify the default value:</p>
+
+<h1>host &ndash; The String hostname to bind (default: &lsquo;0.0.0.0&rsquo;).</h1>
+
+<p>For hash arguments, you SHOULD enumerate each valid option in a way similar to how normal arguments are defined:</p>
+
+<h1>options &ndash; The Hash options used to refine the selection (default: {}):</h1>
+
+<h1>:color  &ndash; The String color to restrict by (optional).</h1>
+
+<h1>:weight &ndash; The Float weight to restrict by. The weight should</h1>
+
+<h1>be specified in grams (optional).</h1>
+
+<p>Ruby allows for some interesting argument capabilities. In those cases, try to explain what&rsquo;s going on as best as possible. Examples are a good way to demonstrate how methods should be invoked. For example:</p>
+
+<h1>Print a log line to STDOUT. You can customize the output by specifying</h1>
+
+<h1>a block.</h1>
+
+<p>#</p>
+
+<h1>msgs  &ndash; Zero or more String messages that will be printed to the log</h1>
+
+<h1>separated by spaces.</h1>
+
+<h1>block &ndash; An optional block that can be used to customize the date format.</h1>
+
+<h1>If it is present, it will be sent a Time object representing</h1>
+
+<h1>the current time. Your block should return a String version of</h1>
+
+<h1>the time, formatted however you please.</h1>
+
+<p>#</p>
+
+<h1>Examples</h1>
+
+<p>#</p>
+
+<h1>log(&ldquo;An error occurred.&rdquo;)</h1>
+
+<p>#</p>
+
+<h1>log(&ldquo;No such file&rdquo;, &ldquo;/var/log/server.log&rdquo;) do |time|</h1>
+
+<h1>time.strftime(&ldquo;%Y-%m-%d %H:%M:%S&rdquo;)</h1>
+
+<h1>end</h1>
+
+<p>#</p>
+
+<h1>Returns nothing.</h1>
+
+<p>def log(*msgs, &amp;block)
+  &hellip;
+end
+The Yields Section
+The yields section is used to specify what is sent to the implicitly given block. The section MUST start with the word &ldquo;Yields&rdquo; and SHOULD contain a description and type of the yielded object. For example:</p>
+
+<h1>Yields the Integer index of the iteration.</h1>
+
+<p>Lines SHOULD be wrapped at 80 columns. Wrapped lines MUST be indented under the above line by at least two spaces.</p>
+
+<p>The Examples Section
+The examples section MUST start with the word &ldquo;Examples&rdquo; on a line by itself. The next line SHOULD be blank. The following lines SHOULD be indented by two spaces (three spaces from the initial comment marker) and contain code that shows off how to call the method and (optional) examples of what it returns. Everything under the &ldquo;Examples&rdquo; line should be considered code, so make sure you comment out lines that show return values. For example:</p>
+
+<h1>Examples</h1>
+
+<p>#</p>
+
+<h1>multiplex(&lsquo;x&rsquo;, 4)</h1>
+
+<h1># => &lsquo;xxxx&rsquo;</h1>
+
+<p>#</p>
+
+<h1>multiplex(&lsquo;apple&rsquo;, 2)</h1>
+
+<h1># => &lsquo;appleapple&rsquo;</h1>
+
+<p>The Returns/Raises Section
+The returns section should explain in plain sentences what is returned from the method. The line MUST begin with &ldquo;Returns&rdquo;. If only a single thing is returned, state the nature and type of the value. For example:</p>
+
+<h1>Returns the duplicated String.</h1>
+
+<p>If several different types may be returned, list all of them. For example:</p>
+
+<h1>Returns the given element Symbol or nil if none was found.</h1>
+
+<p>If the return value of the method is not intended to be used, then you should simply state:</p>
+
+<h1>Returns nothing.</h1>
+
+<p>If the method raises exceptions that the caller may be interested in, add additional lines that explain each exception and under what conditions it may be encountered. The lines MUST begin with &ldquo;Raises&rdquo;. For example:</p>
+
+<h1>Returns nothing.</h1>
+
+<h1>Raises Errno::ENOENT if the file cannot be found.</h1>
+
+<h1>Raises Errno::EACCES if the file cannot be accessed.</h1>
+
+<p>Lines SHOULD be wrapped at 80 columns. Wrapped lines MUST be indented under the above line by at least two spaces. For example:</p>
+
+<h1>Returns the atomic mass of the element as a Float. The value is in</h1>
+
+<h1>unified atomic mass units.</h1>
+
+<p>The Signature Section
+The signature section allows you specify the nature of methods that are dynamically created at runtime.</p>
+
+<p>The section MUST start with the word &ldquo;Signature&rdquo; on a line by itself. The next line SHOULD be blank. The following lines SHOULD be indented by two spaces (three spaces from the initial comment marker) and contain special code that shows the method signature(s). For complex dynamic signatures, you SHOULD name and demarcate signature variables with &lt;> for required parts and [] for optional parts. Use &hellip; for repeating elements. If there are dynamic elements to the signature, document them in the same was as the Arguments section, but leave out any type declarations. Documentation for metaprogrammed methods may exist independent of any actual code, or it may appear above the code that creates the methods. Use your best judgment.</p>
+
+<h1>Signature</h1>
+
+<p>#</p>
+
+<h1>find_by_<field><a href="args"><em>and</em><field>&hellip;</a></h1>
+
+<p>#</p>
+
+<h1>field &ndash; A field name.</h1>
+
+<p>Because metaprogrammed methods may be difficult to decipher, it&rsquo;s best to include an examples section to demonstrate proper usage. For example:</p>
+
+<h1>Public: Find Records by a specific field name and value. This method</h1>
+
+<h1>will be available for each field defined on the record.</h1>
+
+<p>#</p>
+
+<h1>args &ndash; The value or Array of values of the field(s) to find by.</h1>
+
+<p>#</p>
+
+<h1>Examples</h1>
+
+<p>#</p>
+
+<h1>find_by_name_and_email(&ldquo;Tom&rdquo;, &ldquo;<a href="&#109;&#97;&#x69;&#108;&#x74;&#111;&#58;&#x74;&#111;&#109;&#x40;&#x6d;&#111;&#106;&#x6f;&#109;&#98;&#111;&#46;&#99;&#x6f;&#x6d;">&#116;&#111;&#109;&#64;&#109;&#111;&#106;&#111;&#x6d;&#98;&#111;&#46;&#x63;&#x6f;&#x6d;</a>&rdquo;)</h1>
+
+<p>#</p>
+
+<h1>Returns an Array of matching Records.</h1>
+
+<p>#</p>
+
+<h1>Signature</h1>
+
+<p>#</p>
+
+<h1>find_by_<field><a href="args"><em>and</em><field>&hellip;</a></h1>
+
+<p>#</p>
+
+<h1>field &ndash; A field name.</h1>
+
+<p>Class/Module Documentation
+TomDoc for classes and modules follows the same form as Method Documentation but only contains the Description and Examples sections.</p>
+
+<h1>Public: Various methods useful for performing mathematical operations.</h1>
+
+<h1>All methods are module methods and should be called on the Math module.</h1>
+
+<p>#</p>
+
+<h1>Examples</h1>
+
+<p>#</p>
+
+<h1>Math.square_root(9)</h1>
+
+<h1># => 3</h1>
+
+<p>module Math
+  &hellip;
+end
+Just like methods, classes may be marked as Public, Internal, or Deprecated depending on their intended use.</p>
+
+<p>Constants Documentation
+Constants should be documented with freeform comments. The type of the constant and any important constraints should be stated.</p>
+
+<h1>Public: Integer number of seconds to wait before connection timeout.</h1>
+
+<p>CONNECTION_TIMEOUT = 60
+Just like methods, constants may be marked as Public, Internal, or Deprecated depending on their intended use.</p>
+
+<p>Special Considerations
+Constructor
+A Ruby class&rsquo;s initialize method does not have a significant return value. You MAY exclude the returns section. A larger description of the purpose of this class should be done at the Class level.</p>
+
+<h1>Public: Initialize a Widget.</h1>
+
+<p>#</p>
+
+<h1>name &ndash; A String naming the widget.</h1>
+
+<p>def initialize(name)
+  &hellip;
+end
+Attributes
+Ruby&rsquo;s built in attr_reader, attr_writer, and attr_accessor require a bit more consideration. With TomDoc you SHOULD document each of these method generators separately. Because each part of a method documentation section is optional, you can write concise yet unambiguous docs.</p>
+
+<p>Here is an example TomDoc for attr_reader.</p>
+
+<h1>Public: Returns the String name of the user.</h1>
+
+<p>attr_reader :name
+Here is an example TomDoc for attr_writer.</p>
+
+<h1>Public: Sets the String name of the user.</h1>
+
+<p>attr_writer :name
+For attr_accessor you can use an overloaded shorthand that documents the getter and setter simultaneously:</p>
+
+<h1>Public: Gets/Sets the String name of the user.</h1>
+
+<p>attr_accessor :name</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Francis Jiang</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-15T10:54:00+08:00" pubdate data-updated="true">Mar 15<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://jhjguxin.github.io/blog/2012/03/15/tomdoc-for-ruby-version-1-dot-0-0-rc1/" data-via="jhjguxin" data-counturl="http://jhjguxin.github.io/blog/2012/03/15/tomdoc-for-ruby-version-1-dot-0-0-rc1/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/03/09/rspecjian-ming-zhi-nan-by-yuanyi-zhang/" title="Previous Post: RSpec简明指南 By Yuanyi ZHANG">&laquo; RSpec简明指南 By Yuanyi ZHANG</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/03/16/factory-girl-validation-failed/" title="Next Post: factory_girl Validation failed">factory_girl Validation failed &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/">通过mongodump和mongorestore实现Mongodb备份和恢复 --by Chenzhou123520</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes/">Ruby on Rails 4.0 Release Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/rails-active-record-named-scopes/">Rails Active Record Named Scopes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/">晒晒我们的开源项目 ITEYE开源代码</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/">Single Sign-on 单点登录 Sso</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/jhjguxin">@jhjguxin</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'jhjguxin',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Francis Jiang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

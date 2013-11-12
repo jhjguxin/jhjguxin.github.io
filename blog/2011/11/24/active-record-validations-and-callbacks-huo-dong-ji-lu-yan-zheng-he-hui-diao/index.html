@@ -1,0 +1,1962 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Active Record Validations and Callbacks 活动记录验证和回调 - Francis's Octopress Blog</title>
+  <meta name="author" content="Francis Jiang">
+
+  
+  <meta name="description" content="Active Record Validations and Callbacks 活动记录验证和回调 Active Record Validations and Callbacks 活动记录验证和回调 This guide teaches you how to hook勾子into the life &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jhjguxin.github.io/blog/2011/11/24/active-record-validations-and-callbacks-huo-dong-ji-lu-yan-zheng-he-hui-diao">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Francis's Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-25901353-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Francis's Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jhjguxin.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/readme">Readme</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Active Record Validations and Callbacks 活动记录验证和回调</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-24T13:38:00+08:00" pubdate data-updated="true">Nov 24<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>Active Record Validations and Callbacks 活动记录验证和回调</h2>
+
+<h2>Active Record Validations and Callbacks <span style="font-family: WenQuanYi Micro Hei;">活动记录验证和回调</span></h2>
+
+
+<p>This guide teaches you how to hook<span style="font-family: DejaVu Sans;">勾子</span>into the life cycle of your Active Record objects.<span style="font-family: DejaVu Sans;">这个教程指导你怎样挂接到你的</span>Active Record objects<span style="font-family: DejaVu Sans;">的生存周期。</span>You will learn how to validate the state of objects before they go into the database, and how to perform custom operations at certain points in the object life cycle.<span style="font-family: DejaVu Sans;">你将会学习到在将数据对象存入数据库之前怎样验证它们的状态，以及在对象生存周期的一些点上怎样执行定制操作。</span></p>
+
+<p>After reading this guide and trying out the presented concepts, we hope that you’ll be able to:<span style="font-family: DejaVu Sans;">在阅读了这个教程以及尝试介绍的概念，我们希望你能够：</span></p>
+
+<ul>
+    <li>Understand the life cycle of Active Record objects <span style="font-family: DejaVu Sans;"><span style="font-family: Liberation Serif,Times New Roman,serif;">理解 </span></span>Active Record<span style="font-family: DejaVu Sans;"><span style="font-family: Liberation Serif,Times New Roman,serif;">对象的生存周期</span></span></li>
+    <li>Use the built-in Active Record validation helpers <span style="font-family: DejaVu Sans;"><span style="font-family: Liberation Serif,Times New Roman,serif;">使用内建的 </span></span>Active Record<span style="font-family: DejaVu Sans;"><span style="font-family: Liberation Serif,Times New Roman,serif;">验证</span></span>helpers</li>
+    <li>Create your own custom validation methods <span style="font-family: DejaVu Sans;"><span style="font-family: Liberation Serif,Times New Roman,serif;">创建属于你的定制验证方法</span></span></li>
+    <li>Work with the error messages generated by the validation process <span style="font-family: DejaVu Sans;"><span style="font-family: Liberation Serif,Times New Roman,serif;">在验证过程中使用错误消息创建器工作</span></span></li>
+    <li>Create callback methods that respond to events in the object life cycle <span style="font-family: DejaVu Sans;"><span style="font-family: Liberation Serif,Times New Roman,serif;">新建一个回调方法响应对象生存周期的事件</span></span></li>
+    <li>Create special classes that encapsulate<span style="font-family: DejaVu Sans;">封装</span>common behavior for your callbacks <span style="font-family: DejaVu Sans;"><span style="font-family: Liberation Serif,Times New Roman,serif;">创建特殊的类来封装你回调的通常习惯（方法）</span></span></li>
+    <li>Create Observers<span style="font-family: DejaVu Sans;">观察员</span>that respond to life cycle events outside of the original class <span style="font-family: DejaVu Sans;"><span style="font-family: Liberation Serif,Times New Roman,serif;">创建 </span></span>Observers<span style="font-family: DejaVu Sans;"><span style="font-family: Liberation Serif,Times New Roman,serif;">来响应原类以外的生存周期事件</span></span></li>
+</ul>
+
+
+<h3>1 The Object Life Cycle</h3>
+
+
+<p>During the normal operation of a Rails application, objects may be created, updated, and destroyed. Active Record provides hooks into this <em>object</em><em> </em><em>life</em><em> </em><em>cycle</em> so that you can control your application and its data.<span style="font-family: DejaVu Sans;">一个</span>Rails<span style="font-family: DejaVu Sans;">应用程序的正常操作期间，对象可能被新建，更新，和销毁。</span>Active Record<span style="font-family: DejaVu Sans;">提供挂载到这个对象生存周期，以便你可以控制你的应用程序和数据。</span></p>
+
+<p>Validations allow you to ensure that only valid data is stored in your database. Callbacks and observers allow you to trigger<span style="font-family: DejaVu Sans;">触发</span>logic before or after an alteration<span style="font-family: DejaVu Sans;">改造变动</span>of an object’s state.<span style="font-family: DejaVu Sans;">验证允许你确保只有验证数据被存储到你的数据库。回调和观察员（监视器）允许你在变动一个对象的状态之前或之后触发逻辑。</span></p>
+
+<h3>2 Validations Overview<span style="font-family: WenQuanYi Micro Hei;">验证概述</span></h3>
+
+
+<p>Before you dive into the detail of validations in Rails, you should understand a bit about how validations fit into the big picture.<span style="font-family: DejaVu Sans;">在你深入</span>Rails <span style="font-family: DejaVu Sans;">验证的详细说明之前，你应该明白一点就是关于怎样让验证适合于（</span>Rails<span style="font-family: DejaVu Sans;">）这幅大画卷。</span></p>
+
+<h4>2.1 Why Use Validations?</h4>
+
+
+<p>Validations are used to ensure that only valid data is saved into your database. For example, it may be important to your application to ensure that every user provides a valid email address and mailing address.<span style="font-family: DejaVu Sans;">验证用于确保只有通过验证的数据被保存入你的数据库。例如，在你的应用程序中确认每个用户提供了一个有效的</span>Email<span style="font-family: DejaVu Sans;">地址和邮寄地址是非常重要的。</span></p>
+
+<p>There are several ways to validate data before it is saved into your database, including native database constraints, client-side validations, controller-level validations, and model-level validations.<span style="font-family: DejaVu Sans;">在数据被存储到你的数据库中之前这里有几种方法来验证它，包括本地数据库约束，客户端验证，控制层级别的验证和模型层级别的验证。</span></p>
+
+<p>Database constraints and/or stored procedures make the validation mechanisms database-dependent and can make testing and maintenance more difficult. However, if your database is used by other applications, it may be a good idea to use some constraints at the database level. Additionally, database-level validations can safely handle some things (such as uniqueness in heavily-used tables) that can be difficult to implement otherwise.</p>
+
+<ul>
+    <li>Client-side validations can be useful, but are generally unreliable if used alone. If they are implemented using JavaScript, they may be bypassed if JavaScript is turned off in the user’s browser. However, if combined with other techniques, client-side validation can be a convenient way to provide users with immediate feedback as they use your site. <span style="font-family: DejaVu Sans;">客户端验证是很有用的，但是一般情况下单独使用是靠不住的。如果他们使用</span>JavaScript<span style="font-family: DejaVu Sans;">来实施（验证），它们可能被绕过如果用户的浏览器中</span>JavaScript<span style="font-family: DejaVu Sans;">被关闭的话。然而，如果联合其他的技术，客户端验证是一种方便的方法来提供用户即使反馈（验证信息）如果他们使用你的的站点。</span></li>
+    <li>Controller-level validations can be tempting to use, but often become unwieldy and difficult to test and maintain. Whenever possible, it’s a good idea to <a href="http://weblog.jamisbuck.org/2006/10/18/skinny-controller-fat-model"><span style="color: #000080;"><span style="text-decoration: underline;">keep</span></span><span style="color: #000080;"><span style="text-decoration: underline;">your</span></span><span style="color: #000080;"><span style="text-decoration: underline;">controllers</span></span><span style="color: #000080;"><span style="text-decoration: underline;">skinny</span></span></a>, as it will make your application a pleasure to work with in the long run. <span style="font-family: DejaVu Sans;">控制层的验证的使用是诱人的，但是通常变得笨重和难以测试和维护。只要有可能，它是一个保持你的控制层苗条好主意，它也使得你的应用程序愉快的长时间工作。</span></li>
+    <li>Model-level validations are the best way to ensure that only valid data is saved into your database. They are database agnostic, cannot be bypassed by end users, and are convenient to test and maintain. Rails makes them easy to use, provides built-in helpers for common needs, and allows you to create your own validation methods as well. <span style="font-family: DejaVu Sans;">模板层的验证是最好的方式来确保只有有效的数据被保存进了你的数据库。它们与数据库无关，不能被终端用户绕过，并且方便测试和维护。</span>Rails<span style="font-family: DejaVu Sans;">通过提供（基于）常规需要的内建的</span>helpers<span style="font-family: DejaVu Sans;">，使得它们容易使用，并且同样允许你新建属于你的验证方法。</span></li>
+</ul>
+
+
+<h4>2.2 When Does Validation Happen?<span style="font-family: WenQuanYi Micro Hei;">验证在什么时候发生？</span></h4>
+
+
+<p>There are two kinds of Active Record objects: those that correspond to a row inside your database and those that do not. When you create a fresh object, for example using the <tt>new</tt> method, that object does not belong to the database yet. Once you call <tt>save</tt> upon<span style="font-family: DejaVu Sans;">后</span>that object it will be saved into the appropriate database table. Active Record uses the <tt>new_record?</tt> instance method to determine whether an object is already in the database or not. Consider the following simple Active Record class:<span style="font-family: DejaVu Sans;">这里有两种</span>Active Record<span style="font-family: DejaVu Sans;">对象：一些对应于你数据库中的一行以及一些不是。当你创建一个新鲜的对象，例如使用新的方法，这个对象还不属于数据库。一旦你调用</span>save<span style="font-family: DejaVu Sans;">（函数）之后这个对象将会被适当的保存入数据表单。</span>Active Record<span style="font-family: DejaVu Sans;">使用</span><tt>new_record?</tt><span style="font-family: DejaVu Sans;"><tt>实例方法来决定一个对象是否已经被保存进了数据库。思考下面简单的</tt><tt></tt></span><tt>Active</tt><tt> </tt><tt>Record</tt><span style="font-family: DejaVu Sans;"><tt>类：</tt></span></p>
+
+<p><code>class</code><tt> </tt><code>Person</code><code> </code><code>&lt;</code><code> </code><code>ActiveRecord::Base</code></p>
+
+<p><code>end</code></p>
+
+<p><tt>We</tt><tt> </tt><tt>can</tt><tt> </tt><tt>see</tt><tt> </tt><tt>how</tt><tt> </tt><tt>it</tt><tt> </tt><tt>works</tt><tt> </tt><tt>by</tt><tt> </tt><tt>looking</tt><tt> </tt><tt>at</tt><tt> </tt><tt>some</tt><tt> </tt><tt>rails</tt><tt> </tt><tt>console</tt><tt> </tt><tt>output:</tt><span style="font-family: DejaVu Sans;"><tt>我们通过观察一些</tt></span><tt>rails</tt><span style="font-family: DejaVu Sans;"><tt>的控制台输可以明白它是怎么工作的：</tt></span></p>
+
+<p><tt>$</tt><code>rails</code><code> </code><code>console</code></p>
+
+<p><code>&gt;&gt;</code><code> </code><code>p</code><code> </code><code>=</code><code> </code><code>Person.new(:name</code><code> </code><code>=&gt;</code><code> </code><code>&ldquo;John</code><code> </code><code>Doe&rdquo;)</code></p>
+
+<p><code>=&gt;</code><code> </code><code>#&lt;Person</code><code> </code><code>id:</code><code> </code><code>nil,</code><code> </code><code>name:</code><code> </code><code>&ldquo;John</code><code> </code><code>Doe&rdquo;,</code><code> </code><code>created_at:</code><code> </code><code>nil,</code><code> </code><code>:updated_at:</code><code> </code><code>nil&gt;</code></p>
+
+<p><code>&gt;&gt;</code><code> </code><code>p.new_record?</code></p>
+
+<p><code>=&gt;</code><code> </code><code>true</code></p>
+
+<p><code>&gt;&gt;</code><code> </code><code>p.save</code></p>
+
+<p><code>=&gt;</code><code> </code><code>true</code></p>
+
+<p><code>&gt;&gt;</code><code> </code><code>p.new_record?</code></p>
+
+<p><code>=&gt;</code><code> </code><code>false</code></p>
+
+<p>Creating and saving a new record will send an SQL <tt>INSERT</tt> operation to the database. Updating an existing record will send an SQL <tt>UPDATE</tt> operation instead. Validations are typically run before these commands are sent to the database. If any validations fail, the object will be marked as invalid and Active Record will not perform the <tt>INSERT</tt> or <tt>UPDATE</tt> operation. This helps to avoid storing an invalid object in the database. You can choose to have specific validations run when an object is created, saved, or updated.<span style="font-family: DejaVu Sans;">创建和保存一个新的记录将会发送一个</span>SQL <tt>INSERT</tt><span style="font-family: DejaVu Sans;"><tt>操作到数据库。更新一个存在的记录将会发送一个</tt><tt></tt></span><tt>SQL</tt><tt> </tt><tt>UPDATE</tt><span style="font-family: DejaVu Sans;"><tt>操作。验证通常在这些命令被发送到数据库之前运行。如果任何验证失败，这个对象将会标记为非法并且</tt><tt></tt></span><tt>Active</tt><tt> </tt><tt>Record</tt><span style="font-family: DejaVu Sans;"><tt>将不会执行</tt><tt></tt></span><tt>INSERT</tt><span style="font-family: DejaVu Sans;"><tt>或</tt></span><tt>UPDATE</tt><span style="font-family: DejaVu Sans;"><tt>操作。这有助于避免存储一个非法的数据到数据库。你可以在对象被创建，保存或更新的时候选择指定的验证执行。</tt></span></p>
+
+<p>There are many ways to change the state of an object in the database. Some methods will trigger<span style="font-family: DejaVu Sans;">触发</span>validations, but some will not. This means that it’s possible to save an object in the database in an invalid state if you aren’t careful.<span style="font-family: DejaVu Sans;">这里有很多方法来改变对象在数据库中的状态。一些方法将会触发验证，但是一些却不会。这里的意思是如果你不仔细的话就可能以一种非法的状态保存一个对象到数据库。</span></p>
+
+<p>The following methods trigger validations, and will save the object to the database only if the object is valid:<span style="font-family: DejaVu Sans;">下面的方法触发验证，并且如果对象是合法的话将会保存对象到数据库：</span></p>
+
+<ul>
+    <li><tt>create</tt></li>
+    <li><tt>create!</tt></li>
+    <li><tt>save</tt></li>
+    <li><tt>save!</tt></li>
+    <li><tt>update</tt></li>
+    <li><tt>update_attributes</tt></li>
+    <li><tt>update_attributes!</tt></li>
+</ul>
+
+
+<p>The bang versions (e.g. <tt>save!</tt>) raise an exception if the record is invalid. The non-bang versions don’t: <tt>save</tt> and <tt>update_attributes</tt> return <tt>false</tt>, <tt>create</tt> and <tt>update</tt> just return the objects.<span style="font-family: DejaVu Sans;"><span style="color: #800000;">有感叹号的形式（例如</span></span><span style="color: #800000;">save!<span style="font-family: DejaVu Sans;">）在记录是非法的时候会唤起一个异常。没有感叹号形式的就不会：</span></span><tt><span style="color: #800000;">save</span></tt><span style="font-family: DejaVu Sans;"><tt><span style="color: #800000;">和</span></tt></span><tt><span style="color: #800000;">update_attributes</span></tt><span style="font-family: DejaVu Sans;"><tt><span style="color: #800000;">返回</span></tt></span><tt><span style="color: #800000;">false</span></tt><span style="color: #800000;">,</span><tt><span style="color: #800000;">create</span></tt><span style="font-family: DejaVu Sans;"><tt><span style="color: #800000;">和</span></tt></span><tt><span style="color: #800000;">update</span></tt><span style="font-family: DejaVu Sans;"><tt><span style="color: #800000;">只是返回这个对象</span></tt><tt>。</tt></span></p>
+
+<h4>2.3 Skipping Validations<span style="font-family: WenQuanYi Micro Hei;">忽略验证</span></h4>
+
+
+<p>The following methods skip validations, and will save the object to the database regardless<span style="font-family: DejaVu Sans;">无论</span>of its validity. They should be used with caution.<span style="font-family: DejaVu Sans;">下面的方法会略过验证，并且将会保存对象到数据库而无论它的有效性。他们应该慎重使用。</span></p>
+
+<ul>
+    <li><tt>decrement!</tt> <span style="font-family: DejaVu Sans;">递减</span></li>
+    <li><tt>decrement_counter</tt></li>
+    <li><tt>increment!</tt></li>
+    <li><tt>increment_counter</tt></li>
+    <li><tt>toggle!</tt></li>
+    <li><tt>touch</tt> <span style="font-family: DejaVu Sans;">切换</span></li>
+    <li><tt>update_all</tt></li>
+    <li><tt>update_attribute</tt></li>
+    <li><tt>update_column</tt></li>
+    <li><tt>update_counters</tt></li>
+</ul>
+
+
+<p>Note that <tt>save</tt> also has the ability to skip validations if passed <tt>:validate</tt><tt> </tt><tt>=&gt;</tt><tt> </tt><tt>false</tt> as argument. This technique should be used with caution.<span style="font-family: DejaVu Sans;">注意</span>save<span style="font-family: DejaVu Sans;">也可以略过演奏如果通过使用</span><tt>:validate</tt><tt> </tt><tt>=&gt;</tt><tt> </tt><tt>false</tt><span style="font-family: DejaVu Sans;"><tt>作为参数。这个技术也应该慎重使用。</tt></span></p>
+
+<ul>
+    <li><tt>save(:validate</tt><tt> </tt><tt>=&gt;</tt><tt> </tt><tt>false)</tt></li>
+</ul>
+
+
+<h4>2.4 <tt>valid?</tt> and <tt>invalid?</tt></h4>
+
+
+<ol>
+    <li>To verify whether or not an object is valid, Rails uses the <tt>valid?</tt> method. You can also use this method on your own. <tt>valid?</tt> triggers your validations and returns true if no errors were added to the object, and false otherwise.<span style="font-family: DejaVu Sans;">验证一个对象是否有效，</span>Rails<span style="font-family: DejaVu Sans;">使用</span><tt>valid?</tt><span style="font-family: DejaVu Sans;"><tt>方法。你也可以使用属于你的方法。</tt></span><tt>valid?</tt><span style="font-family: DejaVu Sans;"><tt>触发你的验证并且返回</tt></span><tt>True</tt><span style="font-family: DejaVu Sans;"><tt>如果没有错误被添加到对象，否则就返回</tt></span><tt>false</tt><span style="font-family: DejaVu Sans;"><tt>。</tt></span></li>
+</ol>
+
+
+<p><code>class</code> <code>Person</code><code> </code><code>&lt;</code><code> </code><code>ActiveRecord::Base</code></p>
+
+<p><code> </code><code>validates</code><code> </code><code>:name,</code><code> </code><code>:presence</code> <code>=&gt;</code><code> </code><code>true</code></p>
+
+<p><code>end</code></p>
+
+<p>&nbsp;</p>
+
+<p><code>Person.create(:name</code> <code>=&gt;</code><code> </code><code>&ldquo;John</code><code> </code><code>Doe&rdquo;).valid?</code><code> </code><code>#</code><code> </code><code>=&gt;</code><code> </code><code>true</code></p>
+
+<p><code>Person.create(:name</code> <code>=&gt;</code><code> </code><code>nil).valid?</code><code> </code><code>#</code><code> </code><code>=&gt;</code><code> </code><code>false</code></p>
+
+<p>&nbsp;</p>
+
+<p>When Active Record is performing validations, any errors found can be accessed through the <tt>errors</tt> instance method. By definition an object is valid if this collection is empty after running validations.<span style="font-family: DejaVu Sans;">当</span>Active Record<span style="font-family: DejaVu Sans;">在执行验证的时候，任何发现的错误都可以通过</span><tt>errors</tt><span style="font-family: DejaVu Sans;"><tt>实例方法来访问。通过定义一个对象是有效的如果这个集合在运行验证过后是空的。</tt></span></p>
+
+<p>Note that an object instantiated with <tt>new</tt> will not report errors even if it’s technically invalid, because validations are not run when using <tt>new</tt>.<span style="font-family: DejaVu Sans;">注意当实例化一个新的对象的时候将不会报告错误即使假设它的验证技术（得出数据）是非有效的，因为在使用</span>new<span style="font-family: DejaVu Sans;">的时候验证是没有运行的。</span></p>
+
+<p><code>class</code> <code>Person</code><code> </code><code>&lt;</code><code> </code><code>ActiveRecord::Base</code></p>
+
+<p><code> </code><code>validates</code><code> </code><code>:name,</code><code> </code><code>:presence</code> <code>=&gt;</code><code> </code><code>true</code></p>
+
+<p><code>end</code></p>
+
+<p>&nbsp;</p>
+
+<p><code>&gt;&gt;</code><code> </code><code>p</code><code> </code><code>=</code><code> </code><code>Person.new</code></p>
+
+<p><code>=&gt;</code><code> </code><code>#&lt;Person</code><code> </code><code>id:</code><code> </code><code>nil,</code><code> </code><code>name:</code><code> </code><code>nil&gt;</code></p>
+
+<p><code>&gt;&gt;</code><code> </code><code>p.errors</code></p>
+
+<p><code>=&gt;</code><code> </code><code>{}</code></p>
+
+<p>&nbsp;</p>
+
+<p><code>&gt;&gt;</code><code> </code><code>p.valid?</code></p>
+
+<p><code>=&gt;</code><code> </code><code>false</code></p>
+
+<p><code>&gt;&gt;</code><code> </code><code>p.errors</code></p>
+
+<p><code>=&gt;</code><code> </code><code>{:name=&gt;[&ldquo;can&rsquo;t</code><code> </code><code>be</code><code> </code><code>blank&rdquo;]}</code></p>
+
+<p>&nbsp;</p>
+
+<p><code>&gt;&gt;</code><code> </code><code>p</code><code> </code><code>=</code><code> </code><code>Person.create</code></p>
+
+<p><code>=&gt;</code><code> </code><code>#&lt;Person</code><code> </code><code>id:</code><code> </code><code>nil,</code><code> </code><code>name:</code><code> </code><code>nil&gt;</code></p>
+
+<p><code>&gt;&gt;</code><code> </code><code>p.errors</code></p>
+
+<p><code>=&gt;</code><code> </code><code>{:name=&gt;[&ldquo;can&rsquo;t</code><code> </code><code>be</code><code> </code><code>blank&rdquo;]}</code></p>
+
+<p>&nbsp;</p>
+
+<p><code>&gt;&gt;</code><code> </code><code>p.save</code></p>
+
+<p><code>=&gt;</code><code> </code><code>false</code></p>
+
+<p>&nbsp;</p>
+
+<p><code>&gt;&gt;</code><code> </code><code>p.save!</code></p>
+
+<p><code>=&gt;</code><code> </code><code>ActiveRecord::RecordInvalid:</code><code> </code><code>Validation</code><code> </code><code>failed:</code><code> </code><code>Name</code><code> </code><code>can&rsquo;t</code><code> </code><code>be</code><code> </code><code>blank</code></p>
+
+<p>&nbsp;</p>
+
+<p><code>&gt;&gt;</code><code> </code><code>Person.create!</code></p>
+
+<p><code>=&gt;</code><code> </code><code>ActiveRecord::RecordInvalid:</code><code> </code><code>Validation</code><code> </code><code>failed:</code><code> </code><code>Name</code><code> </code><code>can&rsquo;t</code><code> </code><code>be</code><code> </code><code>blank</code></p>
+
+<p>&nbsp;</p>
+
+<p><tt>invalid?</tt> is simply the inverse of <tt>valid?</tt>. <tt>invalid?</tt> triggers your validations and returns true if any errors were added to the object, and false otherwise. <tt>invalid?</tt><span style="font-family: DejaVu Sans;"><tt>是</tt></span><tt>valid?</tt><span style="font-family: DejaVu Sans;"><tt>简单的逆。</tt></span><tt>invalid?</tt><span style="font-family: DejaVu Sans;"><tt>触发你的验证如果有任何错误添加到对象中则返回</tt></span><tt>true</tt><span style="font-family: DejaVu Sans;"><tt>，否则返回</tt></span><tt>false</tt><span style="font-family: DejaVu Sans;"><tt>。</tt></span></p>
+
+<h4>2.5 <tt>errors[]</tt></h4>
+
+
+<p>To verify whether or not a particular attribute of an object is valid, you can use <tt>errors[:attribute]</tt>. It returns an array of all the errors for <tt>:attribute</tt>. If there are no errors on the specified attribute, an empty array is returned.<span style="font-family: DejaVu Sans;">验证一个对象具体的属性是否有效，你可以使用</span><tt>errors[:attribute]</tt><span style="font-family: DejaVu Sans;"><tt>。它返回有关</tt></span><tt>:attribute</tt><span style="font-family: DejaVu Sans;"><tt>所有错误的数组。如果指定的属性没有错误，将会返回一个空数组。</tt></span></p>
+
+<p>This method is only useful <em>after</em> validations have been run, because it only inspects the errors collection and does not trigger validations itself. It’s different from the <tt>ActiveRecord::Base#invalid?</tt> method explained above because it doesn’t verify the validity of the object as a whole. It only checks to see whether there are errors found on an individual attribute of the object.<span style="font-family: DejaVu Sans;">这个方法只有在验证被执行过后才有用，因为它仅仅检查错误集合却不会自己触发验证。<tt>它和</tt></span><tt>ActiveRecord::Base#invalid?</tt><span style="font-family: DejaVu Sans;"><tt>方法上面解释的不同因为它不会整个验证对象的有效性。它仅仅检查这个对象的个别属性是否有错误被找到。</tt></span></p>
+
+<p><code>class</code> <code>Person</code><code> </code><code>&lt;</code><code> </code><code>ActiveRecord::Base</code></p>
+
+<p><code> </code><code>validates</code><code> </code><code>:name,</code><code> </code><code>:presence</code> <code>=&gt;</code><code> </code><code>true</code></p>
+
+<p><code>end</code></p>
+
+<p>&nbsp;</p>
+
+<p><code>&gt;&gt;</code><code> </code><code>Person.new.errors[:name].any?</code><code> </code><code>#</code><code> </code><code>=&gt;</code><code> </code><code>false</code></p>
+
+<p><code>&gt;&gt;</code><code> </code><code>Person.create.errors[:name].any?</code><code> </code><code>#</code><code> </code><code>=&gt;</code><code> </code><code>true</code></p>
+
+<p>We’ll cover validation errors in greater depth in the <a href="http://guides.rubyonrails.org/active_record_validations_callbacks.html#working-with-validation-errors"><span style="color: #000080;"><span style="text-decoration: underline;">Working</span></span><span style="color: #000080;"><span style="text-decoration: underline;">with</span></span><span style="color: #000080;"><span style="text-decoration: underline;">Validation</span></span><span style="color: #000080;"><span style="text-decoration: underline;">Errors</span></span></a> section. For now, let’s turn to the built-in validation helpers that Rails provides by default.<span style="font-family: DejaVu Sans;">我们将会非常深入的涵盖验证错误在</span><a href="http://guides.rubyonrails.org/active_record_validations_callbacks.html#working-with-validation-errors"><span style="color: #000080;"><span style="text-decoration: underline;">Working</span></span><span style="color: #000080;"><span style="text-decoration: underline;">with</span></span><span style="color: #000080;"><span style="text-decoration: underline;">Validation</span></span><span style="color: #000080;"><span style="text-decoration: underline;">Errors</span></span></a><span style="font-family: DejaVu Sans;">。现在，让我们转入</span>Rails<span style="font-family: DejaVu Sans;">默认提供的内建的验证</span>helpers<span style="font-family: DejaVu Sans;">。</span></p>
+
+<p>&nbsp;</p>
+
+<h3>3 Validation Helpers</h3>
+
+
+<p>Active Record offers many pre-defined validation helpers that you can use directly inside your class definitions. These helpers provide common validation rules. Every time a validation fails, an error message is added to the object’s <tt>errors</tt> collection, and this message is associated with the field being validated.Active Record<span style="font-family: DejaVu Sans;">提供许多预定义的你可以插入你的类中直接使用的验证</span>helpers<span style="font-family: DejaVu Sans;">。这些</span>helpers<span style="font-family: DejaVu Sans;">提供常规验证规则。每次验证失败，一个错误消息会被添加到对象的</span>errors<span style="font-family: DejaVu Sans;">集合中，并且这些消息和被验证的</span>field<span style="font-family: DejaVu Sans;">相关。</span></p>
+
+<p>Each helper accepts an arbitrary number of attribute names, so with a single line of code you can add the same kind of validation to several attributes.<span style="font-family: DejaVu Sans;">每个</span>helper<span style="font-family: DejaVu Sans;">接受一个任意数目的属性名字，因此使用一行代码你可以给一些属性添加相同类型验证。</span></p>
+
+<p>All of them accept the <tt>:on</tt> and <tt>:message</tt> options, which define when the validation should be run and what message should be added to the <tt>errors</tt> collection if it fails, respectively<span style="font-family: DejaVu Sans;">个别的</span>. The <tt>:on</tt> option takes one of the values <tt>:save</tt> (the default), <tt>:create</tt> or <tt>:update</tt>. There is a default error message for each one of the validation helpers. These messages are used when the <tt>:message</tt> option isn’t specified. Let’s take a look at each one of the available helpers.<span style="font-family: DejaVu Sans;">所有的（</span>helpers<span style="font-family: DejaVu Sans;">）接受</span><tt>:on</tt><span style="font-family: DejaVu Sans;"><tt>和</tt></span><tt>:message</tt><span style="font-family: DejaVu Sans;"><tt>选项，用来对个别的（</tt></span><tt>helpers</tt><span style="font-family: DejaVu Sans;"><tt>）定义什么时候运行验证以及如果验证失败什么消息被添加到</tt></span><tt>errors</tt><span style="font-family: DejaVu Sans;"><tt>集合。</tt></span><tt>:on</tt><span style="font-family: DejaVu Sans;"><tt>选项获取</tt></span><tt>:save</tt><tt> </tt><tt>(</tt><span style="font-family: DejaVu Sans;"><tt>默认的</tt></span><tt>),</tt><tt> </tt><tt>:create</tt><span style="font-family: DejaVu Sans;"><tt>或</tt></span><tt>:update</tt><span style="font-family: DejaVu Sans;"><tt>的值。这里每个验证</tt></span><tt>helpers</tt><span style="font-family: DejaVu Sans;"><tt>是默认错误消息。这些消息在</tt><tt></tt></span><tt>:message</tt><span style="font-family: DejaVu Sans;"><tt>选项没有被指定时使用。下面我们来看看每个可用的</tt></span><tt>helpers</tt><span style="font-family: DejaVu Sans;"><tt>。</tt></span></p>
+
+<h4><tt>3.1</tt><tt> </tt><tt>acceptance</tt><span style="font-family: WenQuanYi Micro Hei;"><tt>接受承认</tt></span></h4>
+
+
+<p>Validates that a checkbox on the user interface was checked when a form was submitted. This is typically used when the user needs to agree to your application’s terms of service, confirm reading some text, or any similar concept. This validation is very specific to web applications and this ‘acceptance’ does not need to be recorded anywhere in your database (if you don’t have a field for it, the helper will just create a virtual attribute).<span style="font-family: DejaVu Sans;">这个是很特殊对于</span>web<span style="font-family: DejaVu Sans;">应用程序的验证并且这个<span style="font-family: Liberation Serif,Times New Roman,serif;">‘</span></span>acceptance’ <span style="font-family: DejaVu Sans;">不需要在你的数据库中的任何地方记录（如果没有一个它的</span>field<span style="font-family: DejaVu Sans;">，</span>helper<span style="font-family: DejaVu Sans;">将会仅仅创建一个虚拟属性）。</span></p>
+
+<p><code>class</code><tt> </tt><code>Person</code><code> </code><code>&lt;</code><code> </code><code>ActiveRecord::Base</code></p>
+
+<p><code> </code><code>validates</code><code> </code><code>:terms_of_service,</code><code> </code><code>:acceptance</code> <code>=&gt;</code><code> </code><code>true</code></p>
+
+<p><code>end</code></p>
+
+<p><tt>The</tt><tt> </tt><tt>default</tt><tt> </tt><tt>error</tt><tt> </tt><tt>message</tt><tt> </tt><tt>for</tt><tt> </tt><tt>this</tt><tt> </tt><tt>helper</tt><tt> </tt><tt>is</tt><tt> </tt><tt><strong>“</strong></tt><em><strong>must</strong></em><em><strong> </strong></em><em><strong>be</strong></em><em><strong> </strong></em><em><strong>accepted</strong></em><tt><strong>”</strong></tt><tt>.</tt></p>
+
+<p><tt>It</tt><tt> </tt><tt>can</tt><tt> </tt><tt>receive</tt><tt> </tt><tt>an</tt><tt> </tt><tt>:accept</tt><tt> </tt><tt>option,</tt><tt> </tt><tt>which</tt><tt> </tt><tt>determines</tt><tt> </tt><tt>the</tt><tt> </tt><tt>value</tt><tt> </tt><tt>that</tt><tt> </tt><tt>will</tt><tt> </tt><tt>be</tt><tt> </tt><tt>considered</tt><tt> </tt><tt>acceptance.</tt><tt> </tt><tt>It</tt><tt> </tt><tt>defaults</tt><tt> </tt><tt>to</tt><tt> “</tt><tt>1</tt><tt>” </tt><tt>and</tt><tt> </tt><tt>can</tt><tt> </tt><tt>be</tt><tt> </tt><tt>easily</tt><tt> </tt><tt>changed.</tt><span style="font-family: DejaVu Sans;"><tt>它可以接收一个</tt></span><tt>:accept</tt><span style="font-family: DejaVu Sans;"><tt>选项，用来决定哪个值认为是接受。默认是</tt><tt><span style="font-family: Liberation Serif,Times New Roman,serif;">‘</span></tt></span><tt>1</tt><tt>’</tt><span style="font-family: DejaVu Sans;"><tt>并且可以很容易更改成其他的。</tt></span></p>
+
+<p><code>class</code> <code>Person</code><code> </code><code>&lt;</code><code> </code><code>ActiveRecord::Base</code></p>
+
+<p><code> </code><code>validates</code><code> </code><code>:terms_of_service,</code><code> </code><code>:acceptance</code> <code>=&gt;</code><code> </code><code>{</code><code> </code><code>:accept</code> <code>=&gt;</code><code> </code><code>&lsquo;yes&rsquo;</code> <code>}</code></p>
+
+<p><code>end</code></p>
+
+<p>&nbsp;</p>
+
+<h4>3.2 <tt>validates_associated</tt></h4>
+
+
+<p>You should use this helper when your model has associations with other models and they also need to be validated. When you try to save your object, <tt>valid?</tt> will be called upon each one of the associated objects.</p>
+
+<p><code>class</code> <code>Library</code><code> </code><code>&lt;</code><code> </code><code>ActiveRecord::Base</code></p>
+
+<p><code> </code><code>has_many</code><code> </code><code>:books</code></p>
+
+<p><code> </code><code>validates_associated</code><code> </code><code>:books</code></p>
+
+<p><code>end</code></p>
+
+<p>This validation will work with all of the association types.</p>
+
+<p><span style="color: #800000;">Don</span><span style="color: #800000;">’</span><span style="color: #800000;">t</span><span style="color: #800000;">use</span><tt><span style="color: #800000;">validates_associated</span></tt><span style="color: #800000;">on</span><span style="color: #800000;">both</span><span style="color: #800000;">ends</span><span style="color: #800000;">of</span><span style="color: #800000;">your</span><span style="color: #800000;">associations.</span><span style="color: #800000;">They</span><span style="color: #800000;">would</span><span style="color: #800000;">call</span><span style="color: #800000;">each</span><span style="color: #800000;">other</span><span style="color: #800000;">in</span><span style="color: #800000;">an</span><span style="color: #800000;">infinite<span style="font-family: DejaVu Sans;">无限</span></span><span style="color: #800000;">loop.</span></p>
+
+<p>The default error message for <tt>validates_associated</tt> is “<em>is</em><em> </em><em>invalid</em>”. Note that each associated object will contain its own <tt>errors</tt> collection; errors do not bubble up<span style="font-family: DejaVu Sans;">冒泡</span>to the calling model.</p>
+
+<p>&nbsp;</p>
+
+<h4>3.3 <tt>confirmation</tt><span style="font-family: WenQuanYi Micro Hei;"><tt>确认</tt></span></h4>
+
+
+<p>You should use this helper when you have two text fields that should receive exactly the same content. For example, you may want to confirm an email address or a password. This validation creates a virtual attribute whose name is the name of the field that has to be confirmed with “_confirmation” appended.</p>
+
+<p><span style="font-family: DejaVu Sans;">你应该使用这个</span>helper<span style="font-family: DejaVu Sans;">当你有两个内容完全相同的文本框需要回收。（验证输入）</span></p>
+
+<p><code>class</code> <code>Person</code><code> </code><code>&lt;</code><code> </code><code>ActiveRecord::Base</code></p>
+
+<p><code> </code><code>validates</code><code> </code><code>:email,</code><code> </code><code>:confirmation</code> <code>=&gt;</code><code> </code><code>true</code></p>
+
+<p><code>end</code></p>
+
+<p>In your view template you could use something like</p>
+
+<p><code>&lt;%=</code> <code>text_field</code><code> </code><code>:person,</code><code> </code><code>:email</code> <code>%&gt;</code></p>
+
+<p><code>&lt;%=</code> <code>text_field</code><code> </code><code>:person,</code><code> </code><code>:email_confirmation</code> <code>%&gt;</code></p>
+
+<p>&nbsp;</p>
+
+<p>This check is performed only if <tt>email_confirmation</tt> is not <tt>nil</tt>. To require confirmation, make sure to add a presence check for the confirmation attribute (we’ll take a look at <tt>presence</tt> later on this guide):</p>
+
+<p><code>class</code> <code>Person</code><code> </code><code>&lt;</code><code> </code><code>ActiveRecord::Base</code></p>
+
+<p><code> </code><code>validates</code><code> </code><code>:email,</code><code> </code><code>:confirmation</code> <code>=&gt;</code><code> </code><code>true</code></p>
+
+<p><code> </code><code>validates</code><code> </code><code>:email_confirmation,</code><code> </code><code>:presence</code> <code>=&gt;</code><code> </code><code>true</code></p>
+
+<p><code>end</code></p>
+
+<p>The default error message for this helper is “<em>doesn</em><em>’</em><em>t</em><em> </em><em>match</em><em> </em><em>confirmation</em>”.</p>
+
+<h4>3.4 <tt>exclusion</tt><span style="font-family: WenQuanYi Micro Hei;"><tt>排除</tt></span></h4>
+
+
+<p>This helper validates that the attributes’ values are not included in a given set. In fact, this set can be any enumerable<span style="font-family: DejaVu Sans;">列举</span>object.</p>
+
+<p><code>class</code> <code>Account</code><code> </code><code>&lt;</code><code> </code><code>ActiveRecord::Base</code></p>
+
+<p><code> </code><code>validates</code><code> </code><code>:subdomain,</code><code> </code><code>:exclusion</code> <code>=&gt;</code><code> </code><code>{</code><code> </code><code>:in</code> <code>=&gt;</code><code> </code><code>%w(www</code><code> </code><code>us</code><code> </code><code>ca</code><code> </code><code>jp),</code></p>
+
+<p><code> </code><code>:message</code> <code>=&gt;</code><code> </code><code>&ldquo;Subdomain</code><code> </code><code>%{value}</code><code> </code><code>is</code><code> </code><code>reserved.&rdquo;</code> <code>}</code></p>
+
+<p><code>end</code></p>
+
+<p>The <tt>exclusion</tt> helper has an option <tt>:in</tt> that receives the set of values that will not be accepted for the validated attributes. The <tt>:in</tt> option has an alias called <tt>:within</tt> that you can use for the same purpose<span style="font-family: DejaVu Sans;">目的</span>, if you’d like to. This example uses the <tt>:message</tt> option to show how you can include the attribute’s value.</p>
+
+<p>The default error message is “<em>is</em><em> </em><em>reserved</em>”.</p>
+
+<h4>3.5 <tt>format</tt><span style="font-family: WenQuanYi Micro Hei;"><tt>格式（匹配）</tt></span></h4>
+
+
+<p>This helper validates the attributes’ values by testing whether they match a given regular expression<span style="font-family: DejaVu Sans;"><span style="color: #800000;">正则表达式</span></span>, which is specified using the <tt>:with</tt> option.</p>
+
+<p><code>class</code> <code>Product</code><code> </code><code>&lt;</code><code> </code><code>ActiveRecord::Base</code></p>
+
+<p><code> </code><code>validates</code><code> </code><code>:legacy_code,</code><code> </code><code>:format</code> <code>=&gt;</code><code> </code><code>{</code><code> </code><code>:with</code> <code>=&gt;</code><code> </code><code>/\A[a-zA-Z]+\z/,</code></p>
+
+<p><code> </code><code>:message</code> <code>=&gt;</code><code> </code><code>&ldquo;Only</code><code> </code><code>letters</code><code> </code><code>allowed&rdquo;</code> <code>}</code></p>
+
+<p><code>end</code></p>
+
+<p>The default error message is “<em>is</em><em> </em><em>invalid</em>”.</p>
+
+<h4>3.6 <tt>inclusion</tt><span style="font-family: WenQuanYi Micro Hei;"><tt>列入</tt></span></h4>
+
+
+<p>This helper validates that the attributes’ values are included in a given set. In fact, this set can be any enumerable object.</p>
+
+<p><code>class</code> <code>Coffee</code><code> </code><code>&lt;</code><code> </code><code>ActiveRecord::Base</code></p>
+
+<p><code> </code><code>validates</code><code> </code><code>:size,</code><code> </code><code>:inclusion</code> <code>=&gt;</code><code> </code><code>{</code><code> </code><code>:in</code> <code>=&gt;</code><code> </code><code>%w(small</code><code> </code><code>medium</code><code> </code><code>large),</code></p>
+
+<p><code> </code><code>:message</code> <code>=&gt;</code><code> </code><code>&ldquo;%{value}</code><code> </code><code>is</code><code> </code><code>not</code><code> </code><code>a</code><code> </code><code>valid</code><code> </code><code>size&rdquo;</code> <code>}</code></p>
+
+<p><code>end</code></p>
+
+<p>The <tt>inclusion</tt> helper has an option <tt>:in</tt> that receives the set of values that will be accepted. The <tt>:in</tt> option has an alias called <tt>:within</tt> that you can use for the same purpose, if you’d like to. The previous example uses the <tt>:message</tt> option to show how you can include the attribute’s value.</p>
+
+<p>The default error message for this helper is “<em>is</em><em> </em><em>not</em><em> </em><em>included</em><em> </em><em>in</em><em> </em><em>the</em><em> </em><em>list</em>”.</p>
+
+<h4>3.7 <tt>length</tt></h4>
+
+
+<p>This helper validates the length of the attributes’ values. It provides a variety of options, so you can specify length constraints in different ways:</p>
+
+<p>class Person &lt; ActiveRecord::Base</p>
+
+<p>validates :name, :length =&gt; { :minimum =&gt; 2 }</p>
+
+<p>validates :bio, :length =&gt; { :maximum =&gt; 500 }</p>
+
+<p>validates :password, :length =&gt; { :in =&gt; 6..20 }</p>
+
+<p>validates :registration_number, :length =&gt; { :is =&gt; 6 }</p>
+
+<p>end</p>
+
+<p>The possible length constraint<span style="font-family: DejaVu Sans;">约束</span>options are:</p>
+
+<ul>
+    <li><tt>:minimum</tt> – The attribute cannot have less than the specified length.</li>
+    <li><tt>:maximum</tt> – The attribute cannot have more than the specified length.</li>
+    <li><tt>:in</tt> (or <tt>:within</tt>) – The attribute length must be included in a given interval. The value for this option must be a range.</li>
+    <li><tt>:is</tt> – The attribute length must be equal to the given value.</li>
+</ul>
+
+
+<p>The default error messages depend on the type of length validation being performed. <span style="color: #800000;">You</span><span style="color: #800000;">can</span><span style="color: #800000;">personalize</span><span style="color: #800000;">these</span><span style="color: #800000;">messages</span><span style="color: #800000;">using</span><span style="color: #800000;">the</span><tt><span style="color: #800000;">:wrong_length</span></tt><span style="color: #800000;">,</span><tt><span style="color: #800000;">:too_long</span></tt><span style="color: #800000;">,</span><span style="color: #800000;">and</span><tt><span style="color: #800000;">:too_short</span></tt><span style="color: #800000;">options</span><span style="color: #800000;">and</span><tt><span style="color: #800000;">%{count}</span></tt><span style="color: #800000;">as</span><span style="color: #800000;">a</span><span style="color: #800000;">placeholder</span><span style="color: #800000;">for</span><span style="color: #800000;">the</span><span style="color: #800000;">number</span><span style="color: #800000;">corresponding</span><span style="color: #800000;">to</span><span style="color: #800000;">the</span><span style="color: #800000;">length</span><span style="color: #800000;">constraint</span><span style="color: #800000;">being</span><span style="color: #800000;">used.</span>You can still use the <tt>:message</tt> option to specify an error message.</p>
+
+<p><code>class</code> <code>Person</code><code> </code><code>&lt;</code><code> </code><code>ActiveRecord::Base</code></p>
+
+<p><code> </code><code>validates</code><code> </code><code>:bio,</code><code> </code><code>:length</code> <code>=&gt;</code><code> </code><code>{</code><code> </code><code>:maximum</code> <code>=&gt;</code><code> </code><code>1000,</code></p>
+
+<p><code> </code><code>:too_long</code> <code>=&gt;</code><code> </code><code>&ldquo;%{count}</code><code> </code><code>characters</code><code> </code><code>is</code><code> </code><code>the</code><code> </code><code>maximum</code><code> </code><code>allowed&rdquo;</code> <code>}</code></p>
+
+<p><code>end</code></p>
+
+<p>This helper counts characters by default, but you can split the value in a different way using the <tt>:tokenizer</tt> option:</p>
+
+<p><code>class</code> <code>Essay</code><code> </code><code>&lt;</code><code> </code><code>ActiveRecord::Base</code></p>
+
+<p><code> </code><code>validates</code><code> </code><code>:content,</code><code> </code><code>:length</code> <code>=&gt;</code><code> </code><code>{</code></p>
+
+<p><code> </code><code>:minimum</code><code> </code> <code>=&gt;</code><code> </code><code>300,</code></p>
+
+<p><code> </code><code>:maximum</code><code> </code> <code>=&gt;</code><code> </code><code>400,</code></p>
+
+<p><code> </code><code>:tokenizer</code> <code>=&gt;</code><code> </code><code>lambda</code><code> </code><code>{</code><code> </code><code>|str|</code><code> </code><code>str.scan(/\w+/)</code><code> </code><code>},</code></p>
+
+<p><code> </code><code>:too_short</code> <code>=&gt;</code><code> </code><code>&ldquo;must</code><code> </code><code>have</code><code> </code><code>at</code><code> </code><code>least</code><code> </code><code>%{count}</code><code> </code><code>words&rdquo;,</code></p>
+
+<p><code> </code><code>:too_long</code><code> </code> <code>=&gt;</code><code> </code><code>&ldquo;must</code><code> </code><code>have</code><code> </code><code>at</code><code> </code><code>most</code><code> </code><code>%{count}</code><code> </code><code>words&rdquo;</code></p>
+
+<p><code> </code><code>}</code></p>
+
+<p><code>end</code></p>
+
+<p>Note that the default error messages are plural<span style="font-family: DejaVu Sans;">多元的</span>(e.g., “is too short (minimum is %{count} characters)”). For this reason, when <tt>:minimum</tt> is 1 you should provide a personalized<span style="font-family: DejaVu Sans;">个性化</span>message or use <tt>validates_presence_of</tt> instead. When <tt>:in</tt> or <tt>:within</tt> have a lower limit of 1, you should either provide a personalized message or call <tt>presence</tt> prior<span style="font-family: DejaVu Sans;">前</span>to <tt>length</tt>.<span style="font-family: DejaVu Sans;">（当长度比</span>1<span style="font-family: DejaVu Sans;">还小就为空了应该使用</span><tt>validates_presence_of</tt><span style="font-family: DejaVu Sans;"><tt>来验证</tt>）</span></p>
+
+<p>The <tt>size</tt> helper is an alias for <tt>length</tt>.</p>
+
+<h4>3.8 <tt>numericality</tt><span style="font-family: WenQuanYi Micro Hei;"><tt>只能输入数字</tt></span></h4>
+
+
+<p>This helper validates that your attributes have only numeric values. By default, it will match an optional sign followed by an integral or floating point number. To specify that only integral numbers are allowed set <tt>:only_integer</tt> to true.</p>
+
+<p>If you set <tt>:only_integer</tt> to <tt>true</tt>, then it will use the</p>
+
+<p><code>/\A[+&ndash;]?\d+\Z/</code></p>
+
+<p>regular expression to validate the attribute’s value. Otherwise, it will try to convert the value to a number using <tt>Float</tt>.</p>
+
+<p><span style="color: #800000;">Note</span><span style="color: #800000;">that</span><span style="color: #800000;">the</span><span style="color: #800000;">regular</span><span style="color: #800000;">expression</span><span style="color: #800000;">above</span><span style="color: #800000;">allows</span><span style="color: #800000;">a</span><span style="color: #800000;">trailing</span><span style="color: #800000;">newline</span><span style="color: #800000;">character.<span style="font-family: DejaVu Sans;">请注意，上面的正则表达式允许一个尾随的换行符</span></span></p>
+
+<p><code>class</code> <code>Player</code><code> </code><code>&lt;</code><code> </code><code>ActiveRecord::Base</code></p>
+
+<p><code> </code><code>validates</code><code> </code><code>:points,</code><code> </code><code>:numericality</code> <code>=&gt;</code><code> </code><code>true</code></p>
+
+<p><code> </code><code>validates</code><code> </code><code>:games_played,</code><code> </code><code>:numericality</code> <code>=&gt;</code><code> </code><code>{</code><code> </code><code>:only_integer</code> <code>=&gt;</code><code> </code><code>true</code> <code>}</code></p>
+
+<p><code>end</code></p>
+
+<p>Besides <tt>:only_integer</tt>, this helper also accepts the following options to add constraints to acceptable values:</p>
+
+<ul>
+    <li><tt>:greater_than</tt> – Specifies the value must be greater than the supplied value. The default error message for this option is “<em>must</em><em> </em><em>be</em><em> </em><em>greater</em><em> </em><em>than</em><em> </em><em>%{count}</em>”. <span style="font-family: DejaVu Sans;">大于</span></li>
+    <li><tt>:greater_than_or_equal_to</tt> – Specifies the value must be greater than or equal to the supplied value. The default error message for this option is “<em>must</em><em> </em><em>be</em><em> </em><em>greater</em><em> </em><em>than</em><em> </em><em>or</em><em> </em><em>equal</em><em> </em><em>to</em><em> </em><em>%{count}</em>”.</li>
+    <li><tt>:equal_to</tt> – Specifies the value must be equal to the supplied value. The default error message for this option is “<em>must</em><em> </em><em>be</em><em> </em><em>equal</em><em> </em><em>to</em><em> </em><em>%{count}</em>”.</li>
+    <li><tt>:less_than</tt> – Specifies the value must be less than the supplied value. The default error message for this option is “<em>must</em><em> </em><em>be</em><em> </em><em>less</em><em> </em><em>than</em><em> </em><em>%{count}</em>”.</li>
+    <li><tt>:less_than_or_equal_to</tt> – Specifies the value must be less than or equal the supplied value. The default error message for this option is “<em>must</em><em> </em><em>be</em><em> </em><em>less</em><em> </em><em>than</em><em> </em><em>or</em><em> </em><em>equal</em><em> </em><em>to</em><em> </em><em>%{count}</em>”.</li>
+    <li><tt>:odd</tt> – Specifies the value must be an odd number if set to true. The default error message for this option is “<em>must</em><em> </em><em>be</em><em> </em><em>odd</em>”. <span style="font-family: DejaVu Sans;">奇数</span></li>
+    <li><tt>:even</tt> – Specifies the value must be an even number if set to true. The default error message for this option is “<em>must</em><em> </em><em>be</em><em> </em><em>even</em>”. <span style="font-family: DejaVu Sans;">偶数</span></li>
+</ul>
+
+
+<p>The default error message is “<em>is</em><em> </em><em>not</em><em> </em><em>a</em><em> </em><em>number</em>”.</p>
+
+<h4>3.9 <tt>presence</tt><span style="font-family: WenQuanYi Micro Hei;"><tt>存在</tt></span></h4>
+
+
+<p>This helper validates that the specified attributes are not empty. It uses the <tt>blank?</tt> method to check if the value is either <tt>nil</tt> or a blank string, that is, a string that is either empty or consists of whitespace.</p>
+
+<p><code>class</code> <code>Person</code><code> </code><code>&lt;</code><code> </code><code>ActiveRecord::Base</code></p>
+
+<p><code> </code><code>validates</code><code> </code><code>:name,</code><code> </code><code>:login,</code><code> </code><code>:email,</code><code> </code><code>:presence</code> <code>=&gt;</code><code> </code><code>true</code></p>
+
+<p><code>end</code></p>
+
+<p>If you want to be sure that an association is present, you’ll need to test whether the foreign key used to map the association is present, and not the associated object itself.</p>
+
+<p><code>class</code> <code>LineItem</code><code> </code><code>&lt;</code><code> </code><code>ActiveRecord::Base</code></p>
+
+<p><code> </code><code>belongs_to</code><code> </code><code>:order</code></p>
+
+<p><code> </code><code>validates</code><code> </code><code>:order_id,</code><code> </code><code>:presence</code> <code>=&gt;</code><code> </code><code>true</code></p>
+
+<p><code>end</code></p>
+
+<p>Since <tt>false.blank?</tt> is true, if you want to validate the presence of a boolean field you should use <tt>validates</tt><tt> </tt><tt>:field_name,</tt><tt> </tt><tt>:inclusion</tt><tt> </tt><tt>=&gt;</tt><tt> </tt><tt>{</tt><tt> </tt><tt>:in</tt><tt> </tt><tt>=&gt;</tt><tt> </tt><tt>[true,</tt><tt> </tt><tt>false]</tt><tt> </tt><tt>}</tt>.</p>
+
+<p>The default error message is “<em>can</em><em>’</em><em>t</em><em> </em><em>be</em><em> </em><em>empty</em>”.</p>
+
+<h4>3.10 <tt>uniqueness</tt><span style="font-family: WenQuanYi Micro Hei;"><tt>独特性</tt></span></h4>
+
+
+<p>This helper validates that the attribute’s value is unique right before the object gets saved. It does not create a uniqueness constraint in the database, so it may happen that two different database connections create two records with the same value for a column that you intend to be unique. To avoid that, you must create a unique index in your database.</p>
+
+<p><code>class</code> <code>Account</code><code> </code><code>&lt;</code><code> </code><code>ActiveRecord::Base</code></p>
+
+<p><code> </code><code>validates</code><code> </code><code>:email,</code><code> </code><code>:uniqueness</code> <code>=&gt;</code><code> </code><code>true</code></p>
+
+<p><code>end</code></p>
+
+<p>The validation happens by performing an SQL query into the model’s table, searching for an existing record with the same value in that attribute.</p>
+
+<p>There is a <tt>:scope</tt><span style="font-family: DejaVu Sans;"><tt>范围</tt></span>option that you can use to specify other attributes that are used to limit the uniqueness check:</p>
+
+<p><code>class</code> <code>Holiday</code><code> </code><code>&lt;</code><code> </code><code>ActiveRecord::Base</code></p>
+
+<p><code> </code><code>validates</code><code> </code><code>:name,</code><code> </code><code>:uniqueness</code> <code>=&gt;</code><code> </code><code>{</code><code> </code><code>:scope</code> <code>=&gt;</code><code> </code><code>:year,</code></p>
+
+<p><code> </code><code>:message</code> <code>=&gt;</code><code> </code><code>&ldquo;should</code><code> </code><code>happen</code><code> </code><code>once</code><code> </code><code>per</code><code> </code><code>year&rdquo;</code> <code>}</code></p>
+
+<p><code>end</code></p>
+
+<p>There is also a <tt>:case_sensitive</tt> option that you can use to define whether the uniqueness constraint<span style="font-family: DejaVu Sans;">约束</span>will be case sensitive<span style="font-family: DejaVu Sans;">敏感</span>or not. This option defaults to true.</p>
+
+<p><code>class</code> <code>Person</code><code> </code><code>&lt;</code><code> </code><code>ActiveRecord::Base</code></p>
+
+<p><code> </code><code>validates</code><code> </code><code>:name,</code><code> </code><code>:uniqueness</code> <code>=&gt;</code><code> </code><code>{</code><code> </code><code>:case_sensitive</code> <code>=&gt;</code><code> </code><code>false</code> <code>}</code></p>
+
+<p><code>end</code></p>
+
+<p>Note that some databases are configured to perform case-insensitive searches anyway.<span style="font-family: DejaVu Sans;">需要注意的是一些数据库配置为执行区分大小写的搜索。</span></p>
+
+<p>The default error message is “<em>has</em><em> </em><em>already</em><em> </em><em>been</em><em> </em><em>taken</em>”.</p>
+
+<h4>3.11 <tt>validates_with</tt><span style="font-family: WenQuanYi Micro Hei;"><tt>通过指定类验证</tt></span></h4>
+
+
+<p>This helper passes the record to a separate class for validation.</p>
+
+<p>class Person &lt; ActiveRecord::Base</p>
+
+<p>validates_with GoodnessValidator</p>
+
+<p>end</p>
+
+<p>&nbsp;</p>
+
+<p>class GoodnessValidator &lt; ActiveModel::Validator</p>
+
+<p>def validate(record)</p>
+
+<p>if record.first_name == &ldquo;Evil&rdquo;</p>
+
+<p>record.errors[:base] &lt;&lt; &ldquo;This person is evil&rdquo;</p>
+
+<p>end</p>
+
+<p>end</p>
+
+<p>end</p>
+
+<p>The <tt>validates_with</tt> helper takes a class, or a list of classes to use for validation. There is no default error message for <tt>validates_with</tt>. You must manually add errors to the record’s errors collection in the validator class.</p>
+
+<p>To implement the validate method, you must have a <tt>record</tt> parameter defined, which is the record to be validated.</p>
+
+<p>Like all other validations, <tt>validates_with</tt> takes the <tt>:if</tt>, <tt>:unless</tt> and <tt>:on</tt> options. If you pass any other options, it will send those options to the validator class as <tt>options</tt>:</p>
+
+<p>class Person &lt; ActiveRecord::Base</p>
+
+<p>validates_with GoodnessValidator, :fields =&gt; [:first_name, :last_name]</p>
+
+<p>end</p>
+
+<p>&nbsp;</p>
+
+<p>class GoodnessValidator &lt; ActiveModel::Validator</p>
+
+<p>def validate(record)</p>
+
+<p>if options[:fields].any?{|field| record.send(field) == &ldquo;Evil&rdquo; }</p>
+
+<p>record.errors[:base] &lt;&lt; &ldquo;This person is evil&rdquo;</p>
+
+<p>end</p>
+
+<p>end</p>
+
+<p>end</p>
+
+<h4>3.12 <tt>validates_each</tt></h4>
+
+
+<p>This helper validates attributes against a block. It doesn’t have a predefined validation function. You should create one using a block, and every attribute passed to <tt>validates_each</tt> will be tested against it. In the following example, we don’t want names and surnames to begin with lower case.</p>
+
+<p>class Person &lt; ActiveRecord::Base</p>
+
+<p>validates_each :name, :surname do |model, attr, value|</p>
+
+<p>model.errors.add(attr, &lsquo;must start with upper case&rsquo;) if value =~ /\A[a-z]/</p>
+
+<p>end</p>
+
+<p>end</p>
+
+<p>The block receives the model, the attribute’s name and the attribute’s value. You can do anything you like to check for valid data within the block. If your validation fails, you can add an error message to the model, therefore<span style="font-family: DejaVu Sans;">故</span>making it invalid.</p>
+
+<h3>4 Common Validation Options<span style="font-family: WenQuanYi Micro Hei;">常规验证选项</span></h3>
+
+
+<p>These are common validation options:</p>
+
+<h4>4.1 <tt>:allow_nil</tt></h4>
+
+
+<p>The <tt>:allow_nil</tt> option skips the validation when the value being validated is <tt>nil</tt>.</p>
+
+<p>class Coffee &lt; ActiveRecord::Base</p>
+
+<p>validates :size, :inclusion =&gt; { :in =&gt; %w(small medium large),</p>
+
+<p>:message =&gt; &ldquo;%{value} is not a valid size&rdquo; }, :allow_nil =&gt; true</p>
+
+<p>end</p>
+
+<p><tt><span style="color: #800000;">:allow_nil</span></tt><span style="color: #800000;">is</span><span style="color: #800000;">ignored</span><span style="color: #800000;">by</span><span style="color: #800000;">the</span><span style="color: #800000;">presence</span><span style="color: #800000;">validator.</span></p>
+
+<h4>4.2 <tt>:allow_blank</tt></h4>
+
+
+<p>The <tt>:allow_blank</tt> option is similar to the <tt>:allow_nil</tt> option. This option will let validation pass if the attribute’s value is <tt>blank?</tt>, like <tt>nil</tt> or an empty string for example.</p>
+
+<p>class Topic &lt; ActiveRecord::Base</p>
+
+<p>validates :title, :length =&gt; { :is =&gt; 5 }, :allow_blank =&gt; true</p>
+
+<p>end</p>
+
+<p>&nbsp;</p>
+
+<p>Topic.create(&ldquo;title&rdquo; =&gt; &ldquo;&rdquo;).valid? # =&gt; true</p>
+
+<p>Topic.create(&ldquo;title&rdquo; =&gt; nil).valid? # =&gt; true</p>
+
+<p><tt><span style="color: #800000;">:allow_blank</span></tt><span style="color: #800000;">is</span><span style="color: #800000;">ignored</span><span style="color: #800000;">by</span><span style="color: #800000;">the</span><span style="color: #800000;">presence</span><span style="color: #800000;">validator.</span></p>
+
+<h4>4.3 <tt>:message</tt></h4>
+
+
+<p>As you’ve already seen, the <tt>:message</tt> option lets you specify the message that will be added to the <tt>errors</tt> collection when validation fails. When this option is not used, Active Record will use the respective default error message for each validation helper.</p>
+
+<h4>4.4 <tt>:on</tt></h4>
+
+
+<p>The <tt>:on</tt> option lets you specify when the validation should happen. The default behavior for all the built-in validation helpers is to be run on save (both when you’re creating a new record and when you’re updating it). If you want to change it, you can use <tt>:on</tt><tt> </tt><tt>=&gt;</tt><tt> </tt><tt>:create</tt> to run the validation only when a new record is created or <tt>:on</tt><tt> </tt><tt>=&gt;</tt><tt> </tt><tt>:update</tt> to run the validation only when a record is updated.<tt>:on</tt> <span style="font-family: DejaVu Sans;">选项让你指定什么时候产生验证。</span></p>
+
+<p>class Person &lt; ActiveRecord::Base</p>
+
+<h1>it will be possible to update email with a duplicated value</h1>
+
+<p>validates :email, :uniqueness =&gt; true, :on =&gt; :create</p>
+
+<p>&nbsp;</p>
+
+<h1>it will be possible to create the record with a non-numerical age</h1>
+
+<p>validates :age, :numericality =&gt; true, :on =&gt; :update</p>
+
+<p>&nbsp;</p>
+
+<h1>the default (validates on both create and update)</h1>
+
+<p>validates :name, :presence =&gt; true, :on =&gt; :save</p>
+
+<p>end</p>
+
+<h3>5 Conditional Validation<span style="font-family: WenQuanYi Micro Hei;">有附加条件的验证</span></h3>
+
+
+<p>Sometimes it will make sense<span style="font-family: DejaVu Sans;">感觉</span>to validate an object just when a given predicate is satisfied. You can do that by using the <tt>:if</tt> and <tt>:unless</tt> options, which can take a symbol, a string or a <tt>Proc</tt>. You may use the <tt>:if</tt> option when you want to specify when the validation <strong>should</strong> happen. If you want to specify when the validation <strong>should</strong><strong> </strong><strong>not</strong> happen, then you may use the <tt>:unless</tt> option.</p>
+
+<p><span style="font-family: DejaVu Sans;">有时候验证一个对象的时候如果给你一个判定性的（语句）你会感觉到满足。你可以使用</span>:if<span style="font-family: DejaVu Sans;">和</span>:unless<span style="font-family: DejaVu Sans;">选项达到这样的效果，它可以（判断）一个符号（标记），字符串或者是</span>Proc<span style="font-family: DejaVu Sans;">。</span></p>
+
+<p>&nbsp;</p>
+
+<p><em>Proc</em><em> </em><span style="font-family: DejaVu Sans;"><em>是</em></span><em>Ruby</em><em> </em><span style="font-family: DejaVu Sans;"><em>对</em></span><em>block</em><span style="font-family: DejaVu Sans;"><em>的面向对象的封装。</em></span></p>
+
+<p>&nbsp;</p>
+
+<h4>5.1 Using a Symbol with <tt>:if</tt> and <tt>:unless</tt></h4>
+
+
+<p>You can associate the <tt>:if</tt> and <tt>:unless</tt> options with a symbol corresponding to the name of a method that will get called right before validation happens. This is the most commonly used option.</p>
+
+<p>class Order &lt; ActiveRecord::Base</p>
+
+<p>validates :card_number, :presence =&gt; true, :if =&gt; :paid_with_card?</p>
+
+<p>&nbsp;</p>
+
+<p>def paid_with_card?</p>
+
+<p>payment_type == &ldquo;card&rdquo;</p>
+
+<p>end</p>
+
+<p>end</p>
+
+<h4>5.2 Using a String with <tt>:if</tt> and <tt>:unless</tt></h4>
+
+
+<p><span style="color: #800000;">You</span><span style="color: #800000;">can</span><span style="color: #800000;">also</span><span style="color: #800000;">use</span><span style="color: #800000;">a</span><span style="color: #800000;">string</span><span style="color: #800000;">that</span><span style="color: #800000;">will</span><span style="color: #800000;">be</span><span style="color: #800000;">evaluated</span><span style="color: #800000;">using</span><tt><span style="color: #800000;">eval</span></tt><span style="color: #800000;">and</span><span style="color: #800000;">needs</span><span style="color: #800000;">to</span><span style="color: #800000;">contain</span><span style="color: #800000;">valid</span><span style="color: #800000;">Ruby</span><span style="color: #800000;">code.</span>You should use this option only when the string represents a really short condition.</p>
+
+<p>class Person &lt; ActiveRecord::Base</p>
+
+<p>validates :surname, :presence =&gt; true, :if =&gt; &ldquo;name.nil?&rdquo;</p>
+
+<p>end</p>
+
+<h4>5.3 Using a Proc with <tt>:if</tt> and <tt>:unless</tt></h4>
+
+
+<p>Finally, it’s possible to associate <tt>:if</tt> and <tt>:unless</tt> with a <tt>Proc</tt> object which will be called. Using a <tt>Proc</tt> object gives you the ability to write an inline condition instead of a separate<span style="font-family: DejaVu Sans;">单独</span>method. This option is best suited for one-liners.</p>
+
+<p>class Account &lt; ActiveRecord::Base</p>
+
+<p>validates :password, :confirmation =&gt; true,</p>
+
+<p>:unless =&gt; Proc.new { |a| a.password.blank? }</p>
+
+<p>end</p>
+
+<h4>5.4 Grouping conditional validations</h4>
+
+
+<p>Sometimes it is useful to have multiple validations use one condition, it can be easily achieved using <tt>with_options</tt>.</p>
+
+<p>class User &lt; ActiveRecord::Base</p>
+
+<p>with_options :if =&gt; :is_admin? do |admin|</p>
+
+<p>admin.validates :password, :length =&gt; { :minimum =&gt; 10 }</p>
+
+<p>admin.validates :email, :presence =&gt; true</p>
+
+<p>end</p>
+
+<p>end</p>
+
+<p>All validations inside of <tt>with_options</tt> block will have automatically passed the condition <tt>:if</tt><tt> </tt><tt>=&gt;</tt><tt> </tt><tt>:is_admin?</tt></p>
+
+<h3><tt>6</tt><tt> </tt><tt>Performing</tt><tt> </tt><tt>Custom</tt><tt> </tt><tt>Validations</tt><span style="font-family: WenQuanYi Micro Hei;"><tt>执行定制验证</tt></span></h3>
+
+
+<p><tt>When</tt><tt> </tt><tt>the</tt><tt> </tt><tt>built-in</tt><tt> </tt><tt>validation</tt><tt> </tt><tt>helpers</tt><tt> </tt><tt>are</tt><tt> </tt><tt>not</tt><tt> </tt><tt>enough</tt><tt> </tt><tt>for</tt><tt> </tt><tt>your</tt><tt> </tt><tt>needs,</tt><tt> </tt><tt>you</tt><tt> </tt><tt>can</tt><tt> </tt><tt>write</tt><tt> </tt><tt>your</tt><tt> </tt><tt>own</tt><tt> </tt><tt>validators</tt><tt> </tt><tt>or</tt><tt> </tt><tt>validation</tt><tt> </tt><tt>methods</tt><tt> </tt><tt>as</tt><tt> </tt><tt>you</tt><tt> </tt><tt>prefer.</tt></p>
+
+<h4>6.1 Custom Validators<span style="font-family: WenQuanYi Micro Hei;">定制验证器</span></h4>
+
+
+<p>Custom validators are classes that extend <tt>ActiveModel::Validator</tt>. These classes must implement a <tt>validate</tt> method which takes a record as an argument and performs the validation on it. The custom validator is called using the <tt>validates_with</tt> method.</p>
+
+<p>class MyValidator &lt; ActiveModel::Validator</p>
+
+<p>def validate(record)</p>
+
+<p>if record.name.starts_with? &lsquo;X&rsquo;</p>
+
+<p>record.errors[:name] &lt;&lt; &lsquo;Need a name starting with X please!&rsquo;</p>
+
+<p>end</p>
+
+<p>end</p>
+
+<p>end</p>
+
+<p>&nbsp;</p>
+
+<p>class Person</p>
+
+<p>include ActiveModel::Validations</p>
+
+<p>validates_with MyValidator</p>
+
+<p>end</p>
+
+<p>The easiest way to add custom validators for validating individual attributes is with the convenient <tt>ActiveModel::EachValidator</tt>. In this case, the custom validator class must implement<span style="font-family: DejaVu Sans;">实施落实</span>a <tt>validate_each</tt> method which takes three arguments: record, attribute and value which correspond<span style="font-family: DejaVu Sans;">对应</span>to the instance, the attribute to be validated and the value of the attribute in the passed instance.</p>
+
+<p><span style="font-family: DejaVu Sans;">最简单的方法添加（需要）验证个别的属性到定制的</span>validatoras<span style="font-family: DejaVu Sans;">是便捷的使用</span><tt>ActiveModel::EachValidator</tt><span style="font-family: DejaVu Sans;"><tt>。在这个案例中，定制的</tt></span><tt>validator</tt><span style="font-family: DejaVu Sans;"><tt>类必须落实</tt><tt></tt></span><tt>validate_each</tt><span style="font-family: DejaVu Sans;"><tt>方法获得三个参数：与实例对应的</tt></span><tt>record,</tt><tt> </tt><tt>attribute</tt><tt> </tt><tt>and</tt><tt> </tt><tt>value</tt><span style="font-family: DejaVu Sans;"><tt>，（它们是）接下来的实例的属性和值</tt></span></p>
+
+<p>class EmailValidator &lt; ActiveModel::EachValidator</p>
+
+<p>def validate_each(record, attribute, value)</p>
+
+<p>unless value =~ /\A([^@\s]+)@((?:[-a-z0-9]+.)+[a-z]{2,})\z/i</p>
+
+<p>record.errors[attribute] &lt;&lt; (options[:message] || &ldquo;is not an email&rdquo;)</p>
+
+<p>end</p>
+
+<p>end</p>
+
+<p>end</p>
+
+<p>&nbsp;</p>
+
+<p>class Person &lt; ActiveRecord::Base</p>
+
+<p>validates :email, :presence =&gt; true, :email =&gt; true</p>
+
+<p>end</p>
+
+<p>As shown in the example, you can also combine<span style="font-family: DejaVu Sans;">结合</span>standard validations with your own custom validators.</p>
+
+<p>&nbsp;</p>
+
+<h4>6.2 Custom Methods<span style="font-family: WenQuanYi Micro Hei;">定制（验证）方法</span></h4>
+
+
+<p>You can also create methods that verify the state of your models and add messages to the <tt>errors</tt> collection when they are invalid. You must then register these methods by using one or more of the <tt>validate</tt>, <tt>validate_on_create</tt> or <tt>validate_on_update</tt> class methods, passing in the symbols<span style="font-family: DejaVu Sans;">符号</span>for the validation methods’ names.</p>
+
+<p><span style="font-family: DejaVu Sans;">你也可以创建方法验证你</span>models<span style="font-family: DejaVu Sans;">的状态以及在被验证的时候添加消息到</span>errors<span style="font-family: DejaVu Sans;">集合。你必须注册这些方法通过使用一个或多个这些方法：</span><tt>validate</tt>, <tt>validate_on_create</tt> or <tt>validate_on_update</tt><span style="font-family: DejaVu Sans;"><tt>类方法加上验证方法的名字。</tt></span></p>
+
+<p>You can pass more than one symbol for each class method and the respective<span style="font-family: DejaVu Sans;">各自的</span>validations will be run in the same order as they were registered.<span style="font-family: DejaVu Sans;">你可以添加一个或多个符号给（对应的）每一个类方法并且各自的验证将会按照与注册相同的顺序运行。</span></p>
+
+<p>class Invoice &lt; ActiveRecord::Base</p>
+
+<p>validate :expiration_date_cannot_be_in_the_past,</p>
+
+<p>:discount_cannot_be_greater_than_total_value</p>
+
+<p>&nbsp;</p>
+
+<p>def expiration_date_cannot_be_in_the_past</p>
+
+<p>if !expiration_date.blank? and expiration_date &lt; Date.today</p>
+
+<p>errors.add(:expiration_date, &ldquo;can&rsquo;t be in the past&rdquo;)</p>
+
+<p>end</p>
+
+<p>end</p>
+
+<p>&nbsp;</p>
+
+<p>def discount_cannot_be_greater_than_total_value</p>
+
+<p>if discount &gt; total_value</p>
+
+<p>errors.add(:discount, &ldquo;can&rsquo;t be greater than total value&rdquo;)</p>
+
+<p>end</p>
+
+<p>end</p>
+
+<p>end</p>
+
+<p><span style="color: #800000;">You</span><span style="color: #800000;">can</span><span style="color: #800000;">even</span><span style="color: #800000;">create</span><span style="color: #800000;">your</span><span style="color: #800000;">own</span><span style="color: #800000;">validation</span><span style="color: #800000;">helpers</span><span style="color: #800000;">and</span><span style="color: #800000;">reuse</span><span style="color: #800000;">them</span><span style="color: #800000;">in</span><span style="color: #800000;">several</span><span style="color: #800000;">different</span><span style="color: #800000;">models.</span> For example, an application that manages surveys<span style="font-family: DejaVu Sans;">调查</span>may find it useful to express that a certain<span style="font-family: DejaVu Sans;">某些</span>field corresponds<span style="font-family: DejaVu Sans;">对应</span>to a set of choices:</p>
+
+<p>ActiveRecord::Base.class_eval do</p>
+
+<p>def self.validates_as_choice(attr_name, n, options={})</p>
+
+<p>validates attr_name, :inclusion =&gt; { {:in =&gt; 1..n}.merge(options) }</p>
+
+<p>end</p>
+
+<p>end</p>
+
+<p>Simply reopen <tt>ActiveRecord::Base</tt> and define a class method like that. You’d typically put this code somewhere in <tt>config/initializers</tt>. You can use this helper like this:</p>
+
+<p>class Movie &lt; ActiveRecord::Base</p>
+
+<p>validates_as_choice :rating, 5</p>
+
+<p>end</p>
+
+<h3>7 Working with Validation Errors<span style="font-family: WenQuanYi Micro Hei;">工作与</span>Validation Errors</h3>
+
+
+<p>In addition to<span style="font-family: DejaVu Sans;">除了</span>the <tt>valid?</tt> and <tt>invalid?</tt> methods covered earlier, Rails provides a number of methods for working with the <tt>errors</tt> collection and inquiring<span style="font-family: DejaVu Sans;">疑问</span>about the validity of objects.</p>
+
+<p><span style="color: #800000;">The</span><span style="color: #800000;">following</span><span style="color: #800000;">is</span><span style="color: #800000;">a</span><span style="color: #800000;">list</span><span style="color: #800000;">of</span><span style="color: #800000;">the</span><span style="color: #800000;">most</span><span style="color: #800000;">commonly</span><span style="color: #800000;">used</span><span style="color: #800000;">methods.</span><span style="color: #800000;">Please</span><span style="color: #800000;">refer</span><span style="color: #800000;">to</span><span style="color: #800000;">the</span><tt><span style="color: #800000;">ActiveRecord::Errors</span></tt><span style="color: #800000;">documentation</span><span style="color: #800000;">for</span><span style="color: #800000;">a</span><span style="color: #800000;">list</span><span style="color: #800000;">of</span><span style="color: #800000;">all</span><span style="color: #800000;">the</span><span style="color: #800000;">available</span><span style="color: #800000;">methods.</span></p>
+
+<h4>7.1 <tt>errors</tt></h4>
+
+
+<p>Returns an OrderedHash with all errors. Each<strong> </strong><strong>key</strong><strong> </strong><strong>is</strong><strong> </strong><strong>the</strong><strong> </strong><strong>attribute</strong><strong> </strong><strong>name</strong> and the <strong>value</strong><strong> </strong><strong>is</strong><strong> </strong><strong>an</strong><strong> </strong><strong>array</strong><strong> </strong><strong>of</strong><strong> </strong><strong>strings</strong><strong> </strong><strong>with</strong><strong> </strong><strong>all</strong><strong> </strong><strong>errors.</strong></p>
+
+<p>class Person &lt; ActiveRecord::Base</p>
+
+<p>validates :name, :presence =&gt; true, :length =&gt; { :minimum =&gt; 3 }</p>
+
+<p>end</p>
+
+<p>&nbsp;</p>
+
+<p>person = Person.new</p>
+
+<p>person.valid? # =&gt; false</p>
+
+<p>person.errors</p>
+
+<h1>=&gt; {:name =&gt; [&ldquo;can&rsquo;t be blank&rdquo;, &ldquo;is too short (minimum is 3 characters)&rdquo;]}</h1>
+
+<p>&nbsp;</p>
+
+<p>person = Person.new(:name =&gt; &ldquo;John Doe&rdquo;)</p>
+
+<p>person.valid? # =&gt; true</p>
+
+<p>person.errors # =&gt; []</p>
+
+<h4>7.2 <tt>errors[]</tt></h4>
+
+
+<p><tt><strong>errors[]</strong></tt><strong> </strong><strong>is</strong><strong> </strong><strong>used</strong><strong> </strong><strong>when</strong><strong> </strong><strong>you</strong><strong> </strong><strong>want</strong><strong> </strong><strong>to</strong><strong> </strong><strong>check</strong><strong> </strong><strong>the</strong><strong> </strong><strong>error</strong><strong> </strong><strong>messages</strong><strong> </strong><strong>for</strong><strong> </strong><strong>a</strong><strong> </strong><strong>specific</strong><strong> </strong><strong>attribute.</strong><strong> </strong>It returns an array of strings with all error messages for the given attribute, each string with one error message. If there are no errors related to the attribute, it returns an empty array.</p>
+
+<p>class Person &lt; ActiveRecord::Base</p>
+
+<p>validates :name, :presence =&gt; true, :length =&gt; { :minimum =&gt; 3 }</p>
+
+<p>end</p>
+
+<p>&nbsp;</p>
+
+<p>person = Person.new(:name =&gt; &ldquo;John Doe&rdquo;)</p>
+
+<p>person.valid? # =&gt; true</p>
+
+<p>person.errors[:name] # =&gt; []</p>
+
+<p>&nbsp;</p>
+
+<p>person = Person.new(:name =&gt; &ldquo;JD&rdquo;)</p>
+
+<p>person.valid? # =&gt; false</p>
+
+<p>person.errors[:name] # =&gt; [&ldquo;is too short (minimum is 3 characters)&rdquo;]</p>
+
+<p>&nbsp;</p>
+
+<p>person = Person.new</p>
+
+<p>person.valid? # =&gt; false</p>
+
+<p>person.errors[:name]</p>
+
+<h1>=&gt; [&ldquo;can&rsquo;t be blank&rdquo;, &ldquo;is too short (minimum is 3 characters)&rdquo;]</h1>
+
+<h4>7.3 <tt>errors.add</tt></h4>
+
+
+<p>The <tt>add</tt> method lets you manually<span style="font-family: DejaVu Sans;">手动</span>add messages that are related to particular attributes. You can use the <tt>errors.full_messages</tt> or <tt>errors.to_a</tt> methods to view the messages in the <strong>form</strong> they <strong>might</strong><strong> </strong><strong>be</strong><strong> </strong><strong>displayed</strong><strong> </strong><strong>to</strong><strong> </strong><strong>a</strong><strong> </strong><strong>user</strong>. Those particular messages get the attribute name prepended<span style="font-family: DejaVu Sans;">前置</span>(and capitalized<span style="font-family: DejaVu Sans;">大写</span>). <tt>add</tt> receives<span style="font-family: DejaVu Sans;">接收</span>the name of the attribute you want to add the message to, and the message itself. #<span style="font-family: DejaVu Sans;">这里只是添加的消息并没有验证</span></p>
+
+<p>class Person &lt; ActiveRecord::Base</p>
+
+<p>def a_method_used_for_validation_purposes</p>
+
+<p>errors.add(:name, &ldquo;cannot contain the characters !@#%*()_&ndash;+=&rdquo;)</p>
+
+<p>end</p>
+
+<p>end</p>
+
+<p>&nbsp;</p>
+
+<p>person = Person.create(:name =&gt; &ldquo;!@#&rdquo;)</p>
+
+<p>&nbsp;</p>
+
+<p>person.errors[:name]</p>
+
+<h1>=&gt; [&ldquo;cannot contain the characters !@#%*()_&ndash;+=&rdquo;]</h1>
+
+<p>&nbsp;</p>
+
+<p>person.errors.full_messages</p>
+
+<h1>=&gt; [&ldquo;Name cannot contain the characters !@#%*()_&ndash;+=&rdquo;]</h1>
+
+<p>&nbsp;</p>
+
+<p>Another way to do this is using <tt>[]=</tt> setter</p>
+
+<p>class Person &lt; ActiveRecord::Base</p>
+
+<p>def a_method_used_for_validation_purposes</p>
+
+<p>errors[:name] = &ldquo;cannot contain the characters !@#%*()_&ndash;+=&rdquo;</p>
+
+<p>end</p>
+
+<p>end</p>
+
+<p>&nbsp;</p>
+
+<p>person = Person.create(:name =&gt; &ldquo;!@#&rdquo;)</p>
+
+<p>&nbsp;</p>
+
+<p>person.errors[:name]</p>
+
+<h1>=&gt; [&ldquo;cannot contain the characters !@#%*()_&ndash;+=&rdquo;]</h1>
+
+<p>&nbsp;</p>
+
+<p>person.errors.to_a</p>
+
+<h1>=&gt; [&ldquo;Name cannot contain the characters !@#%*()_&ndash;+=&rdquo;]</h1>
+
+<h4>7.4 <tt>errors[:base]</tt></h4>
+
+
+<p>You can add error messages that are related to the object’s state as a whole, instead of being related to a specific attribute. <strong>You</strong><strong> </strong><strong>can</strong><strong> </strong><strong>use</strong><strong> </strong><strong>this</strong><strong> </strong><strong>method</strong><strong> </strong><strong>when</strong><strong> </strong><strong>you</strong><strong> </strong><strong>want</strong><strong> </strong><strong>to</strong><strong> </strong><strong>say</strong><strong> </strong><strong>that</strong><strong> </strong><strong>the</strong><strong> </strong><strong>object</strong><strong> </strong><strong>is</strong><strong> </strong><strong>invalid,</strong><strong> </strong><strong>no</strong><strong> </strong><strong>matter</strong><strong> </strong><strong>the</strong><strong> </strong><strong>values</strong><strong> </strong><strong>of</strong><strong> </strong><strong>its</strong><strong> </strong><strong>attributes.</strong><strong> </strong><strong>Since</strong><strong> </strong><tt><strong>errors[:base]</strong></tt><strong> </strong><strong>is</strong><strong> </strong><strong>an</strong><strong> </strong><strong>array,</strong><strong> </strong><strong>you</strong><strong> </strong><strong>can</strong><strong> </strong><strong>simply</strong><strong> </strong><strong>add</strong><strong> </strong><strong>a</strong><strong> </strong><strong>string</strong><strong> </strong><strong>to</strong><strong> </strong><strong>the</strong><strong> </strong><strong>array</strong><strong> </strong><strong>and</strong><strong> </strong><strong>uses</strong><strong> </strong><strong>it</strong><strong> </strong><strong>as</strong><strong> </strong><strong>the</strong><strong> </strong><strong>error</strong><strong> </strong><strong>message.</strong></p>
+
+<p>class Person &lt; ActiveRecord::Base</p>
+
+<p>def a_method_used_for_validation_purposes</p>
+
+<p>errors[:base] &lt;&lt; &ldquo;This person is invalid because &hellip;&rdquo;</p>
+
+<p>end</p>
+
+<p>end</p>
+
+<h4>7.5 <tt>errors.clear</tt></h4>
+
+
+<p>The <tt>clear</tt> method is used when you intentionally<span style="font-family: DejaVu Sans;">有意</span>want to clear all the messages in the <tt>errors</tt> collection. <strong>Of</strong><strong> </strong><strong>course,</strong><strong> </strong><strong>calling</strong><strong> </strong><tt><strong>errors.clear</strong></tt><strong> </strong><strong>upon</strong><span style="font-family: DejaVu Sans;"><strong>在</strong></span><strong>&hellip;</strong><span style="font-family: DejaVu Sans;"><strong>之上</strong></span><strong>an</strong><strong> </strong><strong>invalid</strong><strong> </strong><strong>object</strong><strong> </strong><strong>won</strong><strong>’</strong><strong>t</strong><strong> </strong><strong>actually</strong><strong> </strong><strong>make</strong><strong> </strong><strong>it</strong><strong> </strong><strong>valid:</strong><strong> </strong><strong>the</strong><strong> </strong><tt><strong>errors</strong></tt><strong> </strong><strong>collection</strong><strong> </strong><strong>will</strong><strong> </strong><strong>now</strong><strong> </strong><strong>be</strong><strong> </strong><strong>empty,</strong><strong> </strong><strong>but</strong><strong> </strong><strong>the</strong><strong> </strong><strong>next</strong><strong> </strong><strong>time</strong><strong> </strong><strong>you</strong><strong> </strong><strong>call</strong><strong> </strong><tt><strong>valid?</strong></tt><strong> </strong><strong>or</strong><strong> </strong><strong>any</strong><strong> </strong><strong>method</strong><strong> </strong><strong>that</strong><strong> </strong><strong>tries</strong><strong> </strong><strong>to</strong><strong> </strong><strong>save</strong><strong> </strong><strong>this</strong><strong> </strong><strong>object</strong><strong> </strong><strong>to</strong><strong> </strong><strong>the</strong><strong> </strong><strong>database,</strong><strong> </strong><strong>the</strong><strong> </strong><strong>validations</strong><strong> </strong><strong>will</strong><strong> </strong><strong>run</strong><strong> </strong><strong>again.</strong><strong> </strong><span style="color: #800000;">If</span><span style="color: #800000;">any</span><span style="color: #800000;">of</span><span style="color: #800000;">the</span><span style="color: #800000;">validations</span><span style="color: #800000;">fail,</span><span style="color: #800000;">the</span><tt><span style="color: #800000;">errors</span></tt><span style="color: #800000;">collection</span><span style="color: #800000;">will</span><span style="color: #800000;">be</span><span style="color: #800000;">filled</span><span style="color: #800000;">again.</span></p>
+
+<p>class Person &lt; ActiveRecord::Base</p>
+
+<p>validates :name, :presence =&gt; true, :length =&gt; { :minimum =&gt; 3 }</p>
+
+<p>end</p>
+
+<p>&nbsp;</p>
+
+<p>person = Person.new</p>
+
+<p>person.valid? # =&gt; false</p>
+
+<p>person.errors[:name]</p>
+
+<h1>=&gt; [&ldquo;can&rsquo;t be blank&rdquo;, &ldquo;is too short (minimum is 3 characters)&rdquo;]</h1>
+
+<p>&nbsp;</p>
+
+<p>person.errors.clear</p>
+
+<p>person.errors.empty? # =&gt; true</p>
+
+<p>&nbsp;</p>
+
+<p>p.save # =&gt; false</p>
+
+<p>&nbsp;</p>
+
+<p>p.errors[:name]</p>
+
+<h1>=&gt; [&ldquo;can&rsquo;t be blank&rdquo;, &ldquo;is too short (minimum is 3 characters)&rdquo;]</h1>
+
+<h4>7.6 <tt>errors.size</tt></h4>
+
+
+<p><tt>The</tt><tt> </tt><tt>size</tt><tt> </tt><tt>method</tt><tt> </tt><tt>returns</tt><tt> </tt><tt>the</tt><tt> </tt><tt>total</tt><tt> </tt><tt>number</tt><tt> </tt><tt>of</tt><tt> </tt><tt>error</tt><tt> </tt><tt>messages</tt><tt> </tt><tt>for</tt><tt> </tt><tt>the</tt><tt> </tt><tt>object.</tt></p>
+
+<p>class Person &lt; ActiveRecord::Base</p>
+
+<p>validates :name, :presence =&gt; true, :length =&gt; { :minimum =&gt; 3 }</p>
+
+<p>end</p>
+
+<p>&nbsp;</p>
+
+<p>person = Person.new</p>
+
+<p>person.valid? # =&gt; false</p>
+
+<p>person.errors.size # =&gt; 3</p>
+
+<p>&nbsp;</p>
+
+<p>person = Person.new(:name =&gt; &ldquo;Andrea&rdquo;, :email =&gt; &ldquo;<a href="&#x6d;&#x61;&#x69;&#108;&#116;&#x6f;&#58;&#x61;&#x6e;&#100;&#114;&#x65;&#x61;&#x40;&#x65;&#x78;&#97;&#109;&#112;&#108;&#101;&#x2e;&#99;&#x6f;&#109;">&#97;&#x6e;&#x64;&#x72;&#x65;&#97;&#64;&#101;&#x78;&#97;&#109;&#112;&#x6c;&#x65;&#x2e;&#x63;&#111;&#109;</a>&rdquo;)</p>
+
+<p>person.valid? # =&gt; true</p>
+
+<p>person.errors.size # =&gt; 0</p>
+
+<h3>8 Displaying Validation Errors in the View<span style="font-family: WenQuanYi Micro Hei;">在视图中显示验证错误（信息）</span></h3>
+
+
+<p>Rails maintains an official plugin that provides helpers to display the error messages of your models in your view templates. You can install it as a plugin or as a Gem.</p>
+
+<h4>8.1 Installing as a plugin</h4>
+
+
+<p>$ rails plugin install git://github.com/joelmoss/dynamic_form.git</p>
+
+<h4>8.2 Installing as a Gem</h4>
+
+
+<p>Add this line in your Gemfile:</p>
+
+<p>gem &ldquo;dynamic_form&rdquo;</p>
+
+<p>Now you will have access to these two methods in your view templates</p>
+
+<h4>8.3 <tt>error_messages</tt> and <tt>error_messages_for</tt></h4>
+
+
+<p>When creating a form with the <tt>form_for</tt> helper, you can use the <tt>error_messages</tt> method on the form builder to render all failed validation messages for the current model instance.</p>
+
+<p>class Product &lt; ActiveRecord::Base</p>
+
+<p>validates :description, :value, :presence =&gt; true</p>
+
+<p>validates :value, :numericality =&gt; true, :allow_nil =&gt; true</p>
+
+<p>end</p>
+
+<p>&lt;%= form_for(@product) do |f| %&gt;</p>
+
+<p>&lt;%= f.error_messages %&gt;</p>
+
+<p>&lt;p&gt;</p>
+
+<p>&lt;%= f.label :description %&gt;&lt;br /&gt;</p>
+
+<p>&lt;%= f.text_field :description %&gt;</p>
+
+<p>&lt;/p&gt;</p>
+
+<p>&lt;p&gt;</p>
+
+<p>&lt;%= f.label :value %&gt;&lt;br /&gt;</p>
+
+<p>&lt;%= f.text_field :value %&gt;</p>
+
+<p>&lt;/p&gt;</p>
+
+<p>&lt;p&gt;</p>
+
+<p>&lt;%= f.submit &ldquo;Create&rdquo; %&gt;</p>
+
+<p>&lt;/p&gt;</p>
+
+<p>&lt;% end %&gt;</p>
+
+<p>To get the idea, if you submit the form with empty fields you typically get this back, though styles are indeed missing by default:</p>
+
+<p>You can also use the <tt>error_messages_for</tt> helper to display the error messages of a model assigned to a view template. It’s very similar to the previous example and will achieve exactly the same result.</p>
+
+<p><code>&lt;%=</code> <code>error_messages_for</code><code> </code><code>:product</code> <code>%&gt;</code></p>
+
+<p>The displayed text for each error message will always be formed by the capitalized name of the attribute that holds the error, followed by the error message itself.<span style="font-family: DejaVu Sans;">大写错误的属性名，后跟错误消息。</span></p>
+
+<p>&lt;%= f.error_messages :header_message =&gt; &ldquo;Invalid product!&rdquo;,</p>
+
+<p>:message =&gt; &ldquo;You&rsquo;ll need to fix the following fields:&rdquo;,</p>
+
+<p>:header_tag =&gt; :h3 %&gt;</p>
+
+<p>Which results in the following content:</p>
+
+<p>If you pass <tt>nil</tt> to any of these options, it will get rid of the respective section of the <tt>div</tt>.</p>
+
+<h4>8.4 Customizing the Error Messages CSS<span style="font-family: WenQuanYi Micro Hei;">定制错误消息的</span>CSS<span style="font-family: WenQuanYi Micro Hei;">样式</span></h4>
+
+
+<p>The selectors to customize the style of error messages are:<span style="font-family: DejaVu Sans;">定制错误消息的选择器是：</span></p>
+
+<ul>
+    <li><tt>field_with_errors</tt><tt> – </tt><tt>Style</tt><tt> </tt><tt>for</tt><tt> </tt><tt>the</tt><tt> </tt><tt>form</tt><tt> </tt><tt>fields</tt><tt> </tt><tt>and</tt><tt> </tt><tt>labels</tt><tt> </tt><tt>with</tt><tt> </tt><tt>errors.</tt><tt> </tt><tt>Errors</tt><span style="font-family: DejaVu Sans;"><tt>的</tt></span><tt>form</tt><tt> </tt><tt>fields</tt><span style="font-family: DejaVu Sans;"><tt>和</tt></span><tt>labels</tt><span style="font-family: DejaVu Sans;"><tt>的样式</tt></span></li>
+    <li><tt>#errorExplanation</tt> – Style for the <tt>div</tt> element with the error messages. error<span style="font-family: DejaVu Sans;">消息的</span>div<span style="font-family: DejaVu Sans;">元素样式</span></li>
+    <li><tt>#errorExplanation</tt><tt> </tt><tt>h2</tt> – Style for the header of the <tt>div</tt> element. div<span style="font-family: DejaVu Sans;">元素包含的标题样式</span></li>
+    <li><tt>#errorExplanation</tt><tt> </tt><tt>p</tt> – Style for the paragraph that holds the message that appears right below the header of the <tt>div</tt> element.div<span style="font-family: DejaVu Sans;">元素中出现在标题下方段落的样式</span></li>
+    <li><tt>#errorExplanation</tt><tt> </tt><tt>ul</tt><tt> </tt><tt>li</tt> – Style for the list items with individual error messages. <span style="font-family: DejaVu Sans;">错误消息中个别的项目列表样式</span></li>
+</ul>
+
+
+<p>Scaffolding<span style="font-family: DejaVu Sans;">脚手架</span>for example generates <tt>app/assets/stylesheets/scaffold.css.scss</tt>, which later compiles to <tt>app/assets/stylesheets/scaffold.css</tt> and defines the red-based style you saw above.</p>
+
+<p><strong>The</strong><strong> </strong><strong>name</strong><strong> </strong><strong>of</strong><strong> </strong><strong>the</strong><strong> </strong><strong>class</strong><strong> </strong><strong>and</strong><strong> </strong><strong>the</strong><strong> </strong><strong>id</strong><strong> </strong><strong>can</strong><strong> </strong><strong>be</strong><strong> </strong><strong>changed</strong><strong> </strong><strong>with</strong><strong> </strong><strong>the</strong><strong> </strong><tt><strong>:class</strong></tt><strong> </strong><strong>and</strong><strong> </strong><tt><strong>:id</strong></tt><strong> </strong><strong>options,</strong><strong> </strong><strong>accepted</strong><strong> </strong><strong>by</strong><strong> </strong><strong>both</strong><strong> </strong><strong>helpers.</strong></p>
+
+<p>Scaffolding — <span style="font-family: DejaVu Sans;">基架</span></p>
+
+<p><span style="font-family: DejaVu Sans;">　　基于数据库架构生成网页模板的过程。在</span>ASP .NET <span style="font-family: DejaVu Sans;">中，动态数据使用基架来简化基于</span>Web <span style="font-family: DejaVu Sans;">的</span>UI <span style="font-family: DejaVu Sans;">的生成过程。用户可以通过这种</span>UI <span style="font-family: DejaVu Sans;">来查看和更新数据库。</span></p>
+
+<h4>8.5 Customizing the Error Messages HTML</h4>
+
+
+<p>By default, form fields with errors are displayed enclosed by a <tt>div</tt> element with the <tt>field_with_errors</tt> CSS class. However, it’s possible to override that.</p>
+
+<p>The way form fields with errors are treated is defined by <tt>ActionView::Base.field_error_proc</tt>. This is a <tt>Proc</tt> that receives two parameters:</p>
+
+<ul>
+    <li>A string with the HTML tag</li>
+    <li>An instance of <tt>ActionView::Helpers::InstanceTag</tt>.</li>
+</ul>
+
+
+<p><strong>Here</strong><strong> </strong><strong>is</strong><strong> </strong><strong>a</strong><strong> </strong><strong>simple</strong><strong> </strong><strong>example</strong><strong> </strong><strong>where</strong><strong> </strong><strong>we</strong><strong> </strong><strong>change</strong><strong> </strong><strong>the</strong><strong> </strong><strong>Rails</strong><strong> </strong><strong>behavior</strong><strong> </strong><strong>to</strong><strong> </strong><strong>always</strong><strong> </strong><strong>display</strong><strong> </strong><strong>the</strong><strong> </strong><strong>error</strong><strong> </strong><strong>messages</strong><strong> </strong><strong>in</strong><strong> </strong><strong>front</strong><strong> </strong><strong>of</strong><strong> </strong><strong>each</strong><strong> </strong><strong>of</strong><strong> </strong><strong>the</strong><strong> </strong><strong>form</strong><strong> </strong><strong>fields</strong><strong> </strong><strong>with</strong><strong> </strong><strong>errors.</strong><strong> </strong>The error messages will be enclosed by a <tt>span</tt> element with a <tt>validation-error</tt> CSS class. There will be no <tt>div</tt> element enclosing the <tt>input</tt> element, so we get rid of that red border around the text field. You can use the <tt>validation-error</tt> CSS class to style it anyway you want.</p>
+
+<p>ActionView::Base.field_error_proc = Proc.new do |html_tag, instance|</p>
+
+<p>if instance.error_message.kind_of?(Array)</p>
+
+<p>%(#{html_tag}&lt;span class=&ldquo;validation-error&rdquo;&gt;&amp;nbsp;</p>
+
+<h1>{instance.error_message.join(&lsquo;,&rsquo;)}&lt;/span&gt;).html_safe</h1>
+
+<p>else</p>
+
+<p>%(#{html_tag}&lt;span class=&ldquo;validation-error&rdquo;&gt;&amp;nbsp;</p>
+
+<h1>{instance.error_message}&lt;/span&gt;).html_safe</h1>
+
+<p>end</p>
+
+<p>end</p>
+
+<p>This will result in something like the following:</p>
+
+<h3>9 Callbacks Overview<span style="font-family: WenQuanYi Micro Hei;">回调概述</span></h3>
+
+
+<p>Callbacks are methods that get called at certain moments of an object’s life cycle. With callbacks it’s possible to write code that will run whenever an Active Record object is created, saved, updated, deleted, validated, or loaded from the database.</p>
+
+<p><span style="font-family: DejaVu Sans;">回调是一种在对象生存周期中的某些情况中（使得对象）被调用的方法。通过</span>callbacks<span style="font-family: DejaVu Sans;">可以运行编写的代码无论</span>Active Record<span style="font-family: DejaVu Sans;">对象是在数据库被创建，保存，删除，验证或者是导入。</span></p>
+
+<h4>9.1 Callback Registration</h4>
+
+
+<p><strong>In</strong><strong> </strong><strong>order</strong><strong> </strong><strong>to</strong><strong> </strong><strong>use</strong><strong> </strong><strong>the</strong><strong> </strong><strong>available</strong><strong> </strong><strong>callbacks,</strong><strong> </strong><strong>you</strong><strong> </strong><strong>need</strong><strong> </strong><strong>to</strong><strong> </strong><strong>register</strong><strong> </strong><strong>them.</strong> You can do that by implementing<span style="font-family: DejaVu Sans;">实施</span>them as ordinary<span style="font-family: DejaVu Sans;">一般</span>methods, and then <strong>using</strong><strong> </strong><strong>a</strong><strong> </strong><strong>macro-style</strong><strong> </strong><strong>class</strong><strong> </strong><strong>method</strong><strong> </strong><strong>to</strong><strong> </strong><strong>register</strong><strong> </strong><strong>them</strong><strong> </strong><strong>as</strong><strong> </strong><strong>callbacks.</strong></p>
+
+<p>class User &lt; ActiveRecord::Base</p>
+
+<p>validates :login, :email, :presence =&gt; true</p>
+
+<p>&nbsp;</p>
+
+<p>before_validation :ensure_login_has_a_value</p>
+
+<p>&nbsp;</p>
+
+<p>protected</p>
+
+<p>def ensure_login_has_a_value</p>
+
+<p>if login.nil?</p>
+
+<p>self.login = email unless email.blank?</p>
+
+<p>end</p>
+
+<p>end</p>
+
+<p>end</p>
+
+<p>The macro-style class methods can also receive<span style="font-family: DejaVu Sans;">接收</span>a block. Consider using this style if the code inside your block is so short that it fits in just one line.</p>
+
+<p>class User &lt; ActiveRecord::Base</p>
+
+<p>validates :login, :email, :presence =&gt; true</p>
+
+<p>&nbsp;</p>
+
+<p>before_create do |user|</p>
+
+<p>user.name = user.login.capitalize if user.name.blank?</p>
+
+<p>end</p>
+
+<p>end</p>
+
+<p>It’s considered<span style="font-family: DejaVu Sans;">考虑</span>good practice to declare callback methods as being protected or private. If left public, they can be called from outside of the model and violate<span style="font-family: DejaVu Sans;">违反</span>the principle of object encapsulation<span style="font-family: DejaVu Sans;">封装</span>.<span style="font-family: DejaVu Sans;">（基于）周密的考虑声明</span>callback<span style="font-family: DejaVu Sans;">方法为</span>protected<span style="font-family: DejaVu Sans;">或者</span>private<span style="font-family: DejaVu Sans;">。如果是</span>public<span style="font-family: DejaVu Sans;">，他们可以被</span>model<span style="font-family: DejaVu Sans;">外调用这样违反了封装对象的原则。</span></p>
+
+<h3>10 Available Callbacks</h3>
+
+
+<p><strong>Here</strong><strong> </strong><strong>is</strong><strong> </strong><strong>a</strong><strong> </strong><strong>list</strong><strong> </strong><strong>with</strong><strong> </strong><strong>all</strong><strong> </strong><strong>the</strong><strong> </strong><strong>available</strong><strong> </strong><strong>Active</strong><strong> </strong><strong>Record</strong><strong> </strong><strong>callbacks</strong>, listed in the same order in which they will get called during the respective operations:</p>
+
+<h4>10.1 Creating an Object</h4>
+
+
+<ul>
+    <li><tt>before_validation</tt></li>
+    <li><tt>after_validation</tt></li>
+    <li><tt>before_save</tt></li>
+    <li><tt>before_create</tt></li>
+    <li><tt>around_create</tt></li>
+    <li><tt>after_create</tt></li>
+    <li><tt>after_save</tt></li>
+</ul>
+
+
+<h4>10.2 Updating an Object</h4>
+
+
+<ul>
+    <li><tt>before_validation</tt></li>
+    <li><tt>after_validation</tt></li>
+    <li><tt>before_save</tt></li>
+    <li><tt>before_update</tt></li>
+    <li><tt>around_update</tt></li>
+    <li><tt>after_update</tt></li>
+    <li><tt>after_save</tt></li>
+</ul>
+
+
+<h4>10.3 Destroying an Object</h4>
+
+
+<ul>
+    <li><tt>before_destroy</tt></li>
+    <li><tt>after_destroy</tt></li>
+    <li><tt>around_destroy</tt></li>
+</ul>
+
+
+<p><tt>after_save</tt> runs both on create and update, but always <em>after</em> the more specific callbacks <tt>after_create</tt> and <tt>after_update</tt>, no matter the order in which the macro calls were executed.<tt>after_save</tt><span style="font-family: DejaVu Sans;"><tt>总是在</tt><tt></tt></span><tt>after_create</tt><tt> </tt><tt>and</tt><tt> </tt><tt>after_update</tt><span style="font-family: DejaVu Sans;"><tt>的后面不管他们的微调用如何。</tt></span></p>
+
+<h4>10.4 <tt>after_initialize</tt> and <tt>after_find</tt></h4>
+
+
+<p>The <tt>after_initialize</tt> callback will be called whenever an Active Record object is <strong>instantiated</strong>, either by directly using <tt><strong>new</strong></tt> or when a record is <strong>loaded</strong> from the database. It can be useful to avoid the need to directly override<span style="font-family: DejaVu Sans;">覆盖</span>your Active Record <tt>initialize</tt> method.</p>
+
+<p>&nbsp;</p>
+
+<p>The <tt>after_find</tt> callback will be called whenever <strong>Active</strong><strong> </strong><strong>Record</strong><strong> </strong><strong>loads</strong><strong> </strong><strong>a</strong><strong> </strong><strong>record</strong><strong> </strong><strong>from</strong><strong> </strong><strong>the</strong><strong> </strong><strong>database</strong>. <tt><strong>after_find</strong></tt><strong> </strong><strong>is</strong><strong> </strong><strong>called</strong><strong> </strong><strong>before</strong><strong> </strong><tt><strong>after_initialize</strong></tt><strong> </strong><strong>if</strong><strong> </strong><strong>both</strong><strong> </strong><strong>are</strong><strong> </strong><strong>defined.</strong></p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>The <tt>after_initialize</tt> and <tt>after_find</tt> callbacks have no <tt>before_*</tt> counterparts<span style="font-family: DejaVu Sans;">同行</span>, but they can be registered just like the other Active Record callbacks.</p>
+
+<p>&nbsp;</p>
+
+<p>class User &lt; ActiveRecord::Base</p>
+
+<p>after_initialize do |user|</p>
+
+<p>puts &ldquo;You have initialized an object!&rdquo;</p>
+
+<p>end</p>
+
+<p>&nbsp;</p>
+
+<p>after_find do |user|</p>
+
+<p>puts &ldquo;You have found an object!&rdquo;</p>
+
+<p>end</p>
+
+<p>end</p>
+
+<p>&nbsp;</p>
+
+<p>&gt;&gt; User.new</p>
+
+<p>You have initialized an object!</p>
+
+<p>=&gt; #&lt;User id: nil&gt;</p>
+
+<p>&nbsp;</p>
+
+<p>&gt;&gt; User.first</p>
+
+<p>You have found an object!</p>
+
+<p>You have initialized an object!</p>
+
+<p>=&gt; #&lt;User id: 1&gt;</p>
+
+<h3>11 Running Callbacks</h3>
+
+
+<p>The following methods trigger callbacks:<span style="font-family: DejaVu Sans;">下面的方法触发回调：</span></p>
+
+<ul>
+    <li><tt>create</tt></li>
+    <li><tt>create!</tt></li>
+    <li><tt>decrement!</tt> <span style="font-family: DejaVu Sans;">递减</span></li>
+    <li><tt>destroy</tt></li>
+    <li><tt>destroy_all</tt></li>
+    <li><tt>increment!</tt></li>
+    <li><tt>save</tt></li>
+    <li><tt>save!</tt></li>
+    <li><tt>save(false)</tt></li>
+    <li><tt>toggle!</tt></li>
+    <li><tt>update</tt></li>
+    <li><tt>update_attribute</tt></li>
+    <li><tt>update_attributes</tt></li>
+    <li><tt>update_attributes!</tt></li>
+    <li><tt>valid?</tt></li>
+</ul>
+
+
+<p>Additionally, the <tt>after_find</tt> callback is triggered by the following finder methods:<span style="font-family: DejaVu Sans;">此外，</span><tt>after_find</tt><span style="font-family: DejaVu Sans;"><tt>会被下面的查找方法触发：</tt></span></p>
+
+<ul>
+    <li><tt>all</tt></li>
+    <li><tt>first</tt></li>
+    <li><tt>find</tt></li>
+    <li><tt>find_all_by_</tt><em>attribute</em></li>
+    <li><tt>find_by_</tt><em>attribute</em></li>
+    <li><tt>find_by_</tt><em>attribute</em><tt>!</tt></li>
+    <li><tt>last</tt></li>
+</ul>
+
+
+<p>The <tt>after_initialize</tt> callback is triggered every time a new object of the class is initialized.<span style="font-family: DejaVu Sans;">当类的一个新的对象被初始化的时候都会触发</span><tt>after_initialize</tt><span style="font-family: DejaVu Sans;"><tt>回调。</tt></span></p>
+
+<h3>12 Skipping Callbacks</h3>
+
+
+<p>Just as with validations, it’s also possible to skip callbacks. These methods should be used with caution, however, because important business rules and application logic may be kept in callbacks. Bypassing them without understanding the potential<span style="font-family: DejaVu Sans;">潜在</span>implications<span style="font-family: DejaVu Sans;">影响</span>may lead to invalid data.<span style="font-family: DejaVu Sans;">正如验证，它有可能忽略回调。这些方法需要注意使用，然而，由于重要的业务规则和应用程序逻辑可能保持回调。没有明白潜在的影响就绕过它们可能会导致非法数据。</span></p>
+
+<ul>
+    <li><tt>decrement</tt></li>
+    <li><tt>decrement_counter</tt></li>
+    <li><tt>delete</tt></li>
+    <li><tt>delete_all</tt></li>
+    <li><tt>find_by_sql</tt></li>
+    <li><tt>increment</tt></li>
+    <li><tt>increment_counter</tt></li>
+    <li><tt>toggle</tt></li>
+    <li><tt>touch</tt></li>
+    <li><tt>update_column</tt></li>
+    <li><tt>update_all</tt></li>
+    <li><tt>update_counters</tt></li>
+</ul>
+
+
+<h3>13 Halting Execution<span style="font-family: WenQuanYi Micro Hei;">停止执行</span></h3>
+
+
+<p>As you start registering new callbacks for your models, they will be queued for execution. This queue will include all your model’s validations, the registered callbacks, and the database operation to be executed.</p>
+
+<p>The whole callback chain<span style="font-family: DejaVu Sans;">链</span>is wrapped in a transaction<span style="font-family: DejaVu Sans;">交易</span>. If any <em>before</em> callback method returns exactly <tt>false</tt> or raises an exception the execution chain gets halted and a ROLLBACK is issued; <em>after</em> callbacks can only accomplish<span style="font-family: DejaVu Sans;">完成</span>that by raising an exception.</p>
+
+<p>Raising an arbitrary exception may break code that expects <tt>save</tt> and friends not to fail like that.<span style="font-family: DejaVu Sans;">抛出任意异常可能会打断代码预计的</span>save<span style="font-family: DejaVu Sans;">以及朋友们不想要的失败。</span>The <tt>ActiveRecord::Rollback</tt> exception is thought precisely<span style="font-family: DejaVu Sans;">正是</span>to tell Active Record a rollback is going on. That one is internally captured but not reraised.</p>
+
+<h3>14 Relational Callbacks Callbacks<span style="font-family: WenQuanYi Micro Hei;">相关</span></h3>
+
+
+<p>Callbacks work through model relationships, and can even be defined by them. Let’s take an example where a user has many posts. In our example, a user’s posts should be destroyed if the user is destroyed. So, we’ll add an <tt>after_destroy</tt> callback to the <tt>User</tt> model by way of its relationship to the <tt>Post</tt> model.</p>
+
+<p>class User &lt; ActiveRecord::Base</p>
+
+<p>has_many :posts, :dependent =&gt; :destroy</p>
+
+<p>end</p>
+
+<p>&nbsp;</p>
+
+<p>class Post &lt; ActiveRecord::Base</p>
+
+<p>after_destroy :log_destroy_action</p>
+
+<p>&nbsp;</p>
+
+<p>def log_destroy_action</p>
+
+<p>puts &lsquo;Post destroyed&rsquo;</p>
+
+<p>end</p>
+
+<p>end</p>
+
+<p>&nbsp;</p>
+
+<p>&gt;&gt; user = User.first</p>
+
+<p>=&gt; #&lt;User id: 1&gt;</p>
+
+<p>&gt;&gt; user.posts.create!</p>
+
+<p>=&gt; #&lt;Post id: 1, user_id: 1&gt;</p>
+
+<p>&gt;&gt; user.destroy</p>
+
+<p>Post destroyed</p>
+
+<p>=&gt; #&lt;User id: 1&gt;</p>
+
+<h3>15 Conditional Callbacks<span style="font-family: WenQuanYi Micro Hei;">有条件的回调</span></h3>
+
+
+<p>Like in validations, we can also make our callbacks conditional, calling them only when a given predicate is satisfied. You can do that by using the <tt>:if</tt> and <tt>:unless</tt> options, which can take a symbol, a string or a <tt>Proc</tt>. You may use the <tt>:if</tt> option when you want to specify when the callback <strong>should</strong> get called. If you want to specify when the callback <strong>should</strong><strong> </strong><strong>not</strong> be called, then you may use the <tt>:unless</tt> option.</p>
+
+<h4>15.1 Using <tt>:if</tt> and <tt>:unless</tt> with a Symbol</h4>
+
+
+<p>You can associate the <tt>:if</tt> and <tt>:unless</tt> options with a symbol corresponding to the name of a method that will get called right before the callback. When using the <tt>:if</tt> option, the callback won’t be executed if the method returns false; when using the <tt>:unless</tt> option, the callback won’t be executed if the method returns true. This is the most common option. Using this form of registration it’s also possible to register several different methods that should be called to check if the callback should be executed.</p>
+
+<p>class Order &lt; ActiveRecord::Base</p>
+
+<p>before_save :normalize_card_number, :if =&gt; :paid_with_card?</p>
+
+<p>end</p>
+
+<h4>15.2 Using <tt>:if</tt> and <tt>:unless</tt> with a String</h4>
+
+
+<p>You can also use a string that will be evaluated using <tt>eval</tt> and needs to contain valid Ruby code. You should use this option only when the string represents a really short condition.</p>
+
+<p>class Order &lt; ActiveRecord::Base</p>
+
+<p>before_save :normalize_card_number, :if =&gt; &ldquo;paid_with_card?&rdquo;</p>
+
+<p>end</p>
+
+<h4>15.3 Using <tt>:if</tt> and <tt>:unless</tt> with a Proc</h4>
+
+
+<p>Finally, it’s possible to associate <tt>:if</tt> and <tt>:unless</tt> with a <tt>Proc</tt> object. This option is best suited when writing short validation methods, usually one-liners.</p>
+
+<p>class Order &lt; ActiveRecord::Base</p>
+
+<p>before_save :normalize_card_number,</p>
+
+<p>:if =&gt; Proc.new { |order| order.paid_with_card? }</p>
+
+<p>end</p>
+
+<h4>15.4 Multiple Conditions for Callbacks</h4>
+
+
+<p>When writing conditional callbacks, it’s possible to mix both <tt>:if</tt> and <tt>:unless</tt> in the same callback declaration.</p>
+
+<p>class Comment &lt; ActiveRecord::Base</p>
+
+<p>after_create :send_email_to_author, :if =&gt; :author_wants_emails?,</p>
+
+<p>:unless =&gt; Proc.new { |comment| comment.post.ignore_comments? }</p>
+
+<p>end</p>
+
+<h3>16 Callback Classes</h3>
+
+
+<p>Sometimes the callback methods that you’ll write will be useful enough to be reused by other models. Active Record makes it possible to create classes that encapsulate the callback methods, so it becomes very easy to reuse them.</p>
+
+<p><strong>Here</strong><strong>’</strong><strong>s</strong><strong> </strong><strong>an</strong><strong> </strong><strong>example</strong><strong> </strong><strong>where</strong><strong> </strong><strong>we</strong><strong> </strong><strong>create</strong><strong> </strong><strong>a</strong><strong> </strong><strong>class</strong><strong> </strong><strong>with</strong><strong> </strong><strong>an</strong><strong> </strong><tt><strong>after_destroy</strong></tt><strong> </strong><strong>callback</strong><strong> </strong><strong>for</strong><strong> </strong><strong>a</strong><strong> </strong><tt><strong>PictureFile</strong></tt><strong> </strong><strong>model.</strong></p>
+
+<p>class PictureFileCallbacks</p>
+
+<p>def after_destroy(picture_file)</p>
+
+<p>if File.exists?(picture_file.filepath)</p>
+
+<p>File.delete(picture_file.filepath)</p>
+
+<p>end</p>
+
+<p>end</p>
+
+<p>end</p>
+
+<p>When declared inside a class the callback method will receive the model object as a parameter. We can now use it this way:</p>
+
+<p>class PictureFile &lt; ActiveRecord::Base</p>
+
+<p>after_destroy PictureFileCallbacks.new</p>
+
+<p>end</p>
+
+<p>Note that we needed to instantiate a new <tt>PictureFileCallbacks</tt> object, since we declared our callback as an instance method. Sometimes it will make more sense to have it as a class method.</p>
+
+<p>class PictureFileCallbacks</p>
+
+<p>def self.after_destroy(picture_file)</p>
+
+<p>if File.exists?(picture_file.filepath)</p>
+
+<p>File.delete(picture_file.filepath)</p>
+
+<p>end</p>
+
+<p>end</p>
+
+<p>end</p>
+
+<p>If the callback method is declared this way, it won’t be necessary to instantiate a <tt>PictureFileCallbacks</tt> object.</p>
+
+<p>class PictureFile &lt; ActiveRecord::Base</p>
+
+<p>after_destroy PictureFileCallbacks</p>
+
+<p>end</p>
+
+<p>You can declare as many callbacks as you want inside your callback classes.</p>
+
+<h3>17 Observers<span style="font-family: WenQuanYi Micro Hei;">观测者</span></h3>
+
+
+<p>Observers are similar to callbacks, but with important differences. Whereas callbacks can pollute a model with code that isn’t directly related to its purpose, observers allow you to add the same functionality outside of a model. For example, it could be argued that a <tt>User</tt> model should not include code to send registration confirmation emails. <strong>Whenever</strong><strong> </strong><strong>you</strong><strong> </strong><strong>use</strong><strong> </strong><strong>callbacks</strong><strong> </strong><strong>with</strong><strong> </strong><strong>code</strong><strong> </strong><strong>that</strong><strong> </strong><strong>isn</strong><strong>’</strong><strong>t</strong><strong> </strong><strong>directly</strong><strong> </strong><strong>related</strong><strong> </strong><strong>to</strong><strong> </strong><strong>your</strong><strong> </strong><strong>model,</strong><strong> </strong><strong>you</strong><strong> </strong><strong>may</strong><strong> </strong><strong>want</strong><strong> </strong><strong>to</strong><strong> </strong><strong>consider</strong><strong> </strong><strong>creating</strong><strong> </strong><strong>an</strong><strong> </strong><strong>observer</strong><strong> </strong><strong>instead.</strong></p>
+
+<p>Observers<span style="font-family: DejaVu Sans;">与</span>callbacks<span style="font-family: DejaVu Sans;">很相似，但是有着很大不同。鉴于</span>callbacks<span style="font-family: DejaVu Sans;">能够影响</span>model<span style="font-family: DejaVu Sans;">通过代码那与他的目的并没有直接关联，</span>observers<span style="font-family: DejaVu Sans;">允许你在</span>model<span style="font-family: DejaVu Sans;">外添加相同的功能。</span></p>
+
+<h4>17.1 Creating Observers</h4>
+
+
+<p>For example, imagine a <tt>User</tt> model where we want to send an email every time a new user is created. Because sending emails is not directly related to our model’s purpose, we could create an observer to contain this functionality.</p>
+
+<p><code>$</code><code> </code><code>rails</code><code> </code><code>generate</code><code> </code><code>observer</code><code> </code><code>User</code></p>
+
+<p>&nbsp;</p>
+
+<p>class UserObserver &lt; ActiveRecord::Observer</p>
+
+<p>def after_create(model)</p>
+
+<h1>code to send confirmation email&hellip;</h1>
+
+<p>end</p>
+
+<p>end</p>
+
+<p>&nbsp;</p>
+
+<p>As with callback classes, the observer’s methods receive the observed model as a parameter.</p>
+
+<h4>17.2 Registering Observers</h4>
+
+
+<p>Observers are conventionally placed inside of your <tt>app/models</tt> directory and registered in your application’s <tt>config/application.rb</tt> file. <strong>For</strong><strong> </strong><strong>example,</strong><strong> </strong><strong>the</strong><strong> </strong><tt><strong>UserObserver</strong></tt><strong> </strong><strong>above</strong><strong> </strong><strong>would</strong><strong> </strong><strong>be</strong><strong> </strong><strong>saved</strong><strong> </strong><strong>as</strong><strong> </strong><tt><strong>app/models/user_observer.rb</strong></tt><strong> </strong><strong>and</strong><strong> </strong><strong>registered</strong><strong> </strong><strong>in</strong><strong> </strong><tt><strong>config/application.rb</strong></tt><strong> </strong><strong>this</strong><strong> </strong><strong>way:</strong></p>
+
+<p><code>#</code><code> </code><code>Activate</code><code> </code><code>observers</code><code> </code><code>that</code><code> </code><code>should</code><code> </code><code>always</code><code> </code><code>be</code><code> </code><code>running</code></p>
+
+<p><code>config.active_record.observers</code><code> </code><code>=</code><code> </code><code>:user_observer</code></p>
+
+<p>As usual, settings in <tt>config/environments</tt> take precedence<span style="font-family: DejaVu Sans;">优先权</span>over those in <tt>config/application.rb</tt>. So, if you prefer that an observer doesn’t run in all environments, you can simply register it in a specific environment instead.</p>
+
+<h4>17.3 Sharing Observers</h4>
+
+
+<p>By default, Rails will simply strip “Observer” from an observer’s name to find the model it should observe. However, observers can also be used to add behavior to more than one model, and so it’s possible to manually specify the models that our observer should observe.</p>
+
+<p>class MailerObserver &lt; ActiveRecord::Observer</p>
+
+<p>observe :registration, :user</p>
+
+<p>&nbsp;</p>
+
+<p>def after_create(model)</p>
+
+<h1>code to send confirmation email&hellip;</h1>
+
+<p>end</p>
+
+<p>end</p>
+
+<p>In this example, the <tt>after_create</tt> method would be called whenever a <tt>Registration</tt> or <tt>User</tt> was created. Note that this new <tt>MailerObserver</tt> would also need to be registered in <tt>config/application.rb</tt> in order to take effect.</p>
+
+<p><code>config.active_record.observers</code><code> </code><code>=</code><code> </code><code>:mailer_observer#</code><span style="font-family: DejaVu Sans;"><code>与上面的类名相关</code></span></p>
+
+<h3>18 Transaction Callbacks</h3>
+
+
+<p>There are two additional callbacks that are triggered by the completion of a database transaction: <tt>after_commit</tt> and <tt>after_rollback</tt>. These callbacks are very similar to the <tt>after_save</tt> callback except that they don’t execute until after database changes have either been committed or rolled back. They are most useful when your active record models need to interact with external systems which are not part of the database transaction.</p>
+
+<p>Consider, for example, the previous example where the <tt>PictureFile</tt> model needs to delete a file after a record is destroyed. If anything raises an exception after the <tt>after_destroy</tt> callback is called and the transaction rolls back, the file will have been deleted and the model will be left in an inconsistent state. For example, suppose that <tt>picture_file_2</tt> in the code below is not valid and the <tt>save!</tt> method raises an error.</p>
+
+<p>PictureFile.transaction do</p>
+
+<p>picture_file_1.destroy</p>
+
+<p>picture_file_2.save!</p>
+
+<p>end</p>
+
+<p>By using the <tt>after_commit</tt> callback we can account for this case.</p>
+
+<p>class PictureFile &lt; ActiveRecord::Base</p>
+
+<p>attr_accessor :delete_file</p>
+
+<p>&nbsp;</p>
+
+<p>after_destroy do |picture_file|</p>
+
+<p>picture_file.delete_file = picture_file.filepath</p>
+
+<p>end</p>
+
+<p>&nbsp;</p>
+
+<p>after_commit do |picture_file|</p>
+
+<p>if picture_file.delete_file &amp;&amp; File.exist?(picture_file.delete_file)</p>
+
+<p>File.delete(picture_file.delete_file)</p>
+
+<p>picture_file.delete_file = nil</p>
+
+<p>end</p>
+
+<p>end</p>
+
+<p>end</p>
+
+<p>The <tt>after_commit</tt> and <tt>after_rollback</tt> callbacks are guaranteed to be called for all models created, updated, or destroyed within a transaction block. If any exceptions are raised within one of these callbacks, they will be ignored so that they don’t interfere with the other callbacks. As such, if your callback code could raise an exception, you’ll need to rescue it and handle it appropriately within the callback.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Francis Jiang</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-24T13:38:00+08:00" pubdate data-updated="true">Nov 24<span>th</span>, 2011</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rails/'>rails</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://jhjguxin.github.io/blog/2011/11/24/active-record-validations-and-callbacks-huo-dong-ji-lu-yan-zheng-he-hui-diao/" data-via="jhjguxin" data-counturl="http://jhjguxin.github.io/blog/2011/11/24/active-record-validations-and-callbacks-huo-dong-ji-lu-yan-zheng-he-hui-diao/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2011/11/22/markdown-syntax-guide/" title="Previous Post: Markdown Syntax Guide">&laquo; Markdown Syntax Guide</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2011/11/29/rubyonrails-guide-to-active-record-associations/" title="Next Post: Rubyonrails Guide to Active Record Associations">Rubyonrails Guide to Active Record Associations &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/">通过mongodump和mongorestore实现Mongodb备份和恢复 --by Chenzhou123520</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes/">Ruby on Rails 4.0 Release Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/rails-active-record-named-scopes/">Rails Active Record Named Scopes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/">晒晒我们的开源项目 ITEYE开源代码</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/">Single Sign-on 单点登录 Sso</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/jhjguxin">@jhjguxin</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'jhjguxin',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Francis Jiang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

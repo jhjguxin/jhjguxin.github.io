@@ -1,0 +1,401 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>ubuntu11.10 双显卡笔记本 开3d特效 - Francis's Octopress Blog</title>
+  <meta name="author" content="Francis Jiang">
+
+  
+  <meta name="description" content="ubuntu11.10 双显卡笔记本 开3d特效 我的本本是双显卡配置的，集成显卡是intel的，独立显卡是nvidia，使用系统自带的附加驱动装nvidia失败&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;.. 我也双显卡的。。。 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jhjguxin.github.io/blog/2011/11/09/ubuntu11-dot-10-shuang-xian-qia-bi-ji-ben-kai-3dte-xiao">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Francis's Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-25901353-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Francis's Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jhjguxin.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/readme">Readme</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">ubuntu11.10 双显卡笔记本 开3d特效</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-09T03:04:00+08:00" pubdate data-updated="true">Nov 9<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>ubuntu11.10 双显卡笔记本 开3d特效</h2>
+
+<p>我的本本是双显卡配置的，集成显卡是intel的，独立显卡是nvidia，使用系统自带的附加驱动装nvidia失败&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;..</p>
+
+<div>我也双显卡的。。。在intel集成显卡下弄好了3D桌面
+ubuntu本身就能识别intel集成显卡，所以跳过显卡驱动步骤，直接安装compiz就行了</div>
+
+
+<div>autoremove 所有的 nvidia包就可以开3d了</div>
+
+
+<div>
+如果非要安装NVIDIA驱动，</div>
+
+
+<div>今天上网的时候，偶然发现了这个开源软件，刚刚更新，用于ubuntu下N卡的双显卡问题。大家可以去试试用一下。无需再禁用N卡。
+<a href="https://github.com/MrMEEE/bumblebee#readme">https://github.com/MrMEEE/bumblebee#readme</a>
+这个网页上有安装步骤
+<a href="http://www.martin-juhl.dk/">http://www.martin-juhl.dk</a></div>
+
+
+<div> </div>
+
+
+<div>
+
+ABSOLETE PROJECT:
+
+Please READ:
+
+<a href="http://www.martin-juhl.dk/2011/08/reassemble-of-the-bee/">http://www.martin-juhl.dk/2011/08/reassemble-of-the-bee/</a>
+
+and
+
+<a href="http://www.martin-juhl.dk/2011/08/ironhide-reporting-for-duty/">http://www.martin-juhl.dk/2011/08/ironhide-reporting-for-duty/</a>
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+IMPORTANT:
+
+Ubuntu Users:
+
+Bumblebee has now been packaged into a PPA @ Launchpad:
+
+<a href="https://launchpad.net/~mj-casalogic/+archive/bumblebee/">https://launchpad.net/~mj-casalogic/+archive/bumblebee/</a>
+
+This will probably be the most up-to-date version for Ubuntu from now on&#8230;
+
+For people currently running the script/git version please do :
+
+sudo bumblebee-uninstall
+sudo apt-get install ppa-purge
+sudo ppa-purge ppa:ubuntu-x-swat/x-updates
+sudo ppa-purge ppa:xorg-edgers/ppa
+sudo apt-add-repository ppa:mj-casalogic/bumblebee
+sudo apt-get update
+sudo apt-get install bumblebee
+
+openSuSE Users:
+
+Bumblebee has been ported to the openSuSE Build Service repository :
+
+<a href="http://download.opensuse.org/repositories/home:/Ximi1970:/bumblebee/openSUSE_11.4/">http://download.opensuse.org/repositories/home:/Ximi1970:/bumblebee/openSUSE_11.4/</a>
+
+For people currently running the script/git version please do :
+
+sudo bumblebee-uninstall
+
+If you have used the nVidia package option:
+sudo bash NVIDIA-Linux-xxxxx-xxxx.run &#8211;uninstall
+
+If you have used the nVidia repository (mirror) option:
+rpm -e x11-video-nvidiaG02
+rpm -e nvidia-computeG02
+rpm -e nvidia-gfxG02-kmp
+zypper rr &#8220;nVidia Graphics Drivers (local mirror)&#8221;
+
+Install the nVidia repository and packages if you do not want to
+use the nouveau driver:
+zypper ar -f <a href="ftp://download.nvidia.com/opensuse/11.4">ftp://download.nvidia.com/opensuse/11.4</a> &#8220;nVidia Graphics Drivers&#8221;
+zypper install nvidia-gfxG02-kmp-`uname -r | cut -f3 -d&#8221;-&#8220;`
+zypper install x11-video-nvidiaG02
+
+Installing bumblebee:
+
+zypper ar -f <a href="http://download.opensuse.org/repositories/home:/Ximi1970:/bumblebee/openSUSE_11.4">http://download.opensuse.org/repositories/home:/Ximi1970:/bumblebee/openSUSE_11.4</a> &#8220;Bumblebee&#8221;
+zypper install bumblebee
+
+or just use Yast to add the repositories and packages.
+
+# &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;-
+# &#8220;Red Bull License&#8221;
+#  wrote this file and is providing free support
+# in any spare time. If you need extended support, you can fuel him up by
+# donating a Red Bull here to get him through the nights..:
+#
+# <a href="http://tinyurl.com/bumblebee-project">http://tinyurl.com/bumblebee-project</a>
+#
+# &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;-
+
+#
+# &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;-
+# &#8220;THE BEER-WARE LICENSE&#8221; (Revision 42):
+#  wrote this file. As long as you retain this notice you
+# can do whatever you want with this stuff. If we meet some day, and you
+# think this stuff is worth it, you can buy me a beer in return Martin Juhl
+# &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;-
+#
+
+#    This file is part of bumblebee.
+#
+#    bumblebee is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    bumblebee is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#  
+#    You should have received a copy of the GNU General Public License
+#    along with bumblebee.  If not, see 
+
+</div>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Francis Jiang</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-09T03:04:00+08:00" pubdate data-updated="true">Nov 9<span>th</span>, 2011</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/wang-wen/'>网文</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://jhjguxin.github.io/blog/2011/11/09/ubuntu11-dot-10-shuang-xian-qia-bi-ji-ben-kai-3dte-xiao/" data-via="jhjguxin" data-counturl="http://jhjguxin.github.io/blog/2011/11/09/ubuntu11-dot-10-shuang-xian-qia-bi-ji-ben-kai-3dte-xiao/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2011/11/03/xu-shi-dai-fa-%21rails-3-jie-shao/" title="Previous Post: 蓄势待发！Rails 3 介绍">&laquo; 蓄势待发！Rails 3 介绍</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2011/11/10/getting-started-with-rails-en-cn/" title="Next Post: Getting Started with Rails-(EN-CN)">Getting Started with Rails-(EN-CN) &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/">通过mongodump和mongorestore实现Mongodb备份和恢复 --by Chenzhou123520</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes/">Ruby on Rails 4.0 Release Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/rails-active-record-named-scopes/">Rails Active Record Named Scopes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/">晒晒我们的开源项目 ITEYE开源代码</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/">Single Sign-on 单点登录 Sso</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/jhjguxin">@jhjguxin</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'jhjguxin',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Francis Jiang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

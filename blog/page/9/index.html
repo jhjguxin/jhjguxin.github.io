@@ -1,0 +1,4166 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Francis's Octopress Blog</title>
+  <meta name="author" content="Francis Jiang">
+
+  
+  <meta name="description" content="TomDoc for Ruby &ndash; Version 1.0.0-rc1 Purpose
+TomDoc is a code documentation specification that helps you write precise documentation that is &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jhjguxin.github.io/blog/page/9">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Francis's Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-25901353-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Francis's Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jhjguxin.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/readme">Readme</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/15/tomdoc-for-ruby-version-1-dot-0-0-rc1/">TomDoc for Ruby - Version 1.0.0-rc1</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-15T10:54:00+08:00" pubdate data-updated="true">Mar 15<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>TomDoc for Ruby &ndash; Version 1.0.0-rc1</h2>
+
+<p>Purpose
+TomDoc is a code documentation specification that helps you write precise documentation that is nice to read in plain text, yet structured enough to be automatically extracted and processed by a machine.</p>
+
+<p>The key words &ldquo;MUST&rdquo;, &ldquo;MUST NOT&rdquo;, &ldquo;REQUIRED&rdquo;, &ldquo;SHALL&rdquo;, &ldquo;SHALL NOT&rdquo;, &ldquo;SHOULD&rdquo;, &ldquo;SHOULD NOT&rdquo;, &ldquo;RECOMMENDED&rdquo;, &ldquo;MAY&rdquo;, and &ldquo;OPTIONAL&rdquo; in this document are to be interpreted as described in RFC 2119.</p>
+
+<p>Method Documentation
+A quick example will serve to best illustrate the TomDoc method documentation format:</p>
+
+<h1>Public: Duplicate some text an arbitrary number of times.</h1>
+
+<p>#</p>
+
+<h1>text  &ndash; The String to be duplicated.</h1>
+
+<h1>count &ndash; The Integer number of times to duplicate the text.</h1>
+
+<p>#</p>
+
+<h1>Examples</h1>
+
+<p>#</p>
+
+<h1>multiplex(&lsquo;Tom&rsquo;, 4)</h1>
+
+<h1># => &lsquo;TomTomTomTom&rsquo;</h1>
+
+<p>#</p>
+
+<h1>Returns the duplicated String.</h1>
+
+<p>def multiplex(text, count)
+  text * count
+end
+TomDoc for a specific method consists of a block of single comment markers (#) that appears directly above the method. There SHOULD NOT be a blank line between the comment block and the method definition. A TomDoc method block consists of five optional sections: a description section, an arguments section, a yields section, an examples section, a returns section, and a signature section. Lines that contain text MUST be separated from the comment marker by a single space. Lines that do not contain text SHOULD consist of just a comment marker (no trailing spaces).</p>
+
+<p>The Description Section
+The description section SHOULD be in plain sentences. Each sentence SHOULD end with a period. Good descriptions explain what the code does at a high level. Make sure to explain any unexpected behavior that the method may have, or any pitfalls that the user may experience. Paragraphs SHOULD be separated with blank lines. Code within the description section should be indented three spaces from the starting comment symbol. Lines SHOULD be wrapped at 80 characters.</p>
+
+<p>To describe the status of a method, you SHOULD use one of several prefixes:</p>
+
+<p>Public: Indicates that the method is part of the project&rsquo;s public API. This annotation is designed to let developers know which methods are considered stable. You SHOULD use this to document the public API of your project. This information can then be used along with Semantic Versioning to inform decisions on when major, minor, and patch versions should be incremented.</p>
+
+<h1>Public: Initialize a new Widget.</h1>
+
+<p>Internal: Indicates that the method is part of the project&rsquo;s internal API. These are methods that are intended to be called from other classes within the project but not intended for public consumption. For example:</p>
+
+<h1>Internal: Normalize the filename.</h1>
+
+<p>Deprecated: Indicates that the method is deprecated and will be removed in a future version. You SHOULD use this to document methods that were Public but will be removed at the next major version.</p>
+
+<h1>Deprecated: Resize an object to the given dimensions.</h1>
+
+<p>An example description that includes all of these elements might look something like the following.</p>
+
+<h1>Public: Format some data with the given format. Possible format</h1>
+
+<h1>identifiers include:</h1>
+
+<p>#</p>
+
+<h1>%i   &ndash; Output the Integer i.</h1>
+
+<h1>%f.n &ndash; Output a Float f with n decimal places rounded.</h1>
+
+<p>#</p>
+
+<h1>The format String may include any text. To escape a percent sign, prefix</h1>
+
+<h1>it with a backslash:</h1>
+
+<p>#</p>
+
+<h1>&ldquo;The sale price was %f.n\% off retail.&rdquo;</h1>
+
+<p>The Arguments Section
+The arguments section consists of a list of arguments. Each list item MUST be comprised of the name of the argument, a dash, and an explanation of the argument in plain sentences. The expected type (or types) of each argument SHOULD be clearly indicated in the explanation. When you specify a type, use the proper classname of the type (for instance, use &lsquo;String&rsquo; instead of &lsquo;string&rsquo; to refer to a String type). If the argument has other constraints (e.g. duck-typed method requirements), simply state those requirements. The dashes following each argument name SHOULD be lined up in a single column. Lines SHOULD be wrapped at 80 columns. If an explanation is longer than that, additional lines MUST be indented at least two spaces but SHOULD be indented to match the indentation of the explanation. For example:</p>
+
+<h1>element &ndash; The Symbol representation of the element. The Symbol should</h1>
+
+<h1>contain only lowercase ASCII alpha characters.</h1>
+
+<p>An argument that is String-like might look like this:</p>
+
+<h1>actor &ndash; An object that responds to to_s. Represents the actor that</h1>
+
+<h1>will be output in the log.</h1>
+
+<p>All arguments are assumed to be required. If an argument is optional, you MUST specify the default value:</p>
+
+<h1>host &ndash; The String hostname to bind (default: &lsquo;0.0.0.0&rsquo;).</h1>
+
+<p>For hash arguments, you SHOULD enumerate each valid option in a way similar to how normal arguments are defined:</p>
+
+<h1>options &ndash; The Hash options used to refine the selection (default: {}):</h1>
+
+<h1>:color  &ndash; The String color to restrict by (optional).</h1>
+
+<h1>:weight &ndash; The Float weight to restrict by. The weight should</h1>
+
+<h1>be specified in grams (optional).</h1>
+
+<p>Ruby allows for some interesting argument capabilities. In those cases, try to explain what&rsquo;s going on as best as possible. Examples are a good way to demonstrate how methods should be invoked. For example:</p>
+
+<h1>Print a log line to STDOUT. You can customize the output by specifying</h1>
+
+<h1>a block.</h1>
+
+<p>#</p>
+
+<h1>msgs  &ndash; Zero or more String messages that will be printed to the log</h1>
+
+<h1>separated by spaces.</h1>
+
+<h1>block &ndash; An optional block that can be used to customize the date format.</h1>
+
+<h1>If it is present, it will be sent a Time object representing</h1>
+
+<h1>the current time. Your block should return a String version of</h1>
+
+<h1>the time, formatted however you please.</h1>
+
+<p>#</p>
+
+<h1>Examples</h1>
+
+<p>#</p>
+
+<h1>log(&ldquo;An error occurred.&rdquo;)</h1>
+
+<p>#</p>
+
+<h1>log(&ldquo;No such file&rdquo;, &ldquo;/var/log/server.log&rdquo;) do |time|</h1>
+
+<h1>time.strftime(&ldquo;%Y-%m-%d %H:%M:%S&rdquo;)</h1>
+
+<h1>end</h1>
+
+<p>#</p>
+
+<h1>Returns nothing.</h1>
+
+<p>def log(*msgs, &amp;block)
+  &hellip;
+end
+The Yields Section
+The yields section is used to specify what is sent to the implicitly given block. The section MUST start with the word &ldquo;Yields&rdquo; and SHOULD contain a description and type of the yielded object. For example:</p>
+
+<h1>Yields the Integer index of the iteration.</h1>
+
+<p>Lines SHOULD be wrapped at 80 columns. Wrapped lines MUST be indented under the above line by at least two spaces.</p>
+
+<p>The Examples Section
+The examples section MUST start with the word &ldquo;Examples&rdquo; on a line by itself. The next line SHOULD be blank. The following lines SHOULD be indented by two spaces (three spaces from the initial comment marker) and contain code that shows off how to call the method and (optional) examples of what it returns. Everything under the &ldquo;Examples&rdquo; line should be considered code, so make sure you comment out lines that show return values. For example:</p>
+
+<h1>Examples</h1>
+
+<p>#</p>
+
+<h1>multiplex(&lsquo;x&rsquo;, 4)</h1>
+
+<h1># => &lsquo;xxxx&rsquo;</h1>
+
+<p>#</p>
+
+<h1>multiplex(&lsquo;apple&rsquo;, 2)</h1>
+
+<h1># => &lsquo;appleapple&rsquo;</h1>
+
+<p>The Returns/Raises Section
+The returns section should explain in plain sentences what is returned from the method. The line MUST begin with &ldquo;Returns&rdquo;. If only a single thing is returned, state the nature and type of the value. For example:</p>
+
+<h1>Returns the duplicated String.</h1>
+
+<p>If several different types may be returned, list all of them. For example:</p>
+
+<h1>Returns the given element Symbol or nil if none was found.</h1>
+
+<p>If the return value of the method is not intended to be used, then you should simply state:</p>
+
+<h1>Returns nothing.</h1>
+
+<p>If the method raises exceptions that the caller may be interested in, add additional lines that explain each exception and under what conditions it may be encountered. The lines MUST begin with &ldquo;Raises&rdquo;. For example:</p>
+
+<h1>Returns nothing.</h1>
+
+<h1>Raises Errno::ENOENT if the file cannot be found.</h1>
+
+<h1>Raises Errno::EACCES if the file cannot be accessed.</h1>
+
+<p>Lines SHOULD be wrapped at 80 columns. Wrapped lines MUST be indented under the above line by at least two spaces. For example:</p>
+
+<h1>Returns the atomic mass of the element as a Float. The value is in</h1>
+
+<h1>unified atomic mass units.</h1>
+
+<p>The Signature Section
+The signature section allows you specify the nature of methods that are dynamically created at runtime.</p>
+
+<p>The section MUST start with the word &ldquo;Signature&rdquo; on a line by itself. The next line SHOULD be blank. The following lines SHOULD be indented by two spaces (three spaces from the initial comment marker) and contain special code that shows the method signature(s). For complex dynamic signatures, you SHOULD name and demarcate signature variables with &lt;> for required parts and [] for optional parts. Use &hellip; for repeating elements. If there are dynamic elements to the signature, document them in the same was as the Arguments section, but leave out any type declarations. Documentation for metaprogrammed methods may exist independent of any actual code, or it may appear above the code that creates the methods. Use your best judgment.</p>
+
+<h1>Signature</h1>
+
+<p>#</p>
+
+<h1>find_by_<field><a href="args"><em>and</em><field>&hellip;</a></h1>
+
+<p>#</p>
+
+<h1>field &ndash; A field name.</h1>
+
+<p>Because metaprogrammed methods may be difficult to decipher, it&rsquo;s best to include an examples section to demonstrate proper usage. For example:</p>
+
+<h1>Public: Find Records by a specific field name and value. This method</h1>
+
+<h1>will be available for each field defined on the record.</h1>
+
+<p>#</p>
+
+<h1>args &ndash; The value or Array of values of the field(s) to find by.</h1>
+
+<p>#</p>
+
+<h1>Examples</h1>
+
+<p>#</p>
+
+<h1>find_by_name_and_email(&ldquo;Tom&rdquo;, &ldquo;<a href="&#109;&#97;&#x69;&#108;&#x74;&#111;&#58;&#x74;&#111;&#109;&#x40;&#x6d;&#111;&#106;&#x6f;&#109;&#98;&#111;&#46;&#99;&#x6f;&#x6d;">&#116;&#111;&#109;&#64;&#109;&#111;&#106;&#111;&#x6d;&#98;&#111;&#46;&#x63;&#x6f;&#x6d;</a>&rdquo;)</h1>
+
+<p>#</p>
+
+<h1>Returns an Array of matching Records.</h1>
+
+<p>#</p>
+
+<h1>Signature</h1>
+
+<p>#</p>
+
+<h1>find_by_<field><a href="args"><em>and</em><field>&hellip;</a></h1>
+
+<p>#</p>
+
+<h1>field &ndash; A field name.</h1>
+
+<p>Class/Module Documentation
+TomDoc for classes and modules follows the same form as Method Documentation but only contains the Description and Examples sections.</p>
+
+<h1>Public: Various methods useful for performing mathematical operations.</h1>
+
+<h1>All methods are module methods and should be called on the Math module.</h1>
+
+<p>#</p>
+
+<h1>Examples</h1>
+
+<p>#</p>
+
+<h1>Math.square_root(9)</h1>
+
+<h1># => 3</h1>
+
+<p>module Math
+  &hellip;
+end
+Just like methods, classes may be marked as Public, Internal, or Deprecated depending on their intended use.</p>
+
+<p>Constants Documentation
+Constants should be documented with freeform comments. The type of the constant and any important constraints should be stated.</p>
+
+<h1>Public: Integer number of seconds to wait before connection timeout.</h1>
+
+<p>CONNECTION_TIMEOUT = 60
+Just like methods, constants may be marked as Public, Internal, or Deprecated depending on their intended use.</p>
+
+<p>Special Considerations
+Constructor
+A Ruby class&rsquo;s initialize method does not have a significant return value. You MAY exclude the returns section. A larger description of the purpose of this class should be done at the Class level.</p>
+
+<h1>Public: Initialize a Widget.</h1>
+
+<p>#</p>
+
+<h1>name &ndash; A String naming the widget.</h1>
+
+<p>def initialize(name)
+  &hellip;
+end
+Attributes
+Ruby&rsquo;s built in attr_reader, attr_writer, and attr_accessor require a bit more consideration. With TomDoc you SHOULD document each of these method generators separately. Because each part of a method documentation section is optional, you can write concise yet unambiguous docs.</p>
+
+<p>Here is an example TomDoc for attr_reader.</p>
+
+<h1>Public: Returns the String name of the user.</h1>
+
+<p>attr_reader :name
+Here is an example TomDoc for attr_writer.</p>
+
+<h1>Public: Sets the String name of the user.</h1>
+
+<p>attr_writer :name
+For attr_accessor you can use an overloaded shorthand that documents the getter and setter simultaneously:</p>
+
+<h1>Public: Gets/Sets the String name of the user.</h1>
+
+<p>attr_accessor :name</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/09/rspecjian-ming-zhi-nan-by-yuanyi-zhang/">RSpec简明指南 by Yuanyi ZHANG</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-09T18:05:00+08:00" pubdate data-updated="true">Mar 9<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>RSpec简明指南 By Yuanyi ZHANG</h2>
+
+<p>这是<a href="http://blog.davidchelimsky.net/">David Chelimsky</a>写的一篇RSpec简明指南，原文在<a href="http://blog.davidchelimsky.net/articles/2007/05/14/an-introduction-to-rspec-part-i">这里</a>。</p>
+
+<p><span style="font-size: large;"><strong>简介</strong></span></p>
+
+<p>要了解RSpec，我们首先需要了解什么是行为驱动开发（Behaviour Driven Development，简称BDD），BDD是一种融合了可接受性测试驱动计划（Acceptance Test Driven Planning），域驱动设计（Domain Driven Design）以及测试驱动开发（Test Driven Development，简称TDD）的敏捷开发模型。RSpec为BDD开发提供TDD支持。</p>
+
+<p>你可以简单的将RSpec看作一个传统的单元测试框架，但我们更愿意将它看成是一种领域特定语言（Domain Specific Language，以下简称DSL），它的主要作用就是描述我们对系统执行某个样例(example)的期望行为(behavior)。</p>
+
+<p>这篇指南遵从TDD思想，但是我们将使用行为（behavior）和样例（example）来代替测试例（test case）和测试方法（test method），想知道我们为什么采用这样的术语，请参看<a href="http://dannorth.net/tags/agile/bdd/">Dan North</a>, <a href="http://daveastels.com/articles/2005/07/05/a-new-look-at-test-driven-development">Dave Astels</a>, 以及 <a href="http://exampler.com/">Brian Marick</a> 的相关文章。</p>
+
+<p><span style="font-size: large;"><strong>安装</strong></span></p>
+
+<p>目前RSpec的最新版本是1.0.5，需要Ruby184以上版本，可以通过下面这条命令安装：</p>
+
+<p><code># gem install rspec</code></p>
+
+<p><span style="font-size: large;"><strong>准备工作</strong></span></p>
+
+<p>整篇指南都围绕一个例子展开，因此在开始前，你最好先为这个例子建个目录：</p>
+
+<p><code>$ mkdir rspec_tutorial
+$ cd rspec_tutorial</code></p>
+
+<p><span style="font-size: large;"><strong>开始</strong></span></p>
+
+<p>我们首先要了解的是RSpec DSL的”describe”与”it”方法，这两个方法有很多其它的名字（但是我们不推荐使用它们），我们之所以使用这样的命名，只是想让你站在行为（behavior）而不是结构（structure）的角度进行思考。</p>
+
+<p>创建名为user_spec.rb的文件：</p>
+
+<p><code>describe User do
+end</code></p>
+
+<p>describe方法创建一个Behavior实例，所以你可以将”describe User”理解为”描述用户的行为（describe the behaviour of the User class）”，或许这个方法叫做“
+describe_the_behaviour_of”会更合适些，但这实在太冗长了，所以我们决定只选取第一个单词describe来作为这个方法的名字。</p>
+
+<p>现在你可以在shell中试试这条命令：</p>
+
+<p><code>$ spec user_spec.rb</code></p>
+
+<p>spec命令有很多选项，但大部分超出了本指南的范围，如果你感兴趣，可以只输入spec而不带任何参数来查看帮助信息。</p>
+
+<p>让我们接着回到上面那条命令，它应该会产生下面的输出：</p>
+
+<p><code>./user_spec.rb:1: uninitialized constant User (NameError)</code></p>
+
+<p>这是因为我们还没有创建User类，也就是说我们要描述的东西不存在，因此我们需要再创建一个user.rb来定义我们所要描述的对象：</p>
+
+<p><code>class User
+end</code></p>
+
+<p>并在user_spec.rb中包含它：</p>
+
+<p><code>require &lsquo;user&rsquo;
+describe User do
+end</code></p>
+
+<p>现在再次运行spec命令：</p>
+
+<p><code>$ spec user_spec.rb
+Finished in 6.0e-06 seconds
+0 examples, 0 failures</code></p>
+
+<p>这个输出是说我们还没有定义样例，所以现在我们就来定义一个：</p>
+
+<p><code>describe User do
+  it &ldquo;should be in any roles assigned to it&rdquo; do
+  end
+end</code></p>
+
+<p>it方法返回一个Example实例，因此我们可以将it方法理解成“用户行为的一个样例”。</p>
+
+<p>再次运行spec：</p>
+
+<p><code>$ spec user_spec.rb &mdash;format specdoc
+User
+&ndash; should be in any roles assigned to it
+Finished in 0.022865 seconds
+1 example, 0 failures</code></p>
+
+<p>specdoc参数格式化行为（describe方法创建的对象）以及样例（it方法创建的对象）的名字然后输出，这种格式来自于TestDox，一个为JUnit测试例及方法提供相似报告的工具。</p>
+
+<p>现在我们开始增加Ruby代码：</p>
+
+<p><code>describe User do
+  it &ldquo;should be in any roles assigned to it&rdquo; do
+    user.should be_in_role(&ldquo;assigned role&rdquo;)
+  end
+end</code></p>
+
+<p>这句话的意思是User应该能够胜任所有分配给他的角色，那么事实是这样么？让我们运行spec试试看：</p>
+
+<p><code>$ spec user_spec.rb &mdash;format specdoc
+User
+&ndash; should be in any roles assigned to it (ERROR &ndash; 1)
+1)
+NameError in ‘User should be in any roles assigned to it’
+undefined local variable or method `user’ for #&lt;#:0×14ecdd8&gt;
+./user_spec.rb:6:
+Finished in 0.017956 seconds
+1 example, 1 failure</code></p>
+
+<p>又出错了，是的，但在继续之前，让我们先仔细看看这段出错信息：</p>
+
+<ul>
+    <li>“ERROR -1)”告诉我们”should be in any roles assigned to it”这个样例出错了</li>
+    <li>“1)”则为我们详细描述了这个错误，当样例很多时，你就会发现这个编号非常有用</li>
+</ul>
+
+
+<p>还有一点需要注意：这段信息没有给出RSpec代码的backtrace，如果你需要它，可以通过–backtrace选项来获取。</p>
+
+<p>下面，我们继续我们的例子，上面的错误是因为我们没有创建User对象，那我们就创建一个：</p>
+
+<p><code>describe User do
+  it &ldquo;should be in any roles assigned to it&rdquo; do
+    user = User.new
+    user.should be_in_role(&ldquo;assigned role&rdquo;)
+  end
+end</code></p>
+
+<p><code>$ spec user_spec.rb &mdash;format specdoc
+User
+&ndash; should be in any roles assigned to it (ERROR &ndash; 1)
+1)
+NoMethodError in ‘User should be in any roles assigned to it’
+undefined method `in_role?’ for #
+./user_spec.rb:7:
+Finished in 0.020779 seconds
+1 example, 1 failure</code></p>
+
+<p>还是失败，不过这次是因为User对象缺少role_in?方法，修改user.rb:</p>
+
+<p><code>class User
+  def in_role?(role)
+  end</code></p>
+
+<p><code>$ spec user_spec.rb &mdash;format specdoc
+User
+&ndash; should be in any roles assigned to it (FAILED &ndash; 1)
+1)
+‘User should be in any roles assigned to it’ FAILED
+expected in_role?(”assigned role”) to return true, got nil
+./user_spec.rb:7:
+Finished in 0.0172110000000001 seconds
+1 example, 1 failure</code></p>
+
+<p>虽然又失败了，但我们的第一个目标其实已经达到了，我们得到了一段更有意义的错误描述”User should be in any roles assigned to it”。</p>
+
+<p>让这段代码避免失败很简单：</p>
+
+<p><code>class User
+  def in_role?(role)
+    true
+  end</code></p>
+
+<p><code>$ spec user_spec.rb &mdash;format specdoc
+User
+&ndash; should be in any roles assigned to it
+Finished in 0.018173 seconds
+1 example, 0 failures</code></p>
+
+<p>现在终于通过了，但是让我们再来看看这段代码：</p>
+
+<p><code>describe User do
+  it &ldquo;should be in any roles assigned to it&rdquo; do
+    user = User.new
+    user.should be_in_role(&ldquo;assigned role&rdquo;)
+  end
+end</code></p>
+
+<p>我们可以将这个样例理解成“用户应该接受所有分配给他的角色”，但问题是我们还没有分给他角色呢？</p>
+
+<p><code>describe User do
+  it &ldquo;should be in any roles assigned to it&rdquo; do
+    user = User.new
+    user.assign_role(&ldquo;assigned role&rdquo;)
+    user.should be_in_role(&ldquo;assigned role&rdquo;)
+  end
+end</code></p>
+
+<p>这段代码又会引发一个错误，因为User并没有assign_role这个方法：</p>
+
+<p><code>class User
+  def in_role?(role)
+    true
+  end
+  def assign_role(role)
+  end
+end</code></p>
+
+<p><code>$ spec user_spec.rb &mdash;format specdoc
+User
+&ndash; should be in any roles assigned to it
+Finished in 0.018998 seconds
+1 example, 0 failures</code></p>
+
+<p>样例再次通过，但是我们的任务还没结束，只要你再回头看看我们目前的代码，就会发现这个User的行为与我们的目标还有距离。</p>
+
+<p>现在，我们只是解决了“用户必须接受所有分配给他的角色”，但是还有一个问题就是”用户不应该接受没有分配给他的角色“。所以我们需要为用户行为再增加一个样例：</p>
+
+<p><code>describe User do
+  it &ldquo;should be in any roles assigned to it&rdquo; do
+    user = User.new
+    user.assign_role(&ldquo;assigned role&rdquo;)
+    user.should be_in_role(&ldquo;assigned role&rdquo;)
+  end
+  it “should NOT be in any roles not assigned to it” do
+    user = User.new
+    user.should_not be_in_role(”unassigned role”)
+  end
+end</code></p>
+
+<p><code>$ spec user_spec.rb &mdash;format specdoc
+User
+&ndash; should be in any roles assigned to it
+&ndash; should NOT be in any roles not assigned to it (FAILED &ndash; 1)
+1)
+‘User should NOT be in any roles not assigned to it’ FAILED
+expected in_role?(”unassigned role”) to return false, got true
+./user_spec.rb:12:
+Finished in 0.019014 seconds
+2 examples, 1 failure</code></p>
+
+<p>失败了，用户接受了没有分给他的角色，这需要我们对User的实现做些改动：</p>
+
+<p><code>class User
+  def in_role?(role)
+    role == &ldquo;assigned role&rdquo;
+  end
+  def assign_role(role)
+  end
+end</code></p>
+
+<p>现在，一切都搞定了，但是我们的代码与样例有些重复（它们都使用了”assigned role”），因此，有必要对User类进行重构：</p>
+
+<p><code>class User
+  def in_role?(role)
+    role == @role
+  end
+  def assign_role(role)
+    @role = role
+  end
+end</code></p>
+
+<p>随后，让我们再来测试一下：</p>
+
+<p><code>$ spec user_spec.rb &mdash;format specdoc
+User
+&ndash; should be in any roles assigned to it
+&ndash; should NOT be in any roles not assigned to it
+Finished in 0.018199 seconds
+2 examples, 0 failures</code></p>
+
+<p>事情就这么结束了么？你可能还有些疑惑，因为我们甚至可以将一个数字分配给用户，但这与”用户应该接受任何分配给他的角色”是吻合的，所以，这时候我们应该征求下我们的客户的意见，“每个用户在同一时间只能担当一个角色吗？”，如果客户的回答是Yes，那么很幸运，我们不需要对我们的代码进行改动，而只需对样例的描述进行一些修改，但如果客户的回答是No，那我们恐怕还得再做些工作。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/06/mass-assignment-vulnerability-how-to-force-dev-define-attr-accesible-by-homakov/">Mass Assignment Vulnerability - How to Force Dev. Define Attr_accesible? By Homakov</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-06T19:03:00+08:00" pubdate data-updated="true">Mar 6<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Mass assignment vulnerability &ndash; how to force dev. define attr_accesible? by homakov</h2>
+
+<div>
+<div>
+
+Those who don&#8217;t know methods attr_accesible / protected - check that article out <a href="http://enlightsolutions.com/articles/whats-new-in-edge-scoped-mass-assignment-in-rails-3-1">http://enlightsolutions.com/articles/whats-new-in-edge-scoped-mass-assignment-in-rails-3-1</a>
+
+Let&#8217;s view at typical situation - middle level rails developer builds website for customer, w/o any special protections in model(Yeah! they don&#8217;t write it! I have asked few my friends - they dont!)
+Next, people use this website but if any of them has an idea that developer didnt specify &#8220;attr_accesible&#8221; - hacker can just add an http field in params, e.g. we have pursue&#8217;s name edition. POST request at pursues#update
+
+id = 333 (target&#8217;s pursues id)
+pursue[&#8216;name&#8217;] = &#8216;my purses name&#8217;
+pursue[&#8216;user_id&#8217;] = 412(hacker id)
+
+if code is scaffolded than likely we got Pursue.find(params[:id]).update_attributes(params[:pursue]) in the controller. And that is what I worry about.
+
+After execution that POST we got hacker owning target&#8217;s pursue!
+
+I don&#8217;t mean that it is Rails problem, of course not. But let&#8217;s get it real(Getting Real ok) - most of developers are middle/junior level and most of them don&#8217;t write important but not very neccessary things: tests, role checks etc including topic - attr_accesible
+
+how to avoid injections ? What should Rails framework do to force people to keep their rails websites safe? Making attr_accesible necessary field in model? What do you think guys.
+
+</div>
+</div>
+
+
+<div id="method-i-attr_accessible"><a name="method-i-attr_accessible"></a><strong>attr_accessible</strong>(*args)</div>
+
+
+<div>
+<div>
+
+Specifies a white list of model attributes that can be set via mass-assignment.指定一个model属性的白名单，其可以通过来定制（白名单里面的的值）。
+
+Like <code>attr_protected</code>, a role for the attributes is optional, if no role is provided then :default is used. A role can be defined by using the :as option.
+
+如同<code>attr_protected，添加的attributes 是他的一个选项，如果没有角色被提供，那么会使用:default选项。一个属性role可以在定义的时候使用:as选项（定制别名）</code>
+
+This is the opposite of the <code>attr_protected</code> macro: Mass-assignment will only set attributes in this list, to assign to the rest of attributes you can use direct writer methods. This is meant to protect sensitive attributes from being overwritten by malicious users tampering with URLs or forms. If you’d rather start from an all-open default and restrict attributes as needed, have a look at <code>attr_protected</code>.
+
+这是<code>attr_protected</code> macro（宏）的相反操作: Mass-assignment 将会仅仅只能设定在这个名单中的attributes ，要分派其余的属性的值你可以使用直接的写方法（赋值然后save）。这里意图去保护敏感的attributes防止其被恶意的用户重写或篡改通过forms的URLs。如果你宁愿开始一个默认全部开放以及需要限制某些属性，去看一看<code>attr_protected</code>.
+
+class Customer
+  include ActiveModel::MassAssignmentSecurity
+
+</div>
+</div>
+
+
+<p>  attr_accessor :name, :credit_rating</p>
+
+<p>  attr_protected :credit_rating, :last_login
+  attr_protected :last_login, :as =&gt; :admin</p>
+
+<p>  def assign_attributes(values, options = {})
+    sanitize_for_mass_assignment(values, options[:as]).each do |k, v|
+      send(&ldquo;#{k}=&rdquo;, v)
+    end
+  end
+end
+When using the :default role :</p>
+
+<p>customer = Customer.new
+customer.assign_attributes({ &ldquo;name&rdquo; =&gt; &ldquo;David&rdquo;, &ldquo;credit_rating&rdquo; =&gt; &ldquo;Excellent&rdquo;,:last_login =&gt; 1.day.ago }, :as =&gt; :default)
+customer.name # =&gt; &ldquo;David&rdquo;
+customer.credit_rating # =&gt; nil
+customer.last_login # =&gt; nil</p>
+
+<p>customer.credit_rating = &ldquo;Average&rdquo;
+customer.credit_rating # =&gt; &ldquo;Average&rdquo;
+And using the :admin role :</p>
+
+<p>customer = Customer.new
+customer.assign_attributes({ &ldquo;name&rdquo; =&gt; &ldquo;David&rdquo;, &ldquo;credit_rating&rdquo; =&gt; &ldquo;Excellent&rdquo;, :last_login =&gt; 1.day.ago }, :as =&gt; :admin)
+customer.name # =&gt; &ldquo;David&rdquo;
+customer.credit_rating # =&gt; &ldquo;Excellent&rdquo;
+customer.last_login # =&gt; nil
+To start from an all-closed default and enable attributes as needed, have a look at attr_accessible.</p>
+
+<p>Note that using Hash#except or Hash#slice in place of attr_protected to sanitize attributes won’t provide sufficient protection.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/06/rails-shi-yong-can-shu-ti-jiao-biao-dan-shi-%2Cyao-zhu-yi-bao-hu-min-gan-zi-duan-by-huacnlee/">Rails 使用参数提交表单时，要注意保护敏感字段 by Huacnlee</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-06T12:53:00+08:00" pubdate data-updated="true">Mar 6<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Rails 使用参数提交表单时，要注意保护敏感字段 by huacnlee</h2>
+
+<p>刚接触 Rails 的人都会对 Rails form 实际特别喜爱，因为它让我们省时省力，就算遇到有100多个字段的表单，也能够几下就做出来了，因为在服务端不用再去对每个字段分别写文本框与字段的赋值。</p>
+
+<p>但是如果没有注意保护，使用 Model.create(params[:model]) 的方式提交会有很大的安全漏洞。
+&lt;h2&gt;下面来看一个例子：&lt;/h2&gt;
+&lt;h3&gt;有用户表 [users]&lt;/h3&gt;
+&lt;ul&gt;
+ &lt;li&gt;id&lt;/li&gt;
+ &lt;li&gt;login [用户名]&lt;/li&gt;
+ &lt;li&gt;passwd [密码]&lt;/li&gt;
+ &lt;li&gt;nick_name [昵称]&lt;/li&gt;
+ &lt;li&gt;email [Email]&lt;/li&gt;
+ &lt;li&gt;state [状态]&lt;/li&gt;
+ &lt;li&gt;group_id [组 [1 管理员, 2 编辑, 3 普通用户]]&lt;/li&gt;
+ &lt;li&gt;exp [经验值]&lt;/li&gt;
+ &lt;li&gt;money [金币]&lt;/li&gt;
+ &lt;li&gt;level_id [等级]&lt;/li&gt;
+ &lt;li&gt;created_at&lt;/li&gt;
+ &lt;li&gt;updated_at&lt;/li&gt;
+&lt;/ul&gt;
+&amp;nbsp;
+&lt;h3&gt;注册表单 users/regist.html.erb&lt;/h3&gt;
+&amp;nbsp;</p>
+
+<p>&lt;code&gt;
+&lt;div id=&ldquo;register&rdquo;&gt;
+  &lt;% form_for @user do |f| &ndash;%&gt;
+    &lt;p&gt;
+      &lt;%= f.label :login, &ldquo;Login&rdquo; %&gt;
+      &lt;%= f.text_field :login %&gt;
+    &lt;/p&gt;
+    &lt;p&gt;
+      &lt;%= f.label :passwd, &ldquo;Password&rdquo; %&gt;
+      &lt;%= f.password_field :passwd %&gt;
+    &lt;/p&gt;
+    &lt;p&gt;
+      &lt;%= f.label :nick_name, &ldquo;Nick Name&rdquo; %&gt;
+      &lt;%= f.password_field :nick_name %&gt;
+    &lt;/p&gt;
+   &lt;p&gt;
+     &lt;%= f.submit &ldquo;Regist&rdquo; %&gt;
+   &lt;/p&gt;
+  &lt;% end &ndash;%&gt;
+&lt;/div&gt; 
+&lt;/code&gt;</p>
+
+<p>控制器 UsersController.rb</p>
+
+<p> class UsersController &lt; ApplicationController
+  def index
+  end
+  def new
+    @user = User.new
+  end
+  def create
+    @user = User.new(params[:user])
+      if @user.save
+        flash[:notice] = &ldquo;注册成功。&rdquo;
+        redirect_to &ldquo;/&rdquo;
+      end
+   end
+end</p>
+
+<p>这是 Rails 里面很常见的写法,但是如果没有做相应的保护措施，那么使用 <code>@user = User.new(params[:user])</code> 然后 <code>@user.save</code> 这样的方式就会有很严重的问题，因为HTML表单是可以通过 <a href="http://www.getfirebug.com/">Firebug</a> 这类前端调试工具修改的。比如，现在的注册表单上面有 <code>login,passwd,nick_name</code> 三个字段，我可以使用 Firebug 强制修改HTML，加上：</p>
+
+<p><code>&lt;input name=&ldquo;user[:group_id]&rdquo; type=&ldquo;text&rdquo; value=&ldquo;1&rdquo; /&gt;</code></p>
+
+<p><code>&lt;input name=&ldquo;user[:money]&rdquo; type=&ldquo;text&rdquo; value=&ldquo;9999999&rdquo; /&gt;</code></p>
+
+<p><code>&lt;input name=&ldquo;user[:exp]&rdquo; type=&ldquo;text&rdquo; value=&ldquo;9999999&rdquo; /&gt; </code></p>
+
+<p>然后提交保存… 接下来出现的结果大家应该都能猜到，这个用户的金币和经验值都被强制加上了，而且还注册成为了超级管理员！很恐怖把！ 看我在 <a href="http://pasite.is-programmer.com/posts/15200.html">is-programmer.com</a> 上面测试的这个例子我把访问量修改到上亿次！当然 is-programmer.com 做过这方面的保护，这个地方的问题不大不小，我本想强制注册个超级管理员的…但后面发现有做保护的… 呵呵</p>
+
+<h2>如何保护？</h2>
+
+
+<p>在 Model 里面使用 <em>attr_accessible</em> 或 <em>attr_protected</em> 详见：<a href="http://api.rubyonrails.org/classes/ActiveRecord/Base.html#M002280">ActiveRecord::Base 文档</a></p>
+
+<p><code># models/user.rb class
+User &lt; ActiveRecord::base
+  # 使用 attr_protected 保护
+   attr_protected :group_id, :money, :exp, :level_id, :state   # 或使用 attr_accessible # attr_accessible :login, :passwd, :email
+end</p>
+
+<h1>controllers/users_controller.rb</h1>
+
+<p>class UsersController &lt; ApplicationController
+  def index
+  end
+  def new
+    @user = User.new
+  end
+  def create
+    @user = User.new(params[:user]) # 如果需要特别修改 attr_protected 保护的字段，请手动赋值，如 @user.exp = 1000 # 初始经验值 1000
+   @user.level_id = 1
+   if @user.save flash[:notice] = &ldquo;注册成功。&rdquo;
+     redirect_to &ldquo;/&rdquo;
+   end
+  end
+end </code></p>
+
+<p><strong>特别需要更改保护字段的时候，需要使用 @model.money = 55 这样的方式赋值，而直接 @model.update_attributes(params[:model]) 这总方式会把保护字段过滤掉。</strong></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/04/windows-8xiao-fei-zhe-yu-lan-ban-winkeykuai-jie-jian-hui-zong/">Windows 8消费者预览版Winkey快捷键汇总</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-04T17:12:00+08:00" pubdate data-updated="true">Mar 4<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Windows 8消费者预览版Winkey快捷键汇总</h2>
+
+<p>Windows 8消费者预览版带来了很多新变化，极大地方便了用户在触屏设备上的操作，不过对于采用键盘的用户，微软也没有怠慢，下面就为大家汇总一下Windows 8的Winkey快捷键，能在实际操作中节省不少时间。</p>
+
+<p><strong>Windows 8消费者预览版新快捷键：</strong></p>
+
+<p>Windows键+空格键：切换输入语言和键盘布局</p>
+
+<p>Windows键+O：禁用屏幕翻转</p>
+
+<p>Windows键+,：临时查看桌面</p>
+
+<p>Windows键+V：切换系统通知信息</p>
+
+<p>Windows键+Shift+V：反向切换系统通知信息</p>
+
+<p>Windows键+回车：打开“讲述人”</p>
+
+<p>Windows键+PgUp：将开始屏幕或Metro应用移至左侧显示器</p>
+
+<p>Windows键+PgDown：将开始屏幕或Metro应用移至右侧显示器</p>
+
+<p>Windows键+Shift+.：将应用移至左侧</p>
+
+<p>Windows键+.：将应用移至右侧</p>
+
+<p>Windows键+C：打开Charms栏(提供设置、设备、共享和搜索等选项)</p>
+
+<p>Windows键+I：打开设置栏</p>
+
+<p>Windows键+K：打开连接显示屏</p>
+
+<p>Windows键+H：打开共享栏</p>
+
+<p>Windows键+Q：打开应用搜索面板</p>
+
+<p>Windows键+W：打开“设置搜索”应用</p>
+
+<p>Windows键+F：打开“文件搜索”应用</p>
+
+<p>Windows键+Tab：循环切换应用</p>
+
+<p>Windows键+Shift+Tab：反向循环切换应用</p>
+
+<p>Windows键+Ctrl+Tab：循环切换应用，切换时手动选择应用</p>
+
+<p>Windows键+Z：打开“应用栏”</p>
+
+<p>Windows键+/：恢复默认输入法</p>
+
+<p>Windows键+J：显示之前操作的应用</p>
+
+<p>Windows键+X：快捷菜单</p>
+
+<p><strong>沿袭Windows 7的快捷方式：</strong></p>
+
+<p>Windows键：显示或隐藏开始菜单</p>
+
+<p>Windows键 + ←：最大化窗口到左侧的屏幕上(与Metro应用无关)</p>
+
+<p>Windows键 + →：最大化窗口到右侧的屏幕上(与Metro应用无关)</p>
+
+<p>Windows键+ ↑：最大化窗口(与Metro应用无关)</p>
+
+<p>Windows键+ ↓：最小化窗口(与Metro应用无关)</p>
+
+<p>Windows键+ SHIFT +↑：垂直拉伸窗口，宽度不变(与Metro应用无关)</p>
+
+<p>Windows键+ SHIFT +↓：垂直缩小窗口，宽度不变(与Metro应用无关)</p>
+
+<p>Windows键+SHIFT+←：将活动窗口移至左侧显示器 (与Metro应用无关)</p>
+
+<p>Windows键+SHIFT+→：将活动窗口移至右侧显示器(与Metro应用无关)</p>
+
+<p>Windows键+ P：演示设置</p>
+
+<p>Windows键+ Home：最小化所有窗口，第二次键击恢复窗口(不恢复Metro应用)</p>
+
+<p>Windows键+ 数字键：打开或切换位于任务栏指定位置的程序</p>
+
+<p>Windows键+Shift+数字键：打开位于任务栏指定位置程序的新实例</p>
+
+<p>Windows键+B：光标移至通知区域</p>
+
+<p>Windows键+Break：显示&#8221;系统属性&#8221;对话框</p>
+
+<p>Windows键+D：显示桌面，第二次键击恢复桌面 (不恢复Metro应用)</p>
+
+<p>Windows键+E：打开我的电脑</p>
+
+<p>Windows键+Ctrl+F：搜索计算机(如果你在网络上)</p>
+
+<p>Windows键+G：循环切换侧边栏小工具</p>
+
+<p>Windows键+L：锁住电脑或切换用户</p>
+
+<p>Windows键+M：最小化所有窗口</p>
+
+<p>Windows键+Shift+M：在桌面恢复所有最小化窗口(不恢复Metro应用)</p>
+
+<p>Windows键+R：打开“运行”对话框</p>
+
+<p>Windows键+T：切换任务栏上的程序</p>
+
+<p>Windows键+Alt+回车：打开Windows媒体中心</p>
+
+<p>Windows键+U：打开轻松访问中心</p>
+
+<p>Windows键+F1：打开Windows帮助和支持</p>
+
+<p>Windows键+N：插件新笔记(OneNote)</p>
+
+<p>Windows键+S：打开屏幕截图工具(OneNote)</p>
+
+<p>Windows键+Q：打开Lync，Windows 8搜索功能移除了该快捷键</p>
+
+<p>Windows键+A：接受所有来电 (Lync)</p>
+
+<p>Windows键+X：拒绝来电(Lync)，如果Windows移动中心存在，该快捷键不起作用</p>
+
+<p>Windows键+减号：缩小(放大镜)</p>
+
+<p>Windows键+加号：放大(放大镜)</p>
+
+<p>Windows键+Esc：关闭放大镜</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/02/kua-yue-bian-jie-ajax-on-rails/">跨越边界: Ajax on Rails</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-02T13:26:00+08:00" pubdate data-updated="true">Mar 2<span>nd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>跨越边界: Ajax on Rails</h2>
+
+<p><em>跨越边界</em> 系列之前的两篇文章（参见 <a href="http://www.ibm.com/developerworks/cn/java/j-cb12056/index.html#resources">参考资料</a>）全面介绍了 Streamlined，这是 Rails 的辅助框架，该框架有效地利用 scaffolding 来快速生成简单的、使用 Ajax 的用户界面。除非您一直与世隔绝，不然您一定会知道 Ajax 是这样一种编程技术，它使用 XML、JavaScript 和 Web 标准来创建高度交互性的 Web 页面，正如您在 Google Maps 和大量其他站点上所看到的页面那样。许多读过 Streamlined 文章的读者都要求我描述一下 Ajax 在 Ruby on Rails 上的运行方式。本文全面介绍了两个简单的 Ajax 例子，延着这个思路介绍了 Ruby/Ajax 这一组合如此成功的原因。在本系列的下篇文章中，我将探究 JavaScript 这门编程语言。</p>
+
+<p><a name="N10062"></a>Ajax 定义</p>
+
+<p>Ajax 代表 Asynchronous JavaScript + XML。信息架构师 Jesse James Garrett 于 2005 年提出这一术语，该术语用来描述一门在夹缝中生存了近二十年的技术（参见 <a href="http://www.ibm.com/developerworks/cn/java/j-cb12056/index.html#resources">参考资料</a>）。Ajax 的使用随即爆增，不论在图书馆、流行网站还是文献作品中都保持同步增长。</p>
+
+<p>Ajax 重新定义了基本的浏览器使用模型。原模型一次呈现一个页面。Ajax 允许浏览器在页面更新的间隔同服务器进行交流。这样做的好处是带来更加丰富的客户体验，但却以增加复杂度为代价。Ajax 是这样运行的：使用 JavaScript 客户端库在客户机和服务器间发送 XML。Ajax 开发人员可以在任何时刻从客户机发送异步请求，因而在服务器处理这些请求时，用户交互可以继续进行。下面就是 Ajax 请求的流程：</p>
+
+<div>
+<h2>关于本系列</h2>
+<div>
+
+在 <a href="http://www.ibm.com/developerworks/cn/java/j-cb/">跨越边界系列</a> 文章中，作者 Bruce Tate 提出这样一种观点，即当今的 Java 程序员们可以通过学习其他方法和语言很好地武装自己。自从 Java 技术明显成为所有开发项目最好的选择以来，编程前景已经发生了改变。其他框架影响着 Java 框架的构建方式，从其他语言学到的概念也可以影响 Java 编程。您编写的 Python（或 Ruby、Smalltalk 等语言）代码可以改变编写 Java 代码的方式。
+
+本系列介绍与 Java 开发完全不同的编程概念和技术，但是这些概念和技术也可以直接应用于 Java 开发。在某些情况下，需要集成这些技术来利用它们。在其他情况下，可以直接应用概念。具体的工具并不重要，重要的是其他语言和框架可以影响 Java 社区中的开发人员、框架，甚至是基本方式。
+
+</div>
+</div>
+
+
+<ol>
+    <li>一个事件（如用户的鼠标点击或编程计时器的触发）启动一个 JavaScript 函数。</li>
+    <li>JavaScript 函数为部分页面而不是整个页面创建一个请求。JavaScript 随后通过 HTTP 将该请求发送到 Web 服务器。</li>
+    <li>此 HTTP 请求调用服务器上的一个脚本，如 Rails 控制器方法或 Java™ servlet。</li>
+    <li>该服务器脚本创建一个 XML 文档并将其返回给服务器。</li>
+    <li>在接收结果的同时，客户机异步处理创建、更新或删除部分 Web 页面，如列表元素、<code>div</code> 标记或图像。</li>
+</ol>
+
+
+<p>所有 Ajax 应用程序都使用类似这种顺序的一种方法。例如，某个应用程序允许将字典中的单词与其定义一起保存。旧式的应用程序会强迫您用一个新的页面视图来编辑定义。Ajax 允许原地编辑，它用一个条目字段替换定义文本，然后用更新的定义来替换该表单。</p>
+
+<p>Ajax 解决方案的组件是：</p>
+
+<ul>
+    <li>客户端 JavaScript 库，用来管理异步请求。</li>
+    <li>服务器端 JavaScript 库，用来处理进来的请求，并构造一个 XML 响应。</li>
+    <li>客户端 JavaScript 库，用来处理生成的 XML。</li>
+    <li>称作文档对象模型（DOM）的库，允许对现有 Web 页面进行更新。</li>
+    <li>辅助例程，用来处理不可避免的 UI 和集成问题。</li>
+</ul>
+
+
+<p>事件/请求/响应/替换模型是大多数 Ajax 应用程序的核心模型，但如果您刚接触 Ajax，您一定会对 Ajax 中大量的可用库和这些库之间巨大的差别感到惊讶不已。该领域中有许多 Ajax 框架，它们的功能常常重叠且没有确定的胜出者。单就 Java 市场而言，有许多库可用，包括 Echo、Dojo、DWR、Google Web Toolkit（GWT）、Java Web Parts、AjaxAnywhere、AjaxTags、Scriptaculous 和 Prototype。这些框架使用截然不同的方法。一些框架试图通过生成 JavaScript 代码的 Java 库来隐藏 JavaScript，如 GWT。另一些框架致力于使 JavaScript 更易使用。一些相当地全面，如 Dom4J，而另一些则仅着力于解决好一个小问题。由于有许多流行的新技术，解决方案之间互相割据的场面有时会很难驾驭，调试工具、UI 实践（如 Back 按钮）和明智的开发实践的实现非常缓慢。Java 平台上的 Ajax 库的力量源自其多样性。这也正是其缺点所在，因为多样性导致了难以决断、集成方面的顾虑和复杂性。</p>
+
+<p>有了 Ruby on Rails，开发体验就显著不同了，这是由于两个原因。首先，Ruby on Rails 有一个核心的 Web 开发平台：Ruby on Rails。其次，到目前为止，大多数在 Rails 上的 Ajax 开发体验都围绕着两个核心框架：Scriptaculous 和 Prototype（参见 <a href="http://www.ibm.com/developerworks/cn/java/j-cb12056/index.html#resources">参考资料</a>）。Rails 方法使用运行时代码生成和定制标记，这使您不必理会复杂的 JavaScript。是时候自己来实践了。如果您想要在学习本文的过程中编写代码的话，需要下载 Rails，也要下载必要的 Ajax 框架（参见 <a href="http://www.ibm.com/developerworks/cn/java/j-cb12056/index.html#resources">参考资料</a>）。打开您的 Rails 环境，跟我一起来吧。</p>
+
+<div>
+
+<hr />
+
+</div>
+
+
+<p><a href="http://www.ibm.com/developerworks/cn/java/j-cb12056/index.html#ibm-pcon">回页首</a></p>
+
+<p><a name="N100D4"></a>没有 Ajax 的简单的 Rails 应用程序</p>
+
+<p>要使用 Rails 和 Ajax，就要创建一个空项目，并生成一个有两个方法的控制器。一个控制器控制简单的页面，另一个控制器建立一个 Ajax 响应。键入下列代码：</p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>rails ajax
+cd ajax
+script/generate controller ajax show time</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<p>第一行和第二行代码生成一个 Rails 项目，并切换到新目录。第三行代码生成一个叫做 <code>ajax</code> 的控制器，并查看两个动作：<code>show</code> 和 <code>time</code>。清单 1 显示了该控制器的代码：
+<a name="N100F5"></a><strong>清单 1. 有两个空方法的控制器 </strong></p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>class AjaxController &lt; ApplicationController
+
+   def show
+   end
+
+   def time
+   end
+end</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<p>首先在不使用 Ajax 的情况下构建两个简单视图，然后用 Ajax 将这两个视图绑定到一起。编辑 app/views/ajax 中的 show.rhtml 视图，使它和清单 2 类似：
+<a name="N10103"></a><strong>清单 2. 简单视图</strong></p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>&lt;h1&gt;Ajax show&lt;/h1&gt;
+Click this link to show the current &lt;%= link_to "time", :action =&gt; "time" %&gt;.</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<p>清单 1 和清单 2 中的代码不支持 Ajax，但我还是会仔细分析该代码。首先，看清单 1 中的控制器。两个空的控制器方法处理进来的 HTTP 请求。如果不明确地呈现一个视图（使用 <code>render</code> 方法），Rails 会呈现和该方法同名的视图。由于 Scriptaculous 和 Prototype 库也使用 HTTP，Rails 不需要对标准 HTTP 方法和 Ajax 方法进行区分。</p>
+
+<p>现在将注意力转移到清单 2 中的视图。大多数代码都是简单的 HTML 代码，只有第二行的 <code>link_to</code> 辅助例程例外：<code>&lt;%= link_to &ldquo;time&rdquo;, :action =&gt; &ldquo;time&rdquo; %&gt;</code>。</p>
+
+<p>正如在<em>跨越边界</em> 之前的文章中所看到的那样，Ruby 用其表达式的值替代 <code>&lt;%=h</code> 和 <code>%&gt;</code> 之间的代码。在这个示例中，<code>link-to</code> 方法是一个生成简单 HTML 链接的辅助例程。可以通过执行该代码看到该链接。通过键入 <code>script/server</code> 启动服务器，然后将浏览器指向 <a href="http://localhost:3000/ajax/show">http://localhost:3000/ajax/show</a> 。您将看到图 1 中的视图：
+<a name="figure1"></a><strong>图 1. 不涉及 Ajax 的简单用户界面</strong>
+<img src="http://www.ibm.com/developerworks/cn/java/j-cb12056/figure-1.jpg" alt="不涉及 Ajax 的简单用户界面" width="296" height="211" /></p>
+
+<p>在浏览器中，单击菜单项来查看页面源代码（在 Internet Explorer 为 <strong>View &gt; Source</strong> ，在 Firefox 中为 <strong>View &gt; Page Source</strong>）。您将看到清单 3 中的代码：
+<a name="N1014E"></a><strong>清单 3. 由 show.rhtml 生成的视图</strong></p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>&lt;h1&gt;Ajax show&lt;/h1&gt;
+Click this link to show the current &lt;a href="/ajax/time"&gt;time&lt;/a&gt;.</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<p>请注意清单 3 中的链接代码。该模板让 Rails 用户不必面对冗长且容易出错的 HTML 句法。（Ajax 代码也是这样运行：使用辅助方法插入 JavaScript 代码，该代码替您管理远程请求和 HTML 替换。）如果单击该链接，将看到针对 <code>time</code> 方法的默认视图，但我还没有实现它。为加以补救，请用清单 4 中的代码替换 app/controllers/ajax_controller.rb 中的 <code>time</code> 方法。为保持简单，我直接从控制器中呈现视图。稍后，我会把一切处理好并呈现视图。
+<a name="N10164"></a><strong>清单 4. 呈现时间</strong></p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>def time
+  render_text "The current time is #{Time.now.to_s}"
+end</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<p>现在，当单击该链接时，会得到图 2 中的视图：
+<a name="figure2"></a><strong>图 2. 不涉及 Ajax 的视图</strong>
+<img src="http://www.ibm.com/developerworks/cn/java/j-cb12056/figure-2.jpg" alt="不涉及 Ajax 的简单视图" width="394" height="215" /></p>
+
+<p>很快就能看到这个 UI 的一个问题。这两个视图不从属于单独的页面。该应用程序表示一个单一概念：单击一个链接来显示时间。为反复更新时间，每次都需要单击该链接和 Back 按钮。将该链接和时间放到相同的页面中也许可以解决这个问题。但如果该页面变得非常大或非常复杂，重新显示整个页面会很浪费，也会很复杂。</p>
+
+<div>
+
+<hr />
+
+</div>
+
+
+<p><a href="http://www.ibm.com/developerworks/cn/java/j-cb12056/index.html#ibm-pcon">回页首</a></p>
+
+<p><a name="N10180"></a>添加 Ajax</p>
+
+<p>Ajax 让您可以只更新 Web 页面的一个片段。Rails 库为您处理大部分的工作。要将 Ajax 添加到这个应用程序中，需要以下四个步骤：</p>
+
+<ol>
+    <li>配置 Rails 以使用 JavaScript。</li>
+    <li>更改时间链接来提交 JavaScript Ajax 请求，而不是仅呈现一个 HTML 链接。</li>
+    <li>指定要更新的 HTML 片断。</li>
+    <li>为更新的 HTML 内容准备一个位置。</li>
+    <li>构建一个控制器方法，或者一个视图来呈现 Ajax 响应。</li>
+</ol>
+
+
+<p>首先，更改 app/views/ajax/show.rhtml 中的代码，使其与清单 5 类似：
+<a name="N101A2"></a><strong>清单 5. 更改显示视图来使用 Ajax</strong></p>
+
+<pre id="best-answer-content">rails3 中取消了link_to_remote方法
+取而代之的是
+使用的 remote参数
+例如：
+link_to image_tag("delete.png"), { :controller =&gt; 'products', :action =&gt; 'destroy', :id =&gt; product }, :method =&gt; :delete, :confirm =&gt; "Are you sure?", :remote =&gt; true</pre>
+
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>&lt;%= javascript_include_tag :defaults %&gt;
+&lt;h1&gt;Ajax show&lt;/h1&gt;
+Click this link to show the current
+&lt;%= link_to_remote "time",
+    :update =&gt; 'time_div',
+    :url =&gt; {:action =&gt; "time"} %&gt;.&lt;br/&gt;
+&lt;div id='time_div'&gt;
+&lt;/div&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<p>我做了一些更改。首先，为处理配置，简单地将必要的 JavaScript 库直接包含在视图中。通常，还会有更多的视图，为避免重复，我将 JavaScript 文件包含在一个公共的 Rails 组件中，如 Rails 布局。本例只有一个视图，所以一切从简。</p>
+
+<p>其次，我改变了链接标记来使用 <code>link_to_remote</code>。您一会儿就能看到这个链接的作用。请注意下列三个参数：</p>
+
+<ul>
+    <li>链接文本：从非 Ajax 的例子中照搬过来。</li>
+    <li><code>:update</code> 参数。如果您以前没见过这种语法，那么就把 <code>:update =&gt; 'time_div'</code> 当作是一个已命名的参数，其中的 <code>:update</code> 是名称，<code>update_div</code> 是值。此代码告诉 Prototype 库：此链接中的结果将用 <code>time_div</code> 这一名称更新 HTML 组件。</li>
+    <li>代码 <code>:url =&gt; {:action =&gt; "time"}</code> 指定该链接将调用的 URL。<code>:url</code> 从一个哈希映射表中获取值。在实际中，该哈希映射表只有一个针对控制器动作的元素：<code>:time</code>。理论上，该 URL 也可以包含控制器的名称和控制器需要的任何可选参数。</li>
+</ul>
+
+
+<p>在清单 5 中，还可以看到空的 <code>div</code>，Rails 将用当前时间更新它。</p>
+
+<p>在浏览器中，装载页面 <a href="http://localhost:3000/ajax/show%E3%80%82%E5%8D%95%E5%87%BB%E8%AF%A5%E9%93%BE%E6%8E%A5%EF%BC%8C%E5%B0%86%E7%9C%8B%E5%88%B0%E5%9B%BE">http://localhost:3000/ajax/show%E3%80%82%E5%8D%95%E5%87%BB%E8%AF%A5%E9%93%BE%E6%8E%A5%EF%BC%8C%E5%B0%86%E7%9C%8B%E5%88%B0%E5%9B%BE</a> 3 中的结果。
+<a name="figure3"></a><strong>图 3. 含 Ajax 的视图</strong>
+<img src="http://www.ibm.com/developerworks/cn/java/j-cb12056/figure-3.jpg" alt="含 Ajax 的简单视图" width="443" height="197" /></p>
+
+<p>为了很好地了解这里发生的情况，请查看该 Web 页面的源代码。清单 6 显示了该代码：
+<a name="N10207"></a><strong>清单 6. 显示模板的结果（在启用 Ajax 的情况下）</strong></p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>&lt;script src="/javascripts/prototype.js?1159113688" type="text/javascript"&gt;&lt;/script&gt;
+&lt;script src="/javascripts/effects.js?1159113688" type="text/javascript"&gt;&lt;/script&gt;
+&lt;script src="/javascripts/dragdrop.js?1159113688" type="text/javascript"&gt;&lt;/script&gt;
+&lt;script src="/javascripts/controls.js?1159113688" type="text/javascript"&gt;&lt;/script&gt;
+&lt;script src="/javascripts/application.js?1159113688" type="text/javascript"&gt;&lt;/script&gt;
+&lt;h1&gt;Ajax show&lt;/h1&gt;
+Click this link to show the current
+&lt;a href="#" onclick="new Ajax.Updater(
+   'time_div', '/ajax/time', {asynchronous:true, evalScripts:true});
+   return false;"&gt;time&lt;/a&gt;.&lt;br/&gt;
+&lt;div id='time_div'&gt;
+
+&lt;/div&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<p>请注意包含的 JavaScript 列表。Rails 辅助方法（<code>include_javascript_tags :defaults</code>）为您构建了此列表。接下来，看到一个用来构建新的 <code>Ajax.Updater</code> 对象的 JavaScript 函数调用，而不是一个 HTML 链接。正如您所料想的那样，名为 <code>asynchronous</code> 的参数被设置为 true。最后，在 HTML <code>div</code> 标记中看不到值，这是由于初始页面在那里没有值。</p>
+
+<div>
+
+<hr />
+
+</div>
+
+
+<p><a href="http://www.ibm.com/developerworks/cn/java/j-cb12056/index.html#ibm-pcon">回页首</a></p>
+
+<p><a name="N10221"></a>使用其他 Ajax 选项</p>
+
+<p>Ajax 能生成强大的动作，甚至能生成一些预料不到的动作。例如，用户也许没注意到更新的时间链接。<code>link_to_remote</code> 选项让您能够轻易地将特殊效果应用到该条目上，从而让用户注意到该结果。现在将应用一些效果。请更改 show.rhtml 中的 <code>link_to_remote</code> 辅助方法，使它与清单 7 类似：
+<a name="N10236"></a><strong>清单 7. 添加效果</strong></p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>&lt;%= link_to_remote "time",
+    :update =&gt; 'time_div',
+    :url =&gt; {:action =&gt; "time"},
+    :complete =&gt; "new Effect.Highlight('time_div')" %&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<p>最佳 Ajax 效果会使您的更改获得临时的关注，但却不会永久持续。您的目标应该是把更改提示给用户，而不打断他们的工作流。像这种用黄色来弱化强调的技术，或用滑入内容或淡出内容来让用户注意的技术都不是长久之计。</p>
+
+<p>到目前为止，链接是您见到的惟一触发器。Ajax 还有许多其他的可用武器，一些由用户驱动，而另一些由程序事件驱动，如时钟。它是一个像闹钟一样并不需要用户干预的东西。可以用 Ajax 的 <code>periodically_call_remote</code> 方法定期更新时钟。请按照清单 8 编辑 show.rhtml 中的代码：
+<a name="N1024B"></a><strong>清单 8. 定期调用远程方法</strong></p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>&lt;%= javascript_include_tag :defaults %&gt;
+&lt;h1&gt;Ajax show&lt;/h1&gt;
+&lt;%= periodically_call_remote :update =&gt; 'time_div',
+                             :url =&gt; {:action =&gt; "time"},
+                             :frequency =&gt; 1.0 %&gt;
+&lt;div id='time_div'&gt;
+&lt;/div&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<p>图 4 显示了结果：不需要用户干预，每隔一秒钟进行更新的时钟：
+<a name="figure4"></a><strong>图 4. 用 Ajax 定期更新的时钟</strong>
+<img src="http://www.ibm.com/developerworks/cn/java/j-cb12056/figure-4.jpg" alt="用 Ajax 定期更新的时钟" width="367" height="223" /></p>
+
+<p>尽管 Rails 视图中的代码和不含 Ajax 的版本相似，但背后的代码却很不同：此版本使用 JavaScript 代替了 HTML。可以通过在浏览器中查看源代码看到清单 9 中的代码：
+<a name="N1026B"></a><strong>清单 9. periodically_call_remote 的源代码</strong></p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>&lt;script src="/javascripts/prototype.js?1159113688" type="text/javascript"&gt;&lt;/script&gt;
+&lt;script src="/javascripts/effects.js?1159113688" type="text/javascript"&gt;&lt;/script&gt;
+&lt;script src="/javascripts/dragdrop.js?1159113688" type="text/javascript"&gt;&lt;/script&gt;
+&lt;script src="/javascripts/controls.js?1159113688" type="text/javascript"&gt;&lt;/script&gt;
+&lt;script src="/javascripts/application.js?1159113688" type="text/javascript"&gt;&lt;/script&gt;
+&lt;h1&gt;Ajax show&lt;/h1&gt;
+&lt;script type="text/javascript"&gt;
+//&lt;![CDATA[
+new PeriodicalExecuter(function() {new Ajax.Updater(
+   'time_div', '/ajax/time', {asynchronous:true, evalScripts:true})}, 1.0)
+//]]&gt;
+&lt;/script&gt;
+&lt;div id='time_div'&gt;
+&lt;/div&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<p>请一定注意这里发生的情况。您正在一个更高层的抽象之上有效地工作，而不是使用小块的自定义 JavaScript 片段，Ruby on Rails 模板系统使使用模型变得相当自然。</p>
+
+<p>正如之前提到的那样，我正从控制器中直接呈现文本。这一简化使开始编程变得很容易，但却不能一直持续下去。视图应该处理显示，控制器应该在视图和模型间调度数据。这项设计技术叫做模型-视图-控制器（MVC），它使对视图或模型的更改更容易分隔开。为使这个应用程序符合 MVC，可以让 Rails 呈现默认视图，正如预料的那样，该内容将替代 <code>time-div</code> 之前的内容。请按照清单 10 更改 app/controllers/ajax_controller.rb 中的 <code>time</code> 方法：
+<a name="N10284"></a><strong>清单 10. 重构</strong></p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>def time
+  @time = Time.now
+end</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<p>请按照清单 11 更改 app/views/ajax/time.rhtml 中的视图：
+<a name="N10292"></a><strong>清单 11. 使用视图呈现 Ajax 内容</strong></p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>&lt;p&gt;The current time is &lt;%=h @time %&gt;&lt;/p&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<p>控制器方法设置一个名为 <code>@time</code> 的实例变量。由于控制器什么都没明确地呈现出来，Rails 将 time.rhtml 视图呈现出来。<em>这种使用模型和呈现一个不含 Ajax 的视图完全一致。</em> 可以再一次看到，Rails 使开发人员不必考虑使用 Ajax 和不使用 Ajax 的应用程序间的区别。从传统的 Web 应用程序到 Ajax，该使用模型都惊人地相似。由于使用 Ajax 的成本如此之低，越来越多的 Rails 应用程序都开始利用 Ajax。</p>
+
+<div>
+
+<hr />
+
+</div>
+
+
+<p><a href="http://www.ibm.com/developerworks/cn/java/j-cb12056/index.html#ibm-pcon">回页首</a></p>
+
+<p><a name="N102A3"></a>Rails 中 Ajax 的其他用法</p>
+
+<p>Rails Ajax 体验领域宽广且内容深刻 —— 我无法用单篇文章甚至一系列文章来概括其深刻的内容。我只能指出 Rails Ajax 支持可以解决其他一些问题。下面是 Rails 中 Ajax 的一些通常用法：</p>
+
+<ul>
+    <li><strong>提交远程表单。</strong> 除了必须异步提交以外，Rails 中的 Ajax 表单和传统表单的执行方式完全一样。这意味着 Rails 中的 <code>Forms</code> 辅助标记让您必须指定一个要更新的 URL，执行可视化的效果，正如使用 <code>link_to_remote</code> 一样。正如 <code>link-to-remote</code> 扩展了 <code>link_to</code> 辅助方法一样，Rails <code>submit_to_remote</code> 扩展了一个 Rails <code>submit</code> 辅助方法。</li>
+    <li><strong>执行复杂脚本。</strong> Rails 开发人员常常需要执行复杂的脚本，远不止更新单个 <code>div</code> 和执行效果那么简单。为此，Rails 提供 JavaScript 模板。用 JavaScript 模板，可以将任意 JavaScript 脚本作为 Ajax 请求的结果来执行。这些模板的一些常见用法（叫作 RJS 模板）为更新多个 <code>div</code>、处理表单验证和管理 Ajax 错误场景。</li>
+    <li><strong>拼写补全。</strong> 您一定想基于数据库中的条目为您的用户提供拼写补全服务。例如，如果用户键入 <code>Bru</code>，我想让我的应用程序注意到数据库中 “Bruce Tate” 这个值。可以使用 Ajax 定期检查字段的更改，并根据用户键入的内容发送拼写补全建议。</li>
+    <li><strong>动态构建复杂表单。</strong> 在业务领域里，常常需要查看部分已完成表单，然后才能知道用户应该完成哪个字段。例如，如果用户拥有一些特定种类的收入或费用，那么 1040EZ 纳税单是无效的。可以在这个过程中用 Ajax 更新表单。</li>
+    <li><strong>拖放。</strong> 可以用 Rails 快速实现拖放支持，这比大多数其他框架要省力得多。</li>
+</ul>
+
+
+<p>&nbsp;</p>
+
+<div>
+
+<hr />
+
+</div>
+
+
+<p><a href="http://www.ibm.com/developerworks/cn/java/j-cb12056/index.html#ibm-pcon">回页首</a></p>
+
+<p><a name="N10301"></a>结束语</p>
+
+<p>Ajax 并不是没有问题。当 Ajax 运行良好时，整个体验会是激动人心的。但当运行不顺利时，您也许会发现对其进行调试是一个全新的领域，调试技术和工具还没有其他语言中那么成熟。Ruby on Rails 的确有一个核心优势：简单。Rails 包装器（加上很棒的社区支持）使得进入这一新环境变得简单，而且最初的投资非常低。但 Rails 支持也仅限于此。这两个框架还没有覆盖 Ajax 的全部内容，无法满足每个用户的需求。</p>
+
+<p>Java 语言有更多的 Ajax 框架和方法可供选择。可以找到更具灵活性的，也可以找到具有很棒的支持基础的。但灵活性是要付出代价的。您不仅需要一个强大的 Ajax 框架，也需要一个 Web 开发框架。例如，集成 JSF 框架和集成 Struts 是两种截然不同的体验。新技术通常追求简单。对于那些在 UI 中需要 Ajax 的出色特性，却又不需要由 Java 提供的高级企业集成特性的问题，Ajax on Rails 也许正合适。下一次，我将更深入地介绍 JavaScript。请继续关注跨越边界。</p>
+
+<p>&nbsp;</p>
+
+<p><a name="resources"></a>参考资料</p>
+
+<p><strong>学习</strong></p>
+
+<ul>
+    <li>您可以参阅本文在 developerWorks 全球站点上的 <a href="http://www.ibm.com/developerworks/java/library/j-cb12056/?S_TACT=105AGX52&amp;S_CMP=cn-a-j" target="_blank">英文原文</a> 。</li>
+    <li><a href="http://www.pragmaticprogrammer.com/titles/fr_j2r/index.html"><em>Java To Ruby: Things Every Manager Should Know</em> </a>（Pragmatic Bookshelf，2006 年）：这是本文作者编著的一本书，讲述何时何处从 Java 编程转到 Ruby on Rails 以及如何完成这种转变。</li>
+    <li><a href="http://www.oreilly.com/catalog/beyondjava/index.html"><em>Beyond Java</em> </a>（O’Reilly，2005 年）：本文作者编写的一本书，讲述 Java 语言的提高和稳步发展，以及在某些方面能够挑战 Java 平台的技术。</li>
+    <li>“<a href="http://www.ibm.com/developerworks/rational/library/dec05/reader/torpey.html?S_TACT=105AGX52&amp;S_CMP=cn-a-j">Book review: <em>Agile Web Development with Rails</em> </a>”（Darren Torpey，developerWorks，2005 年 5 月）：这里介绍的这本书可以加深读者对 Rails 及敏捷开发方式原理的理解。</li>
+    <li>“<a href="http://adaptivepath.com/publications/essays/archives/000385.php">Ajax: A New Approach to Web Applications</a>”（Jesse James Garrett，Adaptive Path，2005 年 2 月）：“Ajax” 这一术语的发明者 Garrett 描述了其基本结构和用户体验特征。</li>
+    <li><a href="http://script.aculo.us/">Scriptaculous</a> 和 <a href="http://prototype.conio.net/">Prototype</a>：增强 Rails Ajax 的两个 JavaScript 框架。</li>
+    <li><a href="http://wiki.rubyonrails.org/rails/pages/How+to+use+the+Ajax+helpers">Rails Ajax helpers</a>：这些辅助方法让 Rails 开发人员不必考虑低层 Ajax 编程的复杂性。</li>
+    <li><a href="http://www.ibm.com/developerworks/cn/ajax">Ajax 技术资源中心</a>：developerWorks Ajax 的门户，包含了专注于 Ajax 编程的内容、blog、论坛和其他资源。</li>
+    <li><a href="http://www.ibm.com/developerworks/cn/web">Web 开发专区</a>：developerWorks Web 开发方面的资源中心，包含了专注于 Web 和 Web 2.0 开发的文章、教程和其他资源。</li>
+    <li><a href="http://ajaxian.com/">Ajaxian</a>：这是一个很棒的 Ajax 门户，它提供对所有 Ajax 相关内容的讨论。</li>
+    <li><a href="http://java.sun.com/blueprints/ajax.html">Ajax BluePrints</a>：对 Ajax 框架和 Java 编程语言设计技术的讨论。</li>
+    <li><a href="http://www.pragmaticprogrammer.com/titles/ruby/index.html"><em>Programming Ruby</em> </a>（Dave Thomas et al.，Pragmatic Bookshelf，2005 年）：一本流行的关于 Ruby 编程的书。</li>
+    <li><a href="http://www.ibm.com/developerworks/cn/java/">Java 技术专区</a>：数百篇关于 Java 编程各方面的文章。</li>
+</ul>
+
+
+<p><strong>获得产品和技术</strong></p>
+
+<ul>
+    <li><a href="http://rubyonrails.org/">Ruby on Rails</a>：下载开放源码的 Ruby on Rails Web 框架。</li>
+    <li><a href="http://www.ruby-lang.org/en/20020102.html">Ruby</a>：从该项目的 Web 站点获取 Ruby。</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/02/ruby-loop/">Ruby&#8212;&#8212;&#8211; Loop</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-02T10:52:00+08:00" pubdate data-updated="true">Mar 2<span>nd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Ruby&mdash;&mdash;&mdash;&mdash; loop</h2>
+
+<p><code></p>
+
+<pre>
+class ForLoop
+  
+  def callFor 
+    for i in 1..3
+      print "index = #{i}\n"
+    end
+  end
+  
+  def callWhile
+    a = 1
+    a *= 2 while a < 10
+    puts a
+    
+    a -= 2 until a < 0
+    puts a
+  end
+  
+  def callWhile2
+    a = 1
+    a += 1  while a < 5
+    puts a
+  #  print "index = #{a}\n"
+  end
+
+  def time
+    3.times do
+      print "Ho! "
+    end
+  end
+  
+  def upto
+     1.upto(3) do |x|
+      puts x
+    end
+  end
+  
+  def step
+    0.step(10, 2) do |x|
+      puts x
+    end
+  end
+
+  def each 
+    [1, 2, 3, 4, 5].each do |x|
+      puts x
+    end
+  end
+  
+  def callFor2  # seems similar as each
+    for n in [5, 4, 3, 2, 1]
+      puts n
+    end
+  end
+  
+  def callLoop
+     i = 0
+     loop do
+      i += 1
+      puts i
+      next if not i > 3
+      puts "i > 3"
+      redo if i >= 6 and i <= 9
+      puts "i < 6 or i > 9"
+      break if i == 10 
+    end
+  end
+  
+end
+
+instance = ForLoop.new
+instance.callFor
+print "----------\n"
+instance.callWhile2
+print "----------\n"
+instance.time
+print "\n----------\n"
+instance.upto
+print "----------\n"
+instance.step
+print "----------\n"
+instance.each
+print "----------\n"
+instance.callFor2
+print "----------\n"
+instance.callLoop
+
+# output
+#index = 1
+#index = 2
+#index = 3
+#----------
+#5
+#----------
+#Ho! Ho! Ho! 
+#----------
+#1
+#2
+#3
+#----------
+#0
+#2
+#4
+#6
+#8
+#10
+#----------
+#1
+#2
+#3
+#4
+#5
+#----------
+#5
+#4
+#3
+#2
+#1
+#----------
+#1
+#2
+#3
+#4
+#i > 3
+#i < 6 or i > 9
+#5
+#i > 3
+#i < 6 or i > 9
+#6
+#i > 3
+#7
+#i > 3
+#8
+#i > 3
+#9
+#i > 3
+#10
+#i > 3
+#i < 6 or i > 9
+</pre>
+
+
+<p></code></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/01/rubycan-kao-shou-ce-vii/">ruby参考手册VII</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-01T00:07:00+08:00" pubdate data-updated="true">Mar 1<span>st</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>ruby参考手册VII</h2>
+
+<p>Ruby FAQ</p>
+
+<ol>
+<li>一般的问题</li>
+<li>变量、常数、参数</li>
+<li>调用带块方法（迭代器）</li>
+<li>句法</li>
+<li>方法</li>
+<li>类、模块</li>
+<li>内部库</li>
+<li>扩展库</li>
+<li>尚未列出的功能</li>
+<li>日语字符的处理</li>
+<li>Ruby的处理系统</li>
+</ol>
+
+
+<p>一般的问题</p>
+
+<ul>
+<li>1.1 Ruby是什么？</li>
+<li>1.2 为什么取名叫Ruby呢？</li>
+<li>1.3 请介绍一下Ruby的诞生过程</li>
+<li>1.4 哪里有Ruby的安装文件？</li>
+<li>1.5 请问Ruby的主页在哪里？</li>
+<li>1.6 请问有Ruby邮件列表吗？</li>
+<li>1.7 怎么才能看到邮件列表中的老邮件？</li>
+<li>1.8 rubyist和ruby hacker的区别是什么？</li>
+<li>1.9 它的正确写法是&#8221;Ruby&#8221;还是&#8221;ruby&#8221;？</li>
+<li>1.10 请介绍一些Ruby的参考书</li>
+<li>1.11 我看了手册可还是不明白，该怎么办？</li>
+<li>1.12 ruby的性格比较像羊？</li>
+<li>1.13 遇到bug时怎么上报？</li>
+</ul>
+
+
+<p>变量、常数、参数</p>
+
+<ul>
+<li>2.1 将对象赋值给变量或常数时,会先拷贝该对象吗?</li>
+<li>2.2 局部变量的作用域是如何划定的?</li>
+<li>2.3 何时才能使用局部变量?</li>
+<li>2.4 常数的作用域是如何划定的?</li>
+<li>2.5 实参是怎么传递给形参的呢?</li>
+<li>2.6 将实参赋值给形参之后,对实参本身有什么影响吗?</li>
+<li>2.7 若向形参所指对象发送消息的话,可能出现什么结果?</li>
+<li>2.8 参数前面的*是什么意思?</li>
+<li>2.9 参数前面的&amp;代表什么?</li>
+<li>2.10 可以给形参指定默认值吗?</li>
+<li>2.11 如何向块传递参数呢?</li>
+<li>2.12 为什么变量和常数的值会自己发生变化?</li>
+<li>2.13 常数不能被修改吗?</li>
+</ul>
+
+
+<p>调用带块方法</p>
+
+<ul>
+<li>3.1 什么是&#8221;带块的方法调用&#8221;?</li>
+<li>3.2 怎么将块传递给带块方法?</li>
+<li>3.3 如何在主调方法中使用块?</li>
+<li>3.4 为什么Proc.new没有生成过程对象呢?</li>
+</ul>
+
+
+<p>句法</p>
+
+<ul>
+<li>4.1 像:exit这种带:的标识符表示什么？</li>
+<li>4.2 如何取得与符号同名的变量的值？</li>
+<li>4.3 loop是控制结构吗？</li>
+<li>4.4 a +b报错，这是怎么回事儿？</li>
+<li>4.5 s = &ldquo;x&rdquo;; puts s *10 报错，这是怎么回事儿？</li>
+<li>4.6 为什么p {}没有任何显示呢？</li>
+<li>4.7 明明有pos=()这样的setter方法，可为什么pos=1时却没有任何反应呢？</li>
+<li>4.8 &lsquo;\1&#8217;和&rsquo;\1&#8217;有什么不同？</li>
+<li>4.9 在p true or true an<span>d</span> false中会显示true，但在a=true if true or true and false中却不会把true赋值给a。</li>
+<li>4.10 为什么p(nil || &ldquo;&rdquo;)什么事儿都没有，可p(nil or &ldquo;&rdquo;)却会报错呢？</li>
+</ul>
+
+
+<p>方法</p>
+
+<ul>
+<li>5.1 向对象发出消息之后，将按照什么顺序来搜索要执行的方法？</li>
+<li>5.2 +和-是操作符吗？</li>
+<li>5.3 Ruby中有函数吗？</li>
+<li>5.4可以在外部使用对象的实例变量吗？</li>
+<li>5.5 private和protected有什么不同？</li>
+<li>5.6 能不能将实例变量变成public类型的变量？</li>
+<li>5.7 怎样指定方法的可见性？</li>
+<li>5.8 方法名可以用大写字母开头吗？</li>
+<li>5.9 为什么使用super时会出现ArgumentError?</li>
+<li>5.10 如何调用上2层的同名方法？</li>
+<li>5.11 重定义内部函数时，如何调用原来的函数？</li>
+<li>5.12 何谓破环性的方法？</li>
+<li>5.13 那些情况下会产生副作用？</li>
+<li>5.14 能让方法返回<span>多个值</span>吗？</li>
+</ul>
+
+
+<p>类、模块</p>
+
+<ul>
+<li>6.1 重定义类时，是否会覆盖原来的定义？</li>
+<li>6.2 有类变量吗？</li>
+<li>6.3 什么是类的实例变量？</li>
+<li>6.4 什么是特殊方法？</li>
+<li>6.5 什么是类方法？</li>
+<li>6.6 什么是特殊类？</li>
+<li>6.7 什么是模块函数？</li>
+<li>6.8 类和模块有什么区别？</li>
+<li>6.9 模块可以生成子类吗？</li>
+<li>6.10 在类定义中定义类方法 和 在顶层中定义类方法 之间有什么不同？</li>
+<li>6.11 load和require有什么不同？</li>
+<li>6.12 include和extend有什么不同？</li>
+<li>6.13 self是什么？</li>
+<li>6.14 MatchData中的begin、end分别返回什么？</li>
+<li>6.15 如何使用类名来获得类？</li>
+</ul>
+
+
+<p>内部库</p>
+
+<ul>
+<li>7.1 instance_methods(true)返回什么?</li>
+<li>7.2 为什么rand总是生成相同的随机数?</li>
+<li>7.3 怎样从0到51中选出5个不重复的随机数呢?</li>
+<li>7.4 Fixnum、Symbol、true、nil和false这些立即值与引用有什么不同?</li>
+<li>7.5 nil和false有什么不同?</li>
+<li>7.6 为什么读入文件并修改之后, 原文件依然没有变化?</li>
+<li>7.7 怎样覆盖同名文件?</li>
+<li>7.8 写文件后拷贝该文件,但所得副本并不完整,请问原因何在?</li>
+<li>7.9 在管道中将字符串传给less后, 为什么看不到结果?</li>
+<li>7.10 无法引用的File对象将会何去何从?</li>
+<li>7.11 怎样手动关闭文件?</li>
+<li>7.12 如何按照更新时间的新旧顺序来排列文件?</li>
+<li>7.13 如何获取文件中单词的出现频度?</li>
+<li>7.14 为什么条件表达式中的空字符串表示true呢?</li>
+<li>7.15 如何按照字典顺序来排列英文字符串数组?</li>
+<li>7.16 &ldquo;abcd&rdquo;[0]会返回什么?</li>
+<li>7.17 怎么把tab变成space?</li>
+<li>7.18 如何对反斜线进行转义操作?</li>
+<li>7.19 sub和sub!的区别在哪里?</li>
+<li>7.20 \Z匹配什么？</li>
+<li>7.21 范围对象中的..和&hellip;有什么不同?</li>
+<li>7.22 有函数指针吗?</li>
+<li>7.23 线程和进程fork有何异同？</li>
+<li>7.24 如何使用Marshal？</li>
+<li>7.25 Ruby有异常处理语句吗?</li>
+<li>7.26 如何使用trap？</li>
+<li>7.27 如何统计文件的行数？</li>
+<li>7.28 怎样把数组转化为哈希表？</li>
+<li>7.29 将字符串变为Array时可以使用%w(&hellip;)，那么将字符串变为Hash时能不能如法炮制呢？</li>
+<li>7.30 为何无法捕捉NameError异常呢？</li>
+<li>7.31 为什么有succ却没有prev呢</li>
+</ul>
+
+
+<p>扩展库</p>
+
+<ul>
+<li>8.1 如何使用交互式Ruby？</li>
+<li>8.2 有调试器吗？</li>
+<li>8.3 怎样在Ruby中使用以C写成的库？</li>
+<li>8.4 有Tcl/Tk的接口吗？</li>
+<li>8.5 为什么我的Tk不管用？</li>
+<li>8.6 有gtk+、xforms的接口吗？</li>
+<li>8.7 进行日期计算时需要注意哪些问题？</li>
+</ul>
+
+
+<p>尚未列出的功能
+日语字符的处理</p>
+
+<ul>
+<li>10.1 若包含汉字的脚本输出乱码或无法正常运行时，该如何处理？</li>
+<li>10.2 选项-K和$KCODE有什么不同？</li>
+<li>10.3 可以使用日语标识符吗？</li>
+<li>10.4 如何从包含日语字符的字符串中依次抽出1个字符？</li>
+<li>10.5 tr(&ldquo;あ&rdquo;,&ldquo;a&rdquo;)运作不正常，应如何处置？</li>
+<li>10.6 如何对平假名进行排序？</li>
+<li>10.7 如何用空白来替代SJIS中从84BF到889F之间的系统相关代码？</li>
+<li>10.8 如何进行全角－半角字符的变换？</li>
+<li>10.9 关于半角假名的问题</li>
+<li>10.10 怎样从包含日语字符的字符串中抽出n字节的内容？</li>
+<li>10.11 怎么让日语文本在第n个字处换行？</li>
+</ul>
+
+
+<p>Ruby的处理系统</p>
+
+<ul>
+<li>11.1 能不能编译Ruby脚本呢？</li>
+<li>11.2 有没有Java VM版的Ruby？</li>
+<li>11.3 除了original Ruby之外，就没有其他版本吗？</li>
+<li>11.4 有没有Ruby用的indent？</li>
+<li>11.5 有没有使用本地线程的Ruby？</li>
+<li>11.6 GC实在是太慢了，怎么办才好？</li>
+<li><p>11.7 有没有Mac版的Ruby？</p></li>
+<li><p>一般的问题</p></li>
+<li><p>1.1 Ruby是什么？</p></li>
+<li>1.2 为什么取名叫Ruby呢？</li>
+<li>1.3 请介绍一下Ruby的诞生过程</li>
+<li>1.4 哪里有Ruby的安装文件？</li>
+<li>1.5 请问Ruby的主页在哪里？</li>
+<li>1.6 请问有Ruby邮件列表吗？</li>
+<li>1.7 怎么才能看到邮件列表中的老邮件？</li>
+<li>1.8 rubyist和ruby hacker的区别是什么？</li>
+<li>1.9 它的正确写法是&#8221;Ruby&#8221;还是&#8221;ruby&#8221;？</li>
+<li>1.10 请介绍一些Ruby的参考书</li>
+<li>1.11 我看了手册可还是不明白，该怎么办？</li>
+<li>1.12 ruby的性格比较像羊？</li>
+<li>1.13 遇到bug时怎么上报？</li>
+</ul>
+
+
+<p>1.1 Ruby是什么？</p>
+
+<p>一言以蔽之，Ruby是一种</p>
+
+<p>语法简单且功能强大的面向对象的脚本语言。</p>
+
+<p>与perl一样，Ruby的文本处理功能十分强大。当然了它的功能远不止于此，您还可以使用它来开发实用的服务器软件。</p>
+
+<p>Ruby博采众长，吸收了众多语言的优点，却又别具一格。</p>
+
+<p>Ruby的优点主要体现在以下几个方面。</p>
+
+<ul>
+<li>它的语法简单</li>
+<li>它具有普通的面向对象功能(类、方法调用等)</li>
+<li>它还具有特殊的面向对象功能(Mix-in、特殊方法等)</li>
+<li>可重载操作符</li>
+<li>具有异常处理功能</li>
+<li>调用带块方法(迭代器)和闭包</li>
+<li>垃圾回收器</li>
+<li>动态载入(取决于系统架构)</li>
+<li>可移植性。它可以运行在大部分的UNIX、DOS和Mac上</li>
+</ul>
+
+
+<p>1.2 为什么取名叫Ruby呢？</p>
+
+<p>松本先生曾经在[ruby-talk:00394]<a href="June%2011,%201999">英译稿</a>中讲过取名的经过。</p>
+
+<p>据说当初松本先生一直琢磨着要给这个新语言取个像Perl这样的宝石名字，正好有个同事的诞生石是Ruby，因此就取名叫Ruby了。</p>
+
+<p>后来发现Ruby和Perl真的很投缘，例如pearl诞生石代表6月，而ruby诞生石则代表7月。还有pearl的字体大小是5pt，而ruby则是5.5pt等等。因此松本先生觉得Ruby这个名字很合适，并努力使其成为比Perl更新更好的脚本语言。</p>
+
+<p>松本先生正期待着Ruby取代Perl的那一天早点到来(^^)。
+1.3 请介绍一下Ruby的诞生过程</p>
+
+<p>松本先生曾经在[ruby-talk:00382]<a href="June%204,%201999">英译稿</a>中介绍过Ruby的诞生过程。[ruby-list:15997]修改了Ruby的诞生时间。</p>
+
+<p>*</p>
+
+<p>Ruby诞生于1993年2月24日。那天我和同事们聊了聊面向对象语言的可能性问题。我了解Perl(Perl4而非Perl5)，但我不喜欢它身上的那股玩具味儿(现在也是如此)。面向对象的脚本语言的前途一片光明。</p>
+
+<p>我觉得Python不能算作真正的面向对象语言，因为它的面向对象特性好像是后加进去的一样。15年来我一直为编程语言而痴狂，我热衷于面向对象编程，但却没有找到一款真正意义上的面向对象的脚本语言。</p>
+
+<p>于是我下定决心自己来开发一个。经过几个月的努力，解释器终于开发成功。然后我又添加了一些自己梦寐以求的东西，如迭代器、异常处理、垃圾回收等。</p>
+
+<p>后来我又采用类库方式添加了Perl的特性。1995年12月，我在日本国内的新闻组上发布了Ruby 0.95版本。</p>
+
+<p>接下来我创建了邮件列表和网站。此后，大家在邮件列表中聊得酣畅淋漓。时至今日，第一个邮件列表中已经积累了14789封邮件。</p>
+
+<p>Ruby 1.0发布于1996年12月，1.1发布于1997年8月。1998年12月，我又发布了安定版1.2和开发版1.3。</p>
+
+<p>1.4 哪里有Ruby的安装文件？</p>
+
+<p>您可以在这里&lt;URL:<a href="ftp://ftp.ruby-lang.org/pub/ruby/&amp;gt;%E6%89%BE%E5%88%B0%E6%9C%80%E6%96%B0%E7%89%88%E7%9A%84Ruby%E3%80%82">ftp://ftp.ruby-lang.org/pub/ruby/&amp;gt;%E6%89%BE%E5%88%B0%E6%9C%80%E6%96%B0%E7%89%88%E7%9A%84Ruby%E3%80%82</a></p>
+
+<p>镜像站点列表如下</p>
+
+<ul>
+<li>&lt;URL:<a href="ftp://ftp.TokyoNet.AD.JP/pub/misc/ruby/&amp;gt;">ftp://ftp.TokyoNet.AD.JP/pub/misc/ruby/&amp;gt;</a></li>
+<li>&lt;URL:<a href="ftp://ftp.iij.ad.jp/pub/lang/ruby/&amp;gt;">ftp://ftp.iij.ad.jp/pub/lang/ruby/&amp;gt;</a></li>
+<li>&lt;URL:<a href="ftp://blade.nagaokaut.ac.jp/pub/lang/ruby/&amp;gt;">ftp://blade.nagaokaut.ac.jp/pub/lang/ruby/&amp;gt;</a></li>
+<li>&lt;URL:<a href="ftp://ftp.krnet.ne.jp/pub/ruby/&amp;gt;">ftp://ftp.krnet.ne.jp/pub/ruby/&amp;gt;</a></li>
+<li>&lt;URL:<a href="ftp://mirror.nucba.ac.jp/mirror/ruby/&amp;gt;">ftp://mirror.nucba.ac.jp/mirror/ruby/&amp;gt;</a></li>
+<li>&lt;URL:<a href="http://mirror.nucba.ac.jp/mirror/ruby/&amp;gt;">http://mirror.nucba.ac.jp/mirror/ruby/&amp;gt;</a></li>
+</ul>
+
+
+<p>您可以在Ruby Binaries中找到cygwin版、mingw版和djgpp版的二进制文件包。</p>
+
+<p>另外，Windows(cygwin)中还为初学者准备了Ruby Entry Package。安装方法请参考面向初学者的Ruby安装说明。
+1.5 请问Ruby的主页在哪里？</p>
+
+<p>Ruby的官方网站是&lt;URL:<a href="http://www.ruby-lang.org/&amp;gt;%E3%80%82">http://www.ruby-lang.org/&amp;gt;%E3%80%82</a>
+1.6 请问有Ruby邮件列表吗？</p>
+
+<p>现在有6个正式的Ruby邮件列表。</p>
+
+<ul>
+<li>ruby-list</li>
+<li>ruby-dev</li>
+<li>ruby-ext</li>
+<li>ruby-math</li>
+<li>ruby-talk</li>
+<li>ruby-core</li>
+</ul>
+
+
+<p>详情请参考Ruby邮件列表。
+1.7 怎么才能看到邮件列表中的老邮件？</p>
+
+<p>&lt;URL:<a href="http://blade.nagaokaut.ac.jp/ruby/ruby-list/index.shtml&amp;gt;%E5%92%8C&amp;lt;URL:http://ruby.freak.ne.jp/&amp;gt;%E9%87%8C%E9%9D%A2%E6%9C%89%E6%90%9C%E7%B4%A2%E9%82%AE%E4%BB%B6%E7%94%A8%E7%9A%84%E8%A1%A8%E5%8D%95%E3%80%82">http://blade.nagaokaut.ac.jp/ruby/ruby-list/index.shtml&amp;gt;%E5%92%8C&amp;lt;URL:http://ruby.freak.ne.jp/&amp;gt;%E9%87%8C%E9%9D%A2%E6%9C%89%E6%90%9C%E7%B4%A2%E9%82%AE%E4%BB%B6%E7%94%A8%E7%9A%84%E8%A1%A8%E5%8D%95%E3%80%82</a></p>
+
+<p>另外，ML Topics中列出了老邮件中的重要话题。
+1.8 rubyist和ruby hacker的区别是什么？</p>
+
+<p>松本先生对rubyist和Ruby hacker的定义如下。</p>
+
+<p>rubyist是指那些对Ruby的关心程度超过常人的人。例如</p>
+
+<ul>
+<li>向周围的人宣传Ruby的人</li>
+<li>编写Ruby的FAQ的人</li>
+<li>在计算机通信组中增加Ruby小组的组长</li>
+<li>撰写Ruby书籍的作者</li>
+<li>写信鼓励Ruby作者的热心人</li>
+<li>Ruby作者本人 ^^;;;</li>
+</ul>
+
+
+<p>而Ruby hacker是指那些在技术层面上对Ruby有所专攻的人。例如</p>
+
+<ul>
+<li>Ruby扩展库的作者</li>
+<li>修改Ruby中的bug并发布补丁的人</li>
+<li>djgpp版Ruby或win32版Ruby的作者</li>
+<li>用Ruby编写了实用(必须得具备一定规模的)程序的人</li>
+<li>用Ruby编写出天书般难懂的脚本的人</li>
+<li>Ruby作者本人 ^^;;;</li>
+</ul>
+
+
+<p>等就是Ruby hacker。</p>
+
+<p>这些称号只不过是自我解嘲式的自称，我不会为任何人进行正式的认证。松本先生特别将上述人士列为{rubyist、Ruby hacker}，可见其尊敬之情。
+1.9 它的正确写法是&#8221;Ruby&#8221;还是&#8221;ruby&#8221;？</p>
+
+<p>Ruby的正式写法是&#8221;Ruby&#8221;，其命令名是&#8221;ruby&#8221;。另外只要不让人觉得别扭的话，也可以使用ruby来替代Ruby。</p>
+
+<p>但不能把&#8221;RUBY&#8221;、&#8221;ルビー&#8221;或&#8221;るびー&#8221;用作这门语言的名称。</p>
+
+<p>此前曾经有一段时间把&#8221;ruby&#8221;用作正式名称。
+1.10 请介绍一些Ruby的参考书</p>
+
+<p>主要有《オブジェクト指向スクリプト言語Ruby》(译注:日语书名未翻译)[松本行弘／石塚圭树 合著 ASCII出版(ISBN4-7561-3254-5)]，其他书目请参考Ruby相关书籍。</p>
+
+<p>至于正则表达式，请参考Jeffrey E. F.Friedl著的《詳説正規表現》(译注:日语书名未翻译)[reilly Japan出版(ISBN4-900900-45-1)]。这本书介绍了各种正则表达式的实现问题，有助于加深您对于Ruby正则表达式的理解。
+1.11 我看了手册可还是不明白，该怎么办？</p>
+
+<p>Ruby的基本句法从Ruby1.0以后就没有太大的变化，但却在不断完善和扩充，因此有时文档的更新速度跟不上最新的发展。另外，有人坚持说源代码就是文档，如此种种。</p>
+
+<p>若您有何疑问，请不必顾虑太多，直接到ruby-list中提问即可。Ruby教主松本先生以及各位尊师还有我都会为您排忧解难。</p>
+
+<p>提问时，请写明ruby -v的结果并附带上您的代码(若代码太长的话，只需摘录重要部分即可)。</p>
+
+<p>若您使用的是irb的话，则稍有不同。因为irb自身也存在一些问题，所以您最好先用irb &mdash;single-irb重试一下，或者用ruby重新运行一次为好。</p>
+
+<p>虽然搜索ML可以解决您的大部分问题，但因为邮件数量庞大，想找到答案实属不易。为遵从网络礼节(请参考RFC1855的3.1.1、3.1.2)，您可以只搜索最近的内容，但是说起来容易，做起来难。况且说不定最近又出现了什么新观点呢。所以您还是壮起胆子来提问吧。
+1.12 ruby的性格比较像羊？</p>
+
+<p>羊、蜂鸟、兔子&hellip;
+1.13 遇到bug时怎么上报？</p>
+
+<p>遇到bug时应该上报到Ruby Bug Tracking System，通常很快就会得到回复。您也可以用邮件将bug的情况上报到ruby-bugs-ja。</p>
+
+<p>上报时，最好能提供ruby的版本和平台信息、错误消息以及能再现bug的脚本和数据。</p>
+
+<p>遇到bug时，通常会显示[BUG]消息，而Ruby也将被强行关闭。此时大部分系统都会生成一个core文件。若您的调试器可用的话，可能还会有backtrace。若您能提供这些信息就更好了。</p>
+
+<ol>
+<li><p>变量、常数、参数</p></li>
+<li><p>2.1 将对象赋值给变量或常数时,会先拷贝该对象吗?</p></li>
+<li>2.2 局部变量的作用域是如何划定的?</li>
+<li>2.3 何时才能使用局部变量?</li>
+<li>2.4 常数的作用域是如何划定的?</li>
+<li>2.5 实参是怎么传递给形参的呢?</li>
+<li>2.6 将实参赋值给形参之后,对实参本身有什么影响吗?</li>
+<li>2.7 若向形参所指对象发送消息的话,可能出现什么结果?</li>
+<li>2.8 参数前面的*是什么意思?</li>
+<li>2.9 参数前面的&amp;代表什么?</li>
+<li>2.10 可以给形参指定默认值吗?</li>
+<li>2.11 如何向块传递参数呢?</li>
+<li>2.12 为什么变量和常数的值会自己发生变化?</li>
+<li>2.13 常数不能被修改吗?</li>
+</ol>
+
+
+<p>2.1 将对象赋值给变量或常数时,会先拷贝该对象吗?</p>
+
+<p>变量和常数都指向一个对象。即使不赋值, 它也是指向nil对象的。赋值操作只不过是让它指向另一个新对象而已。</p>
+
+<p>所以, 赋值时并不会拷贝并生成一个新对象. 而是让赋值表达式左边的变量或常数指向表达式右边的对象。</p>
+
+<p>尽管如此, 可能还是有人不理解. 这也是情有可原的, 因为上面的解释并不能涵盖所有的情况. 实际上, Fixnum、NilClass、 TrueClass、FalseClass以及Symbol类的实例会被变量或常数直接保存, 所以赋值时会被拷贝。其他类的实例都在内存上的其他地方, 变量和常数会指向它们。请参考立即值和使用。
+2.2 局部变量的作用域是如何划定的?</p>
+
+<p>顶层、类(模块)定义或方法定义都是彼此独立的作用域。另外, 在块导入新的作用域时, 它还可以使用外侧的局部变量。</p>
+
+<p>块之所以与众不同, 是因为这样能够保证Thread或过程对象中的局部变量的&#8221;局部性&#8221;。while、until、for是控制结构, 它们不会导入新的作用域。另外, loop是方法, 它的后面跟着块。
+2.3 何时才能使用局部变量?</p>
+
+<p>在Ruby解释器运行Ruby脚本时, 它会一次读取整个脚本,然后进行语法分析。若没有语法问题的话, 才会开始执行句法分析中得到的代码。</p>
+
+<p>在进行语法分析时, 只有在遇到局部变量的赋值语句之后, 才能使用它。例如</p>
+
+<p>for i in 1..2
+if i == 2
+print a
+else
+a = 1
+end
+end</p>
+
+<p>把上述代码写入名为test.rb的脚本. 执行该脚本后发生如下错误</p>
+
+<p>test.rb:3: undefined local variable or method `a&#8217; for</p>
+
+<h1>&lt;Object:0x40101f4c&gt; (NameError)</h1>
+
+<p>from test.rb:1:in `each&#8217;
+from test.rb:1</p>
+
+<p>当i值为1时,并不会发生错误;当i变成2之后就不行了。这是因为, 在进行语法分析时并不会按照运行时的逻辑顺序来进行, 而只是机械地逐行分析. 在遇到print a语句时, a并未被赋值, 因而无法使用该局部变量. 之后,在运行时因为找不到名为a的方法, 所以发生错误。</p>
+
+<p>相反地, 若使用如下脚本则不会出现错误。</p>
+
+<p>a = 1 if false; print a</p>
+
+<h1>=&gt; nil</h1>
+
+<p>若您不想因为局部变量的这个特性而费神的话, 我们推荐您在使用局部变量之前, 添加a = nil赋值语句。这样作还有一个好处, 就是可以加快局部变量的使用速度。
+2.4 常数的作用域是如何划定的?</p>
+
+<p>类/模块中定义的常数可以用在该类/模块中。</p>
+
+<p>若类/模块定义发生嵌套时, 可在内侧类/模块中使用外侧的常数。</p>
+
+<p>还可以使用超类以及包含模块中的常数。</p>
+
+<p>因为顶层中定义的常数已经被添加到Object类中, 所以您可以在所有的类/模块中使用顶层中的常数。</p>
+
+<p>若遇到无法直接使用的常数时, 可以使用 类/模块名+::操作符+常数名 的方式来使用它。
+2.5 实参是怎么传递给形参的呢?</p>
+
+<p>方法调用时, 会把实参赋值给形参。请您参考向变量进行赋值来了解Ruby中赋值的含义。若实参中的对象包含可以改变自身状态的方法时,就必须注意其副作用(当然了,也有可能不是副作用)了。请参考破坏性的方法。
+2.6 将实参赋值给形参之后,对实参本身有什么影响吗?</p>
+
+<p>形参是局部变量, 对其进行赋值之后, 它就会指向其他对象. 仅此而已, 它并不会对原来的实参有什么影响。
+2.7 若向形参所指对象发送消息的话,可能出现什么结果?</p>
+
+<p>形参所指对象实际上就是实参所指对象. 若该对象接到消息时状态发生变化的话,将会影响到主调方。请参考破坏性的方法。
+2.8 参数前面的*是什么意思?</p>
+
+<p>各位C语言大侠请看好, 这可不是什么指针。在Ruby的参数前面添加一个*表示, 它可以接受以数组形式传来的不定量的参数。</p>
+
+<p>def foo(*all)
+for e in all
+print e, &ldquo; &rdquo;
+end
+end</p>
+
+<p>foo(1, 2, 3)</p>
+
+<h1>=&gt; 1 2 3</h1>
+
+<p>另外,如果在方法调用中传了一个带*的数组, 则表示先展开数组然后再进行传递。</p>
+
+<p>a = [1, 2, 3]
+foo(*a)</p>
+
+<p>现在只能在以下部分的尾部使用*</p>
+
+<ol>
+<li>多重赋值的左边</li>
+<li>多重赋值的右边</li>
+<li>参数列表(定义方法时)</li>
+<li>参数列表(调用方法时)</li>
+<li>case的when部分</li>
+</ol>
+
+
+<p>下面是在第(1)种形式中使用*的例子</p>
+
+<p>x, *y = [7, 8, 9]</p>
+
+<p>上面的代码相当于x = 7、y = [8, 9]。另外,下面的代码</p>
+
+<p>x, = [7, 8, 9]</p>
+
+<p>也是合法的, 此时x = 7. 而</p>
+
+<p>x = [7, 8, 9]</p>
+
+<p>则表示x = [7, 8, 9]。
+2.9 参数前面的&amp;代表什么?</p>
+
+<p>在参数前面添加&amp;之后,就可以像使用块那样来传递/接收过程对象。它只能位于参数列表的末尾。
+2.10 可以给形参指定默认值吗?</p>
+
+<p>可以。</p>
+
+<p>在调用函数时,才会计算该默认值。您可以使用任意表达式来设定Ruby的默认值(C++只能使用编译时的常数). 调用方法时,会在方法的作用域内计算默认值。
+2.11 如何向块传递参数呢?</p>
+
+<p>在块内部的前端,使用||将形参括起来之后, 就可以使用实参进行多重赋值了。该形参只是普通的局部变量, 若块的外侧已经有同名参数时, 块参数的作用域将扩大到块外侧, 请留意这个问题。
+2.12 为什么变量和常数的值会自己发生变化?</p>
+
+<p>请看下例。</p>
+
+<p>A = a = b = &ldquo;abc&rdquo;; b &lt;&lt; &ldquo;d&rdquo;; print a, &ldquo; &rdquo;, A</p>
+
+<h1>=&gt; abcd abcd</h1>
+
+<p>对变量或常数进行赋值, 是为了以后通过它们来使用对象。这并不是将对象本身赋值给变量或常数, 而只是让它们记住对该对象的引用。变量可以修改这个引用来指向其他的对象, 而常数却不能修改引用。</p>
+
+<p>对变量或常数使用方法时, 实际上就是对它们所指的对象使用该方法。在上例中, &lt;&lt;方法修改了对象的状态,所以引发了&#8221;非预期&#8221;的结果。若该对象是数值的话, 就不会发生这种问题, 因为数值没有修改其自身状态的方法。若对数值使用方法时, 将返回新的对象。</p>
+
+<p>这个例子虽然是用字符串来作演示的, 但就算使用带有可修改自身状态的方法的那些对象, 如数组或哈希表等来试验的话, 效果也是一样的。
+2.13 常数不能被修改吗?</p>
+
+<p>若想让指向某对象的常数转而指向其他对象时, 就会出现warning。</p>
+
+<p>若该对象带有破坏性的方法的话, 则可以修改该对象的内容。</p>
+
+<ol>
+<li><p>带块的方法调用</p></li>
+<li><p>3.1 什么是&#8221;带块的方法调用&#8221;?</p></li>
+<li>3.2 怎么将块传递给带块方法?</li>
+<li>3.3 如何在主调方法中使用块?</li>
+<li>3.4 为什么Proc.new没有生成过程对象呢?</li>
+</ol>
+
+
+<p>3.1 什么是&#8221;带块的方法调用&#8221;?</p>
+
+<p>有些方法允许在调用它的过程中添加块或者过程对象, 这种特殊的方法调用就是&#8221;带块的方法调用&#8221;。</p>
+
+<p>这原本是为了对控制结构(特别是循环)进行抽象而设置的功能, 因此有时也被称作迭代器. 当然了, 若您只想调用块而不进行iterate(迭代)操作时,也可以使用它.</p>
+
+<p>下例中就用到了迭代器。</p>
+
+<p>data = [1, 2, 3]
+data.each do |i|
+print i, &ldquo;\n&rdquo;
+end</p>
+
+<p>它会输出如下内容。</p>
+
+<p>$ ruby test.rb
+1
+2
+3</p>
+
+<p>也就是说,do和end之间的块被传递给方法, 供其差遣。each方法分别为data中的每个元素来执行块的内容。</p>
+
+<p>用C语言来改写的话,就是</p>
+
+<p>int data[3] = {1, 2, 3};
+int i;
+for (i = 0; i &lt; 3; i++) {
+printf(&ldquo;%d\n&rdquo;, data[i]);
+}</p>
+
+<p>用for来编写代码时, 必须自己进行迭代处理. 相反地, 使用带块的方法调用时, 则由方法负责处理, 这大大减少了因误判循环边界而导致bug的可能性。</p>
+
+<p>另外, 除了do&hellip;end之外, 您还可以使用{&hellip;}。</p>
+
+<p>data = [1, 2, 3]
+data.each { |i|
+print i, &ldquo;\n&rdquo;
+}</p>
+
+<p>这段代码与前面的完全等效。但这并不标明do&hellip;end与{&hellip;}完全等效。例如</p>
+
+<p>foobar a, b do .. end # 此时foobar被看做是带块的方法
+foobar a, b { .. } # 而此时 b被看做是带块的方法</p>
+
+<p>这说明{ }的结合力大于do块。
+3.2 怎么将块传递给带块方法?</p>
+
+<p>如果想将块传递给带块方法, 只需要将块放在方法后面即可. 另外, 还可以在表示过程对象的变量/常数前添加&amp;, 并将其作为参数传递给方法即可。
+3.3 如何在主调方法中使用块?</p>
+
+<p>有3种方式可以让您在方法中使用块. 它们分别是yield控制结构、块参数和Proc.new。(在由C语言写成的扩展库中,需要使用rb_yield)</p>
+
+<p>使用yield时, yield后面的参数会被传递给块, 然后执行块的内容。</p>
+
+<p>块参数是指,插在方法定义中的参数列表末尾的 形如&amp;method的参数. 可以在方法中,这样method.call(args&hellip;)来进行调用。</p>
+
+<p>使用Proc.new时, 它会接管传递给方法的块, 并以块的内容为范本生成一个过程对象。proc或lamda也是一样。</p>
+
+<p>def a (&amp;b)
+yield
+b.call
+Proc.new.call
+proc.call
+lambda.call
+end
+a{print &ldquo;test\n&rdquo;}</p>
+
+<p>3.4 为什么Proc.new没有生成过程对象呢?</p>
+
+<p>若没有给出块的话, Proc.new是不会生成过程对象的, 而且还会引发错误。在方法定义中插入Proc.new时, 一般都假定在方法调用时会传过来一个块。</p>
+
+<ol>
+<li><p>句法</p></li>
+<li><p>4.1 像:exit这种带:的标识符表示什么？</p></li>
+<li>4.2 如何取得与符号同名的变量的值？</li>
+<li>4.3 loop是控制结构吗？</li>
+<li>4.4 a +b报错，这是怎么回事儿？</li>
+<li>4.5 s = &ldquo;x&rdquo;; puts s *10 报错，这是怎么回事儿？</li>
+<li>4.6 为什么p {}没有任何显示呢？</li>
+<li>4.7 明明有pos=()这样的setter方法，可为什么pos=1时却没有任何反应呢？</li>
+<li>4.8 &lsquo;\1&#8217;和&rsquo;\1&#8217;有什么不同？</li>
+<li>4.9 在p true or true and false中会显示true，但在a=true if true or true and false中却不会把true赋值给a。</li>
+<li>4.10 为什么p(nil || &ldquo;&rdquo;)什么事儿都没有，可p(nil or &ldquo;&rdquo;)却会报错呢？</li>
+</ol>
+
+
+<p>4.1 像:exit这种带:的标识符表示什么？</p>
+
+<p>它叫做符号对象，它与标识符之间是1对1的关系。您也可以使用&#8221;exit&#8221;.intern来得到它。在catch, throw, autoload等方法中，既可以使用字符串参数，又可以使用符号参数。
+4.2 如何取得与符号同名的变量的值？</p>
+
+<p>在symbol的作用域内，使用eval((:symbol).id2name)来取值。</p>
+
+<p>a = &lsquo;This is the content of &ldquo;a&rdquo;&rsquo;
+b = eval(:a.id2name)
+a.id == b.id</p>
+
+<p>4.3 loop是控制结构吗？</p>
+
+<p>不，它是方法。该块会导入新的局部变量的作用域。
+4.4 a +b报错，这是怎么回事儿？</p>
+
+<p>它会被解释成a(+b)。+的两侧要么都有空格，要么就都没有。
+4.5 s = &ldquo;x&rdquo;; puts s *10 报错，这是怎么回事儿？</p>
+
+<p>puts s <em>10会被解释成s(</em>10)的方法调用，所以要么s*10这样，要么s * 10这样。
+4.6 为什么p {}没有任何显示呢？</p>
+
+<p>{}会被解释成块，而并非哈希表的构造函数。所以您需要使用p({})或者p Hash.new来解决这个问题。
+4.7 明明有pos=()这样的setter方法，可为什么pos=1时却没有任何反应呢？</p>
+
+<p>请看下例。</p>
+
+<p>class C
+attr_reader :pos
+def pos=(n)
+@pos = n * 3
+end</p>
+
+<p>def set
+pos = 1 #A行
+end
+end</p>
+
+<p>a = C.new
+a.set
+p a.pos #=&gt; nil (预期值是 3)</p>
+
+<p>本来指望最后一行能输出 3，但却是个 nil ，这是因为Ruby把A行的pos解释成局部变量了。若想调用pos=()的话，请这样self.pos = 1调用。
+4.8 &lsquo;\1&#8217;和&rsquo;\1&#8217;有什么不同？</p>
+
+<p>没有不同，二者完全一样。在单引号中，只有\&lsquo;、\和行尾的(取消换行)会得到特殊的解释，其他字符不变。
+4.9 在p true or true and false中会显示true，但在a=true if true or true and false中却不会把true赋值给a。</p>
+
+<p>第1个表达式会被解释成(p true) or true and false，其中的and/or是构成语句的要素，而并不是用来连接p的参数的操作符。</p>
+
+<p>第2个表达是则会被解释成a=true if (true or true and false)。因为if的优先度低于and/or，且or与and的优先度相同，所以就会从左到右地完成解析。
+4.10 为什么p(nil || &ldquo;&rdquo;)什么事儿都没有，可p(nil or &ldquo;&rdquo;)却会报错呢？</p>
+
+<p>虽然||可以连接参数，但or就只能连接句子，所以如此。关于这点区别，您试一试下面的例子就明白了。</p>
+
+<p>p nil || &ldquo;&rdquo;
+p nil or &ldquo;&rdquo;</p>
+
+<ol>
+<li><p>方法</p></li>
+<li><p>5.1 向对象发出消息之后，将按照什么顺序来搜索要执行的方法？</p></li>
+<li>5.2 +和-是操作符吗？</li>
+<li>5.3 Ruby中有函数吗？</li>
+<li>5.4可以在外部使用对象的实例变量吗？</li>
+<li>5.5 private和protected有什么不同？</li>
+<li>5.6 能不能将实例变量变成public类型的变量？</li>
+<li>5.7 怎样指定方法的可见性？</li>
+<li>5.8 方法名可以用大写字母开头吗？</li>
+<li>5.9 为什么使用super时会出现ArgumentError?</li>
+<li>5.10 如何调用上2层的同名方法？</li>
+<li>5.11 重定义内部函数时，如何调用原来的函数？</li>
+<li>5.12 何谓破环性的方法？</li>
+<li>5.13 那些情况下会产生副作用？</li>
+<li>5.14 能让方法返回<span>多个值</span>吗？</li>
+</ol>
+
+
+<p>5.1 向对象发出消息之后，将按照什么顺序来搜索要执行的方法？</p>
+
+<p>将依次搜索特殊方法、本类中定义的方法和超类(包括Mix-in进来的模块。写成 类名.ancestors。)中定义的方法，并执行所找到的第一个方法。若没有找到方法时，将按照同样的顺序来搜索method_missing。</p>
+
+<p>mo<span>du</span>le Indexed
+def <a href="n"></a>
+to_a[n]
+end
+end
+class String
+include Indexed
+end
+p String.ancestors # [String, Indexed, Enumerable, Comparable, Object, Kernel]
+p &ldquo;abcde&rdquo;.gsub!(/./, &ldquo;\&amp;\n&rdquo;)[1]</p>
+
+<p>遗憾的是上述代码返回的是10，而并非预期的&#8221;b\n&#8221;。这是因为系统在String类中搜索[]，在遇到Indexed中定义的方法之前就已经完成了匹配，所以如此。若直接在Class String中重定义[]的话，就会如您所愿了。
+5.2 +和-是操作符吗？</p>
+
+<p>+和-等是方法调用，而并非操作符。因此可进行overload(重定义)。</p>
+
+<p>class MyString &lt; String
+def +(other)
+print super(other)
+end
+end</p>
+
+<p>但以下内容及其组合(!=、!~)则是控制结构，不能进行重定义。</p>
+
+<p>=, .., &hellip;, !, not, &amp;&amp;, and, |, or, ~, ::</p>
+
+<p>重定义(或者定义)操作符时，应该使用形如+@或-@这样的方法名。</p>
+
+<p>=是访问实例变量的方法，您可以在类定义中使用它来定义方法。另外，+或-等经过适当的定义之后，也可以进行形如+=这样的自赋值运算。</p>
+
+<p>def attribute=(val)
+@attribute = val
+end</p>
+
+<p>5.3 Ruby中有函数吗？</p>
+
+<p>Ruby中看似函数的部分实际上都是些省略被调(self)的方法而已。例如</p>
+
+<p>def writeln(str)
+print(str, &ldquo;\n&rdquo;)
+end</p>
+
+<p>writeln(&ldquo;Hello, World!&rdquo;)</p>
+
+<p>中看似函数的部分实际上是Object类中定义的方法，它会被发送到隐藏的被调self中。因此可以说Ruby是纯粹的面向对象语言。</p>
+
+<p>对内部函数这种方法来说，不管self如何，它们总是返回相同的结果。因此没有必要计较被调的问题，可以将其看作函数。
+5.4 可以在外部使用对象的实例变量吗？</p>
+
+<p>不能直接使用。若想操作实例变量，必须事先在对象中定义操作实例变量的方法(accessor)。例如</p>
+
+<p>class C
+def name
+@name
+end
+def name=(str) # name 后面不能有空格！
+@name = str
+end
+end</p>
+
+<p>c = C.new
+c.name = &lsquo;山田太郎&rsquo;
+p c.name #=&gt; &ldquo;山田太郎&rdquo;</p>
+
+<p>另外，您还可以使用Module#attr、attr_reader、 attr_writer、attr_accessor等来完成这种简单的方法定义。例如，您可以这样来重写上面的类定义。</p>
+
+<p>class C
+attr_accessor :name
+end</p>
+
+<p>若您不愿定义访问方法，却想使用实例变量时，可以使用Object#instance_eval。
+5.5 private和protected有什么不同？</p>
+
+<p>private意味着只能使用函数形式来调用该方法，而不能使用被调形式。所以，您只能在本类或其子类中调用private方法。</p>
+
+<p>protected也是一样，只能用在本类及其子类中。但是您既可以使用函数形式又可以使用被调形式来调用它。</p>
+
+<p>在封装方法时，该功能是必不可少。
+5.6 能不能将实例变量变成public类型的变量？</p>
+
+<p>无法让变量变成public类型的变量。在Ruby中访问实例变量时，需要使用访问方法。例如</p>
+
+<p>class Foo
+def initialize(str)
+@name = str
+end</p>
+
+<p>def name
+return @name
+end
+end</p>
+
+<p>但是每次都这么写的话，未免有些繁琐。因此可以使用attr_reader、attr_writer、 attr_accessor等方法来完成这些简单的方法定义。</p>
+
+<p>class Foo
+def initialize(str)
+@name = str
+end</p>
+
+<p>attr_reader :name</p>
+
+<h1>其效果等同于下面的代码。</h1>
+
+<h1>def name</h1>
+
+<h1>return @name</h1>
+
+<h1>end</h1>
+
+<p>end</p>
+
+<p>foo = Foo.new(&ldquo;Tom&rdquo;)
+print foo.name, &ldquo;\n&rdquo; # Tom</p>
+
+<p>您还可以使用attr_accessor来同时定义写入的方法。</p>
+
+<p>class Foo
+def initialize(str)
+@name = str
+end</p>
+
+<p>attr_accessor :name</p>
+
+<h1>其效果等同于下面的代码。</h1>
+
+<h1>def name</h1>
+
+<h1>return @name</h1>
+
+<h1>end</h1>
+
+<h1>def name=(str)</h1>
+
+<h1>@name = str</h1>
+
+<h1>end</h1>
+
+<p>end</p>
+
+<p>foo = Foo.new(&ldquo;Tom&rdquo;)
+foo.name = &ldquo;Jim&rdquo;
+print foo.name, &ldquo;\n&rdquo; # Jim</p>
+
+<p>若只想定义写入方法的话，可以使用attr_writer。
+5.7 怎样指定方法的可见性？</p>
+
+<p>首先 Ruby把那些只能以函数形式(省略被调的形式)来调用的方法叫做private方法。请注意，这里的private定义与C++以及Java中的定义不同。</p>
+
+<p>若将方法设为private类型之后，就不能在其它的对象中调用该方法了。因此，若您只想在本类或其子类中调用某方法时， 就可以把它设为private类型。</p>
+
+<p>您可以这样把方法设为private类型。</p>
+
+<p>class Foo
+def test
+print &ldquo;hello\n&rdquo;
+end
+private :test
+end</p>
+
+<p>foo = Foo.new
+foo.test</p>
+
+<h1>=&gt; test.rb:9: private method `test&#8217; called for #&lt;Foo:0x400f3eec&gt;(Foo)</h1>
+
+<p>您可以使用private_class_method将类方法变为private类型。</p>
+
+<p>class Foo
+def Foo.test
+print &ldquo;hello\n&rdquo;
+end
+private_class_method :test
+end</p>
+
+<p>Foo.test</p>
+
+<h1>=&gt; test.rb:8: private method `test&#8217; called for Foo(Class)</h1>
+
+<p>同理，您可以使用public、public_class_method将方法设为public类型。</p>
+
+<p>在默认情况下，类中的方法都被定义成public类型(initialize除外)，而顶层中的方法会被定义成private类型。
+5.8 方法名可以用大写字母开头吗？</p>
+
+<p>可以。但要注意：即使方法调用中不带参数，也不能省略方法名后的空括号。
+5.9 为什么使用super时会出现ArgumentError?</p>
+
+<p>在方法定义中调用super时，会把所有参数都传给上层方法，若参数个数不符合其要求，就会引发ArgumentError。因此，若参数个数不合时，应该自己指定参数然后再调用super。
+5.10 如何调用上2层的同名方法？</p>
+
+<p>super只能调用上1层的同名方法。若想调用2层以上的同名方法时，需要事先对该上层方法进行alias操作。
+5.11 重定义内部函数时，如何调用原来的函数？</p>
+
+<p>可以在方法定义中使用super。进行重定义之前，使用alias就可以保住原来的定义。也可以把它当作Kernel的特殊方法来进行调用。
+5.12 何谓破环性的方法？</p>
+
+<p>就是能修改对象内容的方法，常见于字符串、数组或哈希表中。一般是这样的：存在两个同名的方法，一个会拷贝原对象并返回副本；一个会直接修改原对象的内容，并返回修改后的对象。通常后者的方法名后面带有！，它就是破坏性的方法。但是有些不带！的方法也是具有破环性的，如String#concat等等。
+5.13 那些情况下会产生副作用？</p>
+
+<p>若在方法中对实参对象使用了破环性的方法的时候，就会产生副作用。</p>
+
+<p>def foo(str)
+str.sub!(/foo/, &ldquo;baz&rdquo;)
+end</p>
+
+<p>obj = &ldquo;foo&rdquo;
+foo(obj)
+print obj</p>
+
+<h1>=&gt; &ldquo;baz&rdquo;</h1>
+
+<p>此时，参数对象的内容被修改。另一方面，如果在程序中确有必要的话，也会对某对象发送具有副作用的消息，那就另当别论了。
+5.14 能让方法返回<span>多个值</span>吗？</p>
+
+<p>在Ruby中确实只能指定一个方法返回值，但若使用数组的话，就可以返回多个值了。</p>
+
+<p>return 1, 2, 3</p>
+
+<p>上例中，传给return的列表会被当作数组处理。这与下面的代码可谓是异曲同工。</p>
+
+<p>return [1, 2, 3]</p>
+
+<p>另外，若使用多重赋值的话，则可以达到返回多个值的效果。例如</p>
+
+<p>def foo
+return 20, 4, 17
+end</p>
+
+<p>a, b, c = foo
+print &ldquo;a:&rdquo;, a, &ldquo;\n&rdquo; #=&gt; a:20
+print &ldquo;b:&rdquo;, b, &ldquo;\n&rdquo; #=&gt; b:4
+print &ldquo;c:&rdquo;, c, &ldquo;\n&rdquo; #=&gt; c:17</p>
+
+<p>您也可以这样处理。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/02/26/rspec-best-practices-and-tips/">RSpec Best Practices and Tips</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-26T16:30:00+08:00" pubdate data-updated="true">Feb 26<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>RSpec best practices and tips</h2>
+
+<p>After a year using RSpec, I’m happy to share “(My) RSpec Best Practices and Tips”. Let’s make your specs easier to maintain, less verbose, more structured and covering more cases!</p>
+
+<h2>Use shortcuts <em>specify {}</em>, <em>it {}</em> and <em>subject {}</em></h2>
+
+
+<p>You think RSpec is verbose? In case your code doesn’t need any description, use a <em>specify block</em>!</p>
+
+<div>
+<div id="highlighter_569165">
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>
+<div><code>it </code><code>"should be valid"</code> <code>do</code></div>
+<div><code></code><code>@user</code><code>.should be_valid </code></div>
+<div><code>end</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<p>can be replaced with</p>
+
+<div>
+<div id="highlighter_540926">
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>
+<div><code>specify { </code><code>@user</code><code>.should be_valid }</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<p>RSpec will generate a nice description text for you when running this expectation. Even better, you can use the <em>it block</em>!</p>
+
+<div>
+<div id="highlighter_397260">
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>
+<div><code>describe User </code><code>do</code></div>
+<div><code></code><code>it { should validate_presence_of </code><code>:name</code> <code>} </code></div>
+<div><code></code><code>it { should have_one </code><code>:address</code> <code>} </code></div>
+<div><code>end</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<p>In case the subject is the not the class described, just set it with the <em>subject</em> method:</p>
+
+<div>
+<div id="highlighter_634030">
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>
+<div><code>subject { </code><code>@user</code><code>.address } </code></div>
+<div><code>it { should be_valid }</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<h2>Start context with ‘when’/&#8217;with’ and methods description with ‘#’</h2>
+
+
+<p>Have you ever get a failed test with an incomprehensible error message like:</p>
+
+<div>
+<div id="highlighter_833360">
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>
+<div><code>User non confirmed confirm email wrong token should not be valid</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<p>Start your <em>contexts</em> with <em>when</em> and get nice messages like:</p>
+
+<div>
+<div id="highlighter_259278">
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>
+<div><code>User when non confirmed when #confirm_email with wrong token should not be valid</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<h2>Use RSpec matchers to get meaningful messages</h2>
+
+
+<p>In case of failure</p>
+
+<div>
+<div id="highlighter_723593">
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>
+<div><code>specify { user.valid?.should == </code><code>true</code> <code>}</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<p>displays:</p>
+
+<div>
+<div id="highlighter_873437">
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>
+<div><code>'User should == true' FAILED </code></div>
+<div><code></code><code>expected: true, </code></div>
+<div><code></code><code>got: false (using ==)</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<p>While</p>
+
+<div>
+<div id="highlighter_57131">
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>
+<div><code>specify { user.should be_valid }</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<p>displays:</p>
+
+<div>
+<div id="highlighter_813731">
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>
+<div><code>'User should be valid' FAILED </code></div>
+<div><code></code><code>expected valid? to return true, got false</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<p>Nice eh?</p>
+
+<h2>Only one expectation per <em>it block</em></h2>
+
+
+<p>I often see specs where it blocks contain several expectations. This makes your tests harder to read and maintain.</p>
+
+<p>So instead of that…</p>
+
+<div>
+<div id="highlighter_927685">
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>
+<div><code>describe DemoMan </code><code>do</code></div>
+<div><code></code><code>it </code><code>"should have expected attributes"</code> <code>do</code></div>
+<div><code></code><code>demo_man = DemoMan.</code><code>new</code></div>
+<div><code></code><code>demo_man.should respond_to </code><code>:name</code></div>
+<div><code></code><code>demo_man.should respond_to </code><code>:gender</code></div>
+<div><code></code><code>demo_man.should respond_to </code><code>:age</code></div>
+<div><code></code><code>end</code></div>
+<div><code>end</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<p>… do this:</p>
+
+<div>
+<div id="highlighter_377829">
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>
+<div><code>describe DemoMan </code><code>do</code></div>
+<div><code></code><code>before(</code><code>:all</code><code>) </code><code>do</code></div>
+<div><code></code><code>@demo_man</code> <code>= DemoMan.</code><code>new</code></div>
+<div><code></code><code>end</code></div>
+<div> </div>
+<div><code></code><code>subject { </code><code>@demo_man</code> <code>} </code></div>
+<div> </div>
+<div><code></code><code>it { should respond_to </code><code>:name</code> <code>} </code></div>
+<div><code></code><code>it { should respond_to </code><code>:gender</code> <code>} </code></div>
+<div><code></code><code>it { should respond_to </code><code>:age</code> <code>} </code></div>
+<div><code>end</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<h2>(Over)use describe and context</h2>
+
+
+<p>Big specs can be a joy to play with as long as they are ordered and DRY. Use nested <em>describe</em> and <em>context</em> blocks as much as you can, each level adding its own specificity in the before block.
+To check your specs are well organized, run them in ‘nested’ mode (<code>spec spec/my_spec.rb -cf nested</code>).
+Using <code>before(:each)</code> in each context and describe blocks will help you set up the environment without repeating yourself. It also enables you to use <em>it {}</em> blocks.</p>
+
+<h3>Bad:</h3>
+
+
+<div>
+<div id="highlighter_149816">
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>
+<div><code>describe User </code><code>do</code></div>
+<div> </div>
+<div><code></code><code>it </code><code>"should save when name is not empty"</code> <code>do</code></div>
+<div><code></code><code>User.</code><code>new</code><code>(</code><code>:name</code> <code>=&gt; </code><code>'Alex'</code><code>).save.should == </code><code>true</code></div>
+<div><code></code><code>end</code></div>
+<div> </div>
+<div><code></code><code>it </code><code>"should not save when name is empty"</code> <code>do</code></div>
+<div><code></code><code>User.</code><code>new</code><code>.save.should == </code><code>false</code></div>
+<div><code></code><code>end</code></div>
+<div> </div>
+<div><code></code><code>it </code><code>"should not be valid when name is empty"</code> <code>do</code></div>
+<div><code></code><code>User.</code><code>new</code><code>.should_not be_valid </code></div>
+<div><code></code><code>end</code></div>
+<div> </div>
+<div><code></code><code>it </code><code>"should be valid when name is not empty"</code> <code>do</code></div>
+<div><code></code><code>User.</code><code>new</code><code>(</code><code>:name</code> <code>=&gt; </code><code>'Alex'</code><code>).should be_valid </code></div>
+<div><code></code><code>end</code></div>
+<div> </div>
+<div><code></code><code>it </code><code>"should give the user a flower when gender is W"</code> <code>do</code></div>
+<div><code></code><code>User.</code><code>new</code><code>(</code><code>:gender</code> <code>=&gt; </code><code>'W'</code><code>).present.should be_a Flower </code></div>
+<div><code></code><code>end</code></div>
+<div> </div>
+<div><code></code><code>it </code><code>"should give the user a iMac when gender is M"</code> <code>do</code></div>
+<div><code></code><code>User.</code><code>new</code><code>(</code><code>:gender</code> <code>=&gt; </code><code>'M'</code><code>).present.should be_an IMac </code></div>
+<div><code></code><code>end</code></div>
+<div><code>end</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<h3>Good:</h3>
+
+
+<div>
+<div id="highlighter_852046">
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>
+<div><code>describe User </code><code>do</code></div>
+<div><code></code><code>before { </code><code>@user</code> <code>= User.</code><code>new</code> <code>} </code></div>
+<div> </div>
+<div><code></code><code>subject { </code><code>@user</code> <code>} </code></div>
+<div> </div>
+<div><code></code><code>context </code><code>"when name empty"</code> <code>do</code></div>
+<div><code></code><code>it { should </code><code>not</code> <code>be_valid } </code></div>
+<div><code></code><code>specify { </code><code>@user</code><code>.save.should == </code><code>false</code> <code>} </code></div>
+<div><code></code><code>end</code></div>
+<div> </div>
+<div><code></code><code>context </code><code>"when name not empty"</code> <code>do</code></div>
+<div><code></code><code>before { </code><code>@user</code><code>.name = </code><code>'Sam'</code> <code>} </code></div>
+<div> </div>
+<div><code></code><code>it { should be_valid } </code></div>
+<div><code></code><code>specify { </code><code>@user</code><code>.save.should == </code><code>true</code> <code>} </code></div>
+<div><code></code><code>end</code></div>
+<div> </div>
+<div><code></code><code>describe </code><code>:present</code> <code>do</code></div>
+<div><code></code><code>subject { </code><code>@user</code><code>.present } </code></div>
+<div> </div>
+<div><code></code><code>context </code><code>"when user is a W"</code> <code>do</code></div>
+<div><code></code><code>before { </code><code>@user</code><code>.gender = </code><code>'W'</code> <code>} </code></div>
+<div> </div>
+<div><code></code><code>it { should be_a Flower } </code></div>
+<div><code></code><code>end</code></div>
+<div> </div>
+<div><code></code><code>context </code><code>"when user is a M"</code> <code>do</code></div>
+<div><code></code><code>before { </code><code>@user</code><code>.gender = </code><code>'M'</code> <code>} </code></div>
+<div> </div>
+<div><code></code><code>it { should be_an IMac } </code></div>
+<div><code></code><code>end</code></div>
+<div><code></code><code>end</code></div>
+<div><code>end</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<h2>Test Valid, Edge and Invalid cases</h2>
+
+
+<p>This is called <em>Boundary value analysis</em>, it’s simple and it will help you to cover the most important cases. Just split-up method’s input or object’s attributes into valid and invalid partitions and test both of them and there boundaries. A method specification might look like that:</p>
+
+<div>
+<div id="highlighter_449964">
+<table border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<div>
+<div><code>describe </code><code>"#month_in_english(month_id)"</code> <code>do</code></div>
+<div><code></code><code>context </code><code>"when valid"</code> <code>do</code></div>
+<div><code></code><code>it </code><code>"should return 'January' for 1"</code> <code># lower boundary </code></div>
+<div><code></code><code>it </code><code>"should return 'March' for 3"</code></div>
+<div><code></code><code>it </code><code>"should return 'December' for 12"</code> <code># upper boundary </code></div>
+<div><code></code><code>context </code><code>"when invalid"</code> <code>do</code></div>
+<div><code></code><code>it </code><code>"should return nil for 0"</code></div>
+<div><code></code><code>it </code><code>"should return nil for 13"</code></div>
+<div><code></code><code>end</code></div>
+<div><code>end</code></div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<p>I hope this will help you improve your specs. Let me know if I missed anything! :)</p>
+
+<p>You could also be interested in <a href="http://eggsonbread.com/2010/09/06/my-cucumber-best-practices-and-tips/">(My) Cucumber best practices and tips</a> or <a href="https://github.com/pcreux/rspec-set">rspec-set</a> a little gem that helps you speeding up your model specs.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/02/24/shi-yong-rspec-jin-xing-xing-wei-qu-dong-ce-shi/">使用 RSpec 进行行为驱动测试</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-24T10:37:00+08:00" pubdate data-updated="true">Feb 24<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>使用 RSpec 进行行为驱动测试</h2>
+
+<p>Bruce Tate, CTO, WellGood LLC</p>
+
+<p>在过去十年中，软件开发人员对测试的热情日渐低迷。同一时期出现的动态语言并没有提供编译程序来捕捉最基本的错误，这使得测试变得更加重要。随着测试社区的成长，开发人员开始注意到，除了捕获 bug 等最基本的优点外，测试还具有以下优势：</p>
+
+<ul>
+    <li>测试能够改进您的设计。进行测试的每个目标对象必须具备至少两个客户机：生产代码和测试用例。这些客户机强制您对代码进行解耦。测试还鼓励开发人员使用更小、更简单的方法。</li>
+    <li>测试减少了不必要的代码。在编写测试用例时，您养成了很好的测试习惯，即只编写运行测试用例所需的最少代码。您抵制住了对功能进行编码的诱惑，因为您目前还不需要它。</li>
+    <li>推动了测试优先开发。您编写的每个测试用例会确定一个小问题。使用代码解决这个问题非常有用并且可以推动开发。当我进行测试驱动开发时，时间过得飞快。</li>
+    <li>测试提供了更多的自主权。在使用测试用例捕获可能的错误时，您会发现自己非常愿意对代码进行改进。</li>
+</ul>
+
+
+<p><a name="N10059"></a>测试驱动的开发和 RSpec</p>
+
+<p>有关测试的优点无需赘述，我将向您介绍一个简单的使用 RSpec 的测试驱动开发示例。RSpec 工具是一个 Ruby 软件包，可以用它构建有关您的软件的规范。该规范实际上是一个描述系统行为的测试。使用 RSpec 的开发流程如下：</p>
+
+<ul>
+    <li>编写一个测试。该测试描述系统中某个较小元素的行为。</li>
+    <li>运行测试。由于尚没有为系统中的相应部分构建代码，测试失败。这一重要步骤将测试您的测试用例，检验测试用例是否在应当失败的时候失败。</li>
+    <li>编写足够的代码，使测试通过。</li>
+    <li>运行测试，检验测试是否成功。</li>
+</ul>
+
+
+<p>实质上，RSpec 开发人员所做的工作就是将失败的测试用例调试为成功的测试用例。这是一个主动的过程。本文中，我将介绍 RSpec 的基本用法。</p>
+
+<p>首先，假设您已安装了 Ruby 和 gems。您还需要安装 RSpec。输入下面的内容：</p>
+
+<p><code>gem install rspec</code></p>
+
+<div> </div>
+
+
+<p>&nbsp;</p>
+
+<p><a name="N1007D"></a>使用示例</p>
+
+<p>接下来，我将逐步构建一个状态机。我将遵循 TDD 规则。首先编写自己的测试用例，并且直到测试用例需要时才编写代码。Rake 的创建者 Jim Weirich 认为这有助于角色扮演。在编写实际的生产代码时，您希望充当一回 jerk 开发人员的角色，只完成最少量的工作来使测试通过。在编写测试时，您则扮演测试人员的角色，试图为开发人员提供一些有益的帮助。</p>
+
+<p>以下的示例展示了如何构建一个状态机。如果您以前从未接触过状态机，请查阅 参考资料。状态机具有多种状态。每种状态支持可以转换状态机状态的事件。测试驱动开发入门的关键就是从零入手，尽量少地使用假设条件。针对测试进行程序设计。</p>
+
+<p>使用清单 1 的内容创建名为 machine_spec.rb 的文件。该文件就是您的规范。您还不了解 machine.rb 文件的作用，目前先创建一个空文件。</p>
+
+<p><a name="resources"></a><strong>清单 1. 最初的 machine_spec.rb 文件 </strong></p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>  require 'machine'</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<p>接下来，需要运行测试。始终通过输入 <code>spec machine_spec.rb</code> 运行测试。清单 2 展示了预料之中的测试失败：
+<a name="listing2"></a><strong>清单 2. 运行空的规范</strong></p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>~/rspec batate$ spec machine_spec.rb
+/opt/local/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `gem_original_require':
+ no such file to load -- machine (LoadError)
+        from /opt/local/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+        from ./state_machine_spec.rb:1
+        from ...</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<p>在测试驱动开发中，您需要进行增量开发，因此在进行下一次开发前，需要先解决此次测试出现的问题。现在，我将扮演 jerk 开发人员的角色，即只完成满足应用程序运行所需的最少工作量。我将创建一个名为 machine.rb 的空文件，使测试通过。我现在可以以逸待劳，测试通过而我几乎没做任何事情。</p>
+
+<p>继续角色扮演。我现在扮演一个烦躁的测试人员，促使 jerk 开发人员做些实际的工作。我将编码以下规范，需要使用 <code>Machine</code> 类，如清单 3 所示：
+<a name="listing3"></a><strong>清单 3. 初始规范</strong></p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>require 'machine'
+
+describe Machine do
+  before :each do
+    @machine = Machine
+  end
+end</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<p>该规范描述了目前尚不存在的 <code>Machine</code> 类。<code>describe</code> 方法提供了 RSpec 描述，您将传入测试类的名称和包含实际规范的代码块。通常，测试用例需要执行一定数量的设置工作。在 RSpec 中，将由 <code>before</code> 方法完成这些设置工作。您向 <code>before</code> 方法传递一个可选的标志和一个代码块。代码块中包含设置工作。标志确定 RSpec 执行代码块的频率。默认的标志为 <code>:each</code>，表示 RSpec 将在每次测试之前调用 set up 代码块。您也可以指定 <code>:all</code>，表示 RSpec 在执行所有测试之前只调用一次 <code>before</code> 代码块。您应该始终使用<code>:each</code>，使各个测试彼此独立。</p>
+
+<p>输入 <code>spec</code> 运行测试，如清单 4 所示：
+<a name="listing4"></a><strong>清单 4. 存在性测试失败</strong></p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>~/rspec batate$ spec machine_spec.rb 
+
+./machine_spec.rb:3: uninitialized constant Machine (NameError)</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<p>现在，烦躁的测试人员要促使 jerk 开发人员做点什么了 — jerk 开发人员现在需要创建某个类。对我来说，就是修复测试出现的错误。在 <code>machine.rb</code> 中，我输入最少量的代码，如清单 5 所示：
+<a name="listing5"></a><strong>清单 5. 创建初始 Machine 类</strong></p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>class Machine
+end</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<p>保存文件，然后运行测试。毫无疑问，清单 6 显示的测试报告没有出现错误：
+<a name="listing6"></a><strong>清单 6. 测试 Machine 是否存在</strong></p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>~/rspec batate$ spec machine_spec.rb 
+
+Finished in 5.0e-06 seconds
+
+0 examples, 0 failures</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<div> </div>
+
+
+<p><a name="N1010D"></a>编写行为</p>
+
+<p>现在，我可以开始实现更多的行为。我知道，所有状态机必须在某些初始状态下启动。目前我还不是很清楚如何设计这个行为，因此我先编写一个非常简单的测试，首先假设 <code>state</code> 方法会返回 <code>:initial</code> 标志。我对 <code>machine_spec.rb</code> 进行修改并运行测试，如清单 7 所示：
+<a name="listing7"></a><strong>清单 7. 实现初始状态并运行测试</strong></p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>require 'machine'
+
+describe Machine do
+  before :each do
+    @machine = Machine.new
+  end
+
+  it "should initially have a state of :initial" do
+    @machine.state.should == :initial
+  end
+
+end
+
+~/rspec batate$ spec machine_spec.rb 
+
+F
+
+1)
+NoMethodError in 'Machine should initially have a state of :initial'
+undefined method `state' for #&lt;Machine:0x10c7f8c&gt;
+./machine_spec.rb:9:
+
+Finished in 0.005577 seconds
+
+1 example, 1 failure</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<p>注意这条规则：<code> it &ldquo;should initially have a state of :initial&rdquo; do @machine.state.should == :initial end</code>。首先注意到这条规则读起来像是一个英文句子。删除标点，将得到 <code>it should initially have a state of initial</code>。然后会注意到这条规则并不像是典型的面向对象代码。它确实不是。您现在有一个方法，称为 <code>it</code>。该方法具有一个使用引号括起来的字符串参数和一个代码块。字符串应该描述测试需求。最后，<code>do</code> 和 <code>end</code> 之间的代码块包含测试用例的代码。</p>
+
+<p>可以看到，测试进度划分得很细。这些微小的步骤产生的收益却很大。它们使我能够改进测试密度，提供时间供我思考期望的行为以及实现行为所需的 API。这些步骤还能使我在开发期间跟踪代码覆盖情况，从而构建更加丰富的规范。</p>
+
+<p>这种风格的测试具有双重作用：测试实现并在测试的同时构建需求设计文档。稍后，我将通过测试用例构建一个需求列表。</p>
+
+<p>我使用最简单的方式修复了测试，返回 <code>:initial</code>，如清单 8 所示：
+<a name="listing8"></a><strong>清单 8. 指定初始状态</strong></p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>class Machine
+
+  def state
+    :initial
+  end
+end</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<p>当查看实现时，您可能会放声大笑或感觉受到了愚弄。对于测试驱动开发，您必须稍微改变一下思考方式。您的目标并不是编写最终的生产代码，至少现在不是。您的目标是使测试通过。当掌握以这种方式工作时，您可能会发现新的实现，并且编写的代码要远远少于采用 TDD 时编写的代码。</p>
+
+<p>下一步是运行代码，查看它是否通过测试：
+<a name="listing9"></a><strong>清单 9. 运行初始状态测试</strong></p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>~/rspec batate$ spec machine_spec.rb 
+
+.
+
+Finished in 0.005364 seconds
+
+1 example, 0 failures</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<p>花些时间思考一下这个通过测试的迭代。如果查看代码的话，您可能会觉得气馁。因为并没有取得什么进展。如果查看整个迭代，将看到更多内容：您捕获了一个重要需求并编写测试用例实现需求。作为一名程序员，我的第一个行为测试帮助我明确了开发过程。因为实现细节随着测试的进行越来越清晰。</p>
+
+<p>现在，我可以实现一个更健壮的状态实现。具体来讲，我需要处理状态机的多个状态。我需要创建一个新的规则获取有效状态列表。像以前一样，我将运行测试并查看是否通过。
+<a name="listing10"></a><strong>清单 10. 实现有效状态规范</strong></p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre> it "should remember a list of valid states" do
+    @machine.states = [:shopping, :checking_out]
+    @machine.states.should = [:shopping, :checking_out]
+  end
+
+run test(note: failing first verifies test)
+
+~/rspec batate$ spec machine_spec.rb 
+
+.F
+
+1)
+NoMethodError in 'Machine should remember a list of valid states'
+undefined method `states=' for #&lt;Machine:0x10c7154&gt;
+./machine_spec.rb:13:
+
+Finished in 0.005923 seconds
+
+2 examples, 1 failure</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<p>在清单 10 中，出现了一个 RSpec 形式的断言。该断言从 <code>should</code> 方法开始，然后添加了一些比较关系。<code>should</code> 方法对应用程序进行某种观察。工作中的应用程序应该以某种方式运行。<code>should</code> 方法很好地捕获了这种需求。在本例中，我的状态机应该记忆两种不同的状态。</p>
+
+<p>现在，应该添加一个实例变量来实际记忆状态。像以往一样，我在修改代码后运行测试用例，并观察测试是否成功。
+<a name="listing11"></a><strong>清单 11. 创建一个属性以记忆状态</strong></p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>class Machine
+  attr_accessor :states
+
+  def state
+    :initial
+  end
+end
+
+~/rspec batate$ spec machine_spec.rb 
+
+..
+
+Finished in 0.00606 seconds
+
+2 examples, 0 failures</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<div> </div>
+
+
+<p><a name="N10190"></a>驱动重构</p>
+
+<p>此时，我并不想决定将 <code>:initial</code> 状态称为状态机的第一个状态。相反，我更希望第一个状态是状态数组中的第一个元素。我对状态机的理解在不断演变。这种现象并不少见。测试驱动开发经常迫使我重新考虑之前的假设。由于我已经通过测试用例捕获了早期需求，我可以轻松地对代码进行重构。在本例中，重构就是对代码进行调整，使其更好地工作。</p>
+
+<p>修改第一个测试，使其如清单 12 所示，并运行测试：
+<a name="listing12"></a><strong>清单 12. 初始状态应该为指定的第一个状态</strong></p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>it "should initially have a state of the first state" do
+  @machine.states = [:shopping, :checking_out]
+  @machine.state.should == :shopping
+end
+
+~/rspec batate$ spec machine_spec.rb 
+
+F.
+
+1)
+'Machine should initially have a state of the first state' FAILED
+expected :shopping, got :initial (using ==)
+./machine_spec.rb:10:
+
+Finished in 0.005846 seconds
+
+2 examples, 1 failure</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<p>可以这样说，测试用例起到作用了，因为它运行失败，因此我现在需要修改代码以使其工作。显而易见，我的任务就是使测试通过。我喜欢这种测试目的，因为我的测试用例正在驱动我进行设计。我将把初始状态传递给 <code>new</code> 方法。我将对实现稍作修改，以符合修改后的规范，如清单 13 所示。
+<a name="listing13"></a><strong>清单 13. 指定初始状态</strong></p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>start to fix it
+class Machine
+  attr_accessor :states
+  attr_reader :state
+
+  def initialize(states)
+    @states = states
+    @state = @states[0]
+  end
+end
+
+~/rspec batate$ spec machine_spec.rb 
+
+1)
+ArgumentError in 'Machine should initially have a state of the first state'
+wrong number of arguments (0 for 1)
+./machine_spec.rb:5:in `initialize'
+./machine_spec.rb:5:in `new'
+./machine_spec.rb:5:
+
+2)
+ArgumentError in 'Machine should remember a list of valid states'
+wrong number of arguments (0 for 1)
+./machine_spec.rb:5:in `initialize'
+./machine_spec.rb:5:in `new'
+./machine_spec.rb:5:
+
+Finished in 0.006391 seconds
+
+2 examples, 2 failures</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<p>现在，测试出现了一些错误。我找到了实现中的一些 bug。测试用例不再使用正确的接口，因为我没有把初始状态传递给状态机。可以看到，测试用例已经起到了保护作用。我进行了较大的更改，测试就发现了 bug。我们需要对测试进行重构以匹配新的接口，将初始状态列表传递给 <code>new</code> 方法。在这里我并没有重复初始化代码，而是将其放置在 <code>before</code> 方法中，如清单 14 所示：
+<a name="listing14"></a><strong>清单 14. 在 “<code>before</code>” 中初始化状态机 </strong></p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>require 'machine'
+
+describe Machine do
+  before :each do
+    @machine = Machine.new([:shopping, :checking_out])
+  end
+
+  it "should initially have a state of the first state" do
+    @machine.state.should == :shopping
+  end
+
+  it "should remember a list of valid states" do
+    @machine.states.should == [:shopping, :checking_out]
+  end
+
+end
+
+~/rspec batate$ spec machine_spec.rb 
+
+..
+
+Finished in 0.005542 seconds
+
+2 examples, 0 failures</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<p>状态机开始逐渐成型。代码仍然有一些问题，但是正在向良好的方向演化。我将开始对状态机进行一些转换。这些转换将促使代码实际记忆当前状态。</p>
+
+<p>测试用例促使我全面地思考 API 的设计。我需要知道如何表示事件和转换。首先，我将使用一个散列表表示转换，而没有使用成熟的面向对象实现。随后，测试需求可能会要求我修改假设条件，但是目前，我仍然保持这种简单性。清单 15 显示了修改后的代码：
+<a name="listing15"></a><strong>清单 15. 添加事件和转换</strong></p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>remember events... change before conditions
+
+require 'machine'
+
+describe Machine do
+  before :each do
+    @machine = Machine.new([:shopping, :checking_out])
+    @machine.events = {:checkout =&gt;
+                               {:from =&gt; :shopping, :to =&gt; :checking_out}}
+  end
+
+  it "should initially have a state of the first state" do
+    @machine.state.should == :shopping
+  end
+
+  it "should remember a list of valid states" do
+    @machine.states.should == [:shopping, :checking_out]
+  end
+
+  it "should remember a list of events with transitions" do
+    @machine.events.should == {:checkout =&gt;
+                               {:from =&gt; :shopping, :to =&gt; :checking_out}}
+  end
+
+end
+
+~/rspec batate$ spec machine_spec.rb 
+
+FFF
+
+1)
+NoMethodError in 'Machine should initially have a state of the first state'
+undefined method `events=' for #&lt;Machine:0x10c6f38&gt;
+./machine_spec.rb:6:
+
+2)
+NoMethodError in 'Machine should remember a list of valid states'
+undefined method `events=' for #z7lt;Machine:0x10c5afc&gt;
+./machine_spec.rb:6:
+
+3)
+NoMethodError in 'Machine should remember a list of events with transitions'
+undefined method `events=' for #&lt;Machine:0x10c4a58&gt;
+./machine_spec.rb:6:
+
+Finished in 0.006597 seconds
+
+3 examples, 3 failures</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<p>由于新的测试代码位于 <code>before</code> 中，将我的三个测试分解开来。尽管如此，清单 16 中展示的测试非常容易修复。我将添加另一个访问程序：
+<a name="listing16"></a><strong>清单 16. 记忆事件</strong></p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>class Machine
+  attr_accessor :states, :events
+  attr_reader :state
+
+  def initialize(states)
+    @states = states
+    @state = @states[0]
+  end
+end
+
+~/rspec batate$ spec machine_spec.rb 
+
+...
+
+Finished in 0.00652 seconds
+
+3 examples, 0 failures
+
+test</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<p>测试全部通过。我得到了一个能正常运行的状态机。接下来的几个测试将使它更加完善。</p>
+
+<div> </div>
+
+
+<p><a name="N101F2"></a>接近真实的应用程序</p>
+
+<p>目前为止，我所做的不过是触发了一次状态转换，但是我已经做好了所有基础工作。我得到了一组需求。我还构建了一组测试。我的代码可以为状态机提供使用的数据。此时，管理单个状态机转换仅表示一次简单的转换，因此我将添加如清单 17 所示的测试：
+<a name="listing17"></a><strong>清单 17. 构建状态机的状态转换</strong></p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>it "should transition to :checking_out upon #trigger(:checkout) event " do
+  @machine.trigger(:checkout)
+  @machine.state.should == :checking_out
+end
+
+~/rspec batate$ spec machine_spec.rb 
+
+...F
+
+1)
+NoMethodError in 'Machine should transition to :checking_out upon
+#trigger(:checkout) event '
+undefined method `trigger' for #&lt;Machine:0x10c4d00&gt;
+./machine_spec.rb:24:
+
+Finished in 0.006153 seconds
+
+4 examples, 1 failure</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<p>我需要抵制快速构建大量功能的诱惑。我应该只编写少量代码，只要使测试通过即可。清单 18 展示的迭代将表示 API 和需求。这就足够了：
+<a name="listing18"></a><strong>清单 18. 定义 <code>trigger</code> 方法</strong></p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>def trigger(event)
+  @state = :checking_out
+end
+
+~/rspec batate$ spec machine_spec.rb 
+
+....
+
+Finished in 0.005959 seconds
+
+4 examples, 0 failures</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<p>这里出现了一个有趣的边注。在编写代码时，我两次都弄错了这个简单的方法。第一次我返回了 <code>:checkout</code>；第二次我将状态设置为<code>:checkout</code> 而不是 <code>:checking_out</code>。在测试中使用较小的步骤可以为我节省大量时间，因为测试用例为我捕获的这些错误在将来的开发中很难捕获到。本文的最后一个步骤是实际执行一次状态机转换。在第一个示例中，我并不关心实际的机器状态是什么样子的。我仅仅是根据事件进行盲目转换，而不考虑状态。</p>
+
+<p>两节点的状态机无法执行这个操作，我需要在第三个节点中构建。我没有使用已有的 <code>before</code> 方法，只是在新状态中添加另外的状态。我将在测试用例中进行两次转换，以确保状态机能够正确地执行转换，如清单 19 所示：
+<a name="listing19"></a><strong>清单 19. 实现第一次转换</strong></p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>it "should transition to :success upon #trigger(:accept_card)" do
+    @machine.events = {
+       :checkout =&gt; {:from =&gt; :shopping, :to =&gt; :checking_out},
+       :accept_card =&gt; {:from =&gt; :checking_out, :to =&gt; :success}
+    }
+
+    @machine.trigger(:checkout)
+    @machine.state.should == :checking_out
+    @machine.trigger(:accept_card)
+    @machine.state.should == :success
+  end
+
+~/rspec batate$ spec machine_spec.rb
+....F
+
+1)
+'Machine should transition to :success upon #trigger(:accept_card)' FAILED
+expected :success, got :checking_out (using ==)
+./machine_spec.rb:37:
+
+Finished in 0.007564 seconds
+
+5 examples, 1 failure</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<p>这个测试将使用 <code>:checkout</code> 和 <code>:accept_card</code> 事件建立新的状态机。在处理签出时，我选择使用两个事件而不是一个，这样可以防止发生双命令。签出代码可以确保状态机在签出之前处于 <code>shopping</code> 状态。第一次签出首先将状态机从 <code>shopping</code> 转换为 <code>checking_out</code>。测试用例通过触发 <code>checkout</code> 和 <code>accept_card</code> 事件实现两个转换，并在调用事件之后检验事件状态是否正确。与预期一样，测试用例失败 — 我并没有编写处理多个转换的触发器方法。代码修正包含一行非常重要的代码。清单 20 展示了状态机的核心：
+<a name="listing20"></a><strong>清单 20. 状态机的核心</strong></p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>def trigger(event)
+    @state = events[event][:to]
+  end
+
+~/rspec batate$ spec machine_spec.rb
+.....
+
+Finished in 0.006511 seconds
+
+5 examples, 0 failures</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<p>测试可以运行。这些粗糙的代码第一次演变为真正可以称之为状态机的东西。但是这还远远不够。目前，状态机缺乏严密性。不管状态如何，状态机都会触发事件。例如，当处于 <code>shopping</code> 状态时，触发 <code>:accept_card</code> 并不会转换为 <code>:success</code> 状态。您只能够从<code>:checking_out</code> 状态触发 <code>:accept_card</code>。在编程术语中，<code>trigger</code> 方法的范围应针对事件。我将编写一个测试来解决问题，然后修复 bug。我将编写一个负测试（negative test），即断言一个不应该出现的行为，如清单 21 所示：
+<a name="listing21"></a><strong>清单 21: 负测试</strong></p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>it "should not transition from :shopping to :success upon :accept_card" do
+    @machine.events = {
+       :checkout =&gt; {:from =&gt; :shopping, :to =&gt; :checking_out},
+       :accept_card =&gt; {:from =&gt; :checking_out, :to =&gt; :success}
+    }
+
+    @machine.trigger(:accept_card)
+    @machine.state.should_not == :success
+  end
+
+rspec batate$ spec machine_spec.rb
+.....F
+
+1)
+'Machine should not transition from :shopping to :success upon :accept_card' FAILED
+expected not == :success, got :success
+./machine_spec.rb:47:
+
+Finished in 0.006582 seconds
+
+6 examples, 1 failure</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<p>现在可以再次运行测试，其中一个测试如预期一样运行失败。修复代码同样只有一行，如清单 22 所示：
+<a name="listing22"></a><strong>清单 22. 修复 <code>trigger</code> 中的范围问题 </strong></p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>def trigger(event)
+    @state = events[event][:to] if state == events[event][:from]
+  end
+
+rspec batate$ spec machine_spec.rb
+......
+
+Finished in 0.006873 seconds
+
+6 examples, 0 failures</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<div> </div>
+
+
+<p><a name="N10291"></a>组合代码</p>
+
+<p>现在，我具有一个可简单运行的状态机。无论从哪方面来说，它都不是一个完美的程序。它还具有下面这些问题：</p>
+
+<ul>
+    <li>状态散列实际上不具备任何功能。我应该根据状态对事件及其转换进行验证，或者将所有状态集中起来。后续需求很可能会要求这样做。</li>
+    <li>某个既定事件只能存在于一个状态中。这种限制并不合理。例如，<code>submit</code> 和 <code>cancel</code> 事件可能需要处于多个状态。</li>
+    <li>代码并不具备明显的面向对象特征。为使配置保持简单，我将大量数据置入散列中。后续的迭代会进一步驱动设计，使其朝面向对象设计方向发展。</li>
+</ul>
+
+
+<p>但是，您还可以看到，这个状态机已经能够满足一些需求了。我还具备一个描述系统行为的文档，这是进行一系列测试的好起点。每个测试用例都支持系统的一个基本需求。事实上，通过运行 <code>spec machine_spec.rb &mdash;format specdoc</code>，您可以查看由系统规范组成的基本报告，如清单 23 所示：
+<a name="listing23"></a><strong>清单 23. 查看规范</strong></p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<pre>spec machine_spec.rb --format specdoc
+
+Machine
+- should initially have a state of the first state
+- should remember a list of valid states
+- should remember a list of events with transitions
+- should transition to :checking_out upon #trigger(:checkout) event
+- should transition to :success upon #trigger(:accept_card)
+- should not transition from :shopping to :success upon :accept_card
+
+Finished in 0.006868 seconds</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<p>测试驱动方法并不适合所有人，但是越来越多的人开始使用这种技术，使用它构建具有灵活性和适应性的高质量代码，并且根据测试从头构建代码。当然，您也可以通过其他框架（如 test_unit）获得相同的优点。RSpec 还提供了优秀的实现方法。这种新测试框架的一大亮点就是代码的表示。新手尤其可以从这种行为驱动的测试方法中受益。请尝试使用该框架并告诉我您的感受。</p>
+
+<p>参考资料</p>
+
+<p><strong>学习</strong></p>
+
+<ul>
+    <li>您可以参阅本文在 developerWorks 全球站点上的 <a href="http://www.ibm.com/developerworks/web/library/wa-rspec/index.html?S_CMP=cn-a-wa&amp;S_TACT=105AGX52" target="_blank">英文原文</a> 。</li>
+    <li><a href="http://rspec.rubyforge.org/">RSpec</a> 是一种行为驱动框架，可增强 Ruby 中的测试驱动开发。</li>
+    <li>Martin Fowler 有关 <a href="http://www.artima.com/intv/testdriven.html">Test Driven Development</a> 的访谈将进一步使您了解这种技术如此强大和高效的原因。</li>
+    <li><a href="http://www.ruby-lang.org/en/">Ruby 主页</a> 提供了优秀的 Ruby 编程语言入门资料。</li>
+    <li><a href="http://www.pragmaticprogrammer.com/title/fr_j2r/"><em>From Java to Ruby</em> </a>一书也由本文作者编写。Bruce Tate 提供了一份管理人员指南，解释了为什么 Ruby 语言对于某些业务问题来说非常重要。</li>
+    <li><a href="http://www.ibm.com/developerworks/cn/web/wa-finitemach1/">有限状态机</a> 是一种软件概念，它将问题分为有限的状态，以及由事件触发的状态之间的转换。状态机构成了本文的基本内容。</li>
+    <li>查看所有 developerWorks 的 <a href="http://www.ibm.com/developerworks/cn/downloads/">重要试用下载</a>。 </li>
+    <li><a href="https://www.ibm.com/developerworks/cn/newsletter/">订阅</a> developerWorks Web 开发新闻。 </li>
+    <li>从 <a href="http://www.ibm.com/developerworks/cn/views/web/articles.jsp">Web 开发专区的技术库</a> 获得更多 howto 文章。 </li>
+</ul>
+
+
+<p><strong>讨论</strong></p>
+
+<ul>
+    <li>加入 <a href="http://www.ibm.com/developerworks/community?S_CMP=cn-a-wa&amp;S_TACT=105AGX52">developerWorks 社区</a>：<a href="http://www.ibm.com/developerworks/blogs/?S_CMP=cn-a-wa&amp;S_TACT=105AGX52">blogs</a>、<a href="http://www.ibm.com/developerworks/forums?S_CMP=cn-a-wa&amp;S_TACT=105AGX52">论坛</a> 等。</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/10/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/8/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/">通过mongodump和mongorestore实现Mongodb备份和恢复 &#8211;by Chenzhou123520</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes/">Ruby on Rails 4.0 Release Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/rails-active-record-named-scopes/">Rails Active Record Named Scopes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/">晒晒我们的开源项目 ITEYE开源代码</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/">Single Sign-on 单点登录 Sso</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/jhjguxin">@jhjguxin</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'jhjguxin',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Francis Jiang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

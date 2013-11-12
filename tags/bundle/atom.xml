@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: bundle | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/tags/bundle/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[bundle install and rbx-require-relative]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/01/31/bundle-install-and-rbx-require-relative/"/>
+    <updated>2012-01-31T12:02:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/01/31/bundle-install-and-rbx-require-relative</id>
+    <content type="html"><![CDATA[<h2>bundle install and rbx-require-relative</h2>
+
+<h1>To use debugger</h1>
+
+<h1>rbx-require-relative is a port of Ruby 1.9’s relative_relative for Rubinus and MRI 1.8</h1>
+
+<h1>If you&rsquo;re running ruby1.9 then you don&rsquo;t need it. Remove it from your Gemfile.</h1>
+
+<h1>Don&rsquo;t require ruby-debug in your Gemfile as it has rbx-require-relative as a dependency. Add gem &lsquo;ruby-debug19&rsquo; instead</h1>
+
+<p><code>if RUBY_VERSION =~ /^1.9/
+gem &lsquo;ruby-debug19&rsquo;
+else
+gem &lsquo;ruby-debug&rsquo;
+end</code></p>
+
+<p>标签： bundle rails ruby</p>
+]]></content>
+  </entry>
+  
+</feed>

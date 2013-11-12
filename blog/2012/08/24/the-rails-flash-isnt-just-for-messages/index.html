@@ -1,0 +1,481 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>The Rails flash isn't just for messages - Francis's Octopress Blog</title>
+  <meta name="author" content="Francis Jiang">
+
+  
+  <meta name="description" content="The Rails flash isn&rsquo;t just for messages The Rails flash is typically used for short messages: app/controllers/sessions_controller.rb &lt;code& &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jhjguxin.github.io/blog/2012/08/24/the-rails-flash-isnt-just-for-messages">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Francis's Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-25901353-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Francis's Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jhjguxin.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/readme">Readme</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">The Rails Flash Isn't Just for Messages</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-24T00:04:00+08:00" pubdate data-updated="true">Aug 24<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>The Rails flash isn&rsquo;t just for messages</h2>
+
+<p><a href="http://guides.rubyonrails.org/action_controller_overview.html#the-flash">The Rails flash</a> is typically used for short messages:</p>
+
+<p>app/controllers/sessions_controller.rb</p>
+
+<pre>&lt;code&gt;redirect_to root_url, notice: &quot;You have been logged out.&quot;&lt;/code&gt;</pre>
+
+
+<p>But it can be used for more than that, any time that you redirect and want to pass along some state without making it part of the URL.</p>
+
+<p>These are some things I’ve used it for.</p>
+
+<h2>Identifiers for more complex messages</h2>
+
+
+<p>Maybe you want to show a more complex message after signing up, containing things like links and bullet points.</p>
+
+<p>Rather than send all that in the flash, you can send some identifier that your views know how to handle.</p>
+
+<p>This could be the name of a partial:</p>
+
+<p>app/controllers/users_controller.rb</p>
+
+<pre>class UsersController &lt; ApplicationController
+  def create
+   @user = actually_create_user
+   flash[:partial] = &quot;welcome&quot;
+   redirect_to some_path
+ end
+end</pre>
+
+
+<p>&nbsp;
+app/views/layouts/application.html.haml
+</figcaption></p>
+
+<div>
+<pre>- if flash[:partial]
+ = render partial: &quot;shared/flashes/#{flash[:partial]}&quot;</pre>
+app/views/shared/flashes/_welcome.html.haml
+
+</div>
+
+
+
+
+<pre>%p Welcome!
+ %ul
+   %li= link_to(&quot;Do this!&quot;, this_path)
+   %li= link_to(&quot;Do that!&quot;, that_path)</pre>
+
+
+<p></figure></p>
+
+<p>&nbsp;</p>
+
+<p>Or just a flag:</p>
+
+<p>&nbsp;</p>
+
+<p>app/controllers/users_controller.rb</p>
+
+<div>
+<pre>&lt;code&gt;flash[:signed_up] = true redirect_to root_path&lt;/code&gt;</pre>
+</div>
+
+
+<p></figure> <figure> <figcaption>app/views/welcomes/show.html.haml</figcaption></p>
+
+<div>
+<pre>&lt;code&gt;- if flash[:signed_up] %p Welcome!&lt;/code&gt;</pre>
+</div>
+
+
+<p></figure></p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h2>Pass on the referer</h2>
+
+
+<p>Say you have some filter redirecting incoming requests. Maybe you’re detecting the locale and adding it to the URL, or verifying credentials.</p>
+
+<p>You can use the flash to make sure the redirected-to controller gets the original referer.</p>
+
+<p>&nbsp;</p>
+
+<figure> <figcaption>app/controllers/application_controller.rb</figcaption>
+<div>
+<pre>class ApplicationController &lt; ActionController::Base
+ before_filter :make_locale_explicit
+
+  private
+  def make_locale_explicit
+    if params[:locale].blank? &amp;&amp; request.get?
+      flash[:referer] = request.referer
+      redirect_to params.merge(locale: I18n.locale)
+    end
+  end
+end</pre>
+</div>
+</figure>
+
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>Now, any controller that cares about the referer could get it with:</p>
+
+<pre>&lt;code&gt;flash[:referer] || request.referer&lt;/code&gt;</pre>
+
+
+<h2>Google Analytics events</h2>
+
+
+<p>Say you want to track a <a href="https://developers.google.com/analytics/devguides/collection/gajs/eventTrackerGuide">Google Analytics event</a> event with JavaScript when a user has signed up. You could do something like this.</p>
+
+<p>Send event data from the controller:</p>
+
+<p>&nbsp;</p>
+
+<figure> <figcaption>app/controllers/users_controller.rb</figcaption>
+<div>
+<pre>class UsersController &lt; ApplicationController
+  def create
+    @user = actually_create_user
+    flash[:events] = [ [&quot;_trackEvent&quot;, &quot;users&quot;, &quot;signup&quot;] ]
+    redirect_to some_path
+  end
+end</pre>
+</div>
+</figure>
+
+
+<p>&nbsp;</p>
+
+<p>Then turn it into JavaScript in your view:</p>
+
+<p>&nbsp;</p>
+
+<figure> <figcaption>app/helpers/layout_helper.rb</figcaption>
+<div>
+<pre>def analytics_events
+  Array(flash[:events]).map do |event|
+    &quot;_gaq.push(#{raw event.to_json});&quot;
+  end.join(&quot;\n&quot;)
+end</pre>
+</div>
+</figure>
+
+
+<p> <figure> <figcaption>app/views/layouts/application.html.haml</figcaption></p>
+
+<div>
+<pre>:javascript
+  = analytics_events</pre>
+</div>
+
+
+<p></figure></p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h2>The flash vs. params</h2>
+
+
+<p>You may have considered that any of the above could have be done with query parameters instead. Including common flash messages:
+&nbsp;</p>
+
+<figure> <figcaption>app/controllers/sessions_controller.rb</figcaption>
+<div>
+<pre>redirect_to root_url(notice: &quot;You have been logged out.&quot;)</pre>
+<span style="font-size: small;"><span style="line-height: normal;">
+</span></span>
+
+</div>
+</figure>
+
+
+<p> <figure> <figcaption>app/views/layouts/application.html.haml</figcaption></p>
+
+<div>
+<pre>- if params[:notice]
+  %p= params[:notice]</pre>
+</div>
+
+
+<p></figure></p>
+
+<p>&nbsp;</p>
+
+<p>Using the flash means that the passed data doesn’t show in the URL, so it won’t happen twice if the link is shared, bookmarked or reloaded. Also the URL will be a little cleaner.</p>
+
+<p>Additionally, the user can’t manipulate the flash, as it’s stored in the session. This adds some protection. If the flash partial example above used <code>params</code>, a user could pass in <code>../../admin/some_partial</code> to see things they shouldn’t.</p>
+
+<h2>Fin</h2>
+
+
+<p>I’d love to hear about what unconventional uses you’ve put the flash to!</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Francis Jiang</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-24T00:04:00+08:00" pubdate data-updated="true">Aug 24<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>, <a class='category' href='/blog/categories/web/'>web</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://jhjguxin.github.io/blog/2012/08/24/the-rails-flash-isnt-just-for-messages/" data-via="jhjguxin" data-counturl="http://jhjguxin.github.io/blog/2012/08/24/the-rails-flash-isnt-just-for-messages/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/08/21/a-practical-guide-to-use-spine-dot-js-in-real-world-app/" title="Previous Post: A Practical Guide to Use Spine.JS in Real World App.">&laquo; A Practical Guide to Use Spine.JS in Real World App.</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/08/27/railsli-de-magic-column-names/" title="Next Post: Rails里的Magic Column Names">Rails里的Magic Column Names &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/">通过mongodump和mongorestore实现Mongodb备份和恢复 --by Chenzhou123520</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes/">Ruby on Rails 4.0 Release Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/rails-active-record-named-scopes/">Rails Active Record Named Scopes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/">晒晒我们的开源项目 ITEYE开源代码</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/">Single Sign-on 单点登录 Sso</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/jhjguxin">@jhjguxin</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'jhjguxin',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Francis Jiang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

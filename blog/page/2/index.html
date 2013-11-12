@@ -1,0 +1,3107 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Francis's Octopress Blog</title>
+  <meta name="author" content="Francis Jiang">
+
+  
+  <meta name="description" content="Ruby Performance Tricks &mdash;Posted by Sergey Potapov http://greyblake.com/blog/2012/09/02/ruby-perfomance-tricks/ I did some benchmarks to find &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jhjguxin.github.io/blog/page/2">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Francis's Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-25901353-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Francis's Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jhjguxin.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/readme">Readme</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/09/05/ruby-performance-tricks-posted-by-sergey-potapov/">Ruby Performance Tricks &#8211;Posted by Sergey Potapov</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-05T08:58:00+08:00" pubdate data-updated="true">Sep 5<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Ruby Performance Tricks &mdash;Posted by Sergey Potapov</h2>
+
+<p><a href="http://greyblake.com/blog/2012/09/02/ruby-perfomance-tricks/"><a href="http://greyblake.com/blog/2012/09/02/ruby-perfomance-tricks/">http://greyblake.com/blog/2012/09/02/ruby-perfomance-tricks/</a></a></p>
+
+<p>I did some benchmarks to find out which alternatives to write code work faster. I wanna share it with you. All benchmarks are made against ruby 1.9.3p194 MRI.</p>
+
+<h2>Do not use exceptions for a control flow</h2>
+
+
+<p>The next example is pretty stupid but it shows how exceptions slow against conditional statements.</p>
+
+<pre>require 'benchmark'
+
+class Obj
+  def with_condition
+    respond_to?(:mythical_method) ? self.mythical_method : nil
+  end
+
+  def with_rescue
+    self.mythical_method
+  rescue NoMethodError
+    nil
+  end
+end
+
+obj = Obj.new
+N = 10_000_000
+
+puts RUBY_DESCRIPTION
+
+Benchmark.bm(15, "rescue/condition") do |x|
+  rescue_report     = x.report("rescue:")    { N.times { obj.with_rescue  } }
+  condition_report  = x.report("condition:") { N.times { obj.with_if      } }
+  [rescue_report / condition_report]
+end</pre>
+
+
+<p>MRI 1.9.3:</p>
+
+<p><code>ruby 1.9.3p194 (2012-04-20 revision 35410) [x86_64-linux]
+user system total real
+rescue: 111.530000 2.650000 114.180000 (115.837103)
+condition: 2.620000 0.010000 2.630000 ( 2.633154)
+rescue/condition: 42.568702 265.000000 NaN ( 43.991767)
+</code></p>
+
+<p>MRI 1.8.7 (REE has similar result):</p>
+
+<pre>ruby 1.8.7 (2011-12-28 patchlevel 357) [x86_64-linux]
+                        user     system      total        real
+rescue:            80.510000   0.940000  81.450000 ( 81.529022)
+if:                 3.320000   0.000000   3.320000 (  3.330166)
+rescue/condition:  24.250000        inf       -nan ( 24.481970)</pre>
+
+
+<h2>String concatenation</h2>
+
+
+<p>Avoid using <code>+=</code> to concatenate strings in favor of <code>&lt;&lt;</code> method. The result is absolutely the same: add a string to the end of an existing one. What is the difference then?</p>
+
+<p>See the example:</p>
+
+<pre>str1 = "first"
+str2 = "second"
+str1.object_id       # =&gt; 16241320
+
+str1 += str2    # str1 = str1 + str2
+str1.object_id  # =&gt; 16241240, id is changed
+
+str1 &lt;&lt; str2 str1.object_id  # =&gt; 16241240, id is the same</pre>
+
+
+<p>When you use <code>+=</code> ruby creates a temporal object which is result of <code>str1 + str2</code>. Then it overrides <code>str1</code> variable with reference to the new built object. On other hand <code>&lt;&lt;</code> modifies existing one. As a result of using <code>+=</code> you have the next disadvantages:</p>
+
+<ul>
+    <li>More calculation to join strings.</li>
+    <li>Redundant string object in memory (previous value of <code>str1</code>), which approximates time when <a href="http://en.wikipedia.org/wiki/Garbage_collection_%28computer_science%29">GC</a> will trigger.</li>
+</ul>
+
+
+<p>How <code>+=</code> is slow? Basically it depends on length of strings you have operation with.</p>
+
+<pre>require 'benchmark'
+
+N = 1000
+BASIC_LENGTH = 10
+
+5.times do |factor|
+  length = BASIC_LENGTH * (10 ** factor)
+  puts "_" * 60 + "\nLENGTH: #{length}"
+
+  Benchmark.bm(10, '+= VS &lt;</pre>
+
+
+<p>Output:</p>
+
+<pre>____________________________________________________________
+LENGTH: 10
+                 user     system      total        real
++=           0.000000   0.000000   0.000000 (  0.004671)
+&lt;&lt;           0.000000   0.000000   0.000000 (  0.000176)
++= VS &lt;&lt;          NaN        NaN        NaN ( 26.508796)
+____________________________________________________________
+LENGTH: 100
+                 user     system      total        real
++=           0.020000   0.000000   0.020000 (  0.022995)
+&lt;&lt;           0.000000   0.000000   0.000000 (  0.000226)
++= VS &lt;&lt;          Inf        NaN        NaN (101.845829)
+____________________________________________________________
+LENGTH: 1000
+                 user     system      total        real
++=           0.270000   0.120000   0.390000 (  0.390888)
+&lt;&lt;           0.000000   0.000000   0.000000 (  0.001730)
++= VS &lt;&lt;          Inf        Inf        NaN (225.920077)
+____________________________________________________________
+LENGTH: 10000
+                 user     system      total        real
++=           3.660000   1.570000   5.230000 (  5.233861)
+&lt;&lt;           0.000000   0.010000   0.010000 (  0.015099)
++= VS &lt;&lt;          Inf 157.000000        NaN (346.629692)
+____________________________________________________________
+LENGTH: 100000
+                 user     system      total        real
++=          31.270000  16.990000  48.260000 ( 48.328511)
+&lt;&lt;           0.050000   0.050000   0.100000 (  0.105993)
++= VS &lt;&lt;   625.400000 339.800000        NaN (455.961373)</pre>
+
+
+<h2>Be careful with calculation within iterators</h2>
+
+
+<p>Assume you need to write a function to convert an array into a hash where keys and values are same as elements of the array:</p>
+
+<p>&nbsp;</p>
+
+<pre>func([1, 2, 3])  # =&gt; {1 =&gt; 1, 2 =&gt; 2, 3 =&gt; 3}</pre>
+
+
+<p>The next solution would satisfy the requirements:</p>
+
+<pre>def func(array)
+  array.inject({}) { |h, e| h.merge(e =&gt; e) }
+end</pre>
+
+
+<p>And would be extremely slow with big portions of data because it contains nested methods (<code>inject</code> and <code>merge</code>), so it’s <strong>O(n<sup>2</sup>) </strong>algorithm. But it’s obviously that it must be <strong>O(n) </strong>. Consider the next:</p>
+
+<p>&nbsp;</p>
+
+<pre>def func(array)
+  array.inject({}) { |h, e| h[e] = e; h }
+end</pre>
+
+
+<p>In this case we do only one iteration over an array without any hard calculation within the iterator.</p>
+
+<p>See the benchmark:</p>
+
+<pre>require 'benchmark'
+
+def n_func(array)
+  array.inject({}) { |h, e| h[e] = e; h }
+end
+
+def n2_func(array)
+  array.inject({}) { |h, e| h.merge(e =&gt; e) }
+end
+
+BASE_SIZE = 10
+
+4.times do |factor|
+  size   = BASE_SIZE * (10 ** factor)
+  params = (0..size).to_a
+  puts "_" * 60 + "\nSIZE: #{size}"
+  Benchmark.bm(10) do |x|
+    x.report("O(n)" ) { n_func(params)  }
+    x.report("O(n2)") { n2_func(params) }
+  end
+end</pre>
+
+
+<p>Output:</p>
+
+<pre>____________________________________________________________
+SIZE: 10
+                user     system      total        real
+O(n)        0.000000   0.000000   0.000000 (  0.000014)
+O(n2)       0.000000   0.000000   0.000000 (  0.000033)
+____________________________________________________________
+SIZE: 100
+                user     system      total        real
+O(n)        0.000000   0.000000   0.000000 (  0.000043)
+O(n2)       0.000000   0.000000   0.000000 (  0.001070)
+____________________________________________________________
+SIZE: 1000
+                user     system      total        real
+O(n)        0.000000   0.000000   0.000000 (  0.000347)
+O(n2)       0.130000   0.000000   0.130000 (  0.127638)
+____________________________________________________________
+SIZE: 10000
+                user     system      total        real
+O(n)        0.020000   0.000000   0.020000 (  0.019067)
+O(n2)      17.850000   0.080000  17.930000 ( 17.983827)</pre>
+
+
+<pre></pre>
+
+
+<p>It’s an obvious and trivial example. Just keep in mind to not do hard calculation within iterators if it’s possible.</p>
+
+<h2>Use bang! methods</h2>
+
+
+<p>In many cases bang methods do the same as there non-bang analogues but without duplication an object. The previous example with <code>merge!</code> would be much faster:</p>
+
+<pre>require 'benchmark'
+
+def merge!(array)
+  array.inject({}) { |h, e| h.merge!(e =&gt; e) }
+end
+
+def merge(array)
+  array.inject({}) { |h, e| h.merge(e =&gt; e) }
+end
+
+N = 10_000
+array = (0..N).to_a
+
+Benchmark.bm(10) do |x|
+  x.report("merge!") { merge!(array) }
+  x.report("merge")  { merge(array)  }
+end</pre>
+
+
+<p>Output:</p>
+
+<pre>                 user     system      total        real
+merge!       0.010000   0.000000   0.010000 (  0.011370)
+merge       17.710000   0.000000  17.710000 ( 17.840856)</pre>
+
+
+<pre></pre>
+
+
+<p>&nbsp;</p>
+
+<h2>Use instance variables</h2>
+
+
+<p>Accessing instance variable directly is about two times faster than accessing them with accessor methods:</p>
+
+<pre>require 'benchmark'
+
+class Metric
+  attr_accessor :var
+
+  def initialize(n)
+    @n   = n
+    @var = 22
+  end
+
+  def run
+    Benchmark.bm(10) do |x|
+      x.report("@var") { @n.times { @var } }
+      x.report("var" ) { @n.times { var  } }
+      x.report("@var =")     { @n.times {|i| @var = i     } }
+      x.report("self.var =") { @n.times {|i| self.var = i } }
+    end
+  end
+end
+
+metric = Metric.new(100_000_000)
+metric.run</pre>
+
+
+<p>Output:</p>
+
+<pre>                 user     system      total        real
+@var         6.980000   0.010000   6.990000 (  7.193725)
+var         13.040000   0.000000  13.040000 ( 13.131711)
+@var =       7.960000   0.000000   7.960000 (  8.242603)
+self.var =  14.910000   0.010000  14.920000 ( 15.960125)</pre>
+
+
+<p>Parallel assignment is slower</p>
+
+<pre>require 'benchmark'
+
+N = 10_000_000
+
+Benchmark.bm(15) do |x|
+  x.report('parallel') do
+    N.times do
+      a, b = 10, 20
+    end
+  end
+
+  x.report('consequentially') do |x|
+    N.times do
+      a = 10
+      b = 20
+    end
+  end
+end</pre>
+
+
+<p>Output:</p>
+
+<pre>                      user     system      total        real
+parallel          1.900000   0.000000   1.900000 (  1.928063)
+consequentially   0.880000   0.000000   0.880000 (  0.879675)</pre>
+
+
+<pre></pre>
+
+
+<p>&nbsp;</p>
+
+<h2>Dynamic method defention</h2>
+
+
+<p>What is the faster way to define method dynamically: <code>class_eval</code> with a code string or using <code>define_method</code>? Which way generated methods work faster?</p>
+
+<pre>require 'benchmark'
+
+class Metric
+  N = 1_000_000
+
+  def self.class_eval_with_string
+    N.times do |i|
+      class_eval(&lt;</pre>
+
+
+<p>Output:</p>
+
+<pre>                             user     system      total        real
+class_eval with string 219.840000   0.720000 220.560000 (221.933074)
+define_method           61.280000   0.240000  61.520000 ( 62.070911)
+string method            0.110000   0.000000   0.110000 (  0.111433)
+dynamic method           0.150000   0.000000   0.150000 (  0.156537)</pre>
+
+
+<p>So <code>class_eval</code> works slower but it’s preferred since methods generated with <code>class_eval</code>and a string of code work faster.</p>
+
+<h2>Links</h2>
+
+
+<ul>
+    <li><a href="http://www.simonecarletti.com/blog/2010/01/how-slow-are-ruby-exceptions/">How Slow Are Ruby Exceptions</a></li>
+    <li><a href="http://www.igvita.com/2008/07/08/6-optimization-tips-for-ruby-mri/">6 Optimization Tips for Ruby MRI</a> (NOTE: <code>Symbol#to_proc</code> was ported to Ruby and it’s not slow anymore)</li>
+    <li><a href="http://my.safaribooksonline.com/book/web-development/ruby/9780321540034">“Writing Efficient Ruby Code” by Dr. Stefan Kaes</a></li>
+    <li><a href="http://programmingzen.com/2007/02/10/top-10-ruby-on-rails-performance-tips/">Top 10 Ruby on Rails performance tips </a></li>
+    <li><a href="http://blog.monitis.com/index.php/2012/02/08/20-ruby-performance-tips/">20 Ruby Performance Tips</a></li>
+    <li><a href="http://rob-bell.net/2009/06/a-beginners-guide-to-big-o-notation/">A Beginner’s Guide to Big O Notation</a></li>
+</ul>
+
+
+<p>Danke.</p>
+
+<pre><footer>Posted by Sergey Potapov <time datetime="2012-09-02T23:34:00+03:00" pubdate="" data-updated="true">Sep 2nd, 2012</time>  <a href="http://greyblake.com/blog/categories/accessor/">accessor</a>, <a href="http://greyblake.com/blog/categories/concatenation/">concatenation</a>, <a href="http://greyblake.com/blog/categories/exception/">exception</a>, <a href="http://greyblake.com/blog/categories/performance/">performance</a>, <a href="http://greyblake.com/blog/categories/reader/">reader</a>,<a href="http://greyblake.com/blog/categories/ruby/">ruby</a>, <a href="http://greyblake.com/blog/categories/string/">string</a>, <a href="http://greyblake.com/blog/categories/variable/">variable</a>, <a href="http://greyblake.com/blog/categories/writer/">writer</a></footer></pre>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/09/03/37signals-earns-millions-each-year-its-ceos-model-his-cleaning-lady/">37signals Earns Millions Each Year. Its CEO’s Model? His Cleaning Lady</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-03T22:55:00+08:00" pubdate data-updated="true">Sep 3<span>rd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>37signals Earns Millions Each Year. Its CEO’s Model? His Cleaning Lady</h2>
+
+<p>&nbsp;</p>
+
+<p><header></p>
+
+<h3>Don’t build a fast company, Jason Fried tells Fast Company. Build a slow one.</h3>
+
+
+<p><figure><img title="" src="http://www.fastcompany.com/multisite_files/fastcompany/imagecache/640/poster/2012/08/3000852-poster-942-hs-37signals-earns-millions-each-year.jpg" alt="" width="640" height="299" /></figure></header>&nbsp;</p>
+
+<div>
+
+Jason Fried is a founder and CEO of <a href="http://37signals.com/" target="_blank">37signals</a>, a software company based in Chicago. Fried also treats 37signals as something of a laboratory for innovative workplace practices&#8211;such as a recent experiment in shortening the summer workweek to just four days. We caught up with Fried to learn how employees are like fossil fuels, how a business can be like a cancer, and how one of the entrepreneurs he admires most is his cleaning lady.
+
+<strong>FAST COMPANY: You have your employees only work four-day weeks in the summer.
+</strong>
+JASON FRIED: Sometimes people are not really used to working just four days and actually want to stay to get more work done.
+
+<strong>You’re saying you have people who actually want to stay the fifth day?
+</strong>
+When we first started this a few years ago, there was a small sense of guilt in a few corners. People were like, “I have stuff to get done, it’s Thursday, so I’m gonna work Friday and just get it done. But we actually preferred that they didn’t. There are very few things that can’t wait till Monday.
+
+<strong>How many employees would stay to work Fridays?
+</strong>
+I don’t know.
+
+<strong>Because you weren’t there!
+</strong>
+We don’t track things in that way. I don’t look at that. I don’t want to encourage that kind of work. I want to encourage quality work.
+
+<strong>As CEO, wouldn’t it simply be rational to let people work the fifth day for you if they wanted?
+</strong>
+If you’re a short-term thinker you’d think so, but we’re long-term thinkers. We’re about being in business for the long haul and keeping the team together over the long haul. I would never trade a short-term burst for a long-term decline in morale. That happens a lot in the tech business: They burn people out and get someone else. I like the people who work here too much. I don’t want them to burn out. Lots of startups burn people out with 60, 70, 80 hours of work per week. They know that both the people or the company will flame out or be bought or whatever, and they don’t care, they just burn their resources. It’s like drilling for as much oil as you possibly can. You can look at people the same way.
+
+<aside><q>SHE’S ON HER OWN, SHE CLEANS PEOPLE’S HOMES, SHE’S INCREDIBLY NICE. SHE BRINGS FLOWERS EVERY TIME SHE CLEANS, AND SHE’S JUST RESPECTFUL AND NICE AND AWESOME. WHY CAN’T MORE PEOPLE BE LIKE THAT?</q></aside><strong>Are we reaching “peak people”?
+</strong>
+It seems like in a lot of companies we are. There’s a shortage of talent out there, and if there’s a shortage of resources, you want to conserve those resources.
+
+<strong>So you think there’s a slash-and-burn mentality in the tech world?
+</strong>
+For sure. I think there’s a lot of lottery-playing going on right now. Companies staffing up, raising a bunch of money, hiring a bunch of people, and burning them out in the hopes that they’ll hit the lottery.
+
+<strong>You seem like too nice a guy to name names&#8211;but do you have certain companies in mind?
+</strong>
+I won’t name names. I used to name names. But I think all you have to do is read TechCrunch. Look at what the top stories are, and they’re all about raising money, how many employees they have, and these are metrics that don’t matter. What matters is: Are you profitable? Are you building something great? Are you taking care of your people? Are you treating your customers well? In the coverage of our industry as a whole, you’ll rarely see stories about treating customers well, about people building a sustainable business. TechCrunch to me is the great place to look to see the sickness in our industry right now.
+
+<strong>Our magazine is called <em>Fast Company</em>, but it sounds like you want to build a slow company.
+</strong>
+I’m a fan of growing slowly, carefully, methodically, of not getting big just for the sake of getting big. I think that rapid growth is typically of symptom of&#8230; there’s a sickness there. There’s a great quote by a guy named Ricardo Semler, author of the book <em><a href="http://www.barnesandnoble.com/w/maverick-success-story-behind-the-worlds-most-unusaul-work-place-ricardo-semler/1104291050?ean=9780446670555" target="_blank">Maverick</a></em>. He said that only two things grow for the sake of growth: businesses and tumors. We have 35 employees at 37signals. We could have hundreds of employees if we wanted to&#8211;our revenues and profits support that&#8211;but I think we’d be worse off.
+
+<strong>What industries do you look to for inspiration, if not the tech world?
+</strong>
+I take my inspiration from small mom-and-pop businesses that have been around for a long time. There are restaurants all over the place that I like to go to that have been around a long time, 30 years or more, and thinking about that, that’s an incredible run. I don’t know what percentage of tech companies have been around 30 years. The other interesting thing about restaurants is you could have a dozen Italian restaurants in the city and they can all be successful. It’s not like in the tech world, where everyone wants to beat each other up, and there’s one winner. Those are the businesses I find interesting&#8211;it could be a dry cleaner, a restaurant, a clothing store. Actually, my cleaning lady, for example, she’s great.
+
+<strong>Your business icon is your cleaning lady?
+</strong>
+She’s on her own, she cleans people’s homes, she’s incredibly nice. She brings flowers every time she cleans, and she’s just respectful and nice and awesome. Why can’t more people be like that? She’s been doing it some twenty-odd years, and that’s just an incredible success story. To me that’s far more interesting than a tech company that’s hiring a bunch of people, just got their fourth round of financing for 12 million dollars, and they’re still losing money. That’s what everyone talks about as being exciting, but I think that’s an absolutely disgusting scenario when it comes to business.
+
+</div>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/30/google-chrome-keyboard-and-mouse-shortcuts/">Google Chrome Keyboard and Mouse Shortcuts</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-30T11:10:00+08:00" pubdate data-updated="true">Aug 30<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Google Chrome Keyboard and mouse shortcuts</h2>
+
+<h3> Keyboard and mouse shortcuts</h3>
+
+
+<h2>Windows keyboard shortcuts</h2>
+
+
+<h3>Tab and window shortcuts</h3>
+
+
+<table cellspacing="0" cellpadding="3">
+<tbody>
+<tr>
+<td>Ctrl+N</td>
+<td>Opens a new window.</td>
+</tr>
+<tr>
+<td>Ctrl+T</td>
+<td>Opens a new tab.</td>
+</tr>
+<tr>
+<td>Ctrl+Shift+N</td>
+<td>Opens a new window in incognito mode.</td>
+</tr>
+<tr>
+<td>Press Ctrl+O, then select file.</td>
+<td>Opens a file from your computer in Google Chrome.</td>
+</tr>
+<tr>
+<td>Press Ctrl and click a link. Or click a link with your middle mouse button (or mousewheel).</td>
+<td>Opens the link in a new tab in the background .</td>
+</tr>
+<tr>
+<td>Press Ctrl+Shift and click a link. Or press Shift and click a link with your middle mouse button (or mousewheel).</td>
+<td>Opens the link in a new tab and switches to the newly opened tab.</td>
+</tr>
+<tr>
+<td>Press Shift and click a link.</td>
+<td>Opens the link in a new window.</td>
+</tr>
+<tr>
+<td>Ctrl+Shift+T</td>
+<td>Reopens the last tab you&#8217;ve closed. Google Chrome remembers the last 10 tabs you&#8217;ve closed.</td>
+</tr>
+<tr>
+<td>Drag a link to a tab.</td>
+<td>Opens the link in the tab.</td>
+</tr>
+<tr>
+<td>Drag a link to a blank area on the tab strip.</td>
+<td>Opens the link in a new tab.</td>
+</tr>
+<tr>
+<td>Drag a tab out of the tab strip.</td>
+<td>Opens the tab in a new window.</td>
+</tr>
+<tr>
+<td>Drag a tab out of the tab strip and into an existing window.</td>
+<td>Opens the tab in the existing window.</td>
+</tr>
+<tr>
+<td>Press Esc while dragging a tab.</td>
+<td>Returns the tab to its original position.</td>
+</tr>
+<tr>
+<td>Ctrl+1 through Ctrl+8</td>
+<td>Switches to the tab at the specified position number on the tab strip.</td>
+</tr>
+<tr>
+<td>Ctrl+9</td>
+<td>Switches to the last tab.</td>
+</tr>
+<tr>
+<td>Ctrl+Tab or Ctrl+PgDown</td>
+<td>Switches to the next tab.</td>
+</tr>
+<tr>
+<td>Ctrl+Shift+Tab or Ctrl+PgUp</td>
+<td>Switches to the previous tab.</td>
+</tr>
+<tr>
+<td>Alt+F4</td>
+<td>Closes the current window.</td>
+</tr>
+<tr>
+<td>Ctrl+W or Ctrl+F4</td>
+<td>Closes the current tab or pop-up.</td>
+</tr>
+<tr>
+<td>Click a tab with your middle mouse button (or mousewheel).</td>
+<td>Closes the tab you clicked.</td>
+</tr>
+<tr>
+<td>Right-click, or click and hold either the Back or Forward arrow in the browser toolbar.</td>
+<td>Displays your browsing history in the tab.</td>
+</tr>
+<tr>
+<td>Press Backspace, or Alt and the left arrow together.</td>
+<td>Goes to the previous page in your browsing history for the tab.</td>
+</tr>
+<tr>
+<td>Press Shift+Backspace, or Alt and the right arrow together.</td>
+<td>Goes to the next page in your browsing history for the tab.</td>
+</tr>
+<tr>
+<td>Press Ctrl and click either the Back arrow, Forward arrow, or Go button in the toolbar. Or click either button with your middle mouse button (or mousewheel).</td>
+<td>Opens the button destination in a new tab in the background.</td>
+</tr>
+<tr>
+<td>Double-click the blank area on the tab strip.</td>
+<td>Maximizes or minimizes the window.</td>
+</tr>
+<tr>
+<td>Alt+Home</td>
+<td>Opens your homepage in your current window.</td>
+</tr>
+</tbody>
+</table>
+
+
+<h3>Google Chrome feature shortcuts</h3>
+
+
+<table cellspacing="0" cellpadding="3">
+<tbody>
+<tr>
+<td width="50%">Alt+F or Alt+E</td>
+<td>Opens the wrench menu, which lets you customize and control settings in Google Chrome.</td>
+</tr>
+<tr>
+<td width="50%">Ctrl+Shift+B</td>
+<td>Toggles the bookmarks bar on and off.</td>
+</tr>
+<tr>
+<td>Ctrl+H</td>
+<td>Opens the History page.</td>
+</tr>
+<tr>
+<td>Ctrl+J</td>
+<td>Opens the Downloads page.</td>
+</tr>
+<tr>
+<td>Shift+Esc</td>
+<td>Opens the Task Manager.</td>
+</tr>
+<tr>
+<td>Shift+Alt+T</td>
+<td>Sets focus on the first tool in the browser toolbar. You can then use the following shortcuts to move around in the toolbar:
+<ul>
+    <li>Press Tab, Shift+Tab, Home, End, right arrow, and left arrow to move focus to different items in the toolbar.</li>
+    <li>Press Space or Enter to activate toolbar buttons, including page actions and browser actions.</li>
+    <li>Press Shift+F10 to bring up any associated context menu (e.g. browsing history for the Back button).</li>
+    <li>Press Esc to return focus from the toolbar back to the page.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td>F6 or Shift+F6</td>
+<td>Switches focus to the next keyboard-accessible pane. Panes include:
+<ul>
+    <li>Highlights the URL in the address bar</li>
+    <li>Bookmarks bar (if visible)</li>
+    <li>The main web content (including any infobars)</li>
+    <li>Downloads bar (if visible)</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td>Ctrl+Shift+J</td>
+<td>Opens Developer Tools.</td>
+</tr>
+<tr>
+<td>Ctrl+Shift+Delete</td>
+<td>Opens the Clear Browsing Data dialog.</td>
+</tr>
+<tr>
+<td>F1</td>
+<td>Opens the Help Center in a new tab (our favorite).</td>
+</tr>
+<tr>
+<td>Ctrl+Shift+M</td>
+<td>Switch between multiple users.</td>
+</tr>
+</tbody>
+</table>
+
+
+<h3>Address bar shortcuts</h3>
+
+
+<p>Use the following shortcuts in the address bar:</p>
+
+<table cellspacing="0" cellpadding="3">
+<tbody>
+<tr>
+<td width="50%">Type a search term, then press Enter.</td>
+<td>Performs a search using your default search engine.</td>
+</tr>
+<tr>
+<td>Type a search engine keyword, press Space, type a search term, and press Enter.</td>
+<td>Performs a search using the search engine associated with the keyword.</td>
+</tr>
+<tr>
+<td>Begin typing a search engine URL, press Tab when prompted, type a search term, and press Enter.</td>
+<td>Performs a search using the search engine associated with the URL.</td>
+</tr>
+<tr>
+<td>Ctrl+Enter</td>
+<td>Adds www. and .com to your input in the address bar and open the resulting URL.</td>
+</tr>
+<tr>
+<td>Type a URL, then press Alt+Enter.</td>
+<td>Opens the URL in a new tab.</td>
+</tr>
+<tr>
+<td>Ctrl+L or Alt+D</td>
+<td>Highlights the URL.</td>
+</tr>
+<tr>
+<td>Ctrl+K or Ctrl+E</td>
+<td>Places a &#8216;?&#8217; in the address bar. Type a search term after the question mark to perform a search using your default search engine.</td>
+</tr>
+<tr>
+<td>Press Ctrl and the left arrow together.</td>
+<td>Moves your cursor to the preceding key term in the address bar</td>
+</tr>
+<tr>
+<td>Press Ctrl and the right arrow together.</td>
+<td>Moves your cursor to the next key term in the address bar</td>
+</tr>
+<tr>
+<td>Ctrl+Backspace</td>
+<td>Deletes the key term that precedes your cursor in the address bar</td>
+</tr>
+<tr>
+<td>Select an entry in the address bar drop-down menu with your keyboard arrows, then press Shift+Delete.</td>
+<td>Deletes the entry from your browsing history, if possible.</td>
+</tr>
+<tr>
+<td>Click an entry in the address bar drop-down menu with your middle mouse button (or mousewheel).</td>
+<td>Opens the entry in a new tab in the background.</td>
+</tr>
+<tr>
+<td>Press Page Up or Page Down when the address bar drop-down menu is visible.</td>
+<td>Selects the first or last entry in the drop-down menu.</td>
+</tr>
+</tbody>
+</table>
+
+
+<p><a name="webpage"></a></p>
+
+<h3>Webpage shortcuts</h3>
+
+
+<table cellspacing="0" cellpadding="3">
+<tbody>
+<tr>
+<td width="50%">Ctrl+P</td>
+<td>Prints your current page.</td>
+</tr>
+<tr>
+<td>Ctrl+S</td>
+<td>Saves your current page.</td>
+</tr>
+<tr>
+<td>F5 or Ctrl+R</td>
+<td>Reloads your current page.</td>
+</tr>
+<tr>
+<td>Esc</td>
+<td>Stops the loading of your current page.</td>
+</tr>
+<tr>
+<td>Ctrl+F</td>
+<td>Opens the find bar.</td>
+</tr>
+<tr>
+<td>Ctrl+G or F3</td>
+<td>Finds the next match for your input in the find bar.</td>
+</tr>
+<tr>
+<td>Ctrl+Shift+G, Shift+F3, or Shift+Enter</td>
+<td>Finds the previous match for your input in the find bar.</td>
+</tr>
+<tr>
+<td>Click the middle mouse button (or mousewheel).</td>
+<td>Activates auto-scrolling. As you move your mouse, the page automatically scrolls according to the direction of the mouse.</td>
+</tr>
+<tr>
+<td>Ctrl+F5 or Shift+F5</td>
+<td>Reloads your current page, ignoring cached content.</td>
+</tr>
+<tr>
+<td>Press Alt and click a link.</td>
+<td>Downloads the target of the link.</td>
+</tr>
+<tr>
+<td>Ctrl+U</td>
+<td>Opens the source of your current page.</td>
+</tr>
+<tr>
+<td>Drag a link to bookmarks bar</td>
+<td>Saves the link as a bookmark.</td>
+</tr>
+<tr>
+<td>Ctrl+D</td>
+<td>Saves your current webpage as a bookmark.</td>
+</tr>
+<tr>
+<td width="50%">Ctrl+Shift+D</td>
+<td>Saves all open pages as bookmarks in a new folder.</td>
+</tr>
+<tr>
+<td>F11</td>
+<td>Opens your page in full-screen mode. Press F11 again to exit full-screen.</td>
+</tr>
+<tr>
+<td>Ctrl and +, or press Ctrl and scroll your mousewheel up.</td>
+<td>Enlarges everything on the page.</td>
+</tr>
+<tr>
+<td>Ctrl and -, or press Ctrl and scroll your mousewheel down.</td>
+<td>Makes everything on the page smaller.</td>
+</tr>
+<tr>
+<td>Ctrl+0</td>
+<td>Returns everything on the page to normal size.</td>
+</tr>
+<tr>
+<td>Space bar</td>
+<td>Scrolls down the web page.</td>
+</tr>
+<tr>
+<td>Home</td>
+<td>Goes to the top of the page.</td>
+</tr>
+<tr>
+<td>End</td>
+<td>Goes to the bottom of the page.</td>
+</tr>
+<tr>
+<td>Press Shift and scroll your mousewheel.</td>
+<td>Scrolls horizontally on the page.</td>
+</tr>
+</tbody>
+</table>
+
+
+<h3>Text shortcuts</h3>
+
+
+<table cellspacing="0" cellpadding="3">
+<tbody>
+<tr>
+<td width="50%">Ctrl+C</td>
+<td>Copies highlighted content to the clipboard.</td>
+</tr>
+<tr>
+<td>Ctrl+V or Shift+Insert</td>
+<td>Pastes content from the clipboard.</td>
+</tr>
+<tr>
+<td>Ctrl+Shift+V</td>
+<td>Paste content from the clipboard without formatting.</td>
+</tr>
+<tr>
+<td>Ctrl+X or Shift+Delete</td>
+<td>Deletes the highlighted content and copies it to the clipboard.</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/29/advanced-caching-part-1-caching-strategies/">Advanced Caching: Part 1 - Caching Strategies</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-29T23:15:00+08:00" pubdate data-updated="true">Aug 29<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Advanced Caching: Part 1 &ndash; Caching Strategies</h2>
+
+<p>First, let&rsquo;s start with a brief overview of the different types of caching. We&rsquo;ll start from 50,000ft and work our way down.</p>
+
+<p>HTTP Caching: Uses HTTP headers (Last-Modified, ETag, If-Modified-Since, If-None-Match, Cache-Control) to determine if the browser can use a locally stored version of the response or if it needs to request a fresh copy from the origin server. Rails makes it easy to use HTTP caching, however the cache is managed outside your application. You may have notice the config.cache_control and Rack::Cache, Rack::ETag, Rack::ConditionalGet middlewares. These are used for HTTP caching.</p>
+
+<p>Page Caching: PRAISE THE GODS if you actually can use page caching in your application. Page caching is the holy grail. Save the entire thing. Don&rsquo;t hit the stack &amp; give some prerendered stuff back. Great for worthless applications without authentication and other highly dynamic aspects. This essentially works like HTTP caching, but the response will always contain the entire page. With page caching the application is skipping the work.</p>
+
+<p>Action Caching: Essentially the same as page caching, except all the before filters are run allowing you to check authentication and other stuff that may have prevented the request form rendering.</p>
+
+<p>Fragment Caching: Store parts of views in the cache. Usually for caching partials or large bits of HTML that are independent from other parts. IE, a list of top stories or something like that.</p>
+
+<p>Rails.cache: All cached content except cached pages are stored in the Rails.cache. We&rsquo;ll use this fact that later. You can cache arbitrary content in the Rails cache. You may cache a large complicated query that you don&rsquo;t want to wait to reinstantiate a ton of ActiveRecord::Base objects.</p>
+
+<p>Under the Hood
+All the caching layers are built on top of the next one. Page caching and HTTP caching are different because they do not use Rails.cache The cache is essentially a key-value store. Different things can be persisted. Strings are most common (for HTML fragments). More complicated objects can be persisted as well. Let&rsquo;s go through some examples of manually using the cache to store things. I am using memcached with dalli for all these examples. Dalli is the default memcached driver.</p>
+
+<h1>Rails.cache.write takes two values: key and a value</h1>
+
+<blockquote><p>Rails.cache.write &lsquo;foo&rsquo;, &lsquo;bar&rsquo;
+=> true</p></blockquote>
+
+<h1>We can read an object back</h1>
+
+<blockquote><p>Rails.cache.read &lsquo;foo&rsquo;
+=> &ldquo;bar&rdquo;</p></blockquote>
+
+<h1>We can store a complicated object as well</h1>
+
+<blockquote><p>hash = { :this => { :is => &lsquo;a hash&rsquo; }}
+Rails.cache.write &lsquo;complicated-object&rsquo;, object
+Rails.cache.read &lsquo;complicated-object&rsquo;
+=> {:this=>{:is=>&ldquo;a hash&rdquo;}}</p></blockquote>
+
+<h1>If we want something that doesn&rsquo;t exist, we get nil</h1>
+
+<blockquote><p>Rails.cache.read &lsquo;we-havent-cached-this-yet&rsquo;
+=> nil</p></blockquote>
+
+<h1>&ldquo;Fetch&rdquo; is the most common pattern. You give it a key and a block</h1>
+
+<h1>to execute to store if the cache misses. The blocks&rsquo;s return value is</h1>
+
+<h1>then written to the cache. The block is not executed if there is a</h1>
+
+<h1>hit.</h1>
+
+<blockquote><p>Rails.cache.fetch &lsquo;huge-array&rsquo; do</p>
+
+<pre><code>huge_array = Array.new
+1000000.times { |i| huge_array &lt;&lt; i }
+huge_array # retrun value is stored in cache
+</code></pre>
+
+<p>  end
+=> [huge array] # took some time to generate
+Rails.cache.read &lsquo;huge-array&rsquo;
+=> [huge array] # but returned instantly</p></blockquote>
+
+<h1>You can also delete everything from the cache</h1>
+
+<blockquote><p>Rails.cache.clear
+=> [true]
+Those are the basics of interacting with the Rails cache. The rails cache is a wrapper around whatever functionality is provided by the underlying storage system. Now we are ready to move up a layer.</p></blockquote>
+
+<p>Understanding Fragment Caching
+Fragment caching is taking rendered HTML fragments and storing them in the cache. Rails provides a cache view helper for this. Its most basic form takes no arguments besides a block. Whatever is rendered during the block will be written back to the cache. The basic principle behind fragment caching is that it takes much less time fetch pre-rendered HTML from the cache, then it takes to generate a fresh copy. This is appallingly true. If you haven&rsquo;t noticed, view generation can be very costly. If you have cachable content and are not using fragment caching then you need to implement this right away! Let&rsquo;s say you have generated a basic scaffold for a post:</p>
+
+<p>$ rails g scaffold post title:string content:text author:string
+Let&rsquo;s start with the most common use case: caching information specific to one thing. IE: One post. Here is a show view:</p>
+
+<!-- nothing fancy going on here -->
+
+
+<p><p>
+  <b>Title:</b>
+  &lt;%= @post.title %>
+</p></p>
+
+<p><p>
+  <b>Content:</b>
+  &lt;%= @post.content %>
+</p>
+Let&rsquo;s say we wanted to cache fragment. Simply wrap it in cache and Rails will do it.</p>
+
+<p>&lt;%= cache &ldquo;post-#{@post.id}&rdquo; do %>
+  <p></p>
+
+<pre><code>&lt;b&gt;Title:&lt;/b&gt;
+&lt;%= @post.title %&gt;
+</code></pre>
+
+<p>  </p></p>
+
+<p>  <p></p>
+
+<pre><code>&lt;b&gt;Content:&lt;/b&gt;
+&lt;%= @post.content %&gt;
+</code></pre>
+
+<p>  </p>
+&lt;% end %>
+The first argument is the key for this fragment. The rendered HTML is stored with this key: views/posts-1. Wait what? Where did that &lsquo;views&rsquo; come from? The cache view helper automatically prepends &lsquo;views&rsquo; to all keys. This is important later. When you first load the page you&rsquo;ll see this in the log:</p>
+
+<p>Exist fragment? views/post-2 (1.6ms)
+Write fragment views/post-2 (0.9ms)
+You can see the key and the operations. Rails is checking to see if the specific key exists. It will fetch or write it. In this case, it has not been stored so it is written. When you reload the page, you&rsquo;ll see a cache hit:</p>
+
+<p>Exist fragment? views/post-2 (0.6ms)
+Read fragment views/post-2 (0.0ms)
+There we go. We got HTML from the cache instead of rendering it. Look at the response times for the two requests:</p>
+
+<p>Completed 200 OK in 17ms (Views: 11.6ms | ActiveRecord: 0.1ms)
+Completed 200 OK in 16ms (Views: 9.7ms | ActiveRecord: 0.1ms)
+Very small differences in this case. 2ms different in view generation. This is a very simple example, but it can make a world of difference in more complicated situations.</p>
+
+<p>You are probably asking the question: &ldquo;What happens when the post changes?&rdquo; This is an excellent question! What well if the post changes, the cached content will not be correct. It is up to us to remove stuff from the cache or figure out a way to get new content from the cache. Let&rsquo;s assume that our blog posts now have comments. What happens when a comment is created? How can handle this?</p>
+
+<p>This is a very simple problem. What if we could figure out a solution to this problem: How can we create a cache miss when the associated object changes? We&rsquo;ve already demonstrated how we can explicitly set a cache key. What if we made a key that&rsquo;s dependent on the time the object was last updated? We can create a key composed of the record&rsquo;s ID and its updated_at timestamp! This way the cache key will change as the content changes and we will not have to expire things manually. (We&rsquo;ll come back to sweepers later). Let&rsquo;s change our cache key to this:</p>
+
+<p>&lt;% cache &ldquo;post-#{@post.id}&rdquo;, @post.updated_at.to_i do %>
+Now we can see we have a new cache key that&rsquo;s dependent on the object&rsquo;s timestamp. Check out the rails log:</p>
+
+<p>Exist fragment? views/post-2/1304291241 (0.5ms)
+Write fragment views/post-2/1304291241 (0.4ms)
+Cool! Now let&rsquo;s make it so creating a comment updates the post&rsquo;s timestamp:</p>
+
+<p>class Comment &lt; ActiveRecord::Base
+  belongs_to :post, :touch => true
+end
+Now all comments will touch the post and change the updated_at timestamp. You can see this in action by touch&#8217;ing a post.</p>
+
+<p>Post.find(1).touch</p>
+
+<p>Exist fragment? views/post-2/1304292445 (0.4ms)
+Write fragment views/post-2/1304292445 (0.4ms)
+This concept is known as: auto expiring cache keys. You create a composite key with the normal key and a time stamp. This will create some memory build up as objects are updated and no longer fresh. Here&rsquo;s an example. You have that fragment. It is cached. Then someone updates the post. You now have two versions of the fragment cached. If there are 10 updates, then there are 10 different versions. Luckily for you, this is not a problem for memcached! Memcached uses a LRU replacement policy. LRU stands for Least Recently Used. That means the key that hasn&rsquo;t been requested in the longest time will be replaced by newer content when needed. For example, assume your cache can only hold 10 posts. The next update will create a new key and hence new content. Version 0 will be deleted and version 11 will be stored in the cache. The total amount of memory is cycled between things that are requested. There are two things to consider in this approach. 1: You will not be able to ensure that content is kept in the cache as long as possible. 2. You will never have to worry about expiring things manually as long as timestamps are updated in the model layer. I&rsquo;ve found it is orders of magnitude easier to add a few :touch => true&rsquo;s to my relationships than it is to maintain sweepers. More on sweepers later. We must continue exploring cache keys.</p>
+
+<p>Rails uses auto-expiring cache keys by default. The problem is they are not mentioned at all the documentation or in the guides. There is one very handy method: ActiveRecord::Base.cache_key. This will generate a key like this: posts/2-20110501232725. This is the exact same thing we did ourselves. This method is very important because depending on what type of arguments you pass into the cache method, a different key is generated. For the time being, this code is functionally equal to our previous examples.</p>
+
+<p>&lt;%= cache @post do %>
+The cache helper takes different forms for arguments. Here are some examples:</p>
+
+<p>cache &lsquo;explicit-key&rsquo;      # views/explicit-key
+cache @post               # views/posts/2-1283479827349
+cache [@post, &lsquo;sidebar&rsquo;]  # views/posts/2-2348719328478/sidebar
+cache [@post, @comment]   # views/posts/2-2384193284878/comments/1-2384971487
+cache :hash => :of_things # views/localhost:3000/posts/2?hash_of_things
+If an Array is the first arguments, Rails will use cache key expansion to generate a string key. This means calling doing logic on each object then joining each result together with a &lsquo;/&rsquo;. Essentially, if the object responds to cache_key, it will use that. Else it will do various things. Here&rsquo;s the source for expand_cache_key:</p>
+
+<p>def self.expand_cache_key(key, namespace = nil)
+  expanded_cache_key = namespace ? &ldquo;#{namespace}/&rdquo; : &ldquo;&rdquo;</p>
+
+<p>  prefix = ENV[&ldquo;RAILS_CACHE_ID&rdquo;] || ENV[&ldquo;RAILS_APP_VERSION&rdquo;]
+  if prefix</p>
+
+<pre><code>expanded_cache_key &lt;&lt; "#{prefix}/"
+</code></pre>
+
+<p>  end</p>
+
+<p>  expanded_cache_key &lt;&lt;</p>
+
+<pre><code>if key.respond_to?(:cache_key)
+  key.cache_key
+elsif key.is_a?(Array)
+  if key.size &gt; 1
+    key.collect { |element| expand_cache_key(element) }.to_param
+  else
+    key.first.to_param
+  end
+elsif key
+  key.to_param
+end.to_s
+</code></pre>
+
+<p>  expanded_cache_key
+end
+This is where all the magic happens. Our simple fragment caching example could easily be converted into an idea like this: The post hasn&rsquo;t changed, so cache the entire result of /posts/1. You can do with this action caching or page caching.</p>
+
+<p>Moving on to Action Caching
+Action caching is an around filter for specific controller actions. It is different from page caching since before filters are run and may prevent access to certain pages. For example, you may only want to cache if the user is logged in. If the user is not logged in they should be redirected to the log in page. This is different than page caching. Page caching bypasses the rails stack completely. Most web applications of legitimate complexity cannot use page caching. Action caching is the next logical step for most web applications. Let&rsquo;s break the idea down: If the post hasn&rsquo;t changed, return the entire cached page as the HTTP response, else render the show view, cache it, and return that as the HTTP response. Or in code:</p>
+
+<h1>Note: you cannot run this code! This is just an example of what&rsquo;s</h1>
+
+<h1>happening under the covers using concepts we&rsquo;ve already covered.</h1>
+
+<p>Rails.cache.fetch &lsquo;views/localhost:3000/posts/1&rsquo; do
+  @post = Post.find params[:id]
+  render :show
+end
+Declaring action caching is easy. Here&rsquo;s how you can cache the show action:</p>
+
+<p>class PostsController &lt; ApplicationController</p>
+
+<p>  caches_action :show</p>
+
+<p>  def show</p>
+
+<pre><code># do stuff
+</code></pre>
+
+<p>  end
+end
+Now refresh the page and look at what&rsquo;s been cached.</p>
+
+<p>Started GET &ldquo;/posts/2&rdquo; for 127.0.0.1 at 2011-05-01 16:54:43 -0700
+  Processing by PostsController#show as HTML
+  Parameters: {&ldquo;id&rdquo;=>&ldquo;2&rdquo;}
+Read fragment views/localhost:3000/posts/2 (0.5ms)
+Rendered posts/show.html.erb within layouts/application (6.1ms)
+Write fragment views/localhost:3000/posts/2 (0.5ms)
+Completed 200 OK in 16ms (Views: 8.6ms | ActiveRecord: 0.1ms)
+Now that the show action for post #2 is cached, refresh the page and see what happens.</p>
+
+<p>Started GET &ldquo;/posts/2&rdquo; for 127.0.0.1 at 2011-05-01 16:55:27 -0700
+  Processing by PostsController#show as HTML
+  Parameters: {&ldquo;id&rdquo;=>&ldquo;2&rdquo;}
+Read fragment views/localhost:3000/posts/2 (0.6ms)
+Completed 200 OK in 1ms
+Damn. 16ms vs 1ms. You can see the difference! You can also see Rails reading that cache key. The cache key is generated from the url with action caching. Action caching is a combination of a before and around filter. The around filter is used to capture the output and the before filter is used to check to see if it&rsquo;s been cached. It works like this:</p>
+
+<p>Execute before filter to check to see if cache key exists?
+Key exists? &ndash; Read from cache and return HTTP Response. This triggers a render and prevents any further code from being executed.
+No key? &ndash; Call all controller and view code. Cache output using Rails.cache and return HTTP response.
+Now you are probably asking the same question as before: &ldquo;What do we do when the post changes?&rdquo; We do the same thing as before: we create a composite key with a string and a time stamp. The question now is, how do we generate a special key using action caching?</p>
+
+<p>Action caching generates a key from the current url. You can pass extra options using the :cache_path option. Whatever is in this value is passed into url_for using the current parameters. Remember in the view cache key examples what happened when we passed in a hash? We get a much different key than before:</p>
+
+<p>views/localhost:3000/posts/2?hash_of_things
+Rails generated a URL based key instead of the standard views key. This is because you may different servers. This ensures that each server has it&rsquo;s own cache key. IE, server one does not collide with server two. We could generate our own url for this resource by doing something like this:</p>
+
+<p>url_for(@post, :tag => @post.updated_at.to_i)
+This will generate this url:</p>
+
+<p><a href="http://localhost:3000/posts/1?tag=234897123978">http://localhost:3000/posts/1?tag=234897123978</a>
+Notice the ?tag=23481329847. This is a hack that aims to stop browsers from using HTTP caching on specific urls. If the URL has changed (timestamp changes) then the browser knows it must request a fresh copy. Rails 2 used to do this for assets like CSS and JS. Things have changed with the asset pipeline.</p>
+
+<p>Here&rsquo;s an example of generating a proper auto expring key for use with action caching.</p>
+
+<p>caches_action :show, :cache_path => proc { |c|
+  # c is the instance of the controller. Since action caching
+  # is declared at the class level, we don&rsquo;t have access to instance
+  # variables. If cache_path is a proc, it will be evaluated in the
+  # the context of the current controller. This is the same idea
+  # as validations with the :if and :unless options
+  #
+  # Remember, what is returned from this block will be passed in as
+  # extra parameters to the url_for method.
+  post = Post.find c.params[:id]
+  { :tag => post.updated_at.to_i }
+end
+This calls url_for with the parameters already assigned by it through the router and whatever is returned by the block. Now if you refresh the page, you&rsquo;ll have this:</p>
+
+<p>Started GET &ldquo;/posts/2&rdquo; for 127.0.0.1 at 2011-05-01 17:11:22 -0700
+  Processing by PostsController#show as HTML
+  Parameters: {&ldquo;id&rdquo;=>&ldquo;2&rdquo;}
+Read fragment views/localhost:3000/posts/2?tag=1304292445 (0.5ms)
+Rendered posts/show.html.erb within layouts/application (1.7ms)
+Write fragment views/localhost:3000/posts/2?tag=1304292445 (0.5ms)
+Completed 200 OK in 16ms (Views: 4.4ms | ActiveRecord: 0.1ms)
+And volia! Now we have an expiring cache key for our post! Let&rsquo;s dig a little deeper. We know the key. Let&rsquo;s look into the cache and see what it actually is! You can see the key from the log. Look it up in the cache.</p>
+
+<blockquote><p>Rails.cache.read &lsquo;views/localhost:3000/posts/2?tag=1304292445&rsquo;
+=> &ldquo;&lt;!DOCTYPE html>\n<html>\n<head>&hellip;..&rdquo;
+It&rsquo;s just a straight HTML string. Easy to use and return as the body. This method works well for singular resources. How can we handle the index action? I&rsquo;ve created 10,000 posts. It takes a good amount of time to render that page on my computer. It takes over 10 seconds. The question is, how can we cache this? We could use the most recently updated post for the time stamp. That way, when one post is updated, it will move to the top and create a new cache key. Here is the code without any action caching:</p></blockquote>
+
+<p>Started GET &ldquo;/posts&rdquo; for 127.0.0.1 at 2011-05-01 17:18:11 -0700
+  Processing by PostsController#index as HTML
+  Post Load (54.1ms)  SELECT &ldquo;posts&rdquo;.* FROM &ldquo;posts&rdquo; ORDER BY updated_at DESC LIMIT 1
+Read fragment views/localhost:3000/posts?tag=1304292445 (1.5ms)
+Rendered posts/index.html.erb within layouts/application (9532.3ms)
+Write fragment views/localhost:3000/posts?tag=1304292445 (36.7ms)
+Completed 200 OK in 10088ms (Views: 9535.6ms | ActiveRecord: 276.2ms)
+Now with action caching:</p>
+
+<p>Started GET &ldquo;/posts&rdquo; for 127.0.0.1 at 2011-05-01 17:20:47 -0700
+  Processing by PostsController#index as HTML
+Read fragment views/localhost:3000/posts?tag=1304295632 (1.0ms)
+Completed 200 OK in 11ms
+Here&rsquo;s the code for action caching:</p>
+
+<p>caches_action :index, :cache_path => proc {|c|
+  { :tag => Post.maximum(&lsquo;updated_at&rsquo;) }
+}
+We&rsquo;ll come back to this situation later. This is a better way to do this. Points to the reader if they know the problem.</p>
+
+<p>These are simple examples designed to show you who can create auto expiring keys for different situations. At this point we have not had to expire any thing ourselves! The keys have done it all for us. However, there are some times when you want more precise control over how things exist in the cache. Enter Sweepers.</p>
+
+<p>Sweepers
+Sweepers are HTTP request dependent observers. They are loaded into controllers and observe models the same way standard observers do. However there is one very important different. They are only used during HTTP requests. This means if you have things being created outside the context of HTTP requests sweepers will do you no good. For example, say you have a background process running that syncs with an external system. Creating a new model will not make it to any sweeper. So, if you have anything cached. It is up to you to expire it. Everything I&rsquo;ve demonstrated so far can be done with sweepers.</p>
+
+<p>Each cache<em>* method has an opposite expire</em>* method. Here&rsquo;s the mapping:</p>
+
+<p>caches_page , expire_page
+caches_action , expire_action
+cache , expire_fragment
+Their arguments work the same with using cache key expansion to find a key to read or delete. Depending on the complexity of your application, it may be easy to use sweepers or it may be impossible. It&rsquo;s easy to use sweepers with these examples. We only need to tie into the save event. For example, when a update or delete happens we need to expire the cache for that specific post. When a create, update, or delete happens we need to expire the index action. Here&rsquo;s what the sweeper would look like:</p>
+
+<p>class PostSweeper &lt; ActionController::Caching::Sweeper
+  observe Post</p>
+
+<p>  def after_create(post)</p>
+
+<pre><code>expire_action :index
+expire_action :show, :id =&gt; post
+# this is the same as the previous line
+expire_action :controller =&gt; :posts, :action =&gt; :show, :id =&gt; @post.id
+</code></pre>
+
+<p>  end
+end</p>
+
+<h1>then in the controller, load the sweeper</h1>
+
+<p>class PostsController &lt; ApplicationController
+  cache_sweeper :post_sweeper
+end
+I will not go into much depth on sweepers because they are the only thing covered in the rails caching guide. The work, but I feel they are clumsy for complex applications. Let&rsquo;s say you have comments for posts. What do you do when a comment is created for a post? Well, you have to either create a comment sweeper or load the post sweeper into the comments controller. You can do either. However, depending on the complexity of your model layer, it may quickly become infeasible to do cache expiration with sweepers. For example, let say you have a Customer. A customer has 15 different types of associated things. Do you want to put the sweeper into 15 different controllers? You can, but you may forget to at some point.</p>
+
+<p>The real problem with sweepers is that they cannot be used once your application works outside of HTTP requests. They can also be clumsy. I personally feel it&rsquo;s much easier to create auto expiring cache keys and only uses sweepers when I want to tie into very specific events. I&rsquo;d also argue that any well designed system does not need sweepers (or at least in very minimally).</p>
+
+<p>Now you should have a good grasp on how the Rails caching methods work. We&rsquo;ve covered how fragment caching uses the current view to generate a cache key. We introduced the concept of auto expiring cache keys using ActiveRecord#cache_key to automatically expire cached content. We introduced action caching and how it uses url_for to generate a cache key. Then we covered how you can pass things into url_for to generate a time stamped key to expire actions automatically. Now that we understand these lower levels we can move up to page caching and HTTP caching.</p>
+
+<p>Page Caching
+Page caching bypasses the entire application by serving up a file in /public from disk. It is different from action or fragment caching for a two reasons: content is not stored in memory and content is stored directly on the disk. You use page caching the same way you use action caching. This means you can use sweepers and and all the other things associated with them. Here&rsquo;s how it works.</p>
+
+<p>Webserver accepts an incoming request: GET /posts
+File exists: /public/posts.html
+posts.html is returned
+Your application code is never called.
+Since pages are written like public assets they are served as such. You will expliclity have to expire them. Warning! Forgetting to expire pages will cause you greif because you application code will not be called. Here&rsquo;s an example of page caching:</p>
+
+<p>PostsController &lt; ApplicationController
+  caches_page :index</p>
+
+<p>  def index</p>
+
+<pre><code># do stuff
+</code></pre>
+
+<p>  end
+When the server receives a request to GET /posts it will write the response from the application to /public/posts.html. The .html part is the format for that request. For example you can use page caching with JSON. GET /posts.json would generate /public/posts.json.</p>
+
+<p>Page caching is basically poor man&rsquo;s HTTP caching without any real benefits. HTTP caching is more useful.</p>
+
+<p>I&rsquo;ve not covered page caching in much depth because it&rsquo;s very likely that if you&rsquo;re reading this page caching is not applicable to your application. The Rails guides cover page caching in decent fashion. Follow up there if you need more information.</p>
+
+<p>HTTP Caching
+HTTP caching is the most complex and powerful caching strategy you can use. With great power comes great responsiblity. HTTP caching works at the protocol level. You can configure HTTP caching so the browser doesn&rsquo;t even need to contact your server at all. There are many ways HTTP caching can be configured. I will not cover them all here. I will give you an overview on how the system works and cover some common use cases.</p>
+
+<p>How It Works
+HTTP caching works at the protocol level. It uses a combination of headers and response codes to indicate weather the user agent should make a request or use a locally stored copy instead. The invalidation or expiring is based on ETags and Last-Modified timestamps. ETag stands for &ldquo;entity tag&rdquo;. It&rsquo;s a unique fingerprint for this request. It&rsquo;s usually a checksum of the respnose body. Origin servers (computers sending the source content) can set either of these fields along with a Cache-Control header. The Cache-Control header tells the user agent what it can do with this response. It answers questions like: how long can I cache this for and am I allowed to cache it? When the user agent needs to make a request again it sends the ETag and/or the Last-Modified date to the origin server. The origin server decides based on the ETag and/or Last-Modified date if the user agent can use the cached copy or if it should use new content. If the server says use the cached content it will return status 304: Not Modified (aka fresh). If not it should return a 200 (cache is stale) and the new content which can be cached.</p>
+
+<p>Let&rsquo;s use curl to see how this works out:</p>
+
+<p>$ curl -I <a href="http://www.example.com">http://www.example.com</a>
+HTTP/1.1 200 OK
+Cache-Control: max-age=0, private, must-revalidate
+Content-length: 822
+Content-Type: text/html
+Date: Mon, 09 Jul 2012 22:46:29 GMT
+Last-Modified: Mon, 09 Jul 2012 21:22:11 GMT
+Status: 200 OK
+Vary: Accept-Encoding
+Connection: keep-alive
+The Cache-Control header is a tricky thing. There are many many ways it can be configured. Here&rsquo;s the two easiest ways to break it down: private means only the final user agent can store the response. Public means any server can cache this content. (You know requests may go through many proxies right?). You can specify an age or TTL. This is how long it can be cached for. Then there is another common situation: Don&rsquo;t check with the server or do check with the server. This particular Cache-Control header means: this is a private (think per user cache) and check with the server everytime before using it.</p>
+
+<p>We can trigger a cache hit by sending the apporiate headers with the next request. This response only has a Last-Modified date. We can send this date for the server to compare. Send this value in the If-Modified-Since header. If the content hasn&rsquo;t changed since that date the server should return a 304. Here&rsquo;s an example using curl:</p>
+
+<p>$ curl -I -H &ldquo;If-Modified-Since: Mon, 09 Jul 2012 21:22:11 GMT&rdquo; <a href="http://www.example.com">http://www.example.com</a>
+HTTP/1.1 304 Not Modified
+Cache-Control: max-age=0, private, must-revalidate
+Date: Mon, 09 Jul 2012 22:55:53 GMT
+Status: 304 Not Modified
+Connection: keep-alive
+This response has no body. It simply tells the user agent to use the locally stored version. We could change the date and get a different response.</p>
+
+<p>$ curl -I -H &ldquo;If-Modified-Since: Sun, 08 Jul 2012 21:22:11 GMT&rdquo; <a href="http://www.example.com">http://www.example.com</a>
+HTTP/1.1 200 OK
+Cache-Control: max-age=0, private, must-revalidate
+Content-length: 822
+Content-Type: text/html
+Date: Mon, 09 Jul 2012 22:57:19 GMT
+Last-Modified: Mon, 09 Jul 2012 21:22:11 GMT
+Status: 200 OK
+Vary: Accept-Encoding
+Connection: keep-alive
+Caches determine freshness based on the If-None-Match and/or If-Modified-Since date. Using our existing 304 response we can supply a random etag to trigger a cache miss:</p>
+
+<p>$ curl -I -H &lsquo;If-None-Match: &ldquo;foo&rdquo;&rsquo; -H &ldquo;If-Modified-Since: Mon, 09 Jul 2012 21:22:11 GMT&rdquo; <a href="http://www.example.com">http://www.example.com</a>
+HTTP/1.1 304 Not Modified
+Cache-Control: max-age=0, private, must-revalidate
+Date: Mon, 09 Jul 2012 22:55:53 GMT
+Status: 304 Not Modified
+Connection: keep-alive
+Etags are sent using the If-None-Match header. Now that we understand the basics we can move onto higher level discussion.</p>
+
+<p>Rack::Cache
+HTTP caching is implemented in the webserver itself or at the application level. It is implemented at the application level in Rails. Rack::Cache is a middleware that sits at the top of the stack and intercepts requests. It will pass requests down to your app and store their contents. Or will it call down to your app and see what ETag and/or timestamps it returns for validation purposes. Rack::Cache acts as a proxy cache. This means it must respect caching rules described in the Cache-Control headers coming out of your app. This means it cannot cache private content but it can cache public content. Cachable content is stored in memcached. Rails configures this automatically.</p>
+
+<p>I&rsquo;ll cover one use case to illustrate how code flows through middleware stack to the actual app code and back up. Let&rsquo;s use a private per user cache example. Here&rsquo;s the cache control header: max-age-0, private, must-revalidate. Pretend this is some JSON API.</p>
+
+<p>The client sends initial request to /api/tweets.json
+Rack::Cache sees the request and ignores it since there is no caching information along with it.
+Application code is called. It returns a 200 response with a date and the some Cache-Control header.
+The client makes another request to /api/tweets.json with an If-Modified-Since header matching the date from the previous request.
+Rack::Cache sees that his request has cache information associated with it. It checks to see how it should handle this request. According to the Cache-Control header it has expired and needs to be checked to see if it&rsquo;s ok to use. Rack::Cache calls the application code.
+Application returns a response with the same date.
+Rack::Cache recieves the response, compares the dates and determines that it&rsquo;s a hit. Rack::Cache sends a 304 back.
+The client uses response body from request in step 1.
+HTTP Caching in Rails
+Rails makes it easy to implement HTTP caching inside your controllers. Rails provides two methods: stale? and fresh_when. They both do the same thing but in opposite ways. I prefer to use stale? because it makes more sense to me. stale? reminds more of Rails.cache.fetch so I stick with that. stale? works like this: checks to see if the incoming request ETag and/or Last-Modified date matches. If they match it calls head :not_modified. If not it can call a black of code to render a response. Here is an example:</p>
+
+<p>def show
+  @post = Post.find params[:id]
+  stale? @post do</p>
+
+<pre><code>respond_with @post
+</code></pre>
+
+<p>  end
+end
+Using stale? with an ActiveRecord object will automatically set the ETag and Last-Modified headers. The Etag is set to a MD5 hash of the objects cache_key method. The Last-Modified date is set to the object&rsquo;s updated_at method. The Cache-Control header is set to max-age=0, private, must-revalidate by default. All these values can be changed by passing in options to stale? or fresh_when. The methods take three options: :etag, :last_modified, and :public. Here are some more examples:</p>
+
+<h1>allow proxy caches to store this result</h1>
+
+<p>stale? @post, :public => true do
+  respond_with @post
+end</p>
+
+<h1>Let&rsquo;s stay your posts are frozen and have no modifications</h1>
+
+<p>stale? @post, :etag => @post.posted_at do
+  respond_with @post
+end
+Now you should understand how HTTTP caching works. Here are the important bits of code inside Rails showing it all works.</p>
+
+<h1>File actionpack/lib/action_controller/metal/conditional_get.rb, line 39</h1>
+
+<p>def fresh_when(record_or_options, additional_options = {})
+  if record_or_options.is_a? Hash</p>
+
+<pre><code>options = record_or_options
+options.assert_valid_keys(:etag, :last_modified, :public)
+</code></pre>
+
+<p>  else</p>
+
+<pre><code>record  = record_or_options
+options = { :etag =&gt; record, :last_modified =&gt; record.try(:updated_at) }.merge(additional_options)
+</code></pre>
+
+<p>  end</p>
+
+<p>  response.etag          = options[:etag]          if options[:etag]
+  response.last_modified = options[:last_modified] if options[:last_modified]
+  response.cache_control[:public] = true if options[:public]</p>
+
+<p>  head :not_modified if request.fresh?(response)
+end
+Here is the code for fresh?. This code should help you if you are confused on how resquests are validated. I found this code much easier to understand than the official spec.</p>
+
+<p>def fresh?(response)
+  last_modified = if_modified_since
+  etag          = if_none_match</p>
+
+<p>  return false unless last_modified || etag</p>
+
+<p>  success = true
+  success &amp;&amp;= not_modified?(response.last_modified) if last_modified
+  success &amp;&amp;= etag_matches?(response.etag) if etag
+  success
+end</p>
+
+<p><h2>Index</h2>
+<ol></p>
+
+<pre><code>&lt;li&gt;&lt;a href="http://www.broadcastingadam.com/2012/07/advanced_caching_part_1-caching_strategies"&gt;Caching Strategies&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.broadcastingadam.com/2012/07/advanced_caching_part_2-using_strategies"&gt;Using Strategies Effectively&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.broadcastingadam.com/2012/07/advanced_caching_part_3-static_assets"&gt;Handling Static Assets&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.broadcastingadam.com/2012/07/advanced_caching_part_4-stepping_outside_the_http_request"&gt;Stepping Outside the HTTP Request&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.broadcastingadam.com/2012/07/advanced_caching_part_5-tag_based_caching"&gt;Tag Based Caching&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.broadcastingadam.com/2012/07/advanced_caching_part_6-fast_json_apis"&gt;Fast JSON APIs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.broadcastingadam.com/2012/07/advanced_caching_part_7-tips_and_tricks"&gt;Tips and Tricks&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.broadcastingadam.com/2012/07/advanced_caching_part_8-conclusion"&gt;Conclusion&lt;/a&gt;&lt;/li&gt;
+</code></pre>
+
+<p></ol>
+<h3>Contact Me</h3>
+Find a problem or have a question about this post? <a href="http://twitter.com/adman65/">@adman65</a> on Twitter or Adman65 on #freenode. Find me in (#rubyonrails or #sproutcore). You can find my code on <a href="http://github.com/twinturbo/">GitHub</a> or hit me up on <a href="https://plus.google.com/u/0/116377228668850173159">Google+</a>.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/27/rails-counter-cache/">Rails Counter Cache</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-27T00:44:00+08:00" pubdate data-updated="true">Aug 27<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Rails counter cache</h2>
+
+<p>这次就是讲用_count字段来缓存has_many的计数 </p>
+
+<p>看Project和Task的例子:</p>
+
+<div id="">
+<pre><h1>Projects</h1>
+
+<table>
+<% for project in @projects %>
+  <tr>
+    <td><%= link_to project.name, poject_path(project) %></td>
+    <td><small>(<%= pluralize project.tasks.size, 'task' %>)</small></td>
+  </tr>
+<% end %>
+</table>
+</pre>
+</div>
+
+
+<pre>上面的页面代码对所有的@projects显示tasks.size，看下log:</pre>
+
+
+<div id="">
+<pre>SQL (0.006385)  SELECT count(*) AS count_all FROM tasks WHERE (tasks.project_id = 326)
+SQL (0.000220)  SELECT count(*) AS count_all FROM tasks WHERE (tasks.project_id = 327)
+SQL (0.000383)  SELECT count(*) AS count_all FROM tasks WHERE (tasks.project_id = 328)
+SQL (0.000197)  SELECT count(*) AS count_all FROM tasks WHERE (tasks.project_id = 329)
+SQL (0.000215)  SELECT count(*) AS count_all FROM tasks WHERE (tasks.project_id = 330)</pre>
+</div>
+
+
+<pre>上面显示了对每个project都使用SQL来count tasks，我们采用eager loading看看能否改进性能:</pre>
+
+
+<div id="">
+<pre>class ProjectsController &lt; ApplicationController
+  def index
+    @projects = Project.find(:all, :include =&gt; :tasks)
+  end
+end</pre>
+</div>
+
+
+<pre>再来看看log:</pre>
+
+
+<div id="">
+<pre>Project Lood Incluing Associations (0.000954)  SELECT projects.'id' AS t0_r0, projects.'name' AS t0_r1, tasks.'id'
+AS t1_r0, tasks.'name' AS t1_r1, tasks.'project_id' AS t1_r2 FROM projects LEFT OUTER JOIN tasks ON tasks.project
+_id = projects.id</pre>
+</div>
+
+
+<pre>我们看到，使用eager loading确实只用一条SQL语句就完成工作，但是缺点是把tasks表所有的字段信息都取出来了，很多信息是 
+没有用的。 
+
+我们来看看更好的解决方案:</pre>
+
+
+<div id="">
+<pre>ruby script/generate migration add_tasks_count</pre>
+</div>
+
+
+<pre>我们新建一个migration，给projects表添加一个叫tasks_count的列:</pre>
+
+
+<div id="">
+<pre>class AddTasksCount &lt; ActiveRecord::Migration
+  def self.up
+    add_column :projects, :tasks_count, :integer, :default =&gt; 0
+
+    Project.reset_column_information
+    Project.find(:all).each do |p|
+      p.update_attribute :tasks_count, p.tasks.length
+    end
+  end
+
+  def self.down
+    remove_column :projects, :tasks_count
+  end
+end</pre>
+</div>
+
+
+<pre>我们还需要告诉Task类开启counter cache:</pre>
+
+
+<div id="">
+<div>
+<pre>class Task &lt; ActiveRecord::Base
+  belongs_to :projects, :counter_cache =&gt; true
+end</pre>
+</div>
+</div>
+
+
+<pre>好了，我们把ProjectsController的index方法改回lazy loading，刷新页面，再看看log:</pre>
+
+
+<div id="">
+<pre>Project Lood (0.000295)  SELECT * FROM projects</pre>
+</div>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/27/railsli-de-magic-column-names/">Rails里的Magic Column Names</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-27T00:37:00+08:00" pubdate data-updated="true">Aug 27<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Rails里的Magic Column Names</h2>
+
+<p>Active Record有一些富有“魔力”的列名:</p>
+
+<p><strong>created_at， created_on， updated_at， updated_on</strong>
+在create或者update一行时Rails对<em>at形式的列用timestamp自动更新，对</em>on形式的列用date自动更新</p>
+
+<p><strong>lock_version</strong>
+如果一个表有lock_version这个列，则Rails会跟踪一行的版本号并执行乐观锁</p>
+
+<p><strong>type</strong>
+单表继承时跟踪一行的type</p>
+
+<p><strong>id</strong>
+表的默认主键名</p>
+
+<p><strong>xxx_id</strong>
+对以复数形式的xxx命名的表的引用的默认外键名</p>
+
+<p><strong>xxx_count</strong>
+对子表xxx维护一个计数器cache</p>
+
+<p><strong>position</strong>
+acts_as_list时用来表示一个list中该行的position</p>
+
+<p><strong>parent_id</strong>
+acts_as_tree时用来表示该行的parent的id</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/24/the-rails-flash-isnt-just-for-messages/">The Rails Flash Isn&#8217;t Just for Messages</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-24T00:04:00+08:00" pubdate data-updated="true">Aug 24<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>The Rails flash isn&rsquo;t just for messages</h2>
+
+<p><a href="http://guides.rubyonrails.org/action_controller_overview.html#the-flash">The Rails flash</a> is typically used for short messages:</p>
+
+<p>app/controllers/sessions_controller.rb</p>
+
+<pre>&lt;code&gt;redirect_to root_url, notice: &quot;You have been logged out.&quot;&lt;/code&gt;</pre>
+
+
+<p>But it can be used for more than that, any time that you redirect and want to pass along some state without making it part of the URL.</p>
+
+<p>These are some things I’ve used it for.</p>
+
+<h2>Identifiers for more complex messages</h2>
+
+
+<p>Maybe you want to show a more complex message after signing up, containing things like links and bullet points.</p>
+
+<p>Rather than send all that in the flash, you can send some identifier that your views know how to handle.</p>
+
+<p>This could be the name of a partial:</p>
+
+<p>app/controllers/users_controller.rb</p>
+
+<pre>class UsersController &lt; ApplicationController
+  def create
+   @user = actually_create_user
+   flash[:partial] = &quot;welcome&quot;
+   redirect_to some_path
+ end
+end</pre>
+
+
+<p>&nbsp;
+app/views/layouts/application.html.haml
+</figcaption></p>
+
+<div>
+<pre>- if flash[:partial]
+ = render partial: &quot;shared/flashes/#{flash[:partial]}&quot;</pre>
+app/views/shared/flashes/_welcome.html.haml
+
+</div>
+
+
+
+
+<pre>%p Welcome!
+ %ul
+   %li= link_to(&quot;Do this!&quot;, this_path)
+   %li= link_to(&quot;Do that!&quot;, that_path)</pre>
+
+
+<p></figure></p>
+
+<p>&nbsp;</p>
+
+<p>Or just a flag:</p>
+
+<p>&nbsp;</p>
+
+<p>app/controllers/users_controller.rb</p>
+
+<div>
+<pre>&lt;code&gt;flash[:signed_up] = true redirect_to root_path&lt;/code&gt;</pre>
+</div>
+
+
+<p></figure> <figure> <figcaption>app/views/welcomes/show.html.haml</figcaption></p>
+
+<div>
+<pre>&lt;code&gt;- if flash[:signed_up] %p Welcome!&lt;/code&gt;</pre>
+</div>
+
+
+<p></figure></p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h2>Pass on the referer</h2>
+
+
+<p>Say you have some filter redirecting incoming requests. Maybe you’re detecting the locale and adding it to the URL, or verifying credentials.</p>
+
+<p>You can use the flash to make sure the redirected-to controller gets the original referer.</p>
+
+<p>&nbsp;</p>
+
+<figure> <figcaption>app/controllers/application_controller.rb</figcaption>
+<div>
+<pre>class ApplicationController &lt; ActionController::Base
+ before_filter :make_locale_explicit
+
+  private
+  def make_locale_explicit
+    if params[:locale].blank? &amp;&amp; request.get?
+      flash[:referer] = request.referer
+      redirect_to params.merge(locale: I18n.locale)
+    end
+  end
+end</pre>
+</div>
+</figure>
+
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>Now, any controller that cares about the referer could get it with:</p>
+
+<pre>&lt;code&gt;flash[:referer] || request.referer&lt;/code&gt;</pre>
+
+
+<h2>Google Analytics events</h2>
+
+
+<p>Say you want to track a <a href="https://developers.google.com/analytics/devguides/collection/gajs/eventTrackerGuide">Google Analytics event</a> event with JavaScript when a user has signed up. You could do something like this.</p>
+
+<p>Send event data from the controller:</p>
+
+<p>&nbsp;</p>
+
+<figure> <figcaption>app/controllers/users_controller.rb</figcaption>
+<div>
+<pre>class UsersController &lt; ApplicationController
+  def create
+    @user = actually_create_user
+    flash[:events] = [ [&quot;_trackEvent&quot;, &quot;users&quot;, &quot;signup&quot;] ]
+    redirect_to some_path
+  end
+end</pre>
+</div>
+</figure>
+
+
+<p>&nbsp;</p>
+
+<p>Then turn it into JavaScript in your view:</p>
+
+<p>&nbsp;</p>
+
+<figure> <figcaption>app/helpers/layout_helper.rb</figcaption>
+<div>
+<pre>def analytics_events
+  Array(flash[:events]).map do |event|
+    &quot;_gaq.push(#{raw event.to_json});&quot;
+  end.join(&quot;\n&quot;)
+end</pre>
+</div>
+</figure>
+
+
+<p> <figure> <figcaption>app/views/layouts/application.html.haml</figcaption></p>
+
+<div>
+<pre>:javascript
+  = analytics_events</pre>
+</div>
+
+
+<p></figure></p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h2>The flash vs. params</h2>
+
+
+<p>You may have considered that any of the above could have be done with query parameters instead. Including common flash messages:
+&nbsp;</p>
+
+<figure> <figcaption>app/controllers/sessions_controller.rb</figcaption>
+<div>
+<pre>redirect_to root_url(notice: &quot;You have been logged out.&quot;)</pre>
+<span style="font-size: small;"><span style="line-height: normal;">
+</span></span>
+
+</div>
+</figure>
+
+
+<p> <figure> <figcaption>app/views/layouts/application.html.haml</figcaption></p>
+
+<div>
+<pre>- if params[:notice]
+  %p= params[:notice]</pre>
+</div>
+
+
+<p></figure></p>
+
+<p>&nbsp;</p>
+
+<p>Using the flash means that the passed data doesn’t show in the URL, so it won’t happen twice if the link is shared, bookmarked or reloaded. Also the URL will be a little cleaner.</p>
+
+<p>Additionally, the user can’t manipulate the flash, as it’s stored in the session. This adds some protection. If the flash partial example above used <code>params</code>, a user could pass in <code>../../admin/some_partial</code> to see things they shouldn’t.</p>
+
+<h2>Fin</h2>
+
+
+<p>I’d love to hear about what unconventional uses you’ve put the flash to!</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/21/a-practical-guide-to-use-spine-dot-js-in-real-world-app/">A Practical Guide to Use Spine.JS in Real World App.</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-21T13:13:00+08:00" pubdate data-updated="true">Aug 21<span>st</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>A Practical Guide to Use Spine.JS in Real World App.</h2>
+
+<p>To give users the best possible fluid experience, we designed <a href="http://pragmatic.ly/">Pragmatic.ly</a> and complied with the <a title="Single Page Application" href="http://en.wikipedia.org/wiki/Single-page_application" target="_blank">single page application</a> standard. We believe that could make users focus on building product rather than spending time on project management itself. A wide range of technology solutions are available to make a single page application. Current trends suggest moving core application from server to client side and keeping server load at minimum for better performance by pure data APIs. <a href="http://pragmatic.ly/">Pragmatic.ly</a> took on the challange to cater to this need by developing server side in Rails, Spine.js at client side.</p>
+
+<p><strong>Why Spine.JS</strong></p>
+
+<p>There are many different JavaScript MVC frameworks such as <a title="Backbone.js" href="http://backbonejs.org/" target="_blank">Backbone.js</a>, <a title="Spine.js" href="http://spinejs.com/" target="_blank">Spine.js</a>, <a title="Knockout.js" href="http://knockoutjs.com/" target="_blank">Knockout.js</a>,<a title="Ember.js" href="http://emberjs.com/" target="_blank">Ember.js</a>, etc. There are too many choices and when I started Pragmatic.ly, I was struggling with the problem of which one I should pick up. Instead of wasting time on choosing I did a quick review by comparing the documents and then decided to choose Spine.js to start with. With months of development so far, I&rsquo;m glad that Spine.js works pretty well and below are the great benefits I have found in using Spine.js.</p>
+
+<ul>
+    <li><em>Simple and lightweight</em>. It&#8217;s easy to dive into the core and extend as you need to.</li>
+    <li><em>MVC pattern at its core</em>. It&#8217;s very similar to the Rails counterparts. So I&#8217;m very comfortable with it from the first day.</li>
+    <li><em>Rails integration</em>. It can&#8217;t be easier to use Rails as the backend data API in Spine.js app. And the <a title="Spine Rails Gem" href="https://github.com/maccman/spine-rails" target="_blank">spine-rails</a> gem is another great addition.</li>
+    <li><em><a title="Asynchronous User Interface" href="http://alexmaccaw.com/posts/async_ui" target="_blank">Asynchronous UI</a></em>. Ideally UIs never block and it will automatically update the data in backend. This brings the fast and very responsive user interface.</li>
+</ul>
+
+
+<p>If you want to get a brief review among different frameworks, check out this <a title="Top 10 JavaScript MVC Frameworks Reviewed" href="http://codebrief.com/2012/01/the-top-10-javascript-mvc-frameworks-reviewed/">article</a> written by Gordon L. Hemption.</p>
+
+<p><strong>How we use Spine.js in Pragmatic.ly</strong></p>
+
+<p>We use spine-rails to generate the Spine.app structure, very similar to Rails app structure.</p>
+
+<p>&nbsp;</p>
+
+<div id="gist-3370365">
+<div>
+<div>
+<div>
+<div id="LC1">├── app</div>
+<div id="LC2">│   ├── controllers</div>
+<div id="LC3">│   │   ├── center</div>
+<div id="LC4">│   │   │   ├── filter_controller.js.coffee</div>
+<div id="LC5">│   │   │   └── tickets_controller.js.coffee</div>
+<div id="LC6">│   │   ├── center_content_controller.coffee</div>
+<div id="LC7">│   │   ├── comments_controller.js.coffee</div>
+<div id="LC8">│   │   ├── header</div>
+<div id="LC9">│   │   │   └── project_nav_controller.js.coffee</div>
+<div id="LC10">│   │   ├── header_controller.coffee</div>
+<div id="LC11">│   │   ├── iterations_controller.coffee</div>
+<div id="LC12">│   │   ├── left_sidebar_controller.coffee</div>
+<div id="LC13">│   │   ├── projects_controller.coffee</div>
+<div id="LC14">│   │   ├── right_sidebar_controller.coffee</div>
+<div id="LC15">│   │   ├── sidebars</div>
+<div id="LC16">│   │   │   ├── left_iteration.js.coffee</div>
+<div id="LC17">│   │   │   ├── left_people.js.coffee</div>
+<div id="LC18">│   │   │   ├── right_activities.js.coffee</div>
+<div id="LC19">│   │   │   └── right_detail_section.js.coffee</div>
+<div id="LC20">│   │   ├── tickets_controller.coffee</div>
+<div id="LC21">│   │   └── users_controller.js.coffee</div>
+<div id="LC22">│   ├── index.js.coffee</div>
+<div id="LC23">│   ├── lib</div>
+<div id="LC24">│   │   ├── constants.js.coffee</div>
+<div id="LC25">│   │   ├── eco-helpers.js</div>
+<div id="LC26">│   │   └── view.js.coffee</div>
+<div id="LC27">│   ├── models</div>
+<div id="LC28">│   │   ├── comment.js.coffee</div>
+<div id="LC29">│   │   ├── iteration.js.coffee</div>
+<div id="LC30">│   │   ├── project.js.coffee</div>
+<div id="LC31">│   │   ├── ticket.js.coffee</div>
+<div id="LC32">│   │   └── user.js.coffee</div>
+<div id="LC33">│   └── views</div>
+<div id="LC34">│   ├── comments</div>
+<div id="LC35">│   │   ├── audit.jst.eco</div>
+<div id="LC36">│   │   ├── form.jst.eco</div>
+<div id="LC37">│   │   └── plain.jst.eco</div>
+<div id="LC38">│   ├── iterations</div>
+<div id="LC39">│   │   ├── section.jst.eco</div>
+<div id="LC40">│   │   └── show.jst.eco</div>
+<div id="LC41">│   ├── projects</div>
+<div id="LC42">│   │   ├── edit.jst.eco</div>
+<div id="LC43">│   │   ├── form.jst.eco</div>
+<div id="LC44">│   │   ├── new.jst.eco</div>
+<div id="LC45">│   │   └── switch.jst.eco</div>
+<div id="LC46">│   ├── tickets</div>
+<div id="LC47">│   │   ├── section.jst.eco</div>
+<div id="LC48">│   │   ├── show.jst.eco</div>
+<div id="LC49">│   │   └── toolbar.jst.eco</div>
+<div id="LC50">│   └── users</div>
+<div id="LC51">│   ├── people.jst.eco</div>
+<div id="LC52">│   └── show.jst.eco</div>
+<div id="LC53">├── application.js</div>
+<div id="LC54">├── bootstrap.js.coffee</div>
+<div id="LC55">└── dashboard.js.coffee</div>
+</div>
+</div>
+<div><a href="https://gist.github.com/raw/3370365/f5a2684f50f33afbe69eeff4cd6747f907e97141/Pragmatic.ly%20JS%20Structure">view raw</a><a href="https://gist.github.com/3370365#file_pragmatic.ly js structure">Pragmatic.ly JS Structure</a><a href="https://gist.github.com/3370365">This Gist</a> brought to you by <a href="http://github.com/">GitHub</a>.</div>
+</div>
+</div>
+
+
+<p>&nbsp;</p>
+
+<p>So basically it&rsquo;s controllers, models and views.</p>
+
+<p><strong>Controllers</strong></p>
+
+<p>There are two kinds of Controllers in Pragmatic.ly. In Spine, Controllers are considered the glue of an application, adding and responding to DOM events, rendering templates and ensuring that views and models are kept in sync. For example,</p>
+
+<p>&nbsp;</p>
+
+<div id="gist-3370386">
+<div>
+<div>
+<div>
+<div id="LC1">class App.LeftIterationController extends Spine.Controller</div>
+<div id="LC2">  el: &#8216;.sidebar #iterations&#8217;</div>
+<div id="LC4">  elements:</div>
+<div id="LC5">    &#8217;ul.list&#8217;: &#8216;list&#8217;</div>
+<div id="LC7">  constructor: -&gt;</div>
+<div id="LC8">    super</div>
+<div id="LC9">    App.Iteration.bind &#8216;create&#8217;, @addIteration</div>
+<div id="LC10">    App.Iteration.bind &#8216;refresh&#8217;, @refreshIterations</div>
+<div id="LC12">  release: -&gt;</div>
+<div id="LC13">    super</div>
+<div id="LC14">    App.Iteration.unbind &#8216;create&#8217;, @addIteration</div>
+<div id="LC15">    App.Iteration.unbind &#8216;refresh&#8217;, @refreshIterations</div>
+<div id="LC17">  addIteration: (iteration) =&gt;</div>
+<div id="LC18">    iteration.unbind()</div>
+<div id="LC19">    view = new App.IterationItem(item: iteration)</div>
+<div id="LC20">    @list.append(view.render().el)</div>
+<div id="LC22">  refreshIterations: (iterations) =&gt;</div>
+<div id="LC23">    @addIteration iteration for iteration in iterations</div>
+</div>
+</div>
+<div><a href="https://gist.github.com/raw/3370386/39fe0b331aa7d524f41132056a4ff6e1da432c74/left_iteration_controller.js.coffee">view raw</a><a href="https://gist.github.com/3370386#file_left_iteration_controller.js.coffee">left_iteration_controller.js.coffee</a><a href="https://gist.github.com/3370386">This Gist</a> brought to you by<a href="http://github.com/">GitHub</a>.</div>
+</div>
+</div>
+
+
+<p>&nbsp;</p>
+
+<p>We split the page into multiple blocks and each block is a Spine Controller. Talking the above example, LeftIterationsController is the Controller to manage the iterations list in the left sidebar.</p>
+
+<p>Then what&rsquo;s the other kind? The answer is <em>Routes</em>! We extract the routes to the dedicated controllers now. It will setup the routes and respond to the <em>navigation</em> event. Then it will prepare the data and trigger the event to let another controller handle it to render templates. For example,</p>
+
+<p>&nbsp;</p>
+
+<div id="gist-3370398">
+<div>
+<div>
+<div>
+<div id="LC1">class App.TicketsController extends Spine.Controller</div>
+<div id="LC2">  constructor: -&gt;</div>
+<div id="LC3">    super</div>
+<div id="LC4">    @routes</div>
+<div id="LC5">      &#8221;/tickets&#8221;: @index</div>
+<div id="LC6">      &#8221;/tickets/:id&#8221; : (params) -&gt;</div>
+<div id="LC7">        @show(params.id)</div>
+<div id="LC9">  index: -&gt;</div>
+<div id="LC10">    tickets = App.Ticket.all()</div>
+<div id="LC11">    App.Ticket.trigger &#8220;tickets:index&#8221;, tickets</div>
+<div id="LC13">  show: (id) -&gt;</div>
+<div id="LC14">    ticket = App.Ticket.find(id)</div>
+<div id="LC15">    $.publish &#8216;ticket:switch&#8217;, ticket</div>
+</div>
+</div>
+<div><a href="https://gist.github.com/raw/3370398/6d475eed1c1c593ca1338cdc2681be3b1ec9dd6d/ticket_routing_controller.js.coffee">view raw</a><a href="https://gist.github.com/3370398#file_ticket_routing_controller.js.coffee">ticket_routing_controller.js.coffee</a><a href="https://gist.github.com/3370398">This Gist</a> brought to you by<a href="http://github.com/">GitHub</a>.</div>
+</div>
+</div>
+
+
+<p>&nbsp;</p>
+
+<p><strong>Models</strong></p>
+
+<p>Models manage data for the application. It&rsquo;s very similar to Rails models. I just want to mention one thing though &ndash; as we moved the logic from server side to client side, there was no need to translate 1:1 on the client side. Instead, encapsulate the data into model which is suitable for the page based on the user.</p>
+
+<p>&nbsp;</p>
+
+<div id="gist-3370424">
+<div>
+<div>
+<div>
+<div id="LC1">class App.Project extends Spine.Model</div>
+<div id="LC2">  @configure &#8216;Project&#8217;, &#8216;id&#8217;, &#8216;name&#8217;, &#8216;description&#8217;, &#8216;owner_id&#8217;, &#8216;uid&#8217;</div>
+<div id="LC3">  @extend Spine.Model.Ajax</div>
+<div id="LC4">  @extend Spine.Model.Dirty</div>
+<div id="LC6">  validate: -&gt;</div>
+<div id="LC7">    &#8217;name required&#8217; unless @name</div>
+<div id="LC9">  inviteUser: (email) -&gt;</div>
+<div id="LC10">    App.Invitation.create(project_id: @id, email: email)</div>
+</div>
+</div>
+<div><a href="https://gist.github.com/raw/3370424/e79540cdbabd4cde1b1e2c142b3a26caba6e5da4/project.js.coffee">view raw</a><a href="https://gist.github.com/3370424#file_project.js.coffee">project.js.coffee</a><a href="https://gist.github.com/3370424">This Gist</a> brought to you by <a href="http://github.com/">GitHub</a>.</div>
+</div>
+</div>
+
+
+<p>&nbsp;</p>
+
+<p><strong>Views</strong></p>
+
+<p>Views are about building and maintaining the DOM elements. Views in Spine are very simple and don&rsquo;t have the built-in UI binding. So most of the time you should let Controller observe the Model and get notified when the model changes, then update the view accordingly.</p>
+
+<p>By doing all the view rendering client-side, you should use JavaScript templating solution to define templates for views as markup containing tempalte variables. There are a number of good candidates, such as <a title="Mustache" href="http://mustache.github.com/" target="_blank">Mustache</a>, <a title="jQuery Template" href="http://api.jquery.com/category/plugins/templates" target="_blank">jQuery.tmpl</a> and <a title="Eco" href="https://github.com/sstephenson/eco" target="_blank">Eco</a>.</p>
+
+<p>I use Eco in Pragmatic.ly. The Erb-like syntax and CoffeeScript support is a big triumph. However, you should know that every eco template generates the same helpers which will increase the file size. You can use this gist to avoid the problem which will register the global helpers and inject into the Eco templates.</p>
+
+<p>&nbsp;</p>
+
+<div id="gist-2360781">
+<div>
+<div>
+<div>
+<div id="LC1"># Put this file in lib/</div>
+<div id="LC3">require &#8216;sprockets/eco_template&#8217;</div>
+<div id="LC5">class CleanEcoTemplate &lt; Sprockets::EcoTemplate</div>
+<div id="LC6">  FROM = &#8221; (function() {&#8221;</div>
+<div id="LC7">  TO = &#8220;}).call(__obj);&#8221;</div>
+<div id="LC9">  def evaluate(scope, locals, &amp;block)</div>
+<div id="LC10">    content = Eco.compile(data)</div>
+<div id="LC11">    from = content.index(FROM)</div>
+<div id="LC12">    to = content.rindex(TO)</div>
+<div id="LC13">    content = content[from&#8230;to] + TO</div>
+<div id="LC14">    &lt;&lt;-JS</div>
+<div id="LC15">function(__obj) {</div>
+<div id="LC16">if (!__obj) __obj = {};</div>
+<div id="LC17">var __helpers = window.ecoHelpers;</div>
+<div id="LC18">var __out = [];</div>
+<div id="LC19">var __sanitize = __helpers.sanitize;</div>
+<div id="LC20">var __capture = __helpers.captureFor(__obj, __out);</div>
+<div id="LC21">var __rememberSafe = __obj.safe;</div>
+<div id="LC22">var __rememberEscape = __obj.escape;</div>
+<div id="LC23">__obj.safe = __helpers.safe;</div>
+<div id="LC24">__obj.escape = __helpers.escape;</div>
+<div id="LC25">#{content}</div>
+<div id="LC26">__obj.safe = __rememberSafe;</div>
+<div id="LC27">__obj.escape = __rememberEscape;</div>
+<div id="LC28">return __out.join(&#8221;);</div>
+<div id="LC29">};</div>
+<div id="LC30">JS</div>
+<div id="LC31">  end</div>
+<div id="LC32">end</div>
+</div>
+</div>
+<div><a href="https://gist.github.com/raw/2360781/8b3b00534fea091b4514589460e99deb2abfe618/clean_eco_template.rb">view raw</a><a href="https://gist.github.com/2360781#file_clean_eco_template.rb">clean_eco_template.rb</a><a href="https://gist.github.com/2360781">This Gist</a> brought to you by <a href="http://github.com/">GitHub</a>.</div>
+</div>
+<div>
+<div>
+<div>
+<div id="LC1"># Must include eco-helpers.js before eco files</div>
+<div id="LC3">(function(global) {</div>
+<div id="LC4">  var ecoHelpers = {</div>
+<div id="LC5">    sanitize: function(value) {</div>
+<div id="LC6">      if (value &amp;&amp; value.ecoSafe) {</div>
+<div id="LC7">        return value;</div>
+<div id="LC8">      } else if (typeof value !== &#8216;undefined&#8217; &amp;&amp; value != null) {</div>
+<div id="LC9">        return ecoHelpers.escape(value);</div>
+<div id="LC10">      } else {</div>
+<div id="LC11">        return &#8221;;</div>
+<div id="LC12">      }</div>
+<div id="LC13">    },</div>
+<div id="LC15">    safe: function(value) {</div>
+<div id="LC16">      if (value &amp;&amp; value.ecoSafe) {</div>
+<div id="LC17">        return value;</div>
+<div id="LC18">      } else {</div>
+<div id="LC19">        if (!(typeof value !== &#8216;undefined&#8217; &amp;&amp; value != null)) value = &#8221;;</div>
+<div id="LC20">        var result = new String(value);</div>
+<div id="LC21">        result.ecoSafe = true;</div>
+<div id="LC22">        return result;</div>
+<div id="LC23">      }</div>
+<div id="LC24">    },</div>
+<div id="LC26">    escape: function(value) {</div>
+<div id="LC27">      return (&#8221; + value)</div>
+<div id="LC28">        .replace(/&amp;/g, &#8216;&amp;amp;&#8217;)</div>
+<div id="LC29">        .replace(/&lt;/g, &#8216;&amp;lt;&#8217;)</div>
+<div id="LC30">        .replace(/&gt;/g, &#8216;&amp;gt;&#8217;)</div>
+<div id="LC31">        .replace(/&#8221;/g, &#8216;&amp;quot;&#8217;);</div>
+<div id="LC32">    },</div>
+<div id="LC34">    captureFor: function(obj, out) {</div>
+<div id="LC35">      return (function(callback) {</div>
+<div id="LC36">        var length = out.length;</div>
+<div id="LC37">        callback.call(obj);</div>
+<div id="LC38">        return ecoHelpers.safe(out.splice(length, out.length - length).join(&#8221;));</div>
+<div id="LC39">      });</div>
+<div id="LC40">    }</div>
+<div id="LC41">  };</div>
+<div id="LC43">  global.ecoHelpers = ecoHelpers;</div>
+<div id="LC44">})(window);</div>
+</div>
+</div>
+<div><a href="https://gist.github.com/raw/2360781/9aa691027d57ddd63ec7f6969481336789539248/eco-helpers.js">view raw</a><a href="https://gist.github.com/2360781#file_eco_helpers.js">eco-helpers.js</a><a href="https://gist.github.com/2360781">This Gist</a> brought to you by <a href="http://github.com/">GitHub</a>.</div>
+</div>
+<div>
+<div>
+<div>
+<div id="LC1"># Put this file in config/initializers</div>
+<div id="LC3">require &#8216;clean_eco_template&#8217;</div>
+<div id="LC5">Rails.application.assets.register_engine &#8216;.eco&#8217;, CleanEcoTemplate</div>
+</div>
+</div>
+<div><a href="https://gist.github.com/raw/2360781/7ccb944d8613edd073dddd34547bcdaa766eefa6/eco_template.rb">view raw</a><a href="https://gist.github.com/2360781#file_eco_template.rb">eco_template.rb</a><a href="https://gist.github.com/2360781">This Gist</a> brought to you by <a href="http://github.com/">GitHub</a>.</div>
+</div>
+</div>
+
+
+<p>&nbsp;</p>
+
+<p><strong>Problems</strong></p>
+
+<p>So that&rsquo;s how we use Spine.js to power Pragmatic.ly. It works very well but still have some limitations.</p>
+
+<ul>
+    <li>By default, you can only monitor the whole Model change event and update the view accordingly. For example, even the username is not changed, you still have to update the views containing that data. There is a &#8220;change:field&#8221; event in Backbone.js which allow you only to update the view when that field of data changed. I like that. So I made a plugin to support that. Check the Gist out.
+<div id="gist-2866558">
+<div>
+<div>
+<div>
+<div id="LC1">Spine ?= require(&#8216;spine&#8217;)</div>
+<div id="LC3">Include =</div>
+<div id="LC4">  savePrevious: -&gt;</div>
+<div id="LC5">    @constructor.records[@id].previousAttributes = @attributes()</div>
+<div id="LC7">Spine.Model.Dirty =</div>
+<div id="LC8">  extended: -&gt;</div>
+<div id="LC9">    @bind &#8216;refresh&#8217;, -&gt;</div>
+<div id="LC10">      @each (record) -&gt; record.savePrevious()</div>
+<div id="LC12">    @bind &#8216;save&#8217;, (record) -&gt;</div>
+<div id="LC13">      if record.previousAttributes?</div>
+<div id="LC14">        for key in record.constructor.attributes when key of record</div>
+<div id="LC15">          if record[key] isnt record.previousAttributes[key]</div>
+<div id="LC16">            record.trigger(&#8216;change:&#8217;+key, record[key])</div>
+<div id="LC17">      record.savePrevious()</div>
+<div id="LC19">    @include Include</div>
+</div>
+</div>
+<div><a href="https://gist.github.com/raw/2866558/515b724d2e7b4b648e5f10c9ef93782f3242c9cd/dirty.js.coffee">view raw</a><a href="https://gist.github.com/2866558#file_dirty.js.coffee">dirty.js.coffee</a><a href="https://gist.github.com/2866558">This Gist</a> brought to you by <a href="http://github.com/">GitHub</a>.</div>
+</div>
+<div>
+<div>
+<div>
+<div id="LC1">So the model object can bind the event &#8220;change:#{field} to trigger event when the field value is changed.</div>
+<div id="LC3">By default it&#8217;s off and if need this feature, the model should extend Spine.Model.Dirty.</div>
+<div id="LC5">A sample case.</div>
+<div id="LC7">class User extends Spine.Model</div>
+<div id="LC8">  @extend Spine.Model.Dirty</div>
+<div id="LC9">end</div>
+</div>
+</div>
+<div><a href="https://gist.github.com/raw/2866558/568e3e12fd1a160d5cedd5a476edd202622d110b/Usage:">view raw</a><a href="https://gist.github.com/2866558#file_usage:">Usage:</a><a href="https://gist.github.com/2866558">This Gist</a> brought to you by <a href="http://github.com/">GitHub</a>.</div>
+</div>
+</div></li>
+    <li>The Ajax plugin in Spine.js plays very nice with backend REST APIs, such as Rails. For example, creating the model will trigger a &#8220;CREATE /collections&#8221; event to the server and updating the model will trigger a &#8220;PUT /collections/id&#8221; event, seemlessly. However, nested resources in Rails is very common but Spine lacks to support that. Either you have to trigger requests to top-level URL or setup the request yourself. I have done a dirty hack to support scoping. It&#8217;s dirty but works.
+<div id="gist-3371899">
+<div>
+<div>
+<div>
+<div id="LC1">class App.Ticket extends Spine.Model</div>
+<div id="LC2">  @configure &#8216;Ticket&#8217;, &#8220;id&#8221;, &#8220;project_id&#8221;</div>
+<div id="LC4">  @scope: -&gt;</div>
+<div id="LC5">    &#8221;projects/#{current.project_id}&#8221;</div>
+<div id="LC7">  scope: -&gt;</div>
+<div id="LC8">    &#8221;projects/#{@project_id}&#8221;</div>
+</div>
+</div>
+<div><a href="https://gist.github.com/raw/3371899/ec5a4177783ce2827796895f6b7c886f6f3643a6/url_scoping.js.coffee">view raw</a><a href="https://gist.github.com/3371899#file_url_scoping.js.coffee">url_scoping.js.coffee</a><a href="https://gist.github.com/3371899">This Gist</a> brought to you by <a href="http://github.com/">GitHub</a>.</div>
+</div>
+</div></li>
+    <li>Asynchronous UI is cool and works for 99% situations. But in a real world app you have to deal with errors like bugs or network failures. Spine doesn&#8217;t have the default error handling for this situation and leave all work to you. It&#8217;s fine but you should know that for that 1% situation, you have to spend lots of time to avoid the impact.</li>
+</ul>
+
+
+<p><strong>Test</strong></p>
+
+<p>I would like to cover how Test works in Pragmatic.ly in another post. To give a quick overview, we use <a title="JavaScript Behavior Test Framework" href="http://pivotal.github.com/jasmine/" target="_blank">Jasmine</a> for JS test and <a title="JavaScript Code Coverage Tool" href="http://siliconforks.com/jscoverage/" target="_blank">JSCoverage</a> for measuring code coverage. Nice pair!</p>
+
+<p>&nbsp;</p>
+
+<p><strong>About Pragmatic.ly</strong></p>
+
+<p><a title="Fast &amp; easy to use project management tool &amp; real-time collaboration" href="https://pragmatic.ly/">Pragmatic.ly</a> is a fast and easy to use project management tool featuring real time collaboration. It&rsquo;s an elegant project management service built for developers with love.</p>
+
+<p>&nbsp;</p>
+
+<p>Now that you&rsquo;ve read so far, you should follow me <a title="yedingding's twitter" href="https://twitter.com/yedingding" target="_blank">@yedingding</a>!</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/20/conditional-comments-in-html/">Conditional Comments in Html</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-20T11:31:00+08:00" pubdate data-updated="true">Aug 20<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Conditional comments in html</h2>
+
+<p>Conditional comments only work in IE, and are thus excellently suited to give special instructions meant only for IE. They are supported from IE 5 onwards.</p>
+
+<p>Conditional comments work as follows:</p>
+
+<pre>&lt;!--[if IE 6]&gt;
+Special instructions for IE 6 here
+&lt;![endif]--&gt;</pre>
+
+
+<ol>
+    <li>Their basic structure is the same as an HTML comment (<code>&lt;!-- --&gt;</code>). Therefore all other browsers will see them as normal comments and will ignore them entirely.</li>
+    <li>IE, though, has been programmed to recognize the special <code>&lt;!--[if IE]&gt;</code> syntax, resolves the <code>if</code> and parses the content of the conditional comment as if it were normal page content.</li>
+    <li>Since conditional comments use the <strong>HTML</strong> comment structure, they can only be included in HTML files, and not in CSS files. I&#8217;d have preferred to put the special styles in the CSS file, but that&#8217;s impossible. You can also put an entire new <code>&lt;link&gt;</code> tag in the conditional comment referring to an extra style sheet.</li>
+</ol>
+
+
+<h3 id="link1">Example</h3>
+
+
+<p>Below I added a lot of conditional comments that print out messages according to your IE version.</p>
+
+<p><strong>Note</strong> however, that if you use multiple Explorers on one computer, the conditional comments will render as if all these Explorer versions are the highest Explorer version available on your machine (usually Explorer 6.0).</p>
+
+<h4 id="link2">Test</h4>
+
+
+<p>Below are a few conditional comments that reveal the IE version you&rsquo;re using.</p>
+
+<p>According to the conditional comment this is not IE</p>
+
+<h4 id="link3">Code</h4>
+
+
+<p>The syntax I use is:</p>
+
+<pre>&lt;p&gt;
+&lt;!--[if IE]&gt;
+According to the conditional comment this is IE&lt;br /&gt;
+&lt;![endif]--&gt;
+&lt;!--[if IE 6]&gt;
+According to the conditional comment this is IE 6&lt;br /&gt;
+&lt;![endif]--&gt;
+&lt;!--[if IE 7]&gt;
+According to the conditional comment this is IE 7&lt;br /&gt;
+&lt;![endif]--&gt;
+&lt;!--[if IE 8]&gt;
+According to the conditional comment this is IE 8&lt;br /&gt;
+&lt;![endif]--&gt;
+&lt;!--[if IE 9]&gt;
+According to the conditional comment this is IE 9&lt;br /&gt;
+&lt;![endif]--&gt;
+&lt;!--[if gte IE 8]&gt;
+According to the conditional comment this is IE 8 or higher&lt;br /&gt;
+&lt;![endif]--&gt;
+&lt;!--[if lt IE 9]&gt;
+According to the conditional comment this is IE lower than 9&lt;br /&gt;
+&lt;![endif]--&gt;
+&lt;!--[if lte IE 7]&gt;
+According to the conditional comment this is IE lower or equal to 7&lt;br /&gt;
+&lt;![endif]--&gt;
+&lt;!--[if gt IE 6]&gt;
+According to the conditional comment this is IE greater than 6&lt;br /&gt;
+&lt;![endif]--&gt;
+&lt;!--[if !IE]&gt; --&gt;
+According to the conditional comment this is not IE&lt;br /&gt;
+&lt;!-- &lt;![endif]--&gt;
+&lt;/p&gt;</pre>
+
+
+<p>Note the special syntax:</p>
+
+<ul>
+    <li><code>gt</code>: greater than</li>
+    <li><code>lte</code>: less than or equal to</li>
+</ul>
+
+
+<p>Also note the last one. It has a different syntax, and its contents are shown in all browsers that are not IE:</p>
+
+<pre>&lt;!--[if !IE]&gt; --&gt;</pre>
+
+
+<h3 id="link4">CSS hack?</h3>
+
+
+<p>Are conditional comments <a href="http://www.quirksmode.org/css/csshacks.html">CSS hacks</a>? Strictly speaking, yes, since they can serve to give special style instructions to some browsers. However, they do not rely on one browser bug to solve another one, as all true CSS hacks do. Besides, they can be used for more than CSS hacks only (though that rarely happens).</p>
+
+<p>Since conditional comments are not based on a browser hack but on a deliberate feature I believe they are safe to use. Sure, other browsers could implement conditional comments, too (though as yet none have done so), but they&rsquo;re unlikely to react to the specific query <code>&lt;!&mdash;[if IE]&gt;</code>.</p>
+
+<p>I use conditional comments, though sparingly. First I see if I can find a real CSS solution to an Explorer Windows problem. If I can&rsquo;t, though, I don&rsquo;t hesitate to use them.</p>
+
+<h3 id="link5">Comment tag</h3>
+
+
+<p>A reader told me IE8 and below also support the (non-standard) <code>&lt;comment&gt;</code> tag.</p>
+
+<pre>&lt;p&gt;This is &lt;comment&gt;not&lt;/comment&gt; IE.&lt;/p&gt;</pre>
+
+
+<p>This isnotIE.</p>
+
+<p>This tag might be a replacement for the <code>!IE</code> conditional comment, but only if you target IE8 and below.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/16/journey-through-the-javascript-mvc-jungle-by-addy-osmani/">Journey Through the JavaScript MVC Jungle &#8211; by Addy Osmani</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-16T00:51:00+08:00" pubdate data-updated="true">Aug 16<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Journey Through The JavaScript MVC Jungle &mdash; By Addy Osmani</h2>
+
+<p>When writing a Web application from scratch, it’s easy to feel like we can get by simply by relying on a <a href="https://developer.mozilla.org/en/DOM/About_the_Document_Object_Model">DOM</a> manipulation library (like <a href="http://jquery.com/">jQuery</a>) and a handful of utility plugins. The problem with this is that it doesn’t take long to get lost in a nested pile of jQuery callbacks and DOM elements without any real structure in place for our applications.</p>
+
+<p>In short, we’re stuck with <a href="http://en.wikipedia.org/wiki/Spaghetti_code">spaghetti code</a>. Fortunately there are modern JavaScript frameworks that can assist with bringing structure and organization to our projects, improving how easily maintainable they are in the long-run.</p>
+
+<h3>What Is MVC, Or Rather MV*?</h3>
+
+
+<p>These modern frameworks provide developers an easy path to organizing their code using variations of a pattern known as <a href="http://addyosmani.com/resources/essentialjsdesignpatterns/book/#detailmvcmvp">MVC</a> (Model-View-Controller). MVC separates the concerns in an application down into three parts:</p>
+
+<ul>
+    <li><strong>Models</strong> represent the domain-specific knowledge and data in an application. Think of this as being a ‘type’ of data you can model — like a User, Photo or Note. Models should notify anyone observing them about their current state (e.g Views).</li>
+    <li><strong>Views</strong> are typically considered the User-interface in an application (e.g your markup and templates), but don’t have to be. They should know about the existence of Models in order to observe them, but don’t directly communicate with them.</li>
+    <li><strong>Controllers</strong> handle the input (e.g clicks, user actions) in an application and Views can be considered as handling the output. When a Controller updates the state of a model (such as editing the caption on a Photo), it doesn’t directly tell the View. This is what the observing nature of the View and Model relationship is for.</li>
+</ul>
+
+
+<p>JavaScript ‘MVC’ frameworks that can help us structure our code don’t always strictly follow the above pattern. Some frameworks will include the responsibility of the Controller in the View (e.g <a href="http://backbonejs.org/">Backbone.js</a>) whilst others add their own opinionated components into the mix as they feel this is more effective.</p>
+
+<p>For this reason we refer to such frameworks as following the MV* pattern, that is, you’re likely to have a View and a Model, but more likely to have something else also included.</p>
+
+<p><strong>Note:</strong> There also exist variations of MVC known as MVP (Model-View-Presenter) and MVVM (Model-View ViewModel). If you’re new to this and feel it’s a lot to take in, don’t worry. It can take a little while to get your head around patterns, but I’ve written more about the above patterns in my online book <a href="http://addyosmani.com/resources/essentialjsdesignpatterns/book/#detailmvcmvp">Learning JavaScript Design Patterns</a> in case you need further help.</p>
+
+<p><img title="cover" src="http://media.smashingmagazine.com/wp-content/uploads/2012/07/juggling-monkey.jpg" alt="" /></p>
+
+<h3>When Do You Need A JavaScript MV* Framework?</h3>
+
+
+<p>When building a single-page application using JavaScript, whether it involves a complex user interface or is simply trying to reduce the number of HTTP requests required for new Views, you will likely find yourself inventing many of the pieces that make up an MV* framework like Backbone or Ember.</p>
+
+<p>At the outset, it isn’t terribly difficult to write an application framework that offers <em>some</em>opinionated way to avoid spaghetti code, however to say that it is equally as trivial to write something of the standard of Backbone would be a grossly incorrect assumption.</p>
+
+<p>There’s a lot more that goes into structuring an application than tying together a DOM manipulation library, templating and routing. Mature MV* frameworks typically not only include many of the pieces you would find yourself writing, but also include solutions to problems you’ll find yourself running into later on down the road. This is a time-saver that you shouldn’t underestimate the value of.</p>
+
+<p>So, where will you likely need an MV* framework and where won’t you?</p>
+
+<p>If you’re writing an application that will likely only be communicating with an API or back-end data service, where much of the heavy lifting for viewing or manipulating that data will be occurring in the browser, you may find a JavaScript MV* framework useful.</p>
+
+<p>Good examples of applications that fall into this category are <a href="http://gmail.com/">GMail</a> and <a href="http://docs.google.com/">Google Docs</a>. These applications typically download a single payload containing all the scripts, stylesheets and markup users need for common tasks and then perform a lot of additional behavior in the background. It’s trivial to switch between reading an email or document to writing one and you don’t need to ask the application to render the whole page again at all.</p>
+
+<p>If, however, you’re building an application that still relies on the server for most of the heavy-lifting of Views/pages and you’re just using a little JavaScript or jQuery to make things a little more interactive, an MV framework may be overkill. There certainly are complex Web applications where the partial rendering of views can* be coupled with a single-page application effectively, but for everything else, you may find yourself better sticking to a simpler setup.</p>
+
+<h3>The Challenge Of Choice: Too Many Options?</h3>
+
+
+<p>The JavaScript community has been going through something of a renaissance over the last few years, with developers building even larger and more complex applications with it as time goes by. The language still greatly differs from those more classic Software engineers are used to using (C++, Java) as well as languages used by Web developers (PHP, Python, .Net etc). This means that in many cases we are borrowing concepts of how to structure applications from what we have seen done in the past in these other languages.</p>
+
+<p>In my talk “<a href="http://addyosmani.com/blog/digesting-javascript-mvc-pattern-abuse-or-evolution/">Digesting JavaScript MVC: Pattern Abuse or Evolution</a>”, I brought up the point that there’s currently too much choice when it comes to what to use for structuring your JavaScript application. Part of this problem is fueled by how different JavaScript developers interpret how a scalable JavaScript application should be organized — MVC? MVP? MVVM? Something else? This leads to more frameworks being created with a different take on MV* each week and ultimately more noise because we’re still trying to establish the “right way” to do things, if that exists at all. Many developers believe it doesn’t.</p>
+
+<p>We refer to the current state of new frameworks frequently popping up as ‘Yet Another Framework Syndrome’ (or YAFS). Whilst innovation is of course something we should welcome, YAFS can lead to a great deal of confusion and frustration when developers just want to start writing an app but don’t want to manually evaluate 30 different options in order to select something maintainable. In many cases, the differences between some of these frameworks can be very subtle if not difficult to distinguish.</p>
+
+<h3>TodoMVC: A Common Application For Learning And Comparison</h3>
+
+
+<p>There’s been a huge boom in the number of such MV* frameworks being released over the past few years.</p>
+
+<p><a href="http://backbonejs.org/">Backbone.js</a>, <a href="http://emberjs.com/">Ember.js</a>, <a href="http://angularjs.com/">AngularJS</a>, <a href="http://spinejs.com/">Spine</a>, <a href="http://canjs.us/">CanJS</a> … The list of new and stable solutions continues to grow each week and developers can quickly find themselves lost in a sea of options. From minds who have had to work on complex applications that inspired these solutions (such as <a href="http://github.com/wycats">Yehuda Katz</a> and <a href="http://github.com/jashkenas">Jeremy Ashkenas</a>), there are many strong contenders for what developers should consider using. The question is, what to use and how do you choose?</p>
+
+<p>We understood this frustration and wanted to help developers simplify their selection process as much as possible. To help solve this problem, we created <a href="http://todomvc.com/">TodoMVC</a> — a project which offers the same Todo application implemented in most of the popular JavaScript MV* frameworks of today — think of it as speed dating for frameworks. Solutions look and feel the same, have a common feature set, and make it easy for us to compare the syntax and structure of different frameworks, so we can select the one we feel the most comfortable with or at least, narrow down our choices.</p>
+
+<p><img title="screenshot1" src="http://media.smashingmagazine.com/wp-content/uploads/2012/07/screenshot11.jpg" alt="" /></p>
+
+<p>This week we’re releasing a <strong>brand new</strong> version of <a href="http://www.todomvc.com/">TodoMVC</a>, which you can find more details about lower down in the apps section.</p>
+
+<p>In the near future we want to take this work even further, providing guides on how frameworks differ and recommendations for which options to consider for particular types of applications you may wish to build.</p>
+
+<h3>Our Suggested Criteria For Selecting A Framework</h3>
+
+
+<p>Selecting a framework is of course about more than simply comparing the Todo app implementations. This is why, once we’ve filtered down our selection of potential frameworks to just a few, it’s recommend to spend some time doing a little due diligence. The framework we opt for may need to support building non-trivial features and could end up being used to maintain the app for years to come.</p>
+
+<ul>
+    <li><strong>What is the framework really capable of?</strong>
+Spend time reviewing both the source code of the framework and official list of features to see how well they fit with your requirements. There will be projects that may require modifying or extending the underlying source and thus make sure that if this might be the case, you’ve performed due diligence on the code.</li>
+    <li><strong>Has the framework been proved in production?</strong>
+i.e Have developers actually built and deployed large applications with it that are publicly accessible? Backbone has a strong portfolio of these (SoundCloud, LinkedIn) but not all frameworks do. Ember is used in number of large apps, including the user tools in Square. JavaScriptMVC has been used to power applications at IBM amongst other places. It’s not only important to know that a framework works in production, but also being able to look at real world code and be inspired by what can be built with it.</li>
+    <li><strong>Is the framework mature?</strong>
+We generally recommend developers don’t simply “pick one and go with it”. New projects often come with a lot of buzz surrounding their releases but remember to take care when selecting them for use on a production-level app. You don’t want to risk the project being canned, going through major periods of refactoring or other breaking changes that tend to be more carefully planned out when a framework is mature. Mature projects also tend to have more detailed documentation available, either as a part of their official or community-driven docs.</li>
+    <li><strong>Is the framework flexible or opinionated?</strong>
+Know what flavor you’re after as there are plenty of frameworks available which provide one or the other. Opinionated frameworks lock (or suggest) you to do things in a specific way (theirs). By design they are limiting, but place less emphasis on the developer having to figure out how things should work on their own.</li>
+    <li><strong>Have you really played with the framework?</strong>
+Write a small application without using frameworks and then attempt to refactor your code with a framework to confirm whether it’s easy to work with or not. As much as researching and reading up on code will influence your decision, it’s equally as important to write actual code using the framework to make sure you’re comfortable with the concepts it enforces.</li>
+    <li><strong>Does the framework have a comprehensive set of documentation?</strong>
+Although demo applications can be useful for reference, you’ll almost always find yourself consulting the official framework docs to find out what its API supports, how common tasks or components can be created with it and what the gotchas worth noting are. Any framework worth it’s salt should have a detailed set of documentation which will help guide developers using it. Without this, you can find yourself heavily relying on IRC channels, groups and self-discovery, which can be fine, but are often overly time-consuming when compared to a great set of docs provided upfront.</li>
+    <li><strong>What is the total size of the framework, factoring in minification, gzipping and any modular building that it supports?</strong>
+What dependencies does the framework have? Frameworks tend to only list the total filesize of the base library itself, but don’t list the sizes of the librarys dependencies. This can mean the difference between opting for a library that initially looks quite small, but could be relatively large if it say, depends on jQuery and other libraries.</li>
+    <li><strong>Have you reviewed the community around the framework?</strong>
+Is there an active community of project contributors and users who would be able to assist if you run into issues? Have enough developers been using the framework that there are existing reference applications, tutorials and maybe even screencasts that you can use to learn more about it?</li>
+</ul>
+
+
+<h3>Dojo And Rise Of The JavaScript Frameworks</h3>
+
+
+<p>As many of us know, the <a href="http://dojotoolkit.org/">Dojo toolkit</a> was one of the first efforts to provide developers a means to developing more complex applications and some might say it in-part inspired us to think more about the needs of non-trivial applications. I sat down to ask Dojos <a href="http://dylanschiemann.com/">Dylan Schiemann</a>, Kitson Kelly, and James Thomas what their thoughts were on the rise of JavaScript MV* frameworks.</p>
+
+<p><strong>Q: Didn’t Dojo already solve all of this? Why hasn’t it been the dominent solution for developers wishing to build more structured (and more non-trivial) applications?</strong></p>
+
+<p>Years ago, while the JavaScript landscape evolved from adding simple Ajax and chrome to a page, Dojo was evangelizing a “toolkit” approach to building complex Web applications.</p>
+
+<p>Many of those features were way ahead of most developers needs. With the emergence of the browser as the dominant application platform, many of the innovations pioneered in The Dojo Toolkit now appear in newer toolkits. MVC was just another package that Dojo has provided for quite some time, along with modular code packages, OO in JS, UI widgets, cross-browser graphics, templating, internationalization, accessibility, data stores, testing frameworks, a build system and much, much more.</p>
+
+<p>JavaScript libraries shouldn’t end at “query”, which is why Dojo, early on, focussed on completing the picture for enterprise grade application development. This is the same focus that is has today with MVC, it’s just another “tool in the arsenal”.</p>
+
+<p>Why is Dojo not the dominant toolkit? Its goal was never to be the only choice. The goal was to provide an open collection of tools that could be used with anything else, within projects, and liberally copied into other work as well. Dojo was criticized for being slow and even after that was addressed, it was criticized for being slow. Trying to shake that perception is challenging. It is very hard to document a feature-rich toolkit. There are 175 sub-packages in Dojo 1.8 and over 1,400 modules.</p>
+
+<p>That is not only a challenge from a documentation purpose, it also means that there isn’t one thing that Dojo does. Which is good if you are building software, but very difficult when you are starting out trying to figure out where to start. These are all things we have been trying to work on for Dojo 1.8, in the form of tutorials and significantly improved documentation.</p>
+
+<p><strong>Q: Why should developers still consider Dojo and what ideas do you have lined up for the future of the project? I hear 1.8 will be another major milestone.</strong></p>
+
+<p>In Dojo 1.8, dojox/mvc takes another step towards full maturity. There has been a lot of investment in time, effort, testing and community awareness into the package. It focuses on providing an MVC model that leverages the rest of Dojo. Coupled with dojox/app, an application framework that is designed to make it easier to build rich applications across desktop and mobile, it makes a holistic framework for creating a
+client side application.</p>
+
+<p>In the typical Dojo way, this is just one of many viable ways in which to build applications with Dojo.</p>
+
+<p>In 1.8, not only does the MVC sub-module become more mature, it is built upon a robust framework. It doesn’t just give you markup language to create your views, express your models or develop a controller. It is far more then just wiring up some controls to a data source. Because it is leveraging the rest of Dojo, you can draw in anything else you might need.</p>
+
+<p>In Dojo 2.0 we will be looking to take modularity to a new level, so that it becomes even easier to take a bit of this and a bit of that and string it all together. We are also exploring the concepts of isomorphism, where it should be transparent to the end-user where your code is being executed, be it client side or server side and that ultimately it should be transparent to the developer.</p>
+
+<h3>The TodoMVC Collection</h3>
+
+
+<p>In our brand new release, Todo implementations now exist for the most popular frameworks with a large number of other commonly used frameworks being worked on in Labs. These implementations have gone through a lot of revision, often taking on board best practice tips and suggestions from framework authors, contributors and users from within the community.</p>
+
+<p><img title="screenshot2" src="http://media.smashingmagazine.com/wp-content/uploads/2012/07/screenshot2.jpg" alt="" /></p>
+
+<p>Following on from comments previously made by Backbone.js author Jeremey Ashkenas and Yehuda Katz, TodoMVC now also offers consistent implementations based on an official application specification as well as routing (or state management).</p>
+
+<p>We don’t pretend that more complex learning applications aren’t possible (they certainly are), but the simplicity of a Todo app allows developers to review areas such as code structure, component syntax and flow, which we feel are enough to enable a comparison between frameworks and prompt further exploration with a particular solution or set of solutions.</p>
+
+<p>Our applications include:</p>
+
+<ul>
+    <li><a href="http://documentcloud.github.com/backbone">Backbone.js</a></li>
+    <li><a href="http://emberjs.com/">Ember.js</a></li>
+    <li><a href="http://angularjs.org/">AngularJS</a></li>
+    <li><a href="http://spinejs.com/">Spine.js</a></li>
+    <li><a href="http://knockoutjs.com/">KnockoutJS</a> (MVVM)</li>
+    <li><a href="http://dojotoolkit.org/">Dojo</a></li>
+    <li><a href="http://yuilibrary.com/">YUI</a></li>
+    <li><a href="http://batmanjs.org/">Batman.js</a></li>
+    <li><a href="http://code.google.com/closure/library/">Closure</a></li>
+    <li><a href="http://agilityjs.com/">Agility.js</a></li>
+    <li><a href="http://kmalakoff.github.com/knockback">Knockback.js</a></li>
+</ul>
+
+
+<p>For those interested in AMD versions:</p>
+
+<ul>
+    <li><a href="http://documentcloud.github.com/backbone">Backbone.js</a> + <a href="http://requirejs.org/">RequireJS</a> (using AMD)</li>
+    <li><a href="http://emberjs.com/">Ember.js</a> + <a href="http://requirejs.org/">RequireJS</a> (using AMD)</li>
+</ul>
+
+
+<p>And our Labs include:</p>
+
+<ul>
+    <li><a href="http://canjs.us/">CanJS</a></li>
+    <li><a href="https://github.com/petermichaux/maria">Maria.js</a></li>
+    <li><a href="http://cujojs.github.com/">cujo.js</a></li>
+    <li><a href="http://meteor.com/">Meteor</a></li>
+    <li><a href="http://www.socketstream.org/">SocketStream</a> + <a href="http://jquery.com/">jQuery</a></li>
+    <li><a href="http://www.sencha.com/products/extjs">Ext.js</a></li>
+    <li><a href="http://sammyjs.org/">Sammy.js</a></li>
+    <li><a href="http://javascriptmvc.com/">JavaScriptMVC</a></li>
+    <li><a href="https://developers.google.com/web-toolkit/">Google Web Toolkit</a></li>
+    <li><a href="https://github.com/troopjs">TroopJS</a></li>
+    <li><a href="http://hay.github.com/stapes">Stapes.js</a></li>
+    <li><a href="http://somajs.github.com/somajs">soma.js</a></li>
+    <li><a href="https://bitbucket.org/mckamey/duel/wiki/Home">DUEL</a></li>
+    <li><a href="https://github.com/jgallen23/fidel">Fidel</a></li>
+    <li><a href="https://github.com/flams/olives">Olives</a></li>
+    <li><a href="https://github.com/rhysbrettbowen/PlastronJS">PlastronJS</a></li>
+    <li><a href="https://github.com/creynders/dijon-framework">Dijon</a></li>
+    <li><a href="http://www.rappidjs.com/">rAppid.js</a></li>
+    <li><a href="https://github.com/brokenseal/broke">Broke</a></li>
+    <li><a href="http://weepy.github.com/o_O">o_O</a></li>
+    <li><a href="https://github.com/marcuswestin/fun">Fun</a></li>
+    <li><a href="http://angularjs.org/">AngularJS</a> + <a href="http://requirejs.org/">RequireJS</a> (using AMD)</li>
+</ul>
+
+
+<p><strong>Note:</strong> We’ve implemented a version of our Todo application using <a href="https://github.com/addyosmani/todomvc/blob/master/vanilla-examples/vanillajs/js/app.js">just JavaScript</a> and another using primarily <a href="https://github.com/addyosmani/todomvc/blob/master/architecture-examples/jquery/js/app.js">jQuery conventions</a>. As you can see, whilst these applications are functionally equivalent to something you might write with an MVC framework, there’s no separation of concerns and the code becomes harder to read and maintain as the codebase grows.</p>
+
+<p>We feel honored that over the past year, some framework authors have involved us in discussions about how to improve their solutions, helping bring our experience with a multitude of solutions to the table. We’ve also slowly moved towards TodoMVC being almost a defacto app that new frameworks implement and this means it’s become easier to make initial comparisons when you’re reviewing choices.</p>
+
+<h3>Frameworks: When To Use What?</h3>
+
+
+<p>To help you get started with narrowing down frameworks to explore, we would like to offer the below high-level framework summaries which we hope will help steer you towards a few specific options to try out.</p>
+
+<p>I want something flexible which offers a minimalist solution to separating concerns in my application. It should support a persistence layer and RESTful sync, models, views (with controllers), event-driven communication, templating and routing. It should be imperative, allowing one to update the View when a model changes. I’d like some decisions about the architecture left up to me. Ideally, many large companies have used the solution to build non-trivial applications. As I may be building something complex, I’d like there to be an active extension community around the framework that have already tried addressing larger problems (<a href="https://github.com/derickbailey/backbone.marionette">Marionette</a>, <a href="https://github.com/chaplinjs/chaplin">Chaplin</a>, <a href="https://github.com/addyosmani/backbone-aura/">Aura</a>, <a href="https://github.com/walmartlabs/thorax">Thorax</a>). Ideally, there are also scaffolding tools (<a href="https://github.com/backbone-boilerplate/grunt-bbb">grunt-bbb</a>, <a href="http://brunch.io/">brunch</a>) available for the solution. <strong>Use Backbone.js.</strong></p>
+
+<p>I want something that tries to tackle desktop-level application development for the web. It should be opinionated, modular, support a variation of MVC, avoid the need to wire everything in my application together manually, support persistence, computed properties and have auto-updating (live) templates. It should support proper state management rather than the manual routing solution many other frameworks advocate being used. It should also come with extensive docs and of course, templating. It should also have scaffolding tools available (ember.gem, ember for brunch). <strong>Use Ember.js.</strong></p>
+
+<p>I want something more lightweight which supports live-binding templates, routing, integration with major libraries (like jQuery and Dojo) and is optimized for performance. It should also support a way to implement models, views and controllers. It may not be used on as many large public applications just yet, but has potential. Ideally, the solution should be built by people who have previous experience creating many complex applications. <strong>Use CanJS.</strong></p>
+
+<p>I want something declarative that uses the View to derive behavior. It focuses on achieving this through custom HTML tags and components that specify your application intentions. It should support being easily testable, URL management (routing) and a separation of concerns through a variation of MVC. It takes a different approach to most frameworks, providing a HTML compiler for creating your own DSL in HTML. It may be inspired by upcoming Web platform features such as Web Components and also has its own scaffolding tools available (angular-seed). <strong>Use AngularJS.</strong></p>
+
+<p>I want something that offers me an excellent base for building large scale applications. It should support a mature widget infrastructure, modules which support lazy-loading and can be asynchronous, simple integration with CDNs, a wide array of widget modules (graphics, charting, grids, etc) and strong support for internationalization (i18n, l10n). It should have support for OOP, MVC and the building blocks to create more complex architectures. <strong>Use Dojo.</strong></p>
+
+<p>I want something which benefits from the YUI extension infrastructure. It should support models, views and routers and make it simple to write multi-view applications supporting routing, View transitions and more. Whilst larger, it is a complete solution that includes widgets/components as well as the tools needed to create an organized application architecture. It may have scaffolding tools (yuiproject), but these need to be updated. <strong>Use YUI.</strong></p>
+
+<p>I want something simple that values asynchronous interfaces and lack any dependencies. It should be opinionated but flexible on how to build applications. The framework should provide bare-bones essentials like model, view, controller, events, and routing, while still being tiny. It should be optimized for use with CoffeeScript and come with comprehensive documentation. <strong>Use Spine.</strong></p>
+
+<p>I want something that will make it easy to build complex dynamic UIs with a clean underlying data model and declarative bindings. It should automatically update my UI on model changes using two-way bindings and support dependency tracking of model data. I should be able to use it with whatever framework I prefer, or even an existing app. It should also come with templating built-in and be easily extensible. <strong>Use KnockoutJS.</strong></p>
+
+<p>I want something that will help me build simple Web applications and websites. I don’t expect there to be a great deal of code involved and so code organisation won’t be much of a concern. The solution should abstract away browser differences so I can focus on the fun stuff. It should let me easily bind events, interact with remote services, be extensible and have a huge plugin community. <strong>Use jQuery.</strong></p>
+
+<p>&nbsp;</p>
+
+<h3>What Do Developers Think About The Most Popular Frameworks?</h3>
+
+
+<p>As part of our research into MV* frameworks for TodoMVC and this article, we decided to conduct a survey to bring together the experiences of those using these solutions. We asked developers what framework they find themselves using the most often and more importantly, why they would recommend them to others. We also asked what they felt was still missing in their project of choice.</p>
+
+<p>We’ve grouped some of the most interesting responses below, by framework.</p>
+
+<h4>EMBER.JS</h4>
+
+
+<blockquote><strong>Pros:</strong> The combination of live templates and observable objects has changed the way I write JavaScript. It can be a bit much to wrap your head around at first, but you end up with a nice separation of responsibility. I found that once I have everything set up, adding fairly complex features only takes a couple lines of code. Without Ember, these same features would’ve been hellish to implement.
+
+<strong>Cons:</strong> Ember has yet to reach 1.0. Many things are still in flux, such as the router and Ember data. The new website is very helpful, but there’s still not as much documentation for Ember as there is for other frameworks, specifically Backbone. Also, with so much magic in the framework, it can be a little scary. There’s the fear that if something breaks you won’t be able to figure out exactly why. Oh, and the error messages that ember gives you often suck.</blockquote>
+
+
+<blockquote><strong>Pros:</strong>
+The key factors:
+
+a) Features that let me avoid a lot of boilerplate (bindings, computer properties, view layer with the cool handlebars).
+
+b) the core team: I’m a Rails developer and know the work of Yehuda Katz. I trust the guy =)
+
+<strong>Cons:</strong> Documentation. It’s really sad that Ember doesn’t have good documentation, tutorials, screencast like Backbone, Angular or other frameworks. Right now, we browse the code looking for docs which isn’t ideal.</blockquote>
+
+
+<blockquote><strong>Pros:</strong> Convention over configuration. Ember makes so many small decisions for you it’s by far the easiest way to build a client-side application these days.
+
+<strong>Cons:</strong> The learning curve. It is missing the mass of getting started guides that exist for other frameworks like Backbone, this is partly because of the small community, but I think more because of the state of flux the codebase is in pre-1.0.</blockquote>
+
+
+<blockquote><strong>Pros:</strong> Simplicity, bindings, tight integration with Handlebars, ease of enabling modularity in my own code.
+
+<strong>Cons:</strong> I’d like to have a stable integration with ember-data, and integrated localStorage support synced with a REST API, but hey that’s fantasy that one day will surely come true ;-)</blockquote>
+
+
+<h4>BACKBONE.JS</h4>
+
+
+<blockquote><strong>Pros:</strong> Simplicity — only 4 core components (Collection, Model, View, Router). Huge community (ecosystem) and lots of solutions on StackOverflow. Higher order frameworks like Marionette or Vertebrae with lots of clever code inside. Somebody might like “low-levelness” — need to write lots of boilerplate code, but get customized application architecture.
+
+<strong>Cons:</strong> I don’t like how extend method works — it copies content of parent objects into new one. Prototypal inheritance FTW. Sometime I miss real world scenarios in docs examples. Also there is a lot of research needed to figure out how to build a bigger app after reading the TODO tutorial.
+
+I’m missing official AMD support in projects from DocumentCloud (BB, _). [Note: this shouldn’t be an issue with the new RequireJS shim() method in RequireJS 2.0].</blockquote>
+
+
+<blockquote><strong>Pros:</strong> After the initial brain-warp of understanding how Backbone rolls, it is incredibly useful. Useful as in, well supported, lightweight, and constantly updated in a valid scope. Ties in with natural friends Underscore, jQuery/Zepto, tools that most of my studio’s projects would work with.
+
+<strong>Cons:</strong> The amount of tutorials on how to do things with Backbone is inconsistent and at different periods of Backbones lifespan. I’ve asked other devs to have a look at Backbone, and they would be writing code for v0.3. Un-aware. Whilst not a problem Backbone can fix itself, it is certainly a major dislike associated with the framework.
+
+I suppose in theory, you could apply this to anything else, but, Backbone is a recurrent one in my eyes. Hell, I’ve even seen month old articles using ancient Backbone methods and patterns.
+
+Whatever dislikes I would have on the framework strictly itself, has been rectified by the community through sensible hacks and approaches. For me, that is why Backbone is great, the community backing it up.</blockquote>
+
+
+<blockquote><strong>Pros:</strong> Provides just enough abstraction without unreasonable opinions — enabling you to tailor it to the needs of the project.
+
+<strong>Cons:</strong> I would re-write (or possibly remove) Backbone.sync. It has baked in assumptions of typical client-initiated HTTP communications, and doesn’t adapt well to the push nature of WebSockets.</blockquote>
+
+
+<blockquote><strong>Pros:</strong> It’s extremely easy to get into, offering a nice gateway to MV* based frameworks. It’s relatively customizable and there are also tons of other people using it, making finding help or support easy.
+
+<strong>Cons:</strong> The fact that there’s no view bindings by default (although you can fix this). Re-rendering the whole view when a single property changes is wasteful.
+
+The RESTful API has a lot of positives, but the lack of bulk-saving (admittedly a problem with REST itself, but still) and the difficulty in getting different URI schemes to work on different types of operations sucks.</blockquote>
+
+
+<h4>ANGULARJS</h4>
+
+
+<blockquote><strong>Pros:</strong>
+
+a) 2-way data binding is incredibly powerful. You tend to think more about your model and the state that it is in instead of a series of events that need to happen. The model is the single source of truth.
+
+b) Performance. AngularJS is a small download. It’s templating uses DOM nodes instead of converting strings into DOM nodes and should perform better.
+
+c) If you are targeting modern browsers and/or are a little careful, you can drop jQuery from your dependencies too.
+
+<strong>Cons:</strong> I’d like to be able to specify transitions for UI state changes that propgate from a model change. Specifically for elements that use ng-show or ng-hide I’d like to use a fade or slide in in an easy declarative way.</blockquote>
+
+
+<blockquote><strong>Pros:</strong> It’s very intuitive, has excellent documentation. I love their data binding approach, HTML based views, nested scopes. I switched from Backbone/Thorax to Angular and never looked back. A new Chrome extension Batarang integrates with Chrome Developer’s Tools and provides live access the Angular data structures.
+
+<strong>Cons:</strong> I’d like to have a built-in support to such functions as drag’n&#8217;drop, however this can be added using external components available on GitHub. I’d also like to see more 3rd party components available for reuse. I think it’s just a matter of time for the ecosystem around AngularJS to get more mature and then these will be available just like they are in communities like jQuery.</blockquote>
+
+
+<blockquote><strong>Pros:</strong> It minimizes drastically the boilerplate code, allows for nice code reuse through components, extends the HTML syntax so that many complex features end up being as simple as applying a directive (attribute) in the HTML, and is super-easily testable thanks to a full commitment to dependency injection.
+You can write a non-trivial app without jQuery or without directly manipulating the DOM. That’s quite a feat.
+
+<strong>Cons:</strong> Its learning curve is somewhat steeper than Backbone (which is quite easy to master), but the gain is appreciative. Documentation could be better.</blockquote>
+
+
+<h4>KNOCKOUTJS</h4>
+
+
+<blockquote><strong>Pros:</strong> I don’t necessarily use it <em>all</em> the time, but KnockoutJS is just fantastic for single page applications. Extremely easy subscribing to live sorting; much better API for so called “collection views” in Backbone using observable arrays. And custom event on observables for effects, etc.
+
+<strong>Cons:</strong> Feel like the API is quite hard to scale, and would probably prefer to wrangle Backbone on the bigger applications. (But that’s also partially due to community support).</blockquote>
+
+
+<blockquote><strong>Pros:</strong> I like the data binding mechanism and feel very comfortable using it. In particular I like how they have replaced templates with control flow binding.
+
+<strong>Cons:</strong> I don’t like that there is no guidance or best practice in terms of application structure. Aside from having a view model, the framework doesn’t help you in defining a well structured view model. It’s very easy to end up with a large unmaintainable function.</blockquote>
+
+
+<h4>DOJO</h4>
+
+
+<blockquote><strong>Pros:</strong> Syntactically, Dojo is very simple. It allows for dynamic and robust builds, with the initial loader file being as low as 6k in some cases. It is AMD compatible, making it extremely portable, and comes out-of-the-box with a ton of features ranging from basic dom interactions to complex SVG, VML, and canvas functionality. The widget system, Dijit, is unmatched in it’s ease-of-use and ability to be extended. It’s a very well-rounded and complete toolkit.
+<strong>Cons:</strong> The dojo/_base/declare functionality is not 100% strict mode compliant and there is currently some overhead due to backwards compatibility, though this will mostly go away in the Dojo 2.0 release.</blockquote>
+
+
+<blockquote><strong>Pros:</strong> Good components : tabs, datagrid, formManager… Renders the same cross browser. AMD compliant. Easy to test with mocks.Integrates well with other frameworks thks to amd (I ll integrate with JMVC)
+<strong>Cons:</strong> Default design for components out of fashion. Not fully html5. So-so documentation
+Poor templating system (no auto binding).</blockquote>
+
+
+<h4>YUI</h4>
+
+
+<blockquote><strong>Pros:</strong> YUI3 is a modular and use-at-will type of component library which includes all of the goodies of Backbone and more. It even (in my opinion) improves upon some of the concepts in Backbone by de-coupling some things (i.e. attribute is a separate module that can be mixed into any object – the event module can be mixed in similarly).
+
+<strong>Cons:</strong> I’d love to see YUI3 support some of the auto-wiring (optional) of Ember. I think that is really the big win for Ember; otherwise, I see YUI3 as a superior component library where I can cherry-pick what I need. I’d also like to see a more AMD-compatible module loader. The loader today works very well; however, it would be nicer if I could start a new projects based on AMD modules and pull in certain YUI3 components and other things from other places that are also using AMD.</blockquote>
+
+
+<h4>JAVASCRIPTMVC</h4>
+
+
+<blockquote><strong>Pros:</strong> Has all tools included, just need to run commands and start building. I have used for the last 6 months and it’s been really good.
+
+<strong>Cons:</strong> The only thing I would do is to speed up development of the next version. Developers are aware of problems and fixing issues but its going to be another ¾ months before some issues I want fixed are addressed, but then I could probably patch and do a pull request.</blockquote>
+
+
+<h4>MARIA</h4>
+
+
+<blockquote><strong>Pros:</strong> Because Maria is a pure MVC framework that is focused on being just an MVC framework. No more and no less. Its clean and simple.
+
+<strong>Cons:</strong> A little more usage documentation outside of the source code, plus a few more test cases. A tutorial that drives home the real use of MVC with Maria would be good too.</blockquote>
+
+
+<h4>CUJO.JS</h4>
+
+
+<blockquote><strong>Pros:</strong> Real apps almost never fit perfectly into an MV* box, and the most important stuff is often outside the box. With cujo.js, you define the box.
+
+Yes, cujo.js has high-level MV*-like features for creating views, models, controllers, etc., but every app is different, and no framework can ever be a 100% solution. Rather than try to be all things, cujo.js also provides lower level tools, architectural plumbling, and a rich plugin system that can even be used to integrate and extend other MV* frameworks.
+
+Create the architecture that best suits your application, rather than constraining your app to fit inside someone else’s predefined architecture.
+
+<strong>Cons:</strong> The broader JavaScript community is totally unprepared and untrained to take on large-scale applications. Most of us don’t even know that design patterns and architectural patterns exist.
+
+Since cujo.js is so different from other frameworks, it needs more than a simple API reference and code snippets. Without tutorials, educational materials, and step-by-step examples, cujo.js might look strange and overwhelming to the untrained eye but documentation is supposed to be coming soon.</blockquote>
+
+
+<h4>EXTJS</h4>
+
+
+<blockquote><strong>Pros:</strong> I think ExtJS works best in combination with Ext Designer. It gives it an edge beyond the other GUI frameworks by letting non-programmers mock up the UI so programmers can fill in the blanks. I think comparing it to MVC frameworks like Backbone doesn’t do it justice – its strength lies in creating rich GUIs, not lean Web apps.
+
+For rich, commercial back-office applications I think ExtJS remains the best choice when it comes to JavaScript solutions (i.e. not GWT etc). For public-facing Web apps I’d rather have something that gives me more control over the markup (and ideally something that degrades gracefully).
+
+<strong>Cons:</strong> It has a steeper learning curve than many of the other modern structural frameworks. One can argue that if you’re investing in ExtJS for the long-term this time spent learning will pay off, however I think solutions like it should aim to better minimize the time it takes to train teams up in using it.</blockquote>
+
+
+<blockquote><strong>Pros:</strong> I think a big feature of ExtJS 4 is that it throws you into the MVC mindset and the preferred filesystem structure right from the bat. With Dojo the initial tutorials seem to be mostly about augmenting existing websites whereas ExtJS assumes you’re starting from scratch.
+
+Using ExtJS doesn’t really “feel” like you’re dealing with HTML at all. The component library is rich enough to let you go a long way without touching more HTML than what is needed to bootstrap your app.
+
+It’d be interesting to see how both compare when Web components become more widely supported. This would finally allow manipulating the DOM without being afraid of breaking any widgets or causing your app’s internal state to become inconsistent.
+
+<strong>Cons:</strong> The licensing is considered restrictive and difficult to understand by some. More people would be investing in ExtJS if it was clearer what the upfront and long-term costs of using it are. This isn’t a concern with some other structural solutions but probably isn’t as much a worry for larger businesses.</blockquote>
+
+
+<blockquote><strong>Pros:</strong> ExtJS is a fantastic package for rapidly building out RIAs for internal use. I for one, love to build with HTML and JavaScript, and for me there’s great satisfaction in mucking around at that level. Even though ExtJS makes it feel like you’re not really working with HTML it still offers a great deal of power, especially if you’re using it to create a complex UI.
+
+<strong>Cons:</strong> That said…I absolutely agree that it’s very heavy and I don’t think I’d recommend it for an external facing Web application. My biggest beef with the package overall is actually that it’s more of a PITA to test with than I’d would like. Our tester actually ended up switching to Sikuli because it was becoming too much of a battle trying to work with it in Selenium.</blockquote>
+
+
+<h4>BATMAN</h4>
+
+
+<blockquote><strong>Pros:</strong> It has a great and easy to use view bindings system. Plays with Rails very nicely and is all about convention over configuration.
+
+<strong>Cons:</strong> The documentation could be a lot better and I feel Shopify won’t be adding the features that they say that they will.</blockquote>
+
+
+<h3>Don’t Be Afraid To Experiment</h3>
+
+
+<p>Whilst it’s unlikely for a developer to need to learn how to use more than a handfull of these frameworks, I do encourage exploration of those you’re unfamiliar with. There’s more than mountain of interesting facts and techniques that can be learned in this process.</p>
+
+<p>In my case: I discovered that Batman.js required the least hand-written lines of code for an implementation. I’m neither a frequent CoffeeScript nor Batman.js user but that in itself gave me some food for thought. Perhaps I could take some of what made this possible and bring it over to the frameworks I do use. Or, maybe I’d simply use Batman.js in a future project if I found the community and support around it improved over time.</p>
+
+<p>Regardless of whether you end up using a different solution, at the end of the day all you have to gain from exploration is more knowledge about what’s out there.</p>
+
+<h3>Going Beyond MV* Frameworks</h3>
+
+
+<p>Whilst the MV* family of patterns are quite popular for structuring applications, they’re limited in that they don’t address any kind of application layer, communication between Views, services that perform work or anything else. Developers may thus find that they sometimes need to explore beyond just MVC — there are times when you absolutely need to take what they have to offer further.</p>
+
+<p>We reached out to developers that have been taking MVC further with their own patterns or extensions for existing frameworks to get some insights on where you need something more.</p>
+
+<p>“In my case, I needed something Composite. I noticed that there were patterns in Backbone apps where developers realized there was a need for an object that coordinated various parts of an application. Most of the time, I’ve seen developers try to solve this using a Backbone construct (e.g a View), even when there isn’t really a need for it. This is why I instead explored the need for an <a href="http://lostechies.com/derickbailey/2011/12/16/composite-javascript-applications-with-backbone-and-backbone-marionette/">Application Initializer</a>.</p>
+
+<p>I also found that MVC didn’t really describe a way to handle regions of a page or application. The gist of <a href="http://lostechies.com/derickbailey/2011/12/12/composite-js-apps-regions-and-region-managers/">region management</a> is that you could define a visible area of the screen and build out the most basic layout for it without knowing what content was going to be displayed in it at runtime.</p>
+
+<p>I created solutions for region management, application initialization and more in my extension project Marionette. It’s one of a number of solutions that extend upon a framework (or architecture pattern) that developers end up needing when they’re building single-page applications that are relatively complex.</p>
+
+<p>There’s even a TodoMVC <a href="https://github.com/derickbailey/todomvc/tree/marionette">Marionette app</a> available for anyone wishing to compare the standard Backbone application with one that goes beyond just MV*.</p>
+
+<p><em>Derick Bailey — Author of Marionette</em></p>
+
+<p>“While a good portion of problems can be decomposed into JavaScript MVC, there are some which simply cannot. For example, an application consumes a third party API at runtime, but is not given any information as to how the data will be structured.</p>
+
+<p>I spent almost a year trying to solve that very problem, but eventually I came to the realization that shoehorning it into MV* was not a viable solution. I was dealing with an “amorphous model” and that’s where it all fell apart. In other words, if you don’t have a well-defined model, most modern JavaScript frameworks can’t help you.</p>
+
+<p>That’s where <a href="http://java.sun.com/blueprints/corej2eepatterns/Patterns/">Core J2EE Pat­terns</a> come in. I got turned on to them while read­ing <a href="http://www.amazon.com/Objects-Patterns-Practice-Matt-Zandstra/dp/1590599098">PHP Objects, Pat­terns, and Prac­tice</a> by Matt Zand­stra, and I’m glad I did! The J2EE Patterns basically outline a request-driven process, where the URL drives the behavior of the application. In a nutshell, a request is created, modified, and then used to determine the view to render.</p>
+
+<p>I’ve expanded on my experiences with <a href="http://dblogit.com/archives/3895">request driven Javascript applications and J2EE patterns</a> for anyone who would like to learn more. ”</p>
+
+<p><em>Dustin Boston — co-author, Aura</em></p>
+
+<h3>Conclusions</h3>
+
+
+<p>While there are several choices for what to use for structuring your JavaScript Web applications these days, it’s important to be <strong>diligent</strong> in the selection process – spend time thoroughly evaluating your options in order to make a decision which results in sustainable,<strong>maintainable</strong> code. Framework diversity fosters innovation, while too much similarity just creates noise.</p>
+
+<p>Projects like TodoMVC can help narrow down your selections to those you feel might be the most interesting or most comfortable for a particular project. Remember to take your time choosing, don’t feel too constrained by using a specific pattern and keep in mind that it’s completely acceptable to build on the solution you select to best fit the needs of your application.</p>
+
+<p>Experimenting with different frameworks will also give you different views on how to solve common problems which will in turn make you a better programmer.</p>
+
+<p><em>Thanks to my fellow TodoMVC team-member <a href="http://sindresorhus.com/">Sindre Sorhus</a> for his help with tweaks and a technical review of this article. </em></p>
+
+<div>
+
+<strong>Tags:</strong><a title="View all articles tagged 'Essentials' (32)" href="http://coding.smashingmagazine.com/tag/essentials/">Essentials</a>,<a title="View all articles tagged 'JavaScript' (44)" href="http://coding.smashingmagazine.com/tag/javascript/">JavaScript</a>,<a title="View all articles tagged 'MVC' (1)" href="http://coding.smashingmagazine.com/tag/mvc/">MVC</a><a title="View all articles tagged 'Tools' (27)" href="http://coding.smashingmagazine.com/tag/tools/">Tools</a>
+
+</div>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/3/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/">通过mongodump和mongorestore实现Mongodb备份和恢复 &#8211;by Chenzhou123520</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes/">Ruby on Rails 4.0 Release Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/rails-active-record-named-scopes/">Rails Active Record Named Scopes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/">晒晒我们的开源项目 ITEYE开源代码</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/">Single Sign-on 单点登录 Sso</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/jhjguxin">@jhjguxin</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'jhjguxin',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Francis Jiang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

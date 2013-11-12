@@ -1,0 +1,365 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>RVM 下载 加速 -by liuhui998 - Francis's Octopress Blog</title>
+  <meta name="author" content="Francis Jiang">
+
+  
+  <meta name="description" content="RVM 下载 加速 -by liuhui998 今天晚上有点时间，我就折腾了一下 rails。 按照这个教程，我一步步的进行安装。 正如我之前听说的 rvm 下载 ruby 的速度只有不到5KB/s 速度。 在 google 了二圈后，我发现国内外好像没有人解决这个问题。 于是我发扬geek精神， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jhjguxin.github.io/blog/2012/05/14/rvm-xia-zai-jia-su-by-liuhui998">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Francis's Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-25901353-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Francis's Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jhjguxin.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/readme">Readme</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">RVM 下载 加速 -by Liuhui998</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-14T15:37:00+08:00" pubdate data-updated="true">May 14<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>RVM 下载 加速 -by liuhui998</h2>
+
+<p>今天晚上有点时间，我就折腾了一下 rails。</p>
+
+<p>按照这个<a title="教程" href="http://ruby-china.org/wiki/install_ruby_guide">教程</a>，我一步步的进行安装。</p>
+
+<p>正如我之前听说的 <a title="rvm" href="https://rvm.beginrescueend.com/rvm/install/">rvm</a> 下载 ruby 的速度只有不到5KB/s 速度。</p>
+
+<p>在 google 了二圈后，我发现国内外好像没有人解决这个问题。</p>
+
+<p>于是我发扬geek精神，开始打起了 rvm 源代码的主意：</p>
+
+<p>1） rvm 是从 ruby-lang.org 这个站点下载 ruby 的源代码
+rvm 慢的主要是因为 ruby-lang.org 这个网站下载速度慢</p>
+
+<p>2） 如果找到 ruby-lang.org 的更快的镜像网站，并修改 rvm 里面的配置
+这个问题也就解决了</p>
+
+<p>于是找到一个叫 <a title="UK Mirror Service " href="http://www.mirrorservice.org/">UK Mirror Service</a> 的网站，它提供了 ruby-lang.org 镜像服务：</p>
+
+<p><a title="http://www.mirrorservice.org/sites/ftp.ruby-lang.org/" href="http://www.mirrorservice.org/sites/ftp.ruby-lang.org/"><a href="http://www.mirrorservice.org/sites/ftp.ruby-lang.org/">http://www.mirrorservice.org/sites/ftp.ruby-lang.org/</a></a></p>
+
+<p>我测试了一下，平均速度最慢也超过 30KB/s</p>
+
+<p>好的镜像找到了，那么下一步就是在哪里修改 ruby 下载地址。</p>
+
+<div><figure>
+<div>
+<table>
+<tbody>
+<tr>
+<td></td>
+<td>
+<pre><code>cd $rvm_path grep -nR "ruby-lang.org" ./</code></pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure></div>
+
+
+<p>&nbsp;</p>
+
+<p>发现地址是写在 $rvm_path/config/db 文件里</p>
+
+<p>找到这一段：</p>
+
+<div><figure>
+<div>
+<table>
+<tbody>
+<tr>
+<td></td>
+<td>
+<pre><code>ruby_1.0_url=http://ftp.ruby-lang.org/pub/ruby/1.0 ruby_1.2_url=http://ftp.ruby-lang.org/pub/ruby/1.2 ruby_1.3_url=http://ftp.ruby-lang.org/pub/ruby/1.3 ruby_1.4_url=http://ftp.ruby-lang.org/pub/ruby/1.4 ruby_1.5_url=http://ftp.ruby-lang.org/pub/ruby/1.5 ruby_1.6_url=http://ftp.ruby-lang.org/pub/ruby/1.6 ruby_1.7_url=http://ftp.ruby-lang.org/pub/ruby/1.7 ruby_1.8_url=http://ftp.ruby-lang.org/pub/ruby/1.8 ruby_1.9_url=http://ftp.ruby-lang.org/pub/ruby/1.9 ruby_2.0_url=http://ftp.ruby-lang.org/pub/ruby/2.0</code></pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure></div>
+
+
+<p>&nbsp;</p>
+
+<p>改成</p>
+
+<div><figure>
+<div>
+<table>
+<tbody>
+<tr>
+<td></td>
+<td>
+<pre><code>ruby_1.0_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.0 ruby_1.2_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.2 ruby_1.3_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.3 ruby_1.4_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.4 ruby_1.5_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.5 ruby_1.6_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.6 ruby_1.7_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.7 ruby_1.8_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.8 ruby_1.9_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/1.9 ruby_2.0_url=http://www.mirrorservice.org/sites/ftp.ruby-lang.org/pub/ruby/2.0</code></pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure></div>
+
+
+<p>&nbsp;</p>
+
+<p>我已把这个修攺提交到我们仓库里 <a title="http://github.com/liuhui998/rvm" href="http://github.com/liuhui998/rvm"><a href="http://github.com/liuhui998/rvm">http://github.com/liuhui998/rvm</a></a>
+可以直接点击下载我改好后的 <a title="db 文件" href="https://raw.github.com/liuhui998/rvm/0f0be9a1316d607a9956415110bef8ea9b8a6726/config/db">文件</a></p>
+
+<p>大家改好 $rvm_path/config/db 文件后，最好能重启终端程序后再执行 rvm install 命令
+这样新的 mirror 就会起效。</p>
+
+<p>经过测试，改进后的 rvm， 在家中4M 以太网的速度可以达到200KB/s.</p>
+
+<p>其本上解决了 rvm 下载 ruby 慢的问题。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Francis Jiang</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-14T15:37:00+08:00" pubdate data-updated="true">May 14<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/zhuan-ye/'>专业</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://jhjguxin.github.io/blog/2012/05/14/rvm-xia-zai-jia-su-by-liuhui998/" data-via="jhjguxin" data-counturl="http://jhjguxin.github.io/blog/2012/05/14/rvm-xia-zai-jia-su-by-liuhui998/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/05/11/the-501-developer-manifesto-%3C%3C501cheng-xu-yuan-xuan-yan-%3E%3E/" title="Previous Post: The 501 Developer Manifesto--《501程序员宣言》">&laquo; The 501 Developer Manifesto--《501程序员宣言》</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/05/15/5-ge-chang-jian-de-rails-kai-fa-wu-qu/" title="Next Post: 5 个常见的 Rails 开发误区">5 个常见的 Rails 开发误区 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/">通过mongodump和mongorestore实现Mongodb备份和恢复 --by Chenzhou123520</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes/">Ruby on Rails 4.0 Release Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/rails-active-record-named-scopes/">Rails Active Record Named Scopes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/">晒晒我们的开源项目 ITEYE开源代码</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/">Single Sign-on 单点登录 Sso</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/jhjguxin">@jhjguxin</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'jhjguxin',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Francis Jiang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

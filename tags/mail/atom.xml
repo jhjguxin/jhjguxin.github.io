@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: mail | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/tags/mail/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Using Resque to send mail for Devise]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/06/15/using-resque-to-send-mail-for-devise/"/>
+    <updated>2012-06-15T15:03:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/06/15/using-resque-to-send-mail-for-devise</id>
+    <content type="html"><![CDATA[<h2>Using Resque to send mail for Devise</h2>
+
+<div>
+<div id="wiki-body">
+<div>
+
+Since sending email synchronously is not a good idea, you'll probably want to have Devise enqueuing it's notification emails for background processing.
+
+Although Devise doesn't support this out of the box you can achieve it easily by using the <a href="https://github.com/mhfs/devise-async">devise-async</a> gem.
+
+To do so, first add it to your Gemfile:
+<div>
+<pre>gem "devise-async"</pre>
+</div>
+Then tell Devise to use the proxy mailer in <code>config/initializers/devise.rb</code>:
+<div>
+<pre># Configure the class responsible to send e-mails.
+config.mailer = "Devise::Async::Proxy"</pre>
+</div>
+And last but not least, set your queuing backend by creating <code>config/initializers/devise_async.rb</code>:
+<div>
+<pre># Supported options: :resque, :sidekiq, :delayed_job
+Devise::Async.backend = :resque</pre>
+</div>
+Your notification emails should now be gracefully enqueued for background processing.
+
+</div>
+</div>
+</div>
+
+
+<h2 id="gollum-footer">## Notice I have jobs in queue but no workers. Do I have to create task, or workers?</h2>
+
+
+<p>&nbsp;</p>
+
+<p><code>#!/usr/bin/env rake</p>
+
+<h1>Add your own tasks in files placed in lib/tasks ending in .rake,</h1>
+
+<h1>for example lib/tasks/capistrano.rake, and they will automatically be available to Rake.</code></h1>
+
+<p>require File.expand_path(&lsquo;../config/application&rsquo;, <strong>FILE</strong>)
+require &lsquo;resque/tasks&rsquo;</p>
+
+<p>Askjane::Application.load_tasks</p>
+
+<p>task &ldquo;resque:setup&rdquo; =&gt; :environment do
+ENV[&lsquo;QUEUE&rsquo;] ||= &lsquo;*&rsquo;</p>
+
+<h1>for redistogo on heroku <a href="http://stackoverflow.com/questions/2611747/rails-resque-workers-fail-with-pgerror-server-closed-the-connection-unexpectedl">http://stackoverflow.com/questions/2611747/rails-resque-workers-fail-with-pgerror-server-closed-the-connection-unexpectedl</a></h1>
+
+<p>Resque.before_fork = Proc.new { ActiveRecord::Base.establish_connection }
+end</p>
+
+<h4>run below command</h4>
+
+<h1>QUEUE=* rake environment resque:work</h1>
+]]></content>
+  </entry>
+  
+</feed>

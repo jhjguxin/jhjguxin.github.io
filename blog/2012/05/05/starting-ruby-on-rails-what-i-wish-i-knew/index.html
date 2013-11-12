@@ -1,0 +1,467 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Starting Ruby on Rails: What I Wish I Knew - Francis's Octopress Blog</title>
+  <meta name="author" content="Francis Jiang">
+
+  
+  <meta name="description" content="Starting Ruby on Rails: What I Wish I Knew from betterexplained.com , update by francis Ruby on Rails is an elegant, compact and fun way to build web &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jhjguxin.github.io/blog/2012/05/05/starting-ruby-on-rails-what-i-wish-i-knew">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Francis's Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-25901353-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Francis's Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jhjguxin.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/readme">Readme</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Starting Ruby on Rails: What I Wish I Knew</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-05T19:38:00+08:00" pubdate data-updated="true">May 5<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>Starting Ruby on Rails: What I Wish I Knew</h2>
+
+<blockquote>from betterexplained.com , update by francis</blockquote>
+
+
+<p><a href="http://rubyonrails.com/">Ruby on Rails</a> is an <strong>elegant</strong>, <strong>compact</strong> and <strong>fun</strong> way to build web applications. Unfortunately, many gotchas await the new programmer. Now that I have a few [rails projects}(<a href="http://instacalc.com/"><a href="http://instacalc.com/">http://instacalc.com/</a></a>) under my belt, here&rsquo;s my shot at sparing you the suffering I experienced when first getting started.</p>
+
+<h3><a name="tools-just-get-them" href="https://github.com/jhjguxin/project-manage/blob/master/rails/wiki/starting-ruby-on-rails-what-i-wish-i-knew.en.markdown#tools-just-get-them"></a>Tools: Just Get Them</h3>
+
+
+<p>Here&rsquo;s the tools you&rsquo;ll need. Don&rsquo;t read endless reviews trying to decide on the best one; start somewhere and get going.</p>
+
+<ul>
+    <li><a href="http://www.pragmaticprogrammer.com/titles/rails/">Agile Web Development with Rails.</a> Yes, it&#8217;s a book. And a cohesive book is worth 100 hobbled-together online tutorials.</li>
+    <li><a href="http://rubyforge.org/projects/instantrails/">InstantRails</a>: A <code>.zip</code> file containing Ruby, Apache, MySQL and PHP (for PhpMyAdmin), packaged and ready to go.</li>
+    <li><a href="http://www.aptana.com/">Aptana/RadRails</a> (like Eclipse) or Ruby In Steel (like Visual Studio) for editing code.</li>
+    <li><a href="http://subversion.tigris.org/">Subversion</a>, <a href="http://tortoisesvn.net/downloads">TortoiseSVN</a> and/or <a href="https://github.com/">Github</a> for source control.</li>
+    <li>Browse popular ruby on rails links on [del.icio.us]<a href="http://del.icio.us/popular/rubyonrails">http://del.icio.us/popular/rubyonrails</a>), <a href="http://railsbrain.com/">Rails documentation</a> and <a href="http://docs.huihoo.com/ruby/ruby-man-1.4/syntax.html">Ruby syntax &amp; examples</a>.</li>
+</ul>
+
+
+<p>But What Does It All Mean?</p>
+
+<p>&ldquo;Ruby on Rails&rdquo; is catchy but confusing. Is Rails some type of magical drug that Ruby is on? (Depending on who you ask, yes.)</p>
+
+<p><strong>Ruby</strong> is a programming language, similar to +Python+ and +Perl+. It is dynamically typed (no need for &ldquo;int i&rdquo;), 解释执行, and can be modified at runtime (such as adding new methods to classes). It has 数十种 of shortcuts that make it very clean; methods are rarely over 10 lines. It has good RegEx support and works well for shell scripting.</p>
+
+<p><strong>Rails</strong> is a <a href="http://rubygems.org/read/book/1">gem</a>, or a Ruby library. Some gems let you use the Win32 API. Others handle networking. Rails helps make web applications, providing classes for saving to the database, handling URLs and displaying html (along with a webserver, maintenance tasks, a debugging console and much more).</p>
+
+<p><strong>IRB</strong> is the interactive Ruby console (type &ldquo;irb&rdquo; to use). Rails has a special IRB console to access your web app as it is running (excellent for live debugging).</p>
+
+<p><strong>Rake</strong> is Ruby&rsquo;s version of Make. Define and run maintenance 维护 tasks like setting up databases, reloading data, backing up, or even deploying an app to your website.</p>
+
+<p><strong>Erb</strong> is embedded Ruby, which is like PHP. It lets you mix Ruby with HTML (for example): Ruby, which is like PHP. It lets you mix Ruby with HTML (for example):</p>
+
+<div>
+<pre>  &lt;div&gt;Hello there, &lt;%= get_user_name() %&gt;&lt;/div&gt;</pre>
+</div>
+
+
+<p><strong>YAML</strong> (or <strong>YML</strong>) means &ldquo;YAML Ain&rsquo;t a Markup Language&rdquo; — it&rsquo;s a simple way to <a href="http://en.wikipedia.org/wiki/YAML">specify data</a>:</p>
+
+<div>
+<pre>  {name: John Smith, age: 33}</pre>
+</div>
+
+
+<p>It&rsquo;s like JSON, much leaner than XML, and used by Rails for setting configuration options (like setting the database name and password).</p>
+
+<p>Phew! Once Ruby is installed and in your path, you can add the rails gem using:</p>
+
+<pre lang="shell"><code> gem install rails </code></pre>
+
+
+<p>In general, use gem install &ldquo;gem_name&rdquo;, which searches online sources for that library. Although Rails is &ldquo;just another gem&rdquo;, it is the killer library that brought Ruby into the limelight.</p>
+
+<h3><a name="understanding-ruby-isms" href="https://github.com/jhjguxin/project-manage/blob/master/rails/wiki/starting-ruby-on-rails-what-i-wish-i-knew.en.markdown#understanding-ruby-isms"></a>Understanding Ruby-Isms</h3>
+
+
+<p>It&rsquo;s daunting to learn a new library and a new language at the same time. Here are some of the biggest Ruby gotchas 陷阱 for those with a C/C++/Java background.</p>
+
+<p>Ruby removes unnecessary cruft: (){};</p>
+
+<ul>
+    <li>Parenthesis on method calls are optional; use print &#8220;hi&#8221;.</li>
+    <li>Semicolons aren&#8217;t needed after each line (crazy, I know).</li>
+    <li>Use &#8220;if then else end&#8221; rather than braces.</li>
+    <li>Parens aren&#8217;t needed around the conditions in if-then statements.</li>
+    <li>Methods automatically return the last line (call return explicitly if needed)</li>
+</ul>
+
+
+<p>Ruby scraps the annoying, ubiquitous punctuation that distracts from the program logic. Why put parens ((around),(everything))? Again, if you want parens, put ‘em in there. But you&rsquo;ll take off the training wheels soon enough.</p>
+
+<p>The line noise (er, &ldquo;punctuation&rdquo;) we use in C and Java is for the compiler&rsquo;s benefit, not ours. Be warned: after weeks with Ruby, other languages become a bit painful to read.</p>
+
+<pre>def greet(name)              # simple method
+   "Hello, " + name          # returned automatically
+end
+
+greet "world"                # ==&gt; "Hello, world"</pre>
+
+
+<p><strong>Those Funny Ruby Variables</strong></p>
+
+<ul>
+    <li><code>x = 3</code> is a local variable for a method or block (gone when the method is done)</li>
+    <li><code>@x = 3</code> is a instance variable owned by each object (it sticks around)</li>
+    <li><code>@@x = 3</code> is a class variable shared by all objects (it sticks around, too).</li>
+    <li><code>:hello</code> is a symbol, like a constant string. Useful for indexing hashes. Speaking of which…</li>
+    <li><code>dictionary = { :cat =&gt; "Goes meow", :dog =&gt; "Barks loud."}</code> is a hash of key/value pairs. Access elements with<code>dictionary[:cat]</code>. &gt; when key is a symbol, after ruby 1.9 <code>dictionary = { "cat" =&gt; "Goes meow", dog: "Barks loud."}</code></li>
+</ul>
+
+
+<p><strong>Those Funny Ruby Assignments</strong></p>
+
+<p>Ruby has the <code>||</code> operator which is a bit funky. When put in a chain</p>
+
+<div>
+<pre>  x = a || b || c || "default"</pre>
+</div>
+
+
+<p>it means &ldquo;test each value and return the first that&rsquo;s not false.&#8221; <strong>So if a is false, it tries b. If b is false, it tries c. Otherwise, it returns the string &#8220;default&rdquo;.</strong></p>
+
+<p>If you write <code>x = x || &ldquo;default&rdquo;</code> it means &ldquo;set x to itself (if it has a value), otherwise use the default.&rdquo; An easier way to write this is</p>
+
+<div>
+<pre>  x ||= "default"</pre>
+</div>
+
+
+<p>which means the same: set x to the default value unless it has some other value. You&rsquo;ll see this a lot in Ruby programs.</p>
+
+<p><strong>Those Funny Ruby Blocks</strong></p>
+
+<p>Ruby has &ldquo;blocks&rdquo;, which are like anonymous functions passed to a loop or another function. These blocks can specify a parameter using<code>|param|</code> and then take actions, call functions of their own, and so on. Blocks are useful when applying some function to each element of an array. It helps to think of them as a type of anonymous function that can, but doesn&rsquo;t have to, take a parameter.</p>
+
+<pre>3.times do |i|
+   print i*i
+end</pre>
+
+
+<p>In this example, the numbers <code>0</code>,<code>1</code> and <code>2</code> are passed to a block (do… end) that takes a single parameter (i) and prints i squared. The output would be <code>0</code>, followed by <code>1</code> followed by <code>4</code> (and looks like &ldquo;014″ since we didn&rsquo;t include spaces). Blocks are common in Ruby but take some getting used to, so be forewarned.</p>
+
+<p>These are the Ruby lessons that were tricky when starting out. Try <a href="http://mislav.uniqpath.com/poignant-guide/">Why&rsquo;s Poignant Guide To Ruby</a> for more info (&ldquo;Why&rdquo; is the name of the author… it confused me too).</p>
+
+<h3><a name="understanding-rails-isms" href="https://github.com/jhjguxin/project-manage/blob/master/rails/wiki/starting-ruby-on-rails-what-i-wish-i-knew.en.markdown#understanding-rails-isms"></a>Understanding Rails-isms</h3>
+
+
+<p>Rails has its own peculiarities. &ldquo;Trust us, it&rsquo;s good for you.&rdquo; say the programmers. It&rsquo;s true – the features/quirks make Rails stand out, but they&rsquo;re confusing until they click. Remember:</p>
+
+<ul>
+    <li><strong>Class and table names are important</strong>. Rails has certain naming conventions; it expects objects from the class Person to be saved to a database table named people. Yes, Rails has <strong>a pluralization engine</strong> to figure out what object maps to what table (I kid you not). This magic is great, but scary at first when you&#8217;re not sure how classes and tables are getting linked together.</li>
+    <li>Many methods take an &#8220;options&#8221; hash as a parameter, rather than having dozens of individual parameters. When you see
+<div>
+<pre>link_to "View Post", :action =&gt; 'show', :controller =&gt; 'article', :id =&gt; @article</pre>
+</div></li>
+</ul>
+
+
+<p>The call is really doing this:</p>
+
+<div>
+<pre>  link_to("View Post", {:action =&gt; 'show', :controller =&gt; 'article', :id =&gt; @article})</pre>
+</div>
+
+
+<p>There are only two parameters: the name (&ldquo;View Post&rdquo;) and a hash with 3 key/value pairs. Ruby lets us remove the extra parens and braces, leaving the stripped-down function call above.</p>
+
+<h3><a name="understanding-the-model-view-controller-pattern" href="https://github.com/jhjguxin/project-manage/blob/master/rails/wiki/starting-ruby-on-rails-what-i-wish-i-knew.en.markdown#understanding-the-model-view-controller-pattern"></a>Understanding The Model-View-Controller Pattern</h3>
+
+
+<p>Rails is built around the <a href="http://betterexplained.com/articles/intermediate-rails-understanding-models-views-and-controllers/">model-view-controller</a> pattern. It&rsquo;s a <strong>simple concept</strong>: <strong>separate the data, logic, and display layers of your program</strong>. This lets you split functionality cleanly, just like having separateHTML, CSS and Javascript files prevents your code from mushing together. Here&rsquo;s the MVC breakdown:</p>
+
+<ul>
+    <li><strong>Models</strong> are classes that talk to the databse. You find, create and save models, so you don&#8217;t (usually) have to write SQL. Rails has a class to handle the magic of saving to a database when a model is updated.</li>
+    <li><strong>Controllers</strong> take user input (like a URL) and decide what to do (show a page, order an item, post a comment). They may initially have business logic, like finding the right models or changing data. As your rails ninjitsu improves, constantly refactor and move business logic into the model (<a href="http://weblog.jamisbuck.org/2006/10/18/skinny-controller-fat-model">fat model, skinny controller</a>). Ideally, controllers just take inputs, call model methods, and pass outputs to the view (including error messages).</li>
+    <li><strong>Views</strong> display the output, usually HTML. They use ERB and this part of Rails is like PHP - you useHTML templates with some Ruby variables thrown in. Rails also makes it easy to create views asXML (for web services/RSS feeds) or JSON (for AJAX calls).</li>
+</ul>
+
+
+<p>The MVC pattern is key to building a readable, maintainable and easily-updateable web app.</p>
+
+<h3><a name="understanding-rails-directory-structure" href="https://github.com/jhjguxin/project-manage/blob/master/rails/wiki/starting-ruby-on-rails-what-i-wish-i-knew.en.markdown#understanding-rails-directory-structure"></a>Understanding Rails&#8217; Directory Structure</h3>
+
+
+<p>When you create your first rails app, the directories are laid out for you. The structure is well-organized: Models are in <code>app/models</code>, controllers in <code>app/controllers</code>, and views in <code>app/my_local_views</code> (just kidding).</p>
+
+<p>The naming conventions are important – it lets rails applications &ldquo;find their parts&rdquo; easily, without additional configuration. Also, it&rsquo;s very easy for another programmer to understand and learn from any rails app. I can take a look at Typo, the rails blogging software, and have a good idea of how it works in minutes. Consistency creates comprehension.</p>
+
+<h3><a name="understanding-rails-scaffolding" href="https://github.com/jhjguxin/project-manage/blob/master/rails/wiki/starting-ruby-on-rails-what-i-wish-i-knew.en.markdown#understanding-rails-scaffolding"></a>Understanding Rails&#8217; Scaffolding</h3>
+
+
+<p><strong>Scaffolding</strong> gives you default controller actions (URLs to visit) and a view (forms to fill out) to interact with your data — you don&rsquo;t need to build an interface yourself. You do need to define the Model and create a database table.</p>
+
+<p>Think of scaffolds as the &ldquo;default&rdquo; interface you can use to interact with your app – you&rsquo;ll slowly override parts of the default as your app is built. You specify scaffolds in the controller with a single line:</p>
+
+<p>and it adds default actions and views for showing, editing, and creating your &ldquo;Person&rdquo; object. Rails forms take some getting used to, so scaffolding helps a lot in the initial stages.</p>
+
+<h3><a name="more-tips-and-tricks" href="https://github.com/jhjguxin/project-manage/blob/master/rails/wiki/starting-ruby-on-rails-what-i-wish-i-knew.en.markdown#more-tips-and-tricks"></a>More Tips and Tricks</h3>
+
+
+<p>I originally planned on a list of tips &amp; tricks I found helpful when learning rails. It quickly struck me that Ruby on Rails actually requires a lot of background knowledge, and despite (or because of) its &ldquo;magic&rdquo;, it can still be confusing. I&rsquo;ll get into my favorite tricks in an upcoming article.</p>
+
+<p>As you dive further into web development, these guides may be helpful:</p>
+
+<ul>
+    <li><a href="http://betterexplained.com/articles/how-to-debug-web-applications-with-firefox/">How To Debug Web Applications With Firefox</a></li>
+    <li><a href="http://betterexplained.com/articles/how-to-optimize-your-site-with-http-caching/">How To Optimize Your Site With HTTP Caching</a></li>
+    <li><a href="http://betterexplained.com/articles/how-to-optimize-your-site-with-gzip-compression/">How To Optimize Your Site With GZIP Compression</a></li>
+    <li><a href="http://betterexplained.com/articles/speed-up-your-javascript-load-time/">Speed Up Your Javascript Load Time</a></li>
+    <li><a href="http://betterexplained.com/articles/the-quick-guide-to-guids/">The Quick Guide to GUIDs</a></li>
+</ul>
+
+
+<p>Source : <a href="http://betterexplained.com/articles/starting-ruby-on-rails-what-i-wish-i-knew/"><a href="http://betterexplained.com/articles/starting-ruby-on-rails-what-i-wish-i-knew/">http://betterexplained.com/articles/starting-ruby-on-rails-what-i-wish-i-knew/</a></a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Francis Jiang</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-05T19:38:00+08:00" pubdate data-updated="true">May 5<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://jhjguxin.github.io/blog/2012/05/05/starting-ruby-on-rails-what-i-wish-i-knew/" data-via="jhjguxin" data-counturl="http://jhjguxin.github.io/blog/2012/05/05/starting-ruby-on-rails-what-i-wish-i-knew/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/05/04/ruby-on-rails-programming-best-practices/" title="Previous Post: Ruby on Rails – Programming Best Practices">&laquo; Ruby on Rails – Programming Best Practices</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/05/08/nosql/" title="Next Post: NoSQL">NoSQL &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/">通过mongodump和mongorestore实现Mongodb备份和恢复 --by Chenzhou123520</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes/">Ruby on Rails 4.0 Release Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/rails-active-record-named-scopes/">Rails Active Record Named Scopes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/">晒晒我们的开源项目 ITEYE开源代码</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/">Single Sign-on 单点登录 Sso</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/jhjguxin">@jhjguxin</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'jhjguxin',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Francis Jiang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

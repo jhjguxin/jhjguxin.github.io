@@ -1,0 +1,1830 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: syntax | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/tags/syntax/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Active Record-Query Interface-CN]]></title>
+    <link href="http://jhjguxin.github.io/blog/2011/12/02/active-record-query-interface-cn/"/>
+    <updated>2011-12-02T17:54:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2011/12/02/active-record-query-interface-cn</id>
+    <content type="html"><![CDATA[<h2>Active Record-Query Interface-CN</h2>
+
+<h1>Active Record</h1>
+
+
+<p>Active Record<span style="font-family: DejaVu Sans;">（中文名：活动记录）是一种领域模型模式，特点是一个模型类对应关系型数据库中的一个表，而模型类的一个实例对应表中的一行记录。</span>Active Record <span style="font-family: DejaVu Sans;">和</span>Row Gateway <span style="font-family: DejaVu Sans;">（行记录入口）十分相似，但前者是领域模型，后者是一种数据源模式。关系型数据库往往通过外键来表述实体关系，</span>Active Record <span style="font-family: DejaVu Sans;">在数据源层面上也将这种关系映射为对象的关联和聚集。</span></p>
+
+<p><span style="font-family: DejaVu Sans;">　　</span>Active Record <span style="font-family: DejaVu Sans;">适合非常简单的领域需求，尤其在领域模型和数据库模型十分相似的情况下。如果遇到更加复杂的领域模型结构（例如用到继承、策略的领域模型），往往需要使用分离数据源的领域模型，结合</span>Data Mapper <span style="font-family: DejaVu Sans;">（数据映射器）使用。</span></p>
+
+<p><span style="font-family: DejaVu Sans;">　　</span>Active Record <span style="font-family: DejaVu Sans;">驱动框架一般兼有</span>ORM <span style="font-family: DejaVu Sans;">框架的功能，但</span>ActivActive Recorde Record <span style="font-family: DejaVu Sans;">不是简单的</span>ORM<span style="font-family: DejaVu Sans;">，正如和</span>Row Gateway <span style="font-family: DejaVu Sans;">的区别。著名的例子是全栈（</span>Full Stack<span style="font-family: DejaVu Sans;">）</span>Web <span style="font-family: DejaVu Sans;">开发框架</span>Ruby on Rails <span style="font-family: DejaVu Sans;">，其默认使用一个纯</span>Ruby <span style="font-family: DejaVu Sans;">写成的</span><strong>Active</strong><strong> </strong><strong>Record</strong><strong> </strong><span style="font-family: DejaVu Sans;"><strong>框架</strong>来驱动</span>MVC <span style="font-family: DejaVu Sans;">中的模型层。</span></p>
+
+<p><span style="font-family: DejaVu Sans;">　　对象关系映射（</span>ORM<span style="font-family: DejaVu Sans;">）提供了概念性的、易于理解的模型化数据的方法。</span>ORM<span style="font-family: DejaVu Sans;">方法论基于三个核心原则：简单：以最基本的形式建模数据。传达性：数据库结构被任何人都能理解的语言文档化。精确性：基于数据模型创建正确标准化了的结构。</span></p>
+
+<p><span style="font-family: DejaVu Sans;">　　在</span>Martin Fowler <span style="font-family: DejaVu Sans;">的《企业应用架构模式》一书中曾详细叙述了本模式。</span></p>
+
+<p><span style="font-family: DejaVu Sans;">　　以下是著名的</span>Active Record <span style="font-family: DejaVu Sans;">驱动框架：</span></p>
+
+<p><span style="font-family: DejaVu Sans;">　　</span>SQLObject(Python)</p>
+
+<p><span style="font-family: DejaVu Sans;">　　</span>Ruby on Rails ActiveRecord (Ruby)</p>
+
+<p><span style="font-family: DejaVu Sans;">　　</span>Yii Framework ActiveRecord (PHP)</p>
+
+<p><span style="font-family: DejaVu Sans;">　　</span>Castle ActiveRecord (.NET)</p>
+
+<h2>Migrations</h2>
+
+
+<p>Migrations are a convenient way for you to alter<span style="font-family: DejaVu Sans;">移动</span>your database in a structured and organized manner.Migrations<span style="font-family: DejaVu Sans;">是一种很便捷的方法让你能够以一种结构化的和有组织的方式来迁移你的数据库。</span>You could edit fragments of SQL by hand but you would then be responsible for telling other developers that they need to go and run them.<span style="font-family: DejaVu Sans;">你可以手动编辑</span>SQL<span style="font-family: DejaVu Sans;">片段，而且你有责任把这些告诉其他的开发人员，因为他们需要开发和使用它们。</span>You’d also have to keep track of which changes need to be run against the production machines next time you deploy.<span style="font-family: DejaVu Sans;">你也可以跟踪对你部署的代码在接下来的</span>production<span style="font-family: DejaVu Sans;">机器（将会）发生的变化。</span></p>
+
+<p>Active Record tracks which migrations have already been run so all you have to do is update your source and run <tt>rake</tt><tt> </tt><tt>db:migrate</tt>.Active Record<span style="font-family: DejaVu Sans;">跟踪并迁移你已经运行过的（代码和数据），而你只需要在更新了你的源代码的时候执行</span><tt>rake</tt><tt> </tt><tt>db:migrate</tt><span style="font-family: DejaVu Sans;"><tt>。</tt></span>Active Record will work out which migrations should be run.Active Recor<span style="font-family: DejaVu Sans;">将会计算出那些迁移需要被执行。</span>It will also update your <tt>db/schema.rb</tt> file to match the structure of your database.<span style="font-family: DejaVu Sans;">它还会更新你的</span><tt>db/schema.rb</tt><span style="font-family: DejaVu Sans;"><tt>文件使其于你的数据库结构相匹配。</tt></span></p>
+
+<p>Rails<span style="font-family: DejaVu Sans;">使用的是</span><strong>Active</strong><strong> </strong><strong>Record</strong><strong> </strong><span style="font-family: DejaVu Sans;"><strong>框架</strong>来处理数据迁移，这里笔者把</span>Active Record <span style="font-family: DejaVu Sans;">框架放在一个地方学习了，如需了解</span>Migration<span style="font-family: DejaVu Sans;">部分需要直接阅读</span>Migration<span style="font-family: DejaVu Sans;">部分。</span></p>
+
+<p>&nbsp;</p>
+
+<h2>Active Record Validations and Callbacks <span style="font-family: WenQuanYi Micro Hei;">活动记录验证和回调</span></h2>
+
+
+<p>This guide teaches you how to hook<span style="font-family: DejaVu Sans;">勾子</span>into the life cycle of your Active Record objects.<span style="font-family: DejaVu Sans;">这个教程指导你怎样挂接到你的</span>Active Record objects<span style="font-family: DejaVu Sans;">的生存周期。</span>You will learn how to validate the state of objects before they go into the database, and how to perform custom operations at certain points in the object life cycle.<span style="font-family: DejaVu Sans;">你将会学习到在将数据对象存入数据库之前怎样验证它们的状态，以及在对象生存周期的一些点上怎样执行定制操作。</span></p>
+
+<p>Rails<span style="font-family: DejaVu Sans;">使用的是</span><strong>Active</strong><strong> </strong><strong>Record</strong><strong> </strong><span style="font-family: DejaVu Sans;"><strong>框架</strong>来处理验证和回调，这里笔者把</span>Active Record <span style="font-family: DejaVu Sans;">框架放在一个地方学习了，如需了解</span>Migration<span style="font-family: DejaVu Sans;">部分需要直接阅读</span>Validations and Callbacks <span style="font-family: DejaVu Sans;">部分。</span></p>
+
+<h2><strong>A</strong><strong> </strong><strong>Guide</strong><strong> </strong><strong>to</strong><strong> </strong><strong>Active</strong><strong> </strong><strong>Record</strong><strong> </strong><strong>Associations</strong></h2>
+
+
+<p>This guide covers the association features of Active Record. By referring to this guide, you will be able to:<span style="font-family: DejaVu Sans;">本教程涵盖了</span>Active Record<span style="font-family: DejaVu Sans;">的关系部分的特性。（通过）这个教程提及的，你将能够：</span></p>
+
+<ul>
+    <li>Declare associations between Active Record models <span style="font-family: DejaVu Sans;">在</span>Active Record<span style="font-family: DejaVu Sans;">的</span>models<span style="font-family: DejaVu Sans;">中声明（它们的）关系</span></li>
+    <li>Understand the various types of Active Record associations <span style="font-family: DejaVu Sans;">明白各种类型的</span>Active Record<span style="font-family: DejaVu Sans;">关系</span></li>
+    <li>Use the methods added to your models by creating associations <span style="font-family: DejaVu Sans;">通过添加方法到</span>models<span style="font-family: DejaVu Sans;">（的形式）来创建关系</span></li>
+</ul>
+
+
+<h2>Active Record Query Interface<span style="font-family: WenQuanYi Micro Hei;">（基于）活动记录的查询接口</span></h2>
+
+
+<p>This guide covers different ways to retrieve data from the database using Active Record. By referring to this guide, you will be able to:</p>
+
+<p><span style="font-family: DejaVu Sans;">这个教程涵盖了使用基于</span>Active Record <span style="font-family: DejaVu Sans;">的不同方式从数据库检索数据。同过参考这个教程，你可以掌握：</span></p>
+
+<ul>
+    <li>Find records using a variety of methods and conditions <span style="font-family: DejaVu Sans;">使用各种方法和条件查找记录</span></li>
+    <li>Specify the order, retrieved attributes, grouping, and other properties of the found records<span style="font-family: DejaVu Sans;">对查找的记录指定顺序，检索属性，组，和其他属性</span></li>
+    <li>Use eager<span style="font-family: DejaVu Sans;">急于</span>loading to reduce the number of database queries needed for data retrieval <span style="font-family: DejaVu Sans;">使用预先加载，以减少数据检索所需的数据库查询数量</span></li>
+    <li>Use dynamic finders methods <span style="font-family: DejaVu Sans;">使用多元搜索方法</span></li>
+    <li>Check for the existence of particular records <span style="font-family: DejaVu Sans;">在特定的记录部分检查存在的记录</span></li>
+    <li>Perform various calculations on Active Record models <span style="font-family: DejaVu Sans;">在</span>Active Record <span style="font-family: DejaVu Sans;">模型中执行各种计算</span></li>
+</ul>
+
+
+<p><span style="color: #800000;">This</span><span style="color: #800000;">Guide</span><span style="color: #800000;">is</span><span style="color: #800000;">based</span><span style="color: #800000;">on</span><span style="color: #800000;">Rails</span><span style="color: #800000;">3.0.</span><span style="color: #800000;">Some</span><span style="color: #800000;">of</span><span style="color: #800000;">the</span><span style="color: #800000;">code</span><span style="color: #800000;">shown</span><span style="color: #800000;">here</span><span style="color: #800000;">will</span><span style="color: #800000;">not</span><span style="color: #800000;">work</span><span style="color: #800000;">in</span><span style="color: #800000;">other</span><span style="color: #800000;">versions</span><span style="color: #800000;">of</span><span style="color: #800000;">Rails.</span></p>
+
+<p>If you’re used to using raw SQL to find database records then, generally, you will find that there are better ways to carry out<span style="font-family: DejaVu Sans;">进行</span>the same operations in Rails. Active Record insulates you from the need to use SQL in most cases.<span style="font-family: DejaVu Sans;">如果你使用过原生的</span>SQL<span style="font-family: DejaVu Sans;">（语句）来查询数据库，那么，一般情况下，你将会发现（对数据库）进行同样的操作在</span>Rails<span style="font-family: DejaVu Sans;">中会有这更好的方法。</span>Active Record<span style="font-family: DejaVu Sans;">在大多数情况下会让你远离你（以前）需要使用的</span>SQL<span style="font-family: DejaVu Sans;">查询语句。</span></p>
+
+<p>Code examples throughout this guide will refer to one or more of the following models:<span style="font-family: DejaVu Sans;">贯穿这个教材代码示例将会参考一个或多个下面的模型：</span></p>
+
+<p>All of the following models use <tt>id</tt> as the primary key, unless specified otherwise.<span style="font-family: DejaVu Sans;">所有的模型都会使用</span>id<span style="font-family: DejaVu Sans;">作为主键，除非指定了其他主键。</span></p>
+
+<p><em>class Client &lt; ActiveRecord::Base</em></p>
+
+<p><em>has_one :address</em></p>
+
+<p><em>has_many :orders</em></p>
+
+<p><em>has_and_belongs_to_many :roles</em></p>
+
+<p><em>end</em></p>
+
+<p>&nbsp;</p>
+
+<p><em>class Address &lt; ActiveRecord::Base</em></p>
+
+<p><em>belongs_to :client</em></p>
+
+<p><em>end</em></p>
+
+<p>&nbsp;</p>
+
+<p><em>class Order &lt; ActiveRecord::Base</em></p>
+
+<p><em>belongs_to :client, :counter_cache =&gt; true</em></p>
+
+<p><em>end</em></p>
+
+<p>&nbsp;</p>
+
+<p><em>class Role &lt; ActiveRecord::Base</em></p>
+
+<p><em>has_and_belongs_to_many :clients</em></p>
+
+<p><em>end</em></p>
+
+<p>Active Record will perform queries on the database for you and is compatible<span style="font-family: DejaVu Sans;">兼容</span>with most database systems (MySQL, PostgreSQL and SQLite to name a few). Regardless of which database system you’re using, the Active Record method format will always be the same.</p>
+
+<p>Active Record<span style="font-family: DejaVu Sans;">将会为你在数据库中执行查询并且它兼容大多数的数据库系统（</span>MySQL, PostgreSQL and SQLite<span style="font-family: DejaVu Sans;">这里仅仅列举这些）。不管你使用的是何种数据库系统，</span>Active Record<span style="font-family: DejaVu Sans;">的方法格式通常是相同的。</span></p>
+
+<h3><a name="retrieving-objects-from-the-database"></a> 1 Retrieving Objects from the Database<span style="font-family: WenQuanYi Micro Hei;">在数据库中检索对象</span></h3>
+
+
+<p>To retrieve objects from the database, Active Record provides several finder methods. Each finder method allows you to pass arguments into it to perform certain queries on your database without writing raw SQL.</p>
+
+<p><span style="font-family: DejaVu Sans;">为了从数据库中检索对象，</span>Active Record<span style="font-family: DejaVu Sans;">提供了一些查询方法。每个查询方法都运行你带入参数并在数据库中执行查询而不用写</span>SQL<span style="font-family: DejaVu Sans;">自身的语句。</span></p>
+
+<p>The methods are:</p>
+
+<ul>
+    <li><tt>where</tt></li>
+    <li><tt>select</tt></li>
+    <li><tt>group</tt></li>
+    <li><tt>order</tt></li>
+    <li><tt>reorder</tt></li>
+    <li><tt>reverse_order</tt> <span style="font-family: DejaVu Sans;">逆向排序</span></li>
+    <li><tt>limit</tt></li>
+    <li><tt>offset</tt> <span style="font-family: DejaVu Sans;">偏移</span></li>
+    <li><tt>joins</tt></li>
+    <li><tt>includes</tt></li>
+    <li><tt>lock</tt></li>
+    <li><tt>readonly</tt></li>
+    <li><tt>from</tt></li>
+    <li><tt>having</tt></li>
+</ul>
+
+
+<p>All of the above methods return an instance of <tt>ActiveRecord::Relation</tt>.<span style="font-family: DejaVu Sans;">所有以上方法会返回一个</span><tt>ActiveRecord::Relation</tt><span style="font-family: DejaVu Sans;"><tt>的实例。</tt></span></p>
+
+<p>Primary operation of <tt>Model.find(options)</tt> can be summarized as:</p>
+
+<p><tt>Model.find(options)</tt><span style="font-family: DejaVu Sans;"><tt>主要的操作可以被概括为：</tt></span></p>
+
+<ul>
+    <li>Convert the supplied options to an equivalent SQL query. <span style="font-family: DejaVu Sans;">转换提供的（查询）选项为等同的</span>SQL<span style="font-family: DejaVu Sans;">查询</span></li>
+    <li>Fire the SQL query and retrieve the corresponding results from the database. <span style="font-family: DejaVu Sans;">开始</span>SQL<span style="font-family: DejaVu Sans;">查询并且检索从数据库相应的结果</span></li>
+    <li>Instantiate the equivalent Ruby object of the appropriate model for every resulting row. <span style="font-family: DejaVu Sans;">把每个（数据库中原生的）结果实例化等同的</span>Ruby<span style="font-family: DejaVu Sans;">对象</span></li>
+    <li>Run <tt>after_find</tt> callbacks if any. <span style="font-family: DejaVu Sans;">运行</span><tt>after_find</tt><span style="font-family: DejaVu Sans;"><tt>进行回调如果需要</tt></span></li>
+</ul>
+
+
+<h4><a name="retrieving-a-single-object"></a>1.1 Retrieving a Single Object<span style="font-family: WenQuanYi Micro Hei;">检索单个对象</span></h4>
+
+
+<p>Active Record lets you retrieve a single object using five different ways.</p>
+
+<p>Active Record<span style="font-family: DejaVu Sans;">让你可以使用五种不同的方法检索单个对象。</span></p>
+
+<h5><a name="using-a-primary-key"></a>1.1.1 Using a Primary Key<span style="font-family: WenQuanYi Micro Hei;">使用主键查询</span></h5>
+
+
+<p>Using <tt>Model.find(primary_key)</tt>, you can retrieve the object corresponding to the supplied <em>primary</em><em> </em><em>key</em> and matching the supplied options (if any). For example:</p>
+
+<p><span style="font-family: DejaVu Sans;"><tt>使用</tt></span><tt>Model.find(primary_key)</tt><span style="font-family: DejaVu Sans;"><tt>，你可以检索对象通过提供相应的主键或者匹配提供的其他选项（如果存在）。例如：</tt></span></p>
+
+<p><tt><em>#</em></tt><tt><em> </em></tt><tt><em>Find</em></tt><tt><em> </em></tt><tt><em>the</em></tt><tt><em> </em></tt><tt><em>client</em></tt><tt><em> </em></tt><tt><em>with</em></tt><tt><em> </em></tt><tt><em>primary</em></tt><tt><em> </em></tt><tt><em>key</em></tt><tt><em> </em></tt><tt><em>(id)</em></tt><tt><em> </em></tt><tt><em>1.</em></tt></p>
+
+<p><tt><em>rails</em></tt><tt><em> </em></tt><tt><em>console</em></tt></p>
+
+<p><tt><em>Loading development environment (Rails 3.1.1)</em></tt></p>
+
+<p><tt><em>irb(main):001:0&gt; p=Post.find(1)</em></tt></p>
+
+<p><tt> </tt><tt><em>Post Load (9.0ms) SELECT &ldquo;posts&rdquo;.* FROM &ldquo;posts&rdquo; WHERE &ldquo;posts&rdquo;.&ldquo;id&rdquo; = ? LIMIT 1 [[&ldquo;id&rdquo;, 1]]</em></tt></p>
+
+<p><tt><em>=&gt; #&lt;Post id: 1, name: &ldquo;</em></tt><span style="font-family: DejaVu Sans;"><tt><em>阿飞姐姐</em></tt></span><tt><em>&rdquo;, title: &ldquo;</em></tt><span style="font-family: DejaVu Sans;"><tt><em>接口姐姐</em></tt></span><tt><em>&rdquo;, content: &ldquo;12342424&rdquo;, created_at: &ldquo;2011-11-05 15:10:41&rdquo;, updated_at: &ldquo;2011-11-05 15:10:41&rdquo;&gt;</em></tt></p>
+
+<p><tt>SQL</tt><tt> </tt><tt>equivalent</tt><tt> </tt><tt>of</tt><tt> </tt><tt>the</tt><tt> </tt><tt>above</tt><tt> </tt><tt>is:</tt></p>
+
+<p><tt><em>SELECT * FROM posts WHERE (posts.id = 1)</em></tt></p>
+
+<p><tt>Model.find(primary_key)</tt> will raise an <tt>ActiveRecord::RecordNotFound</tt> exception if no matching record is found.</p>
+
+<p><tt>Model.find(primary_key)</tt><span style="font-family: DejaVu Sans;"><tt>如果没有记录匹配则会抛出一个</tt><tt></tt></span><tt>ActiveRecord::RecordNotFound</tt><span style="font-family: DejaVu Sans;"><tt>异常。</tt></span></p>
+
+<h5><a name="first"></a>1.1.2 <tt>first</tt></h5>
+
+
+<p><tt>Model.first</tt> finds the first record matched by the supplied options. For example:</p>
+
+<p><tt>Model.first</tt><span style="font-family: DejaVu Sans;"><tt>找到与提供的选项匹配的第一条记录。例如：</tt></span></p>
+
+<p><tt><em>client = Client.first</em></tt></p>
+
+<p><tt><em>=&gt; #&lt;Client id: 1, first_name: &ldquo;Lifo&rdquo;&gt;</em></tt></p>
+
+<p><tt><em>irb(main):018:0&gt; Post.first</em></tt></p>
+
+<p><tt> </tt><tt><em>Post Load (0.4ms) SELECT &ldquo;posts&rdquo;.* FROM &ldquo;posts&rdquo; LIMIT 1</em></tt></p>
+
+<p><tt><em>=&gt; #&lt;Post id: 2, name: &ldquo;jhjguxin&rdquo;, title: &ldquo;test console&rdquo;, content: &ldquo;A new post to test console&rdquo;, created_at: &ldquo;2011-11-05 15:55:17&rdquo;, updated_at: &ldquo;2011-11-05 15:55:17&rdquo;</em></tt></p>
+
+<p>SQL equivalent of the above is:</p>
+
+<p><tt><em>SELECT * FROM clients LIMIT 1</em></tt></p>
+
+<p><tt>Model.first</tt> returns <tt>nil</tt> if no matching record is found. No exception will be raised.</p>
+
+<p><span style="font-family: DejaVu Sans;"><tt>如果没有记录匹配</tt></span><tt>Model.first</tt><span style="font-family: DejaVu Sans;"><tt>会返回</tt></span><tt>nil</tt><span style="font-family: DejaVu Sans;"><tt>。不会抛出异常。</tt></span></p>
+
+<h5><a name="last"></a>1.1.3 <tt>last</tt></h5>
+
+
+<p><tt>Model.last</tt> finds the last record matched by the supplied options. For example:</p>
+
+<p><tt><em>client = Client.last</em></tt></p>
+
+<p><tt><em>=&gt; #&lt;Client id: 221, first_name: &ldquo;Russel&rdquo;&gt;</em></tt></p>
+
+<p>SQL equivalent of the above is:<span style="font-family: DejaVu Sans;">上面等同的</span>SQL<span style="font-family: DejaVu Sans;">语句是：</span></p>
+
+<p><tt><em>SELECT * FROM clients ORDER BY clients.id DESC LIMIT 1</em></tt></p>
+
+<p><tt><em>##SELECT &ldquo;posts&rdquo;.* FROM &ldquo;posts&rdquo; ORDER BY &ldquo;posts&rdquo;.&ldquo;id&rdquo; DESC LIMIT 1</em></tt></p>
+
+<p><tt>Model.last</tt> returns <tt>nil</tt> if no matching record is found. No exception will be raised.</p>
+
+<p><span style="font-family: DejaVu Sans;">如果没有记录匹配</span><tt>Model.last</tt><span style="font-family: DejaVu Sans;"><tt>会返回</tt></span><tt>nil</tt><span style="font-family: DejaVu Sans;"><tt>。不会抛出异常。</tt></span></p>
+
+<h4><a name="retrieving-multiple-objects"></a>1.2 Retrieving Multiple Objects<span style="font-family: WenQuanYi Micro Hei;">检索多个目标</span></h4>
+
+
+<h5><a name="using-multiple-primary-keys"></a>1.2.1 Using Multiple Primary Keys<span style="font-family: WenQuanYi Micro Hei;">使用多个主键</span></h5>
+
+
+<p><tt>Model.find(array_of_primary_key)</tt> also accepts an array of <em>primary</em><em> </em><em>keys</em>. An array of all the matching records for the supplied <em>primary</em><em> </em><em>keys</em> is returned. For example:</p>
+
+<p><tt>Model.find(array_of_primary_key)</tt><span style="font-family: DejaVu Sans;"><tt>也接受一个主键数组。将会返回一个由所有与提供的主键匹配的记录组成的数组。例如：</tt></span></p>
+
+<p><tt><em># Find the clients with primary keys 1 and 10.</em></tt></p>
+
+<p><tt><em>client = Client.find(1, 10) # Or even Client.find([1, 10])</em></tt></p>
+
+<p><tt><em>=&gt; [#&lt;Client id: 1, first_name: =&gt; &ldquo;Lifo&rdquo;&gt;, #&lt;Client id: 10, first_name: =&gt; &ldquo;Ryan&rdquo;&gt;]</em></tt></p>
+
+<p>SQL equivalent of the above is:</p>
+
+<p><tt><em>SELECT * FROM clients WHERE (clients.id IN (1,10))</em></tt></p>
+
+<p><tt><span style="color: #800000;">Model.find(array_of_primary_key)</span></tt><span style="color: #800000;">will</span><span style="color: #800000;">raise</span><span style="color: #800000;">an</span><tt><span style="color: #800000;">ActiveRecord::RecordNotFound</span></tt><span style="color: #800000;">exception</span><span style="color: #800000;">unless</span><span style="color: #800000;">a</span><span style="color: #800000;">matching</span><span style="color: #800000;">record</span><span style="color: #800000;">is</span><span style="color: #800000;">found</span><span style="color: #800000;">for</span><strong><span style="color: #800000;">all</span></strong><span style="color: #800000;">of</span><span style="color: #800000;">the</span><span style="color: #800000;">supplied</span><span style="color: #800000;">primary</span><span style="color: #800000;">keys.</span></p>
+
+<p><tt><span style="color: #800000;">Model.find(array_of_primary_key)</span></tt><span style="font-family: DejaVu Sans;"><tt><span style="color: #800000;">只要有一条记录没有找到就会抛出</span></tt><tt></tt></span><tt><span style="color: #800000;">ActiveRecord::RecordNotFound</span></tt><span style="font-family: DejaVu Sans;"><tt><span style="color: #800000;">异常</span></tt></span></p>
+
+<p><tt><span style="color: #800000;">ActiveRecord::RecordNotFound:</span></tt><tt></tt><tt><span style="color: #800000;">Couldn&rsquo;t</span></tt><tt></tt><tt><span style="color: #800000;">find</span></tt><tt></tt><tt><span style="color: #800000;">all</span></tt><tt></tt><tt><span style="color: #800000;">Posts</span></tt><tt></tt><tt><span style="color: #800000;">with</span></tt><tt></tt><tt><span style="color: #800000;">IDs</span></tt><tt></tt><tt><span style="color: #800000;">(2,</span></tt><tt></tt><tt><span style="color: #800000;">4,</span></tt><tt></tt><tt><span style="color: #800000;">5)</span></tt><tt></tt><tt><span style="color: #800000;">(found</span></tt><tt></tt><tt><span style="color: #800000;">2</span></tt><tt></tt><tt><span style="color: #800000;">results,</span></tt><tt></tt><tt><span style="color: #800000;">but</span></tt><tt></tt><tt><span style="color: #800000;">was</span></tt><tt></tt><tt><span style="color: #800000;">looking</span></tt><tt></tt><tt><span style="color: #800000;">for</span></tt><tt></tt><tt><span style="color: #800000;">3)</span></tt></p>
+
+<h4><a name="retrieving-multiple-objects-in-batches"></a> 1.3 Retrieving Multiple Objects in Batches<span style="font-family: WenQuanYi Micro Hei;">分批次的检索多个目标</span></h4>
+
+
+<p>Sometimes you need to iterate<span style="font-family: DejaVu Sans;">反复重复</span>over a large set of records. For example to send a newsletter to all users, to export some data, etc.</p>
+
+<p><span style="font-family: DejaVu Sans;">有时候你需要遍历大量的记录，例如发送一条业务通讯给所有的用户，输出一些数据，等等。</span></p>
+
+<p>The following may seem very straight forward at first:</p>
+
+<p><span style="font-family: DejaVu Sans;">首先（通过）以下内容看起来会非常直观</span></p>
+
+<p><tt><em># Very inefficient when users table has thousands of rows.</em></tt></p>
+
+<p><tt><em>User.all.each do |user|</em></tt></p>
+
+<p><tt> </tt><tt><em>NewsLetter.weekly_deliver(user)</em></tt></p>
+
+<p><tt><em>end</em></tt></p>
+
+<p>But if the total number of rows in the table is very large, the above approach may vary from being under performant to just plain<span style="font-family: DejaVu Sans;">平原</span>impossible.</p>
+
+<p><span style="font-family: DejaVu Sans;">但是如果（数据）表单的行有非常大的量，上面的方法在执行（的时候）不可能性能（还是那么）平稳。</span></p>
+
+<p>This is because <tt>User.all.each</tt> makes Active Record fetch <em>the</em><em> </em><em>entire</em><em> </em><em>table</em>, build a model object per row, and keep the entire array in the memory. Sometimes that is just too many objects and demands too much memory.</p>
+
+<p><span style="font-family: DejaVu Sans;">这是因为</span><tt>User.all.each</tt><span style="font-family: DejaVu Sans;"><tt>使得</tt><tt></tt></span><tt>Active</tt><tt> </tt><tt>Record</tt><span style="font-family: DejaVu Sans;"><tt>获取整个表单，给每一行数据创建一个</tt></span><tt>object</tt><tt> </tt><tt>model</tt><span style="font-family: DejaVu Sans;"><tt>，并且保留整个数组在内存中。有时会有太多的对象并且需要太多的内存。</tt></span></p>
+
+<p>&nbsp;</p>
+
+<p><strong>Configuring</strong><strong> </strong><strong>the</strong><strong> </strong><strong>batch</strong><strong> </strong><strong>size<span style="font-family: DejaVu Sans;">配置批次大小</span></strong></p>
+
+<p>Behind the scenes <tt>find_each</tt> fetches rows in batches of <tt>1000</tt> and yields them one by one. The size of the underlying batches is configurable via the <tt>:batch_size</tt> option.<span style="font-family: DejaVu Sans;">在使用</span><tt>find_each</tt><span style="font-family: DejaVu Sans;"><tt>获取</tt></span><tt>1000</tt><span style="font-family: DejaVu Sans;"><tt>次记录行并且一个接一个的</tt></span><tt>yield</tt><span style="font-family: DejaVu Sans;"><tt>它们的情况中。（确定）下面（查找）批次的大小是通过配置</tt></span><tt>:batch_size</tt><span style="font-family: DejaVu Sans;"><tt>选项。</tt></span></p>
+
+<p>To fetch <tt>User</tt> records in batch size of <tt>5000</tt>:</p>
+
+<p><tt><em>User.find_each(:batch_size =&gt; 5000) do |user|</em></tt></p>
+
+<p><tt> </tt><tt><em>NewsLetter.weekly_deliver(user)</em></tt></p>
+
+<p><tt><em>end</em></tt></p>
+
+<p>&nbsp;</p>
+
+<p><strong>Starting</strong><strong> </strong><strong>batch</strong><strong> </strong><strong>find</strong><strong> </strong><strong>from</strong><strong> </strong><strong>a</strong><strong> </strong><strong>specific</strong><strong> </strong><strong>primary</strong><strong> </strong><strong>key<span style="font-family: DejaVu Sans;">通过一个指定的主键开始批次查找</span></strong></p>
+
+<p>Records are fetched in ascending order on the primary key, which must be an integer. The <tt>:start</tt> option allows you to configure the first ID of the sequence if the lowest is not the one you need. This may be useful for example to be able to resume an interrupted batch process if it saves the last processed ID as a checkpoint.<span style="font-family: DejaVu Sans;">这会非常有用比如能够减少因为设置最后处理的</span>ID<span style="font-family: DejaVu Sans;">作为</span>checkpoint<span style="font-family: DejaVu Sans;">引起的中断。</span></p>
+
+<p><span style="font-family: DejaVu Sans;">（这里）是按照主键值的升序排列获取记录的，主键值必须是整数。</span><tt>:start</tt><span style="font-family: DejaVu Sans;"><tt>选项允许你配置序列的开始</tt></span><tt>ID</tt><span style="font-family: DejaVu Sans;"><tt>如果排序最低的（记录）不是你需要的。</tt></span></p>
+
+<p>To send newsletters only to users with the primary key starting from <tt>2000</tt>:</p>
+
+<p>User.find_each(:batch_size =&gt; 5000, :start =&gt; 2000) do |user|</p>
+
+<p>NewsLetter.weekly_deliver(user)</p>
+
+<p>end</p>
+
+<p><strong>Additional</strong><strong> </strong><strong>options<span style="font-family: DejaVu Sans;">其他（附加）选项</span></strong></p>
+
+<p><tt>find_each</tt> accepts the same options as the regular <tt>find</tt> method. However, <tt>:order</tt> and <tt>:limit</tt> are needed internally and hence not allowed to be passed explicitly.</p>
+
+<p><tt>find_each</tt><span style="font-family: DejaVu Sans;"><tt>接受和正则</tt></span><tt>find</tt><span style="font-family: DejaVu Sans;"><tt>方法相同的选项。</tt></span></p>
+
+<h5><a name="find_in_batches"></a>1.3.2 <tt>find_in_batches</tt></h5>
+
+
+<p>You can also work by chunks instead of row by row using <tt>find_in_batches</tt>. This method is analogous to <tt>find_each</tt>, but it yields arrays of models instead:</p>
+
+<p><span style="font-family: DejaVu Sans;"><tt>通过使用</tt></span><tt>find_in_batches</tt><span style="font-family: DejaVu Sans;">你也可以用</span>chunks<span style="font-family: DejaVu Sans;"><span style="font-family: Liberation Serif,Times New Roman,serif;">替代数据行。这个方法类似于 </span></span><tt>find_each</tt><span style="font-family: DejaVu Sans;"><tt>，但是作为替代它（会输出）到一个数组区域：</tt></span></p>
+
+<p><tt><em># Works in chunks of 1000 invoices at a time.</em></tt></p>
+
+<p><tt><em>Invoice.find_in_batches(:include =&gt; :invoice_lines) do |invoices|</em></tt></p>
+
+<p><tt> </tt><tt><em>export.add_invoices(invoices)</em></tt></p>
+
+<p><tt><em>end</em></tt></p>
+
+<p>The above will yield the supplied block with <tt>1000</tt> invoices every time.<span style="font-family: DejaVu Sans;">上面的语句每次会提供给语句</span>1000invoices<span style="font-family: DejaVu Sans;">。</span></p>
+
+<h3><a name="conditions"></a>2 Conditions<span style="font-family: WenQuanYi Micro Hei;">条件</span></h3>
+
+
+<p>The <tt>where</tt> method allows you to specify conditions to limit the records returned, representing the <tt>WHERE</tt>-part of the SQL statement. Conditions can either be specified as a string, array, or hash.</p>
+
+<p>where<span style="font-family: DejaVu Sans;">方法允许你指定条件限制记录返回（的内容），表示</span>SQL<span style="font-family: DejaVu Sans;">部分的</span>WHERE<span style="font-family: DejaVu Sans;">部分。条件可以指定为一个字符串，数组，或者</span>hash<span style="font-family: DejaVu Sans;">（字典）。</span></p>
+
+<h4><a name="pure-string-conditions"></a>2.1 Pure String Conditions<span style="font-family: WenQuanYi Micro Hei;">纯字符串条件</span></h4>
+
+
+<p>If you’d like to add conditions to your find, you could just specify them in there, just like <tt>Client.where(&ldquo;orders_count</tt><tt> </tt><tt>=</tt><tt> </tt><tt>&lsquo;2&rsquo;&rdquo;)</tt>. This will find all clients <strong>where</strong><strong> </strong><strong>the</strong><strong> </strong><tt><strong>orders_count</strong></tt><strong> </strong><strong>field</strong><strong>’</strong><strong>s</strong><strong> </strong><strong>value</strong><strong> </strong><strong>is</strong><strong> </strong><strong>2</strong>.</p>
+
+<p><strong>Building</strong><strong> </strong><strong>your</strong><strong> </strong><strong>own</strong><strong> </strong><strong>conditions</strong><strong> </strong><strong>as</strong><strong> </strong><strong>pure</strong><strong> </strong><strong>strings</strong><strong> </strong><strong>can</strong><strong> </strong><strong>leave</strong><strong> </strong><strong>you</strong><strong> </strong><strong>vulnerable</strong><span style="font-family: DejaVu Sans;"><strong>脆弱</strong></span><strong>to</strong><strong> </strong><strong>SQL</strong><strong> </strong><strong>injection</strong><span style="font-family: DejaVu Sans;"><strong>注入</strong></span><strong>exploits</strong><span style="font-family: DejaVu Sans;"><strong>漏洞</strong></span><strong>.</strong> For example, <tt>Client.where(&ldquo;first_name</tt><tt> </tt><tt>LIKE</tt><tt> </tt><tt>&lsquo;%#{params[:first_name]}%&rsquo;&rdquo;)</tt> is not safe. See the next section for the preferred way to handle conditions using an array.</p>
+
+<h4><a name="array-conditions"></a>2.2 Array Conditions</h4>
+
+
+<p>Now what if that number could vary, say as an argument from somewhere? The find then becomes something like:</p>
+
+<p><span style="font-family: DejaVu Sans;">现在，如果这个数字可能会有所不同，（比如说）作为某个地方的一个参数？查找会变成如下：</span></p>
+
+<p><tt><span style="color: #000000;"><span style="font-size: small;"><em>Client.where(&ldquo;orders_count = ?&rdquo;, params[:orders])</em></span></span></tt></p>
+
+<p>Active Record will go through the first element in the conditions value and any additional elements will replace the question marks <tt>(?)</tt> in the first element.</p>
+
+<p>Active Record<span style="font-family: DejaVu Sans;">将会在第一个元素中表示条件（语句）并且其他元素取代第一个元素中的问号。</span></p>
+
+<p>Or if you want to specify two conditions, you can do it like:</p>
+
+<p><tt><em>Client.where(&ldquo;orders_count = ? AND locked = ?&rdquo;, params[:orders], false)</em></tt></p>
+
+<p>In this example, the first question mark will be replaced with the value in <tt>params[:orders]</tt> and the second will be replaced with the SQL representation of <tt>false</tt>, which depends on the adapter.</p>
+
+<p>The reason for doing code like:</p>
+
+<p><tt><em>Client.where(&ldquo;orders_count = ?&rdquo;, params[:orders])</em></tt></p>
+
+<p>instead of:</p>
+
+<p><tt><em>Client.where(&ldquo;orders_count = #{params[:orders]}&rdquo;)</em></tt></p>
+
+<p>is because of argument safety. Putting the variable directly into the conditions string will pass the variable to the database <strong>as-is</strong>. This means that it will be an unescaped variable directly from a user who may have malicious intent. If you do this, you put your entire database at risk because once a user finds out he or she can exploit your database they can do just about anything to it. Never ever put your arguments directly inside the conditions string.</p>
+
+<p><span style="font-family: DejaVu Sans;">（这里）是基于参数安全（考虑）。将变量直接放入条件字符串将会（原封不动的传送变量）到数据库。他的意思是这个参数有可能将会是以一个来自用户的恶意的非转义的变量。如果你这样做，你就把整个数据库放在了风险之中，因为一旦有用户找到他们或者它可以利用（漏洞）对你数据库做任何操作。永远不要直接把你的参数放在条件字符串中。</span></p>
+
+<p>For more information on the dangers of SQL injection, see the <a href="http://guides.rubyonrails.org/security.html#sql-injection"><span style="color: #000080;"><span style="text-decoration: underline;">Ruby</span></span><span style="color: #000080;"><span style="text-decoration: underline;">on</span></span><span style="color: #000080;"><span style="text-decoration: underline;">Rails</span></span><span style="color: #000080;"><span style="text-decoration: underline;">Security</span></span><span style="color: #000080;"><span style="text-decoration: underline;">Guide</span></span></a>.</p>
+
+<h5><a name="placeholder-conditions"></a>2.2.1 Placeholder Conditions<span style="font-family: WenQuanYi Micro Hei;">条件（参数）占位符</span></h5>
+
+
+<p>Similar to the <tt>(?)</tt> replacement style of params, you can also specify keys/values hash in your array conditions:<span style="font-family: DejaVu Sans;">最简单的是使用（？）替代参数的形式，你也可以指定</span>keys/values hash<span style="font-family: DejaVu Sans;">在你的条件语句数组中：</span></p>
+
+<p><tt><em>Client.where(&ldquo;created_at &gt;= :start_date AND created_at &lt;= :end_date&rdquo;,</em></tt></p>
+
+<p><tt> </tt><tt><em>{:start_date =&gt; params[:start_date], :end_date =&gt; params[:end_date]})</em></tt></p>
+
+<p>This makes for clearer readability if you have a large number of variable conditions.<span style="font-family: DejaVu Sans;">当你有大量的条件变量时这样表示更加简洁和可读性更好。</span></p>
+
+<h5><a name="array-range_conditions"></a>2.2.2 Range Conditions<span style="font-family: WenQuanYi Micro Hei;">范围条件</span></h5>
+
+
+<p>If you’re looking for a range inside of a table (for example, users created in a certain timeframe) you can use the conditions option coupled with the <tt>IN</tt> SQL statement for this. If you had two dates coming in from a controller you could do something like this to look for a range:</p>
+
+<p><span style="font-family: DejaVu Sans;">如果你正在一个表中限定一个条件范围查找（例如，用户限定在一定的时间表中创建）你可以使用条件选项加上（这个参数的）</span>IN SQL<span style="font-family: DejaVu Sans;">声明。如果有来自一个</span>controller<span style="font-family: DejaVu Sans;">的两个日期，你可以做些事情查找一个范围：</span></p>
+
+<p><tt><em>Client.where(:created_at =&gt; (params[:start_date].to_date)..(params[:end_date].to_date))</em></tt></p>
+
+<p><tt><em>This query will generate something similar to the following SQL:</em></tt></p>
+
+<p><tt><em>SELECT &ldquo;clients&rdquo;.* FROM &ldquo;clients&rdquo; WHERE (&ldquo;clients&rdquo;.&ldquo;created_at&rdquo; BETWEEN &lsquo;2010-09-29&rsquo; AND &lsquo;2010-11-30&rsquo;)</em></tt></p>
+
+<h4><a name="hash-conditions"></a>2.3 Hash Conditions Hash<span style="font-family: WenQuanYi Micro Hei;">字典条件</span></h4>
+
+
+<p>Active Record also allows you to pass in hash conditions which can increase the readability of your conditions syntax. With hash conditions, you pass in a hash with keys of the fields you want conditionalised and the values of how you want to conditionalise them:</p>
+
+<p>Active Record<span style="font-family: DejaVu Sans;">同样也允许你通过</span>hash<span style="font-family: DejaVu Sans;">条件来增加你条件语句的可读性。在</span>hash<span style="font-family: DejaVu Sans;">条件，以键作为你的条件化参数并且相应的值则是具体的条件限制。</span></p>
+
+<p>Only equality, range and subset checking are possible with Hash conditions.</p>
+
+<h5><a name="equality-conditions"></a>2.3.1 Equality Conditions<span style="font-family: WenQuanYi Micro Hei;">等同条件</span></h5>
+
+
+<p><tt><em>Client.where(:locked =&gt; true)</em></tt></p>
+
+<p><strong>The</strong><strong> </strong><strong>field</strong><strong> </strong><strong>name</strong><strong> </strong><strong>can</strong><strong> </strong><strong>also</strong><strong> </strong><strong>be</strong><strong> </strong><strong>a</strong><strong> </strong><strong>string:</strong></p>
+
+<p><tt><em>Client.where(&lsquo;locked&rsquo; =&gt; true)</em></tt></p>
+
+<h5><a name="hash-range_conditions"></a>2.3.2 Range Conditions</h5>
+
+
+<p>The good thing about this is that we can pass in a range for our fields without it generating a large query as shown in the preamble of this section.</p>
+
+<p><tt><em>Client.where(:created_at =&gt; (Time.now.midnight – 1.day)..Time.now.midnight)</em></tt></p>
+
+<p>This will find all clients created yesterday by using a <tt>BETWEEN</tt> SQL statement:</p>
+
+<p><span style="font-family: DejaVu Sans;">这将会通过使用一个</span><tt>BETWEEN</tt> SQL<span style="font-family: DejaVu Sans;">声明查找</span>client<span style="font-family: DejaVu Sans;">中昨天创建的记录。</span></p>
+
+<p><tt><em>SELECT * FROM clients WHERE (clients.created_at BETWEEN &lsquo;2008-12-21 00:00:00&rsquo; AND &lsquo;2008-12-22 00:00:00&rsquo;)</em></tt></p>
+
+<p>This demonstrates a shorter syntax for the examples in <a href="http://guides.rubyonrails.org/active_record_querying.html#array-conditions"><span style="color: #000080;"><span style="text-decoration: underline;">Array</span></span><span style="color: #000080;"><span style="text-decoration: underline;">Conditions</span></span></a></p>
+
+<h5><a name="subset-conditions"></a>2.3.3 Subset Conditions<span style="font-family: WenQuanYi Micro Hei;">子集条件</span></h5>
+
+
+<p>If you want to find records using the <tt>IN</tt> expression you can pass an array to the conditions hash:</p>
+
+<p><span style="font-family: DejaVu Sans;">如果想使用</span>IN<span style="font-family: DejaVu Sans;">表达式查找记录你可以在条件</span>hash<span style="font-family: DejaVu Sans;">字典中加上一个数组：</span></p>
+
+<p><tt><em>Client.where(:orders_count =&gt; [1,3,5])</em></tt></p>
+
+<p>This code will generate SQL like this:</p>
+
+<p><tt><em>SELECT * FROM clients WHERE (clients.orders_count IN (1,3,5))</em></tt></p>
+
+<h3><a name="ordering"></a>3 Ordering<span style="font-family: WenQuanYi Micro Hei;">排序</span></h3>
+
+
+<p>To retrieve records from the database in a specific order, you can use the <tt><strong>order</strong></tt> method.</p>
+
+<p><span style="font-family: DejaVu Sans;">如果你想检索记录从数据库中并且以一种指定的方式排序，你可以使用</span>order<span style="font-family: DejaVu Sans;">方法。</span></p>
+
+<p>For example, if you’re getting a set of records and want to order them in ascending order by the <tt>created_at</tt> field in your table:</p>
+
+<p><tt><em>Client.order(&ldquo;created_at&rdquo;)</em></tt></p>
+
+<p><tt><em>You could specify ASC or DESC as well:</em></tt></p>
+
+<p><tt><em>Client.order(&ldquo;created_at DESC&rdquo;)</em></tt></p>
+
+<p><tt><em># OR</em></tt></p>
+
+<p><tt><em>Client.order(&ldquo;created_at ASC&rdquo;)</em></tt></p>
+
+<p>Or ordering by multiple fields:<span style="font-family: DejaVu Sans;">或者按照多个</span>fields<span style="font-family: DejaVu Sans;">排序：</span></p>
+
+<p><tt><em>Client.order(&ldquo;orders_count ASC, created_at DESC&rdquo;)</em></tt></p>
+
+<h3><a name="selecting-specific-fields"></a>4 Selecting Specific Fields</h3>
+
+
+<p>By default, <tt>Model.find</tt> selects all the fields from the result set using <tt>select</tt><tt> </tt><tt>*</tt>.</p>
+
+<p><span style="font-family: DejaVu Sans;">默认情况中，</span><tt>Model.find</tt><span style="font-family: DejaVu Sans;"><tt>会选择所有的</tt></span><tt>fields</tt><span style="font-family: DejaVu Sans;"><tt>作为结果并且（对数据库执行）</tt></span><tt>select</tt><tt> </tt><tt>*</tt><span style="font-family: DejaVu Sans;"><tt>。</tt></span></p>
+
+<p>To select only a subset of fields from the result set, you can specify the subset via the <tt>select</tt> method.</p>
+
+<p><span style="font-family: DejaVu Sans;">要想只选中</span>fields<span style="font-family: DejaVu Sans;">中的一个子集作为结果，你可以通过</span>select<span style="font-family: DejaVu Sans;">方法指定子集。</span></p>
+
+<p><span style="color: #800000;">If</span><span style="color: #800000;">the</span><tt><span style="color: #800000;">select</span></tt><span style="color: #800000;">method</span><span style="color: #800000;">is</span><span style="color: #800000;">used,</span><span style="color: #800000;">all</span><span style="color: #800000;">the</span><span style="color: #800000;">returning</span><span style="color: #800000;">objects</span><span style="color: #800000;">will</span><span style="color: #800000;">be</span><a href="http://guides.rubyonrails.org/active_record_querying.html#readonly-objects"><span style="color: #000080;"><span style="text-decoration: underline;">read</span></span><span style="color: #000080;"><span style="text-decoration: underline;">only</span></span></a><span style="color: #800000;">.</span></p>
+
+<p>For example, to select only <tt>viewable_by</tt> and <tt>locked</tt> columns:</p>
+
+<p><tt><em>Client.select(&ldquo;viewable_by, locked&rdquo;)</em></tt></p>
+
+<p>The SQL query used by this find call will be somewhat like:</p>
+
+<p><tt><em>SELECT viewable_by, locked FROM clients</em></tt></p>
+
+<p>Be careful because this also means you’re initializing a model object with only the fields that you’ve selected. <strong>If</strong><strong> </strong><strong>you</strong><strong> </strong><strong>attempt</strong><strong> </strong><strong>to</strong><strong> </strong><strong>access</strong><strong> </strong><strong>a</strong><strong> </strong><strong>field</strong><strong> </strong><strong>that</strong><strong> </strong><strong>is</strong><strong> </strong><strong>not</strong><strong> </strong><strong>in</strong><strong> </strong><strong>the</strong><strong> </strong><strong>initialized</strong><strong> </strong><strong>record</strong><strong> </strong><strong>you</strong><strong>’</strong><strong>ll</strong><strong> </strong><strong>receive</strong>:</p>
+
+<p>ActiveModel::MissingAttributeError: missing attribute: &lt;attribute&gt;</p>
+
+<p><strong>Where</strong><strong> </strong><tt><strong>&lt;attribute&gt;</strong></tt><strong> </strong><strong>is</strong><strong> </strong><strong>the</strong><strong> </strong><strong>attribute</strong><strong> </strong><strong>you</strong><strong> </strong><strong>asked</strong><strong> </strong><strong>for.</strong> The <tt>id</tt> method will not raise the <tt>ActiveRecord::MissingAttributeError</tt>, so just be careful when working with associations because they need the <tt>id</tt> method to function properly.</p>
+
+<p>You can also call SQL functions within the select option. For example, if you would like to only grab a single record per unique value in a certain field by using the <tt>DISTINCT</tt> function you can do it like this:</p>
+
+<p><tt><em>Client.select(&ldquo;DISTINCT(name)&rdquo;)</em></tt></p>
+
+<p>&nbsp;</p>
+
+<h3><a name="limit-and-offset"></a>5 Limit and Offset</h3>
+
+
+<p>To apply <tt>LIMIT</tt> to the SQL fired by the <tt>Model.find</tt>, <strong>you</strong><strong> </strong><strong>can</strong><strong> </strong><strong>specify</strong><strong> </strong><strong>the</strong><strong> </strong><tt><strong>LIMIT</strong></tt><strong> </strong><strong>using</strong><strong> </strong><tt><strong>limit</strong></tt><strong> </strong><strong>and</strong><strong> </strong><tt><strong>offset</strong></tt><strong> </strong><strong>methods</strong><strong> </strong><strong>on</strong><strong> </strong><strong>the</strong><strong> </strong><strong>relation.</strong></p>
+
+<p>You can use <tt>limit</tt> to specify the number of records to be retrieved, and use <tt>offset</tt> to specify the number of records to skip before starting to return the records. For example</p>
+
+<p><tt><em>Client.limit(5)</em></tt></p>
+
+<p>will return a maximum of 5 clients and because it specifies no offset it will return the first 5 in the table. The SQL it executes looks like this:</p>
+
+<p><tt><em>SELECT * FROM clients LIMIT 5</em></tt></p>
+
+<p>Adding <tt>offset</tt> to that</p>
+
+<p><tt><em>Client.limit(5).offset(30)</em></tt></p>
+
+<p>will return instead a maximum of 5 clients beginning with the 31st. The SQL looks like:</p>
+
+<p><span style="font-family: DejaVu Sans;">将会返回最大</span>5<span style="font-family: DejaVu Sans;">个</span>clients<span style="font-family: DejaVu Sans;">并且从第</span>31<span style="font-family: DejaVu Sans;">个开始。这个</span>SQL<span style="font-family: DejaVu Sans;">看起来是：</span></p>
+
+<p><tt><em>SELECT * FROM clients LIMIT 5 OFFSET 30</em></tt></p>
+
+<h3><a name="group"></a>6 Group</h3>
+
+
+<p>To apply a <tt>GROUP</tt><tt> </tt><tt>BY</tt> clause to the SQL fired by the finder, you can specify the <tt>group</tt> method on the find.</p>
+
+<p>For example, if you want to find a collection of the dates orders were created on:</p>
+
+<p><tt><em>Order.select(&ldquo;date(created_at) as ordered_date, sum(price) as total_price&rdquo;).group(&ldquo;date(created_at)&rdquo;)</em></tt></p>
+
+<p>And this will give you a single <tt>Order</tt><span style="font-family: DejaVu Sans;"><tt>生产者</tt></span>object for each date where there are orders in the database.</p>
+
+<p>The SQL that would be executed would be something like this:</p>
+
+<p><tt><em>SELECT date(created_at) as ordered_date, sum(price) as total_price FROM orders GROUP BY date(created_at)</em></tt></p>
+
+<h3><a name="having"></a>7 Having</h3>
+
+
+<p>SQL uses the <tt>HAVING</tt> clause<span style="font-family: DejaVu Sans;">短语</span>to specify conditions on the <tt>GROUP</tt><tt> </tt><tt>BY</tt> fields. You can add the <tt>HAVING</tt> clause to the SQL fired by the <tt>Model.find</tt> by adding the <tt>:having</tt> option to the find.</p>
+
+<p>For example:</p>
+
+<p><tt><em>Order.select(&ldquo;date(created_at) as ordered_date, sum(price) as total_price&rdquo;).group(&ldquo;date(created_at)&rdquo;).having(&ldquo;sum(price) &gt; ?&rdquo;, 100)</em></tt></p>
+
+<p>The SQL that would be executed would be something like this:</p>
+
+<p><tt><em>SELECT date(created_at) as ordered_date, sum(price) as total_price FROM orders GROUP BY date(created_at) HAVING sum(price) &gt; 100</em></tt></p>
+
+<p>This will return single order objects for each day, but only those that are ordered more than $100 in a day.</p>
+
+<h3><a name="overriding-conditions"></a>8 Overriding Conditions<span style="font-family: WenQuanYi Micro Hei;">覆盖条件</span></h3>
+
+
+<h4><a name="except"></a>8.1 <tt>except</tt><span style="font-family: WenQuanYi Micro Hei;"><tt>排除</tt></span></h4>
+
+
+<p>You can specify certain conditions to be excepted by using the <tt>except</tt> method. For example:</p>
+
+<p><tt><em>Post.where(&lsquo;id &gt; 10&rsquo;).limit(20).order(&lsquo;id asc&rsquo;).except(:order)#</em></tt><span style="font-family: DejaVu Sans;"><tt><em>取消排序</em></tt></span></p>
+
+<p><tt><em>The SQL that would be executed:</em></tt></p>
+
+<p><tt><em>SELECT * FROM posts WHERE id &gt; 10 LIMIT 20</em></tt></p>
+
+<p><tt><em>irb(main):006:0&gt; Post.where(&lsquo;id &gt; 1&rsquo;).limit(20).order(&lsquo;id desc&rsquo;)</em></tt></p>
+
+<p><tt> </tt><tt><em>Post Load (0.4ms) SELECT &ldquo;posts&rdquo;.* FROM &ldquo;posts&rdquo; WHERE (id &gt; 1) ORDER BY id desc LIMIT 20</em></tt></p>
+
+<p><tt><em>=&gt; [#&lt;Post id: 4, name: &ldquo;2134&rdquo;, title: &ldquo;2134&rdquo;, content: &ldquo;21343242134&rdquo;, created_at: &ldquo;2011-11-09 10:25:38&rdquo;, updated_at: &ldquo;2011-11-09 10:25:38&rdquo;&gt;, #&lt;Post id: 2, name: &ldquo;jhjguxin&rdquo;, title: &ldquo;test console&rdquo;, content: &ldquo;A new post to test console&rdquo;, created_at: &ldquo;2011-11-05 15:55:17&rdquo;, updated_at: &ldquo;2011-11-05 15:55:17&rdquo;&gt;]</em></tt></p>
+
+<p><tt><em>irb(main):007:0&gt; Post.where(&lsquo;id &gt; 1&rsquo;).limit(20).order(&lsquo;id desc&rsquo;).except(:order)</em></tt></p>
+
+<p><tt> </tt><tt><em>Post Load (0.4ms) SELECT &ldquo;posts&rdquo;.* FROM &ldquo;posts&rdquo; WHERE (id &gt; 1) LIMIT 20</em></tt></p>
+
+<p><tt><em>=&gt; [#&lt;Post id: 2, name: &ldquo;jhjguxin&rdquo;, title: &ldquo;test console&rdquo;, content: &ldquo;A new post to test console&rdquo;, created_at: &ldquo;2011-11-05 15:55:17&rdquo;, updated_at: &ldquo;2011-11-05 15:55:17&rdquo;&gt;, #&lt;Post id: 4, name: &ldquo;2134&rdquo;, title: &ldquo;2134&rdquo;, content: &ldquo;21343242134&rdquo;, created_at: &ldquo;2011-11-09 10:25:38&rdquo;, updated_at: &ldquo;2011-11-09 10:25:38&rdquo;&gt;]</em></tt></p>
+
+<h4><a name="only"></a>8.2 <tt>only</tt></h4>
+
+
+<p>You can also override conditions using the <tt>only</tt> method. For example:</p>
+
+<p><tt><em>Post.where(&lsquo;id &gt; 10&rsquo;).limit(20).order(&lsquo;id desc&rsquo;).only(:order, :where)</em></tt></p>
+
+<p>The SQL that would be executed:</p>
+
+<p><tt><em>SELECT * FROM posts WHERE id &gt; 10 ORDER BY id DESC</em></tt></p>
+
+<h4><a name="reorder"></a>8.3 <tt>reorder</tt></h4>
+
+
+<p>The <tt>reorder</tt> method overrides the default scope order. For example:</p>
+
+<p><tt><em>class Post &lt; ActiveRecord::Base</em></tt></p>
+
+<p><tt> </tt><tt><em>..</em></tt></p>
+
+<p><tt> </tt><tt><em>..</em></tt></p>
+
+<p><tt> </tt><tt><em>has_many :comments, :order =&gt; &lsquo;posted_at DESC&rsquo;</em></tt></p>
+
+<p><tt><em>end</em></tt></p>
+
+<p>&nbsp;</p>
+
+<p><tt><em>Post.find(10).comments.reorder(&lsquo;name&rsquo;)</em></tt></p>
+
+<p>The SQL that would be executed:</p>
+
+<p><tt><em>SELECT * FROM posts WHERE id = 10 ORDER BY name</em></tt></p>
+
+<p>In case the <tt>reorder</tt> clause is not used, the SQL executed would be:</p>
+
+<p><tt><em>SELECT * FROM posts WHERE id = 10 ORDER BY posted_at DESC</em></tt></p>
+
+<p>If no ordering clause is specified in the query, the <tt>reverse_order</tt> orders by the primary key in reverse<span style="font-family: DejaVu Sans;">撤销</span>order.</p>
+
+<p><tt><em>Client.where(&ldquo;orders_count &gt; 10&rdquo;).reverse_order</em></tt></p>
+
+<p>The SQL that would be executed:</p>
+
+<p><tt><em>SELECT * FROM clients WHERE orders_count &gt; 10 ORDER BY clients.id DESC</em></tt></p>
+
+<p><strong>This</strong><strong> </strong><strong>method</strong><strong> </strong><strong>accepts</strong><strong> </strong><strong><strong>no</strong></strong><strong> </strong><strong>arguments.</strong></p>
+
+<h3><a name="readonly-objects"></a>9 Readonly Objects</h3>
+
+
+<p>Active Record provides <tt>readonly</tt> method on a relation to explicitly disallow modification or deletion of any of the returned object. Any attempt to alter or destroy a readonly record will not succeed, raising an <tt>ActiveRecord::ReadOnlyRecord</tt> exception.</p>
+
+<p><tt><em>client = Client.readonly.first</em></tt></p>
+
+<p><tt><em>client.visits += 1</em></tt></p>
+
+<p><tt><em>client.save</em></tt></p>
+
+<p><strong>As</strong><strong> </strong><tt><strong>client</strong></tt><strong> </strong><strong>is</strong><strong> </strong><strong>explicitly</strong><strong> </strong><strong>set</strong><strong> </strong><strong>to</strong><strong> </strong><strong>be</strong><strong> </strong><strong>a</strong><strong> </strong><strong>readonly</strong><strong> </strong><strong>object</strong>, the above code will raise an <tt>ActiveRecord::ReadOnlyRecord</tt> exception when<strong> </strong><strong>calling</strong><strong> </strong><tt><strong>client.save</strong></tt><strong> </strong><strong>with</strong><strong> </strong><strong>an</strong><strong> </strong><strong>updated</strong><strong> </strong><strong>value</strong><strong> </strong><strong>of</strong><strong> </strong><em><strong>visits</strong></em>.</p>
+
+<h3><a name="locking-records-for-update"></a>10 Locking Records for Update</h3>
+
+
+<p>Locking is helpful for preventing race conditions when updating records in the database and ensuring atomic updates.</p>
+
+<p>Active Record provides two locking mechanisms:</p>
+
+<ul>
+    <li>Optimistic<span style="font-family: DejaVu Sans;">乐观</span>Locking</li>
+    <li>Pessimistic<span style="font-family: DejaVu Sans;">悲观</span>Locking</li>
+</ul>
+
+
+<h4><a name="optimistic-locking"></a>10.1 Optimistic Locking</h4>
+
+
+<p><strong>Optimistic</strong><strong> </strong><strong>locking</strong><strong> </strong><strong>allows</strong><strong> </strong><strong>multiple</strong><strong> </strong><strong>users</strong><strong> </strong><strong>to</strong><strong> </strong><strong>access</strong><strong> </strong><strong>the</strong><strong> </strong><strong>same</strong><strong> </strong><strong>record</strong><strong> </strong><strong>for</strong><strong> </strong><strong>edits</strong>, and assumes<span style="font-family: DejaVu Sans;">假定</span>a minimum of conflicts with the data. It does this by <strong>checking</strong><strong> </strong><strong>whether</strong><strong> </strong><strong>another</strong><strong> </strong><strong>process</strong><strong> </strong><strong>has</strong><strong> </strong><strong>made</strong><strong> </strong><strong>changes</strong> to a record <strong>since</strong><strong> </strong><strong>it</strong><strong> </strong><strong>was</strong><strong> </strong><strong>opened</strong>. An <tt>ActiveRecord::StaleObjectError</tt> exception is thrown if that has occurred<span style="font-family: DejaVu Sans;">发生</span>and the update is ignored.</p>
+
+<p><strong>Optimistic</strong><strong> </strong><strong>locking</strong><strong> </strong><strong>column</strong></p>
+
+<p><strong>In</strong><strong> </strong><strong>order</strong><strong> </strong><strong>to</strong><strong> </strong><strong>use</strong><strong> </strong><strong>optimistic</strong><strong> </strong><strong>locking</strong>, the table <strong>needs</strong><strong> </strong><strong>to</strong><strong> </strong><strong>have</strong><strong> </strong><strong>a</strong><strong> </strong><strong>column</strong><strong> </strong><strong>called</strong><strong> </strong><tt><strong>lock_version</strong></tt>. Each time the record is <strong>updated</strong>, Active Record increments the <tt><strong>lock_version</strong></tt> column. If an update request is made with a lower value in the <tt>lock_version</tt> field than is currently in the <tt>lock_version</tt> column in the database, the update request will fail with an <tt>ActiveRecord::StaleObjectError</tt>. Example:</p>
+
+<p><tt><em>c1 = Client.find(1)</em></tt></p>
+
+<p><tt><em>c2 = Client.find(1)</em></tt></p>
+
+<p>&nbsp;</p>
+
+<p><tt><em>c1.first_name = &ldquo;Michael&rdquo;</em></tt></p>
+
+<p><tt><em>c1.save</em></tt></p>
+
+<p>&nbsp;</p>
+
+<p><tt><em>c2.name = &ldquo;should fail&rdquo;</em></tt></p>
+
+<p><tt><em>c2.save # Raises a ActiveRecord::StaleObjectError</em></tt></p>
+
+<p>You’re then responsible<span style="font-family: DejaVu Sans;">有责任</span>for dealing<span style="font-family: DejaVu Sans;">处理</span>with the conflict by rescuing the exception and either rolling back, merging, or otherwise apply the business logic needed to resolve the conflict.</p>
+
+<p><span style="color: #800000;">You</span><span style="color: #800000;">must</span><span style="color: #800000;">ensure</span><span style="color: #800000;">that</span><span style="color: #800000;">your</span><span style="color: #800000;">database</span><span style="color: #800000;">schema</span><span style="color: #800000;">defaults</span><span style="color: #800000;">the</span><tt><span style="color: #800000;">lock_version</span></tt><span style="color: #800000;">column</span><span style="color: #800000;">to</span><tt><span style="color: #800000;">0</span></tt><span style="color: #800000;">.</span></p>
+
+<p>This behavior can be turned off by setting <tt><strong>ActiveRecord::Base.lock_optimistically</strong></tt><tt><strong> </strong></tt><tt><strong>=</strong></tt><tt><strong> </strong></tt><tt><strong>false</strong></tt><strong>.</strong></p>
+
+<p><strong>To</strong><strong> </strong><strong>override</strong><strong> </strong><strong>the</strong><strong> </strong><strong>name</strong><strong> </strong><strong>of</strong><strong> </strong><strong>the</strong><strong> </strong><tt><strong>lock_version</strong></tt><strong> </strong><strong>column</strong>, <tt>ActiveRecord::Base</tt> provides a class method called <tt>set_locking_column</tt>:</p>
+
+<p><tt><em>class Client &lt; ActiveRecord::Base</em></tt></p>
+
+<p><tt> </tt><tt><em>set_locking_column :lock_client_column</em></tt></p>
+
+<p><tt><em>end</em></tt></p>
+
+<h4><a name="pessimistic-locking"></a>10.2 Pessimistic Locking</h4>
+
+
+<p>Pessimistic locking uses a locking mechanism provided by the underlying<span style="font-family: DejaVu Sans;">底层</span>database. Using <tt>lock</tt> when building a relation obtains an exclusive lock on the selected rows. Relations using <tt>lock</tt> are usually wrapped inside a transaction for preventing deadlock conditions.</p>
+
+<p><span style="font-family: DejaVu Sans;">在语句块的一个流程中使用</span>lock<span style="font-family: DejaVu Sans;">通常是为了防止死锁情况出现。</span></p>
+
+<p>For example:</p>
+
+<p><tt><em>Item.transaction do</em></tt></p>
+
+<p><tt> </tt><tt><em>i = Item.lock.first</em></tt></p>
+
+<p><tt> </tt><tt><em>i.name = &lsquo;Jones&rsquo;</em></tt></p>
+
+<p><tt> </tt><tt><em>i.save</em></tt></p>
+
+<p><tt><em>end</em></tt></p>
+
+<p>The above session produces the following SQL for a MySQL backend:</p>
+
+<p>You can also pass raw SQL to the <tt>lock</tt> method for allowing different types of locks. For example, MySQL has an expression called <tt>LOCK</tt><tt> </tt><tt>IN</tt><tt> </tt><tt>SHARE</tt><tt> </tt><tt>MODE</tt> where you can lock a record but still allow other queries to read it. To specify this expression just pass it in as the lock option:</p>
+
+<p><tt><em>SQL (0.2ms) BEGIN</em></tt></p>
+
+<p><tt><em>Item Load (0.3ms) SELECT * FROM <code>items</code> LIMIT 1 FOR UPDATE</em></tt></p>
+
+<p><tt><em>Item Update (0.4ms) UPDATE <code>items</code> SET <code>updated_at</code> = &lsquo;2009-02-07 18:05:56&rsquo;, <code>name</code> = &lsquo;Jones&rsquo; WHERE <code>id</code> = 1</em></tt></p>
+
+<p><tt><em>SQL (0.8ms) COMMIT</em></tt></p>
+
+<p>You can also pass raw SQL to the <tt>lock</tt> method for allowing different types of locks. For example, MySQL has an expression called <tt>LOCK</tt><tt> </tt><tt>IN</tt><tt> </tt><tt>SHARE</tt><tt> </tt><tt>MODE</tt> <strong>where</strong><strong> </strong><strong>you</strong><strong> </strong><strong>can</strong><strong> </strong><strong>lock</strong><strong> </strong><strong>a</strong><strong> </strong><strong>record</strong><strong> </strong><strong>but</strong><strong> </strong><strong>still</strong><strong> </strong><strong>allow</strong><strong> </strong><strong>other</strong><strong> </strong><strong>queries</strong><strong> </strong><strong>to</strong><strong> </strong><strong>read</strong><strong> </strong><strong>it</strong>. To specify this expression just pass it in as the lock option:</p>
+
+<p><tt><em>Item.transaction do</em></tt></p>
+
+<p><tt> </tt><tt><em>i = Item.lock(&ldquo;LOCK IN SHARE MODE&rdquo;).find(1)</em></tt></p>
+
+<p><tt> </tt><tt><em>i.increment!(:views)</em></tt></p>
+
+<p><tt><em>end</em></tt></p>
+
+<h3><a name="joining-tables"></a>11 Joining Tables</h3>
+
+
+<p>Active Record provides a finder method called <tt>joins</tt> for specifying <tt>JOIN</tt> clauses<span style="font-family: DejaVu Sans;">短语</span>on the resulting SQL. There are multiple ways to use the <tt>joins</tt> method.</p>
+
+<h4><a name="using-a-string-sql-fragment"></a>11.1 Using a String SQL Fragment</h4>
+
+
+<p>You can just supply the raw SQL specifying the <tt><strong>JOIN</strong></tt><strong> </strong>clause to <tt>joins</tt>:</p>
+
+<p><tt><em>Client.joins(&lsquo;LEFT OUTER JOIN addresses ON addresses.client_id = clients.id&rsquo;)</em></tt></p>
+
+<p>This will result in the following SQL:</p>
+
+<p><tt><em>SELECT clients.* FROM clients LEFT OUTER JOIN addresses ON addresses.client_id = clients.id</em></tt></p>
+
+<h4><a name="using-array-hash-of-named-associations"></a> 11.2 Using Array/Hash of Named Associations</h4>
+
+
+<p><span style="color: #800000;">This</span><span style="color: #800000;">method</span><span style="color: #800000;">only</span><span style="color: #800000;">works</span><span style="color: #800000;">with</span><tt><span style="color: #800000;">INNER</span></tt><tt></tt><tt><span style="color: #800000;">JOIN</span></tt><span style="color: #800000;">.</span></p>
+
+<p>Active Record lets you use the names of the <span style="color: #000080;"><span style="text-decoration: underline;"><a href="http://guides.rubyonrails.org/association_basics.html">associations</a></span></span> defined on the model as a shortcut for specifying <tt>JOIN</tt> clause for those associations when using the <tt>joins</tt> method.</p>
+
+<p>For example, consider the following <tt>Category</tt>, <tt>Post</tt>, <tt>Comments</tt> and <tt>Guest</tt> models:</p>
+
+<p><tt><em>class Category &lt; ActiveRecord::Base</em></tt></p>
+
+<p><tt> </tt><tt><em>has_many :posts</em></tt></p>
+
+<p><tt><em>end</em></tt></p>
+
+<p>&nbsp;</p>
+
+<p><tt><em>class Post &lt; ActiveRecord::Base</em></tt></p>
+
+<p><tt> </tt><tt><em>belongs_to :category</em></tt></p>
+
+<p><tt> </tt><tt><em>has_many :comments</em></tt></p>
+
+<p><tt> </tt><tt><em>has_many :tags</em></tt></p>
+
+<p><tt><em>end</em></tt></p>
+
+<p>&nbsp;</p>
+
+<p><tt><em>class Comment &lt; ActiveRecord::Base</em></tt></p>
+
+<p><tt> </tt><tt><em>belongs_to :post</em></tt></p>
+
+<p><tt> </tt><tt><em>has_one :guest</em></tt></p>
+
+<p><tt><em>end</em></tt></p>
+
+<p>&nbsp;</p>
+
+<p><tt><em>class Guest &lt; ActiveRecord::Base</em></tt></p>
+
+<p><tt> </tt><tt><em>belongs_to :comment</em></tt></p>
+
+<p><tt><em>end</em></tt></p>
+
+<p>&nbsp;</p>
+
+<p><tt><em>class Tag &lt; ActiveRecord::Base</em></tt></p>
+
+<p><tt> </tt><tt><em>belongs_to :post</em></tt></p>
+
+<p><tt><em>end</em></tt></p>
+
+<p>Now all of the following will produce the expected join queries using <tt>INNER</tt><tt> </tt><tt>JOIN</tt>:</p>
+
+<h5><a name="joining-a-single-association"></a>11.2.1 Joining a Single Association</h5>
+
+
+<p><tt><em>Category.joins(:posts)</em></tt></p>
+
+<p>This produces:</p>
+
+<p><tt><em>SELECT categories.* FROM categories</em></tt></p>
+
+<p><tt> </tt><tt><em>INNER JOIN posts ON posts.category_id = categories.id</em></tt></p>
+
+<p>Or, in English: “return a Category object for <strong>all</strong><strong> </strong><strong>categories</strong><strong> </strong><strong>with</strong><strong> </strong><strong>posts</strong>”. Note that you will see duplicate categories if more than one post has the same category. If you want unique<span style="font-family: DejaVu Sans;">唯一的</span>categories, you can use Category.joins(:post).select(“distinct(categories.id)”).</p>
+
+<p><span style="font-family: DejaVu Sans;">或者，用英语说：<span style="font-family: Liberation Serif,Times New Roman,serif;">“</span>返回所有</span>posts<span style="font-family: DejaVu Sans;">的所有</span>categories<span style="font-family: DejaVu Sans;">到</span>Category<span style="font-family: DejaVu Sans;">对象<span style="font-family: Liberation Serif,Times New Roman,serif;">”</span>。请注意，如果超过一个</span>post<span style="font-family: DejaVu Sans;">具有相同的</span>categories<span style="font-family: DejaVu Sans;">，你会看到重复的</span>categories<span style="font-family: DejaVu Sans;">。如果你想要唯一的</span>categories<span style="font-family: DejaVu Sans;">，你可以使用</span>Category.joins(:post).select(“distinct(categories.id)”)<span style="font-family: DejaVu Sans;">。</span></p>
+
+<h5><a name="joining-multiple-associations"></a>11.2.2 Joining Multiple Associations</h5>
+
+
+<p><tt><em>Post.joins(:category, :comments)#</em></tt><span style="font-family: DejaVu Sans;"><tt><em>两个参数之间是与关系</em></tt></span></p>
+
+<p>This produces:</p>
+
+<p><tt><em>SELECT posts.* FROM posts</em></tt></p>
+
+<p><tt> </tt><tt><em>INNER JOIN categories ON posts.category_id = categories.id</em></tt></p>
+
+<p><tt> </tt><tt><em>INNER JOIN comments ON comments.post_id = posts.id</em></tt></p>
+
+<p>Or, in English: “return all posts that have a category and at<strong> </strong><strong>least</strong><strong> </strong><strong>one</strong><strong> </strong><strong>comment</strong>”. Note again that posts with multiple comments will show up multiple times.</p>
+
+<h5><a name="joining-nested-associations-single-level"></a> 11.2.3 Joining Nested Associations (Single Level)</h5>
+
+
+<p>&nbsp;</p>
+
+<p><tt><em>Post.joins(:comments =&gt; :guest)</em></tt></p>
+
+<p>This produces:</p>
+
+<p><tt><em>SELECT posts.* FROM posts</em></tt></p>
+
+<p><tt> </tt><tt><em>INNER JOIN comments ON comments.post_id = posts.id</em></tt></p>
+
+<p><tt> </tt><tt><em>INNER JOIN guests ON guests.comment_id = comments.id</em></tt></p>
+
+<p>Or, in English: “return all posts that have<strong> </strong><strong>a</strong><strong> </strong><strong>comment</strong><strong> </strong><strong>made</strong><strong> </strong><strong>by</strong><strong> </strong><strong>a</strong><strong> </strong><strong>guest</strong>.”</p>
+
+<h5><a name="joining-nested-associations-multiple-lev"></a> 11.2.4 Joining Nested Associations (Multiple Level)</h5>
+
+
+<p><tt><em>Category.joins(:posts =&gt; [{:comments =&gt; :guest}, :tags])</em></tt></p>
+
+<p>This produces:</p>
+
+<p><tt><em>SELECT categories.* FROM categories</em></tt></p>
+
+<p><tt> </tt><tt><em>INNER JOIN posts ON posts.category_id = categories.id</em></tt></p>
+
+<p><tt> </tt><tt><em>INNER JOIN comments ON comments.post_id = posts.id</em></tt></p>
+
+<p><tt> </tt><tt><em>INNER JOIN guests ON guests.comment_id = comments.id</em></tt></p>
+
+<p><tt> </tt><tt><em>INNER JOIN tags ON tags.post_id = posts.id</em></tt></p>
+
+<p><span style="font-family: DejaVu Sans;">返回</span>post<span style="font-family: DejaVu Sans;">的</span>category<span style="font-family: DejaVu Sans;">，并且这个</span>post<span style="font-family: DejaVu Sans;">至少有一个</span>commit<span style="font-family: DejaVu Sans;">是</span>guest<span style="font-family: DejaVu Sans;">提交而且这个</span>post<span style="font-family: DejaVu Sans;">至少有一个</span>tag<span style="font-family: DejaVu Sans;">。</span></p>
+
+<h4><a name="specifying-conditions-on-the-joined-tabl"></a> 11.3 Specifying Conditions on the Joined Tables</h4>
+
+
+<p>You can specify conditions on the joined tables using the regular <span style="color: #000080;"><span style="text-decoration: underline;"><a href="http://guides.rubyonrails.org/active_record_querying.html#array-conditions">Array</a></span></span> and <span style="color: #000080;"><span style="text-decoration: underline;"><a href="http://guides.rubyonrails.org/active_record_querying.html#pure-string-conditions">String</a></span></span> conditions. <a href="http://guides.rubyonrails.org/active_record_querying.html#hash-conditions"><span style="color: #000080;"><span style="text-decoration: underline;">Hash</span></span><span style="color: #000080;"><span style="text-decoration: underline;">conditions</span></span></a> provides a special syntax for specifying conditions for the joined tables:</p>
+
+<p><span style="font-family: DejaVu Sans;">你可以在</span>joined tables <span style="font-family: DejaVu Sans;">的时候通过使用正则数组和字符串条件（表达式）来指定条件。</span>Hash<span style="font-family: DejaVu Sans;">条件提供了一个特殊的语法来指定</span>joined tables<span style="font-family: DejaVu Sans;">的条件：</span></p>
+
+<p><tt><em>time_range = (Time.now.midnight &ndash; 1.day)..Time.now.midnight</em></tt></p>
+
+<p><tt><em>Client.joins(:orders).where(&lsquo;orders.created_at&rsquo; =&gt; time_range)</em></tt></p>
+
+<p>An alternative and cleaner syntax is to nest the hash conditions:<span style="font-family: DejaVu Sans;">一个更简洁的替代语法是将条件嵌入</span>Hash<span style="font-family: DejaVu Sans;">条件中。</span></p>
+
+<p><tt><em>time_range = (Time.now.midnight &ndash; 1.day)..Time.now.midnight</em></tt></p>
+
+<p><tt><em>Client.joins(:orders).where(:orders =&gt; {:created_at =&gt; time_range})</em></tt></p>
+
+<p>This will find all clients who have orders that were created yesterday, again using a <tt>BETWEEN</tt> SQL expression.<span style="font-family: DejaVu Sans;">这将会查找所有的</span>clients<span style="font-family: DejaVu Sans;">，它们都有</span>orders<span style="font-family: DejaVu Sans;">并且，</span>order<span style="font-family: DejaVu Sans;">在昨天创建，再一次使用</span>BETWEEN SQL<span style="font-family: DejaVu Sans;">语句。</span></p>
+
+<h3><a name="eager-loading-associations"></a>12 Eager Loading Associations</h3>
+
+
+<p>Eager loading<span style="font-family: DejaVu Sans;">快速导入</span>is the mechanism for loading the associated records of the objects returned by <tt>Model.find</tt> using as few queries as possible.</p>
+
+<p>Eager loading<span style="font-family: DejaVu Sans;">快速导入是一个导入记录的关系的机器，它通过</span><tt>Model.find</tt><span style="font-family: DejaVu Sans;"><tt>返回对象，并使用尽可能少的查询。</tt></span></p>
+
+<p><strong>N</strong><strong> </strong><strong>+</strong><strong> </strong><strong>1</strong><strong> </strong><strong>queries</strong><strong> </strong><strong>problem</strong></p>
+
+<p>Consider the following code, which finds 10 clients and prints their postcodes:</p>
+
+<p><tt><em>clients = Client.limit(10)</em></tt></p>
+
+<p>&nbsp;</p>
+
+<p><tt><em>clients.each do |client|</em></tt></p>
+
+<p><tt> </tt><tt><em>puts client.address.postcode</em></tt></p>
+
+<p><tt><em>end</em></tt></p>
+
+<p><strong>This</strong><strong> </strong><strong>code</strong><strong> </strong><strong>looks</strong><strong> </strong><strong>fine</strong><strong> </strong><strong>at</strong><strong> </strong><strong>the</strong><strong> </strong><strong>first</strong><strong> </strong><strong>sight</strong>. But the problem lies within the total number of queries executed. The above code executes 1 ( to find 10 clients ) + 10 ( one per each client to load the address ) = <strong>11</strong> queries in total.<span style="font-family: DejaVu Sans;">上面的代码执行一次（找到</span>10<span style="font-family: DejaVu Sans;">个</span>clients<span style="font-family: DejaVu Sans;">）</span>+10<span style="font-family: DejaVu Sans;">（每一个</span>client<span style="font-family: DejaVu Sans;">导入地址）</span></p>
+
+<p><strong>Solution</strong><strong> </strong><strong>to</strong><strong> </strong><strong>N</strong><strong> </strong><strong>+</strong><strong> </strong><strong>1</strong><strong> </strong><strong>queries</strong><strong> </strong><strong>problem</strong></p>
+
+<p>Active Record lets you specify in advance all the associations that are going to be loaded. This is possible by specifying the <tt>includes</tt> method of the <tt>Model.find</tt> call. With <tt>includes</tt>, Active Record ensures that all of the specified associations are loaded using the minimum possible number of queries.</p>
+
+<p>Revisiting the above case, we could rewrite <tt>Client.all</tt> to use eager load addresses:</p>
+
+<p><tt><em>clients = Client.includes(:address).limit(10)</em></tt></p>
+
+<p>&nbsp;</p>
+
+<p><tt><em>clients.each do |client|</em></tt></p>
+
+<p><tt> </tt><tt><em>puts client.address.postcode</em></tt></p>
+
+<p><tt><em>end</em></tt></p>
+
+<p>The above code will execute just <strong>2</strong> queries, as opposed to <strong>11</strong> queries in the previous case:</p>
+
+<p><span style="font-family: DejaVu Sans;">上面的代码将执行</span>2<span style="font-family: DejaVu Sans;">查询，而不是在以前的情况下，以</span>11<span style="font-family: DejaVu Sans;">查询：</span></p>
+
+<p><tt><em>SELECT * FROM clients LIMIT 10</em></tt></p>
+
+<p><tt><em>SELECT addresses.* FROM addresses</em></tt></p>
+
+<p><tt> </tt><tt><em>WHERE (addresses.client_id IN (1,2,3,4,5,6,7,8,9,10))</em></tt></p>
+
+<h4><a name="eager-loading-multiple-associations"></a> 12.1 Eager Loading Multiple Associations</h4>
+
+
+<p>Active Record lets you eager load any number of associations with a single <tt>Model.find</tt> call by using an array, hash, or a nested hash of array/hash with the <tt>includes</tt> method.</p>
+
+<p>Active Record<span style="font-family: DejaVu Sans;">可以通过</span>includes<span style="font-family: DejaVu Sans;">方法加上数组，</span>hash<span style="font-family: DejaVu Sans;">或者使用数组和</span>hash<span style="font-family: DejaVu Sans;">嵌套的</span>hash<span style="font-family: DejaVu Sans;">字典调用单个</span><tt>Model.find</tt><span style="font-family: DejaVu Sans;"><tt>方法快速导入任何数目的关系。</tt></span></p>
+
+<h5><a name="array-of-multiple-associations"></a>12.1.1 Array of Multiple Associations</h5>
+
+
+<p><tt><em>Post.includes(:category, :comments)</em></tt></p>
+
+<p>This loads all the posts and the associated category and comments for each post.</p>
+
+<h5><a name="nested-associations-hash"></a>12.1.2 Nested Associations Hash</h5>
+
+
+<p><tt><em>Category.includes(:posts =&gt; [{:comments =&gt; :guest}, :tags]).find(1)</em></tt></p>
+
+<p>This will find the <strong>category</strong><strong> </strong><strong>with</strong><strong> </strong><strong>id</strong><strong> </strong><strong>1</strong> and <strong>eager</strong><strong> </strong><strong>load</strong> all of the associated posts<span style="font-family: DejaVu Sans;">以及快速导入分类为</span>id<span style="font-family: DejaVu Sans;">为</span>1<span style="font-family: DejaVu Sans;">的</span>post, the associated posts’ tags and comments<span style="font-family: DejaVu Sans;">和</span>post<span style="font-family: DejaVu Sans;">的</span>tags<span style="font-family: DejaVu Sans;">和</span>comments, and every comment’s guest association<span style="font-family: DejaVu Sans;">并且每个</span>comments<span style="font-family: DejaVu Sans;">是由</span>guest<span style="font-family: DejaVu Sans;">创建的</span>.</p>
+
+<h4><a name="specifying-conditions-on-eager-loaded-as"></a> 12.2 Specifying Conditions on Eager Loaded Associations</h4>
+
+
+<p>Even though Active Record lets you specify conditions on the eager loaded associations just like <tt>joins</tt>, <strong>the</strong><strong> </strong><strong>recommended</strong><strong> </strong><strong>way</strong><strong> </strong><strong>is</strong><strong> </strong><strong>to</strong><strong> </strong><strong>use</strong><strong> </strong><span style="color: #000080;"><span style="text-decoration: underline;"><a href="http://guides.rubyonrails.org/active_record_querying.html#joining-tables"><strong>joins</strong></a></span></span><strong> </strong><strong>instead.</strong></p>
+
+<p>However if you must do this, you may use <tt>where</tt> as you would normally.</p>
+
+<p><tt><em>Post.includes(:comments).where(&ldquo;comments.visible&rdquo;, true)</em></tt></p>
+
+<p>This would generate a query which contains a <tt>LEFT</tt><tt> </tt><tt>OUTER</tt><tt> </tt><tt>JOIN</tt> whereas the <tt>joins</tt> method would generate one using the <tt>INNER</tt><tt> </tt><tt>JOIN</tt> function instead.</p>
+
+<p><tt><em>SELECT &ldquo;posts&rdquo;.&ldquo;id&rdquo; AS t0_r0, &hellip; &ldquo;comments&rdquo;.&ldquo;updated_at&rdquo; AS t1_r5 FROM &ldquo;posts&rdquo; LEFT OUTER JOIN &ldquo;comments&rdquo; ON &ldquo;comments&rdquo;.&ldquo;post_id&rdquo; = &ldquo;posts&rdquo;.&ldquo;id&rdquo; WHERE (comments.visible = 1)</em></tt></p>
+
+<p>If there was no <tt>where</tt> condition, this would generate the normal set of two queries.</p>
+
+<p>If, in the case of this <tt>includes</tt> query,<strong> </strong><strong>there</strong><strong> </strong><strong>were</strong><strong> </strong><strong>no</strong><strong> </strong><strong>comments</strong><strong> </strong><strong>for</strong><strong> </strong><strong>any</strong><strong> </strong><strong>posts</strong>, all the posts would <strong>still</strong><strong> </strong><strong>be</strong><strong> </strong><strong>loaded</strong>. <span style="color: #800000;">By</span><span style="color: #800000;">using</span><tt><span style="color: #800000;">joins</span></tt> (an INNER JOIN), the join conditions <strong>must</strong> match, <strong>otherwise</strong><strong> </strong><strong>no</strong><strong> </strong><strong>records</strong><strong> </strong><strong>will</strong><strong> </strong><strong>be</strong><strong> </strong><strong>returned.</strong></p>
+
+<h3><a name="scopes"></a>13 Scopes<span style="font-family: WenQuanYi Micro Hei;">作用域</span></h3>
+
+
+<p>Scoping allows you to specify commonly-used ARel<span style="font-family: DejaVu Sans;">（</span>Arel is a relational algebra engine for Ruby</p>
+
+<p><span style="font-family: DejaVu Sans;">） </span>queries which can be referenced as method calls on the association objects or models. With these scopes, you can use every method previously covered such as <tt>where</tt>, <tt>joins</tt> and <tt>includes</tt>. All scope methods will return an <tt>ActiveRecord::Relation</tt> object which will allow for further methods (such as other scopes) to be called on it.</p>
+
+<p><span style="font-family: DejaVu Sans;">作用域允许你指定通常使用的</span>Arel<span style="font-family: DejaVu Sans;">（</span>Arel<span style="font-family: DejaVu Sans;">是一个用于</span>Ruby<span style="font-family: DejaVu Sans;">的关系代数引擎）查询它可以在对象或模型调用方法的时候被引用。通过这些作用域，你可以使用比如</span>where<span style="font-family: DejaVu Sans;">，</span>joins<span style="font-family: DejaVu Sans;">和</span>includes<span style="font-family: DejaVu Sans;">这些方法覆盖以前的（方法）。所有的</span>scope<span style="font-family: DejaVu Sans;">方法将会返回一个 </span><tt>ActiveRecord::Relation</tt><span style="font-family: DejaVu Sans;"><tt>对象它将允许一些以后的方法（例如其他的作用域）被其调用。</tt></span></p>
+
+<p>To define a simple scope, we use the <tt>scope</tt> method inside the class, passing the ARel query that we’d like run when this scope is called:</p>
+
+<p><tt><em>class Post &lt; ActiveRecord::Base</em></tt></p>
+
+<p><tt> </tt><tt><em>scope :published, where(:published =&gt; true)</em></tt></p>
+
+<p><tt><em>end</em></tt></p>
+
+<p><tt><em>Just like before, these methods are also chainable</em></tt><span style="font-family: DejaVu Sans;"><tt><em>可链式的</em></tt></span><tt><em>:</em></tt></p>
+
+<p><tt><em>class Post &lt; ActiveRecord::Base</em></tt></p>
+
+<p><tt> </tt><tt><em>scope :published, where(:published =&gt; true).joins(:category)</em></tt></p>
+
+<p><tt><em>end</em></tt></p>
+
+<p>Scopes are also chainable within scopes:<span style="font-family: DejaVu Sans;">作用域对作用域中也是可链式的：</span></p>
+
+<p><tt><em>class Post &lt; ActiveRecord::Base</em></tt></p>
+
+<p><tt> </tt><tt><em>scope :published, where(:published =&gt; true)</em></tt></p>
+
+<p><tt> </tt><tt><em>scope :published_and_commented, published.and(self.arel_table[:comments_count].gt(0))</em></tt></p>
+
+<p><tt><em>end</em></tt></p>
+
+<p>To call this <tt>published</tt> scope we can call it on either the class:<span style="font-family: DejaVu Sans;">调用这个</span>published<span style="font-family: DejaVu Sans;">作用域我们可以在类中调用：</span></p>
+
+<p><tt><em>Post.published =&gt; [published posts]</em></tt></p>
+
+<p>Or on an association consisting of <tt>Post</tt> objects:<span style="font-family: DejaVu Sans;">或者是在组成</span>Post<span style="font-family: DejaVu Sans;">对象的关系（成员）中调用：</span></p>
+
+<p><tt><em>category = Category.first</em></tt></p>
+
+<p><tt><em>category.posts.published =&gt; [published posts belonging to this category]</em></tt></p>
+
+<h4><a name="working-with-times"></a>13.1 Working with times<span style="font-family: WenQuanYi Micro Hei;">工作中的时间（字段）</span></h4>
+
+
+<p>If you’re working with dates or times within scopes, due to how they are evaluated, you will need to use a lambda so that the scope is evaluated every time.</p>
+
+<p><span style="font-family: DejaVu Sans;">如果你在工作中遇到时间（字段）或者包含有时间（字段）的作用域，由于他们的求值方式，你将需要使用一个匿名函数来使得每次调用域都会计算时间的值。</span></p>
+
+<p><tt><em>class Post &lt; ActiveRecord::Base</em></tt></p>
+
+<p><tt> </tt><tt><em>scope :last_week, lambda { where(&ldquo;created_at &lt; ?&rdquo;, Time.zone.now ) }</em></tt></p>
+
+<p><tt><em>end</em></tt></p>
+
+<p>Without the <tt>lambda</tt>, this <tt>Time.zone.now</tt> will only be called once.</p>
+
+<h4><a name="passing-in-arguments"></a>13.2 Passing in arguments</h4>
+
+
+<p>When a <tt>lambda</tt> is used for a <tt>scope</tt>, it can take arguments:</p>
+
+<p><tt><em>class Post &lt; ActiveRecord::Base</em></tt></p>
+
+<p><tt> </tt><tt><em>scope :1_week_before, lambda { |time| where(&ldquo;created_at &lt; ?&rdquo;, time)</em></tt></p>
+
+<p><tt><em>end</em></tt></p>
+
+<p>This may then be called using this:</p>
+
+<p><tt><em>Post.1_week_before(Time.zone.now)</em></tt></p>
+
+<p>However, this is just duplicating<span style="font-family: DejaVu Sans;">复制 </span>the functionality<span style="font-family: DejaVu Sans;">功能 </span>that would be provided to you by a class method.<span style="font-family: DejaVu Sans;">然而，这样仅仅通过一个类方法提供给来复制（使用）这个功能。</span></p>
+
+<p><tt><em>class Post &lt; ActiveRecord::Base</em></tt></p>
+
+<p><tt> </tt><tt><em>def self.1_week_before(time)</em></tt></p>
+
+<p><tt> </tt><tt><em>where(&ldquo;created_at &lt; ?&rdquo;, time)</em></tt></p>
+
+<p><tt> </tt><tt><em>end</em></tt></p>
+
+<p><tt><em>end</em></tt></p>
+
+<p>Using a class method is the preferred way to accept arguments for scopes. These methods will still be accessible<span style="font-family: DejaVu Sans;">访问 </span>on the association objects:</p>
+
+<p><span style="font-family: DejaVu Sans;">使用一个类方法是一个完美的方法来让</span>scopes<span style="font-family: DejaVu Sans;">获取参数。这个方法仍然访问</span>objects<span style="font-family: DejaVu Sans;">的</span>association<span style="font-family: DejaVu Sans;">。</span></p>
+
+<p><tt><em>category.posts.1_week_before(time)</em></tt></p>
+
+<h4><a name="working-with-scopes"></a>13.3 Working with scopes<span style="font-family: WenQuanYi Micro Hei;">使用作用域来工作</span></h4>
+
+
+<p>Where a relational object is required, the <tt>scoped</tt> method may come in handy. This will return an <tt>ActiveRecord::Relation</tt> object which can have further scoping applied to it afterwards. A place where this may come in handy is on associations</p>
+
+<p><tt><em>client = Client.find_by_first_name(&ldquo;Ryan&rdquo;)</em></tt></p>
+
+<p><tt><em>orders = client.orders.scoped</em></tt></p>
+
+<p>With this new <tt>orders</tt> object, we are able to ascertain that this object can have more scopes applied to it. For instance,<strong> if we wanted to return orders only in the last 30 days at a later point</strong>.</p>
+
+<p><tt><em>orders.where(&ldquo;created_at &gt; ?&rdquo;, 30.days.ago)</em></tt></p>
+
+<h4><a name="applying-a-default-scope"></a>13.4 Applying a default scope</h4>
+
+
+<p>If we wish for <strong>a scope</strong> to be <strong>applied</strong> across <strong>all queries</strong><span style="font-family: DejaVu Sans;"><strong>所有查询</strong> </span>to the model we can use the <tt><strong>default_scope</strong></tt> method within the model itself.</p>
+
+<p><tt><em>class Client &lt; ActiveRecord::Base</em></tt></p>
+
+<p><tt> </tt><tt><em>default_scope where(&ldquo;removed_at IS NULL&rdquo;)</em></tt></p>
+
+<p><tt><em>end</em></tt></p>
+
+<p>When queries are executed on this model, the SQL query will now look something like this:</p>
+
+<p><tt><em>SELECT * FROM clients WHERE removed_at IS NULL</em></tt></p>
+
+<h4><a name="removing-all-scoping"></a>13.5 Removing all scoping</h4>
+
+
+<p>If we wish to remove scoping for any reason we can use the <tt>unscoped</tt> method. This is especially useful if a <tt>default_scope</tt> is specified in the model and should not be applied for this particular query.</p>
+
+<p><tt><em>Client.unscoped.all</em></tt></p>
+
+<p>This method removes all scoping and will do a normal query on the table.</p>
+
+<h3><a name="dynamic-finders"></a>14 Dynamic Finders<span style="font-family: WenQuanYi Micro Hei;">动态查询</span></h3>
+
+
+<p>For every field (also known as an attribute) you define in your table, Active Record provides a finder method. If you have a field called <tt>first_name</tt> on your <tt>Client</tt> model for example, you get <tt>find_by_first_name</tt> and <tt>find_all_by_first_name</tt> for free from Active Record. If you have a <tt>locked</tt> field on the <tt>Client</tt> model, you also get <tt>find_by_locked</tt> and <tt>find_all_by_locked</tt> methods.</p>
+
+<p><span style="font-family: DejaVu Sans;">在你表中定义的每个</span>field<span style="font-family: DejaVu Sans;">（通常被看着一个属性）， </span>Active Record<span style="font-family: DejaVu Sans;">都提供了一个</span>finder<span style="font-family: DejaVu Sans;">方法。例如，如果你有一个</span>field<span style="font-family: DejaVu Sans;">名叫</span>first_name<span style="font-family: DejaVu Sans;">在你的</span>Client<span style="font-family: DejaVu Sans;">模型中，你会免费的从</span>Active Record <span style="font-family: DejaVu Sans;">得到</span>find_by_first_name<span style="font-family: DejaVu Sans;">和</span>find_all_by_first_name<span style="font-family: DejaVu Sans;">方法。如果你在</span>Client<span style="font-family: DejaVu Sans;">模型中有一个</span>locked field<span style="font-family: DejaVu Sans;">，你也会获得</span>find_by_locked<span style="font-family: DejaVu Sans;">和</span>find_all_by_locked<span style="font-family: DejaVu Sans;">方法。</span></p>
+
+<p>You can also use <tt>find_last_by_*</tt> methods which will find the last record matching your argument.</p>
+
+<p><span style="font-family: DejaVu Sans;"><strong>你也可以使用</strong></span><strong>find_last_by_*</strong><span style="font-family: DejaVu Sans;"><strong>方法，它将会查找在机器中匹配你的参数的最后的记录。</strong></span></p>
+
+<p>You can specify an exclamation point (<tt>!</tt>) on the end of the dynamic finders to get them to raise an <tt>ActiveRecord::RecordNotFound</tt> error if they do not return any records, like <tt>Client.find_by_name!(&ldquo;Ryan&rdquo;)</tt></p>
+
+<p><span style="font-family: DejaVu Sans;">你也可以在动态</span>finders<span style="font-family: DejaVu Sans;">末尾指定一个感叹号来来的到查询结果或者如果他们没有返回任何参数则抛出一个 </span><tt>ActiveRecord::RecordNotFound</tt><span style="font-family: DejaVu Sans;"><tt>错误。</tt></span></p>
+
+<p><strong>If you want to find both by name and locked</strong>, you can chain these finders together by simply typing <tt>and</tt> between the fields. For example, <tt>Client.find_by_first_name_and_locked(&ldquo;Ryan&rdquo;, true).</tt></p>
+
+<p><span style="color: #800000;">Up to and including Rails 3.1, when the number of arguments passed to a dynamic finder method is lesser than the number of fields, say </span><tt><span style="color: #800000;">Client.find_by_name_and_locked(“Ryan”)</span></tt><span style="color: #800000;">, the behavior is to pass </span><tt><span style="color: #800000;">nil</span></tt><span style="color: #800000;"> as the missing argument.<span style="font-family: DejaVu Sans;">如果参数少于动态</span></span><span style="color: #800000;">finder<span style="font-family: DejaVu Sans;">的</span></span><span style="color: #800000;">fields<span style="font-family: DejaVu Sans;">的数目，习惯上是对缺少的</span></span><span style="color: #800000;">fields<span style="font-family: DejaVu Sans;">传递一个</span></span><span style="color: #800000;">nil<span style="font-family: DejaVu Sans;">。 </span></span><span style="color: #800000;">This is </span><strong><span style="color: #800000;">unintentional</span></strong><span style="color: #800000;"> and this behavior will be changed in Rails 3.2 to throw an </span><tt><span style="color: #800000;">ArgumentError</span></tt><span style="color: #800000;">.<span style="font-family: DejaVu Sans;">这样做是没有意义的并且这个约定将会在</span></span><span style="color: #800000;">Rails 3.2<span style="font-family: DejaVu Sans;">中修改成抛出一个 </span></span><tt><span style="color: #800000;">ArgumentError</span></tt><span style="font-family: DejaVu Sans;"><tt><span style="color: #800000;">错误。</span></tt></span></p>
+
+<p>There’s another set of dynamic finders that let you find or create/initialize objects if they aren’t found. These work in a similar fashion to the other finders and can be used like <tt>find_or_create_by_first_name(params[:first_name])</tt>. Using this will first perform a find and then create if the find returns <tt>nil</tt>. The SQL looks like this for <tt>Client.find_or_create_by_first_name(&ldquo;Ryan&rdquo;)</tt>:</p>
+
+<p>&nbsp;</p>
+
+<p><tt><em>SELECT * FROM clients WHERE (clients.first_name = &lsquo;Ryan&rsquo;) LIMIT 1</em></tt></p>
+
+<p><tt><em>BEGIN</em></tt></p>
+
+<p><tt><em>INSERT INTO clients (first_name, updated_at, created_at, orders_count, locked)</em></tt></p>
+
+<p><tt> </tt><tt><em>VALUES(&lsquo;Ryan&rsquo;, &lsquo;2008-09-28 15:39:12&rsquo;, &lsquo;2008-09-28 15:39:12&rsquo;, 0, &lsquo;0&rsquo;)</em></tt></p>
+
+<p><tt><em>COMMIT</em></tt></p>
+
+<p><tt><em>irb(main):134:0&gt; p=Post.find_or_create_by_name_and_title_and_content(&lsquo;1111111&rsquo;,&lsquo;111111111&rsquo;,&lsquo;11111111&rsquo;)</em></tt></p>
+
+<p><tt> </tt><tt><em>Post Load (0.4ms) SELECT &ldquo;posts&rdquo;.* FROM &ldquo;posts&rdquo; WHERE &ldquo;posts&rdquo;.&ldquo;title&rdquo; = &lsquo;111111111&rsquo; AND &ldquo;posts&rdquo;.&ldquo;content&rdquo; = &lsquo;11111111&rsquo; AND &ldquo;posts&rdquo;.&ldquo;name&rdquo; = &lsquo;1111111&rsquo; LIMIT 1</em></tt></p>
+
+<p><tt> </tt><tt><em>SQL (429.0ms) INSERT INTO &ldquo;posts&rdquo; (&ldquo;content&rdquo;, &ldquo;created_at&rdquo;, &ldquo;name&rdquo;, &ldquo;title&rdquo;, &ldquo;updated_at&rdquo;) VALUES (?, ?, ?, ?, ?) [[&ldquo;content&rdquo;, &ldquo;11111111&rdquo;], [&ldquo;created_at&rdquo;, Fri, 02 Dec 2011 08:42:39 UTC +00:00], [&ldquo;name&rdquo;, &ldquo;1111111&rdquo;], [&ldquo;title&rdquo;, &ldquo;111111111&rdquo;], [&ldquo;updated_at&rdquo;, Fri, 02 Dec 2011 08:42:39 UTC +00:00]]</em></tt></p>
+
+<p><tt><em>=&gt; #&lt;Post id: 5, name: &ldquo;1111111&rdquo;, title: &ldquo;111111111&rdquo;, content: &ldquo;11111111&rdquo;, created_at: &ldquo;2011-12-02 08:42:39&rdquo;, updated_at: &ldquo;2011-12-02 08:42:39&rdquo;&gt;</em></tt></p>
+
+<p>&nbsp;</p>
+
+<p><tt>find_or_create</tt>’s sibling, <tt>find_or_initialize</tt>, will find an object and if it does not exist will act similarly to calling <tt>new</tt> with the arguments you passed in. For example:</p>
+
+<p>client = Client.find_or_initialize_by_first_name(&lsquo;Ryan&rsquo;)</p>
+
+<p>will either assign an existing client object with the name “Ryan” to the client local variable, or initialize a new object similar to calling <tt>Client.new(:first_name =&gt; &lsquo;Ryan&rsquo;)</tt>. From here, you can modify other fields in client by calling the attribute setters on it: <tt>client.locked = true</tt> and when you want to write it to the database just call <tt>save</tt> on it.</p>
+
+<h3><a name="finding-by-sql"></a>15 Finding by SQL</h3>
+
+
+<p>If you’d like to use your own SQL to find records in a table you can use <tt>find_by_sql</tt>. The <tt>find_by_sql</tt> method will return an array of objects even if the underlying query returns just a single record. For example you could run this query:</p>
+
+<p><tt><em>Client.find_by_sql(&ldquo;SELECT * FROM clients</em></tt></p>
+
+<p><tt> </tt><tt><em>INNER JOIN orders ON clients.id = orders.client_id</em></tt></p>
+
+<p><tt> </tt><tt><em>ORDER clients.created_at desc")</em></tt></p>
+
+<p><tt>find_by_sql</tt> provides you with a simple way of making custom calls to the database and retrieving instantiated objects.</p>
+
+<h3><a name="select_all"></a>16 <tt>select_all</tt></h3>
+
+
+<p><tt>find_by_sql</tt> has a close relative called <tt>connection#select_all</tt>. <tt>select_all</tt> will retrieve objects from the database using custom SQL just like <tt>find_by_sql</tt> but will not instantiate them. Instead, you will get an array of hashes where each hash indicates<span style="font-family: DejaVu Sans;">指示 </span>a record.</p>
+
+<p><tt><em>Client.connection.select_all(&ldquo;SELECT * FROM clients WHERE id = &lsquo;1&rsquo;&rdquo;)</em></tt></p>
+
+<h3><tt><span style="color: #000000;">15</span></tt><span style="font-family: WenQuanYi Micro Hei;"><tt><span style="color: #000000;">和</span></tt></span><tt><span style="color: #000000;">16 </span></tt><span style="font-family: WenQuanYi Micro Hei;"><tt><span style="color: #000000;">综合比较</span></tt></span></h3>
+
+
+<p><tt><em>irb(main):174:0&gt; p=Post.find_by_sql(&ldquo;SELECT * FROM posts WHERE (posts.id = 1)&rdquo;) Post Load (1.7ms) SELECT * FROM posts WHERE (posts.id = 1)</em></tt></p>
+
+<p><tt><em>=&gt; [#&lt;Post id: 1, name: &ldquo;name111111111111111&rdquo;, title: &ldquo;title111111111111111&rdquo;, content: &ldquo;content111111111111111&rdquo;, created_at: &ldquo;2011-12-02 08:56:33&rdquo;, updated_at: &ldquo;2011-12-02 08:56:33&rdquo;&gt;] </em></tt></p>
+
+<p><tt><em>irb(main):175:0&gt; puts p</em></tt></p>
+
+<p><tt><em>#&lt;Post:0xb6bf4d64&gt;</em></tt></p>
+
+<p><tt><em>=&gt; nil</em></tt></p>
+
+<p><tt><em>irb(main):176:0&gt; p=Post.connection.select_all(&ldquo;SELECT * FROM posts WHERE id = &lsquo;1&rsquo;&rdquo;)</em></tt></p>
+
+<p><tt> </tt><tt><em>(0.6ms) SELECT * FROM posts WHERE id = &lsquo;1&rsquo;</em></tt></p>
+
+<p><tt><em>=&gt; [{&ldquo;name&rdquo;=&gt;&ldquo;name111111111111111&rdquo;, &ldquo;created_at&rdquo;=&gt;&ldquo;2011-12-02 08:56:33.397313&rdquo;, &ldquo;title&rdquo;=&gt;&ldquo;title111111111111111&rdquo;, &ldquo;updated_at&rdquo;=&gt;&ldquo;2011-12-02 08:56:33.397313&rdquo;, &ldquo;id&rdquo;=&gt;1, &ldquo;content&rdquo;=&gt;&ldquo;content111111111111111&rdquo;}]</em></tt></p>
+
+<p><tt><em>irb(main):177:0&gt; puts p</em></tt></p>
+
+<p><tt><em>namename111111111111111created_at2011-12-02 08:56:33.397313titletitle111111111111111updated_at2011-12-02 08:56:33.397313id1contentcontent111111111111111</em></tt></p>
+
+<p><tt><em>=&gt; nil</em></tt></p>
+
+<h3><a name="existence-of-objects"></a>17 Existence of Objects<span style="font-family: WenQuanYi Micro Hei;">目标是否存在</span></h3>
+
+
+<p>If you simply want to check for the existence of the object there’s a method called <tt>exists?</tt>. This method will query the database using the same query as <tt>find</tt>, but instead of returning an object or collection of objects it will return either <tt>true</tt> or <tt>false</tt>.</p>
+
+<p><tt><em>Client.exists?(1)</em></tt></p>
+
+<p>The <tt>exists?</tt> method also takes multiple ids, but the catch is that it will return true if any one of those records exists.</p>
+
+<p><tt><em>Client.exists?(1,2,3)</em></tt></p>
+
+<p><tt><em># or</em></tt></p>
+
+<p><tt><em>Client.exists?([1,2,3])</em></tt></p>
+
+<p>It’s even possible to use <tt>exists?</tt> without any arguments on a model or a relation.</p>
+
+<p><tt><em>Client.where(:first_name =&gt; &lsquo;Ryan&rsquo;).exists?</em></tt></p>
+
+<p>The above returns <tt>true</tt> if there is at least one client with the <tt>first_name</tt> ‘Ryan’ and <tt>false</tt> otherwise.</p>
+
+<p><tt><em>Client.exists?</em></tt></p>
+
+<p><strong>The above returns </strong><tt><strong>false</strong></tt><strong> if the </strong><tt><strong>clients</strong></tt><strong> table is empty and </strong><tt><strong>true</strong></tt><strong> otherwise.</strong></p>
+
+<p>You can also use <tt>any?</tt> and <tt>many?</tt> to check for existence on a model or relation.</p>
+
+<p><tt><em># via a model</em></tt></p>
+
+<p><tt><em>Post.any?</em></tt></p>
+
+<p><tt><em>Post.many?</em></tt></p>
+
+<p>&nbsp;</p>
+
+<p><tt><em># via a named scope</em></tt></p>
+
+<p><tt><em>Post.recent.any?</em></tt></p>
+
+<p><tt><em>Post.recent.many?</em></tt></p>
+
+<p>&nbsp;</p>
+
+<p><tt><em># via a relation</em></tt></p>
+
+<p><tt><em>Post.where(:published =&gt; true).any?</em></tt></p>
+
+<p><tt><em>Post.where(:published =&gt; true).many?</em></tt></p>
+
+<p>&nbsp;</p>
+
+<p><tt><em># via an association</em></tt></p>
+
+<p><tt><em>Post.first.categories.any?#</em></tt><span style="font-family: DejaVu Sans;"><tt><em>第一个</em></tt></span><tt><em>post</em></tt><span style="font-family: DejaVu Sans;"><tt><em>的</em></tt></span><tt><em>category</em></tt><span style="font-family: DejaVu Sans;"><tt><em>是否存在</em></tt></span></p>
+
+<p><tt><em>Post.first.categories.many?</em></tt></p>
+
+<h3><a name="calculations"></a>18 Calculations</h3>
+
+
+<p>This section uses count as an example method in this preamble, but the options described apply to all sub-sections.</p>
+
+<p>All calculation methods work directly on a model:</p>
+
+<p><tt><em>Client.count</em></tt></p>
+
+<p><tt><em># SELECT count(*) AS count_all FROM clients</em></tt></p>
+
+<p>Or on a relation:</p>
+
+<p><tt><em>Client.where(:first_name =&gt; &lsquo;Ryan&rsquo;).count</em></tt></p>
+
+<p><tt><em># SELECT count(*) AS count_all FROM clients WHERE (first_name = &lsquo;Ryan&rsquo;)</em></tt></p>
+
+<p><tt><em>Post.first.tags.count</em></tt></p>
+
+<p>You can also use various finder methods on a relation for performing complex calculations:</p>
+
+<p><tt><em>Client.includes(&ldquo;orders&rdquo;).where(:first_name =&gt; &lsquo;Ryan&rsquo;, :orders =&gt; {:status =&gt; &lsquo;received&rsquo;}).count</em></tt></p>
+
+<p><tt><em>#Post.includes(&lsquo;tags&rsquo;).where(:id=&gt;&ldquo;2&rdquo;,:tags=&gt;{:name=&gt;&lsquo;123&rsquo;}).count</em></tt></p>
+
+<p>Which will execute:</p>
+
+<p><tt><em>SELECT count(DISTINCT clients.id) AS count_all FROM clients</em></tt></p>
+
+<p><tt> </tt><tt><em>LEFT OUTER JOIN orders ON orders.client_id = client.id WHERE</em></tt></p>
+
+<p><tt> </tt><tt><em>(clients.first_name = &lsquo;Ryan&rsquo; AND orders.status = &lsquo;received&rsquo;)</em></tt></p>
+
+<h4><a name="count"></a>18.1 Count</h4>
+
+
+<p>If you want to see how many records are in your model’s table you could call <tt>Client.count</tt> and that will return the number. If you want to be more specific and find all the clients with their age present in the database you can use <tt>Client.count(:age)</tt>.</p>
+
+<p>For options, please see the parent section, <a href="http://guides.rubyonrails.org/active_record_querying.html#calculations">Calculations</a>.</p>
+
+<h4><a name="average"></a>18.2 Average<span style="font-family: WenQuanYi Micro Hei;">平均值</span></h4>
+
+
+<p>If you want to see the average of a certain number in one of your tables you can call the <tt>average</tt> method on the class that relates to the table. This method call will look something like this:</p>
+
+<p><tt><em>Client.average(&ldquo;orders_count&rdquo;)</em></tt></p>
+
+<p><tt><em>irb(main):215:0&gt; puts Post.average(&lsquo;created_at&rsquo;)</em></tt></p>
+
+<p><tt> </tt><tt><em>(1.4ms) SELECT AVG(&ldquo;posts&rdquo;.&ldquo;created_at&rdquo;) AS avg_id FROM &ldquo;posts&rdquo; </em></tt></p>
+
+<p><tt><em>2011.0</em></tt></p>
+
+<h4><a name="minimum"></a>18.3 Minimum</h4>
+
+
+<p>If you want to find the minimum value of a field in your table you can call the <tt>minimum</tt> method on the class that relates to the table. This method call will look something like this:</p>
+
+<p><tt><em>Client.minimum(&ldquo;age&rdquo;)</em></tt></p>
+
+<p>For options, please see the parent section, <a href="http://guides.rubyonrails.org/active_record_querying.html#calculations">Calculations</a>.</p>
+
+<h4><a name="maximum"></a>18.4 Maximum</h4>
+
+
+<p>If you want to find the maximum value of a field in your table you can call the <tt>maximum</tt> method on the class that relates to the table. This method call will look something like this:</p>
+
+<p><tt><em>Client.maximum(&ldquo;age&rdquo;)</em></tt></p>
+
+<p>For options, please see the parent section, <a href="http://guides.rubyonrails.org/active_record_querying.html#calculations">Calculations</a>.</p>
+
+<h4><a name="sum1"></a>18.5 Sum</h4>
+
+
+<p>If you want to find the sum of a field for all records in your table you can call the <tt>sum</tt> method on the class that relates to the table. This method call will look something like this:</p>
+
+<p><a name="sum"></a><tt><em>Client.sum(&ldquo;orders_count&rdquo;)</em></tt></p>
+
+<p>&nbsp;</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Markdown Syntax Guide]]></title>
+    <link href="http://jhjguxin.github.io/blog/2011/11/22/markdown-syntax-guide/"/>
+    <updated>2011-11-22T18:13:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2011/11/22/markdown-syntax-guide</id>
+    <content type="html"><![CDATA[<h2>Markdown Syntax Guide</h2>
+
+<p>Markdown Syntax Guide
+The Allura code uses markdown syntax everywhere to allow you to create rich
+text markup, and extends markdown in several ways to allow for quick linking
+to other artifacts in your project.</p>
+
+<p>Markdown was created to be easy to read, easy to write, and still readable in plain text format.</p>
+
+<p>Links
+Reference Links
+Artifact Links
+Text
+Blockquotes
+Preformatted Text
+Lists
+Tables
+Headers
+Horizontal Rules
+Images
+Escapes
+More Headers
+Code Highlighting
+Includes
+Neighborhood Notifications
+Download Button
+Project Screenshots
+Thanks
+Links
+Most URLs will automatically be turned into links. To be explicit, just write it like this:</p>
+
+<p><a href="http://someurl">http://someurl</a></p>
+
+<p><a href="&#x6d;&#x61;&#105;&#108;&#116;&#111;&#x3a;&#x73;&#x6f;&#x6d;&#101;&#x62;&#98;&#111;&#x62;&#x40;&#101;&#x78;&#97;&#x6d;&#x70;&#108;&#101;&#46;&#x63;&#x6f;&#109;">&#115;&#111;&#x6d;&#101;&#98;&#98;&#111;&#98;&#64;&#x65;&#x78;&#x61;&#109;&#x70;&#x6c;&#x65;&#x2e;&#x63;&#111;&#109;</a></p>
+
+<p>Output:</p>
+
+<p><a href="http://someurl">http://someurl</a></p>
+
+<p><a href="&#x6d;&#97;&#105;&#108;&#x74;&#x6f;&#x3a;&#115;&#111;&#109;&#101;&#98;&#x62;&#111;&#x62;&#x40;&#101;&#x78;&#x61;&#x6d;&#112;&#108;&#101;&#46;&#x63;&#111;&#109;">&#115;&#x6f;&#109;&#101;&#x62;&#98;&#x6f;&#x62;&#64;&#101;&#120;&#97;&#109;&#x70;&#108;&#x65;&#46;&#99;&#111;&#x6d;</a></p>
+
+<p>To use text for the link, write it:</p>
+
+<p><a href="http://someurl">like this</a>Output:</p>
+
+<p>like this</p>
+
+<p>You can add a <em>title</em> (which shows up under the cursor):</p>
+
+<p><a href="http://someurl" title="this title shows up when you hover">like this</a>Output:</p>
+
+<p>like this</p>
+
+<p>Reference Links
+You can also put the <a href="http://url">link URL</a> below the current paragraph
+like <a href="http://another.url" title="A funky title">this</a>.</p>
+
+<p>Output:</p>
+
+<p>You can also put the link URL below the current paragraph like this.</p>
+
+<p>Here the text &ldquo;link URL&rdquo; gets linked to &ldquo;<a href="http://url">http://url</a>&rdquo;, and the lines showing &ldquo;<a href="http://url">1</a>: <a href="http://url">http://url</a>&rdquo; won&rsquo;t show anything.</p>
+
+<p>Or you can use a <a href="http://goes/with/the/link/name/textOutput:">shortcut</a> reference, which links the text &ldquo;shortcut&rdquo; to the link named &ldquo;<a href="http://goes/with/the/link/name/textOutput:">shortcut</a>&rdquo; on the next paragraph.</p>
+
+<p>Or you can use a <a href="http://goes/with/the/link/name/textOutput:">shortcut</a> reference, which links the text
+&ldquo;shortcut&rdquo; to the link named &ldquo;<a href="http://goes/with/the/link/name/textOutput:">shortcut</a>&rdquo; on the next paragraph.</p>
+
+<p>Or you can use a shortcut reference, which links the text &ldquo;shortcut&rdquo; to the link named &ldquo;shortcut&rdquo; on the next paragraph.</p>
+
+<p>Artifact Links
+Any existing forge resource can be linked with surrounding square brackets ie [MyPage] or [#123].</p>
+
+<p>Links to resources in other tools can be explicitly referenced by adding a tool identifier prefix to the link. So for instance <code>[developerwiki:MyPage]</code> can refer to a wiki page in a <code>developerwiki</code> instance. You can also link to tickets with <code>[tickets:#123]</code> assuming there&rsquo;s a 123 ticket in a Tracker instance mounted at <code>tickets</code>. The same is true for forums, or any of the other tools you have installed. You can even link to tickets in a subproject with <code>[subproject.tickets:#123]</code>.</p>
+
+<p>[MyPage]
+[developerwiki:MyPage]
+[#123]
+[tickets:#123]
+No example output is available for this one because it only works on real artifacts. Try it in your project!</p>
+
+<p>Text
+Use * or _ to emphasize things:</p>
+
+<p><em>this is in italic</em>  and <em>so is this</em></p>
+
+<p><strong>this is in bold</strong>  and <strong>so is this</strong></p>
+
+<p><strong><em>this is bold and italic</em></strong>  and <strong><em>so is this</em></strong>
+Output:</p>
+
+<p>this is in italic and so is this</p>
+
+<p>this is in bold and so is this</p>
+
+<p>this is bold and italic and so is this</p>
+
+<p>You can strike through text using HTML like this:</p>
+
+<p><s>this is strike through text</s>
+Output:</p>
+
+<p>this is strike through text</p>
+
+<p>Just write paragraphs like in a text file and they will display how
+you would expect.  A blank line separates paragraphs.</p>
+
+<p>So this is a new paragraph. But any text on adjacent lines
+will all end up
+in the same paragraph.
+Output:</p>
+
+<p>Just write paragraphs like in a text file and they will display how
+you would expect. A blank line separates paragraphs.</p>
+
+<p>So this is a new paragraph. But any text on adjacent lines
+will all end up
+in the same paragraph.</p>
+
+<p>Blockquotes
+Use the > character in front of a line, just like in email</p>
+
+<blockquote><p>Use it if you&rsquo;re quoting a person, a song or whatever.</p>
+
+<p>You can use <em>italic</em> or lists inside them also.
+And just like with other paragraphs,
+all of these lines are still
+part of the blockquote, even without the > character in front.</p></blockquote>
+
+<p>To end the blockquote, just put a blank line before the following
+paragraph.
+Output:</p>
+
+<p>Use it if you&rsquo;re quoting a person, a song or whatever.</p>
+
+<p>You can use italic or lists inside them also. And just like with other paragraphs, all of these lines are still part of the blockquote, even without the > character in front.</p>
+
+<p>To end the blockquote, just put a blank line before the following
+paragraph.</p>
+
+<p>Preformatted Text
+If you want some text to show up exactly as you write it, without Markdown doing anything to it, just indent every line by at least 4 spaces (or 1 tab).</p>
+
+<pre><code>This line won't *have any markdown* formatting applied.
+I can even write &lt;b&gt;HTML&lt;/b&gt; and it will show up as text.
+This is great for showing program source code, or HTML or even
+Markdown. &lt;b&gt;this won't show up as HTML&lt;/b&gt; but
+exactly &lt;i&gt;as you see it in this text file&lt;/i&gt;.
+</code></pre>
+
+<p>As a shortcut you can use backquotes to do the same thing while
+inside a normal pargraph.  <code>This won't be *italic* or **bold**
+at all.</code>
+Output:</p>
+
+<p>This line won&rsquo;t <em>have any markdown</em> formatting applied.
+I can even write <b>HTML</b> and it will show up as text.
+This is great for showing program source code, or HTML or even
+Markdown. <b>this won&rsquo;t show up as HTML</b> but
+exactly <i>as you see it in this text file</i>.
+As a shortcut you can use backquotes to do the same thing while
+inside a normal pargraph. This won&rsquo;t be <em>italic</em> or <strong>bold</strong>
+at all.</p>
+
+<p>Lists
+* an asterisk starts an unordered list
+* and this is another item in the list
++ or you can also use the + character
+&ndash; or the &ndash; character</p>
+
+<p>To start an ordered list, write this:</p>
+
+<ol>
+<li>this starts a list <em>with</em> numbers</li>
+<li>this will show as number &ldquo;2&rdquo;</li>
+<li>this will show as number &ldquo;3.&rdquo;</li>
+<li>any number, +, &ndash;, or * will keep the list going.
+
+<ul>
+<li>just indent by 4 spaces (or tab) to make a sub-list
+
+<ol>
+<li> keep indenting for more sub lists</li>
+</ol>
+</li>
+<li>here i&rsquo;m back to the second level
+Output:</li>
+</ul>
+</li>
+</ol>
+
+
+<p>an asterisk starts an unordered list
+and this is another item in the list
+or you can also use the + character
+or the &ndash; character
+To start an ordered list, write this:</p>
+
+<p>this starts a list with numbers
+this will show as number &ldquo;2&rdquo;
+this will show as number &ldquo;3.&rdquo;
+any number, +, &ndash;, or * will keep the list going.
+just indent by 4 spaces (or tab) to make a sub-list
+keep indenting for more sub lists
+here i&rsquo;m back to the second level
+Tables
+You can create tables using pipes and dashes like this:</p>
+
+<table>
+<thead>
+<tr>
+<th>  First Header  </th>
+<th> Second Header</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>  Content Cell  </td>
+<td> Content Cell</td>
+</tr>
+<tr>
+<td>  Content Cell  </td>
+<td> Content Cell</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>Output:</p>
+
+<p>First Header Second Header
+Content Cell Content Cell
+Content Cell Content Cell</p>
+
+<p>You can use markdown syntax within table cells for formatting:</p>
+
+<table>
+<thead>
+<tr>
+<th>  First Header   </th>
+<th> Second Header</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>  <em>Content Cell</em> </td>
+<td> Content Cell</td>
+</tr>
+<tr>
+<td>  Content Cell   </td>
+<td> Content Cell</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>Output:</p>
+
+<p>First Header Second Header
+Content Cell Content Cell
+Content Cell Content Cell</p>
+
+<p>You can also create tables using HTML code.</p>
+
+<p>Headers
+Just put 1 or more dashes or equals signs (&mdash;&ndash; or ===) below the title.</p>
+
+<h1>This is a huge header</h1>
+
+<h2>this is a smaller header</h2>
+
+<p>Output:</p>
+
+<p>This is a huge header
+this is a smaller header
+Horizontal Rule
+Just put three or more *&rsquo;s or &ndash;&rsquo;s on a line:</p>
+
+<hr />
+
+<p>Output:</p>
+
+<hr />
+
+<p>Or, you can use single spaces between then, like this:</p>
+
+<hr />
+
+<p>Output:</p>
+
+<hr />
+
+<p>or</p>
+
+<hr />
+
+<p>Output:</p>
+
+<hr />
+
+<p>Make sure you have a blank line above the dashes, though, or else:</p>
+
+<h2>you will get a header</h2>
+
+<p>Output:</p>
+
+<p>you will get a header
+Images
+To include an image, just put a &ldquo;!&rdquo; in front of a text link:</p>
+
+<p><img src="https://sourceforge.net/images/icon_linux.gif" alt="alternate text" />
+Output:</p>
+
+<p>The &ldquo;alternate text&rdquo; will show up if the browser can&rsquo;t load the image.</p>
+
+<p>You can also use a title if you want, like this:</p>
+
+<p><img src="https://sourceforge.net/images/icon_linux.gif" title="tiny arrow" alt="tiny arrow" />
+Output:</p>
+
+<p>To reference an attached image, just use the img macro. You can add more attributes:</p>
+
+<p>[[img src=attached-image.jpg alt=foobar]]
+Output:</p>
+
+<p>Escapes
+What if you want to just show asterisks, not italics?</p>
+
+<ul>
+<li>this shows up in italics: <em>a happy day</em></li>
+<li>this shows the asterisks: *a happy day*
+Output:</li>
+</ul>
+
+
+<p>this shows up in italics: a happy day
+this shows the asterisks: <em>a happy day</em>
+The backslashes will disappear and leave the asterisks.</p>
+
+<p>You can do the same with any of the characters that have a special meaning
+for Markdown.</p>
+
+<p>HTML tags may need to be escaped. <b> will be interpreted as a bold tag. Entity codes will be used. <foobar> isn&rsquo;t allowed and will be dropped, so you probably want to escape it:</p>
+
+<p><b>this will be bold</b>
+you should escape &lt;unknown&gt; tags
+&lt; special entities work
+&amp;lt; if you want to escape it
+Output:</p>
+
+<p>this will be bold
+you should escape <unknown> tags
+&lt; special entities work
+&lt; if you want to escape it</p>
+
+<p>Individual ampersands (&amp;) and less-than signs (&lt;) are fine, they will be shown as expected.</p>
+
+<p>More Headers
+More ways of doing headers:</p>
+
+<h1>this is a huge header</h1>
+
+<h2>this is a smaller header</h2>
+
+<h3>this is even smaller</h3>
+
+<h4>more small</h4>
+
+<h5>even smaller</h5>
+
+<h6>smallest still: <code>&lt;h6&gt;</code> header</h6>
+
+<p>Output:</p>
+
+<p>this is a huge header
+this is a smaller header
+this is even smaller
+more small
+even smaller
+smallest still: <h6> header
+You can use up to 6 # characters at the beginning of the line.</p>
+
+<p>Code Highlighting
+The Code highlighting used in the newforge is based on (<a href="http://www.freewisdom.org/projects/python-markdown/CodeHilite">http://www.freewisdom.org/projects/python-markdown/CodeHilite</a>). It follows the same syntax as regular Markdown code blocks, except that there are two ways to tell the highlighter what language to use for the code block.</p>
+
+<p>If the first line of the codeblock contains a shebang, the language is derived from that and line numbers are used.</p>
+
+<pre><code>#!/usr/bin/python
+# Code goes here ...
+</code></pre>
+
+<p>Output:</p>
+
+<p>1
+2 #!/usr/bin/python</p>
+
+<h1>Code goes here &hellip;</h1>
+
+<p>If the first line contains a shebang, but the shebang line does not contain a path (a single / or even a space) or If the first line begins with three or more colons, the text following the colons identifies the language. In both cases, the first line is removed from the code block before processing.</p>
+
+<pre><code>:::python
+# Code goes here ...
+</code></pre>
+
+<p>Output:</p>
+
+<h1>Code goes here &hellip;</h1>
+
+<p>You can also designate a code block by surrounding it with lines of tildes. The type of code highlighting to apply will be inferred based on the code within, or you can specify like above.</p>
+
+<p><del>
+<a href="#">My code</a>
+</del>
+Output:</p>
+
+<p><a href="#">My code</a>
+Includes
+You can embed another wiki page directly:</p>
+
+<p>[[include ref=SamplePage]]
+No example output is available for this one because it only works on real wiki pages. Try it in your wiki!</p>
+
+<p>Neighborhood Notifications
+You can list updates from all projects in a neighborhood by tool type. Max_number (default is 5) and sort (default is pubdate) are optional:</p>
+
+<p>[[neighborhood_feeds tool_name=Wiki max_number=10 sort=pubdate]]
+Neighborhood Blog Posts
+You can view blog posts from all projects in a neighborhood. Max_number (default is 5) and sort (default is timestamp) are optional:</p>
+
+<p>[[neighborhood_blog_posts max_number=10 sort=timestamp]]
+Project Blog Posts
+You can view blog posts from all blogs in a project. Max_number (default is 5), mount point (leave empty to view posts from all blog tools in a project), and sort (default is timestamp) are optional:</p>
+
+<p>[[project_blog_posts max_number=10 sort=timestamp mount_point=news]]
+Download Button
+You can display a download button that links to the best download available for the active project. Please note that if you use this macro and there is no download associated with your project, the button will not appear.</p>
+
+<p>[[download_button]]
+Project Screenshots
+You can show all the screenshots for the current project as thumbnails that are linked to the full-size image.</p>
+
+<p>[[project_screenshots]]
+Thanks
+Thanks to John Gruber and Aaron Swartz for creating Markdown.</p>
+
+<p>This page is based on some examples from Greg Schueler, <a href="&#x6d;&#x61;&#105;&#108;&#116;&#111;&#58;&#103;&#114;&#101;&#103;&#64;&#118;&#x61;&#x72;&#x69;&#x6f;&#46;&#117;&#x73;">&#103;&#x72;&#x65;&#103;&#64;&#118;&#x61;&#114;&#105;&#x6f;&#x2e;&#x75;&#x73;</a></p>
+]]></content>
+  </entry>
+  
+</feed>

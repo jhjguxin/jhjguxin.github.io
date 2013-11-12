@@ -1,0 +1,346 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Errno::ECONNREFUSED:  Connection refused - connect(2) while connecting to a remote solr instance from Sunspot - Francis's Octopress Blog</title>
+  <meta name="author" content="Francis Jiang">
+
+  
+  <meta name="description" content="Errno::ECONNREFUSED: Connection refused &ndash; connect(2) while connecting to a remote solr instance from Sunspot Quickstart with Rails 3 Add to &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jhjguxin.github.io/blog/2012/02/03/errno-econnrefused-connection-refused-connect-2-while-connecting-to-a-remote-solr-instance-from-sunspot">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Francis's Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-25901353-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Francis's Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jhjguxin.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/readme">Readme</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Errno::ECONNREFUSED: Connection Refused - Connect(2) While Connecting to a Remote Solr Instance From Sunspot</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-03T20:10:00+08:00" pubdate data-updated="true">Feb 3<span>rd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>Errno::ECONNREFUSED:  Connection refused &ndash; connect(2) while connecting to a remote solr instance from Sunspot</h2>
+
+<h2>Quickstart with Rails 3</h2>
+
+
+<p>Add to Gemfile:</p>
+
+<div>
+<code>gem 'sunspot_rails'
+gem 'sunspot_solr' # optional pre-packaged Solr distribution for use in development</code>
+</div>
+
+
+<p>Bundle it!</p>
+
+<div>
+<pre>bundle install</pre>
+</div>
+
+
+<p>Generate a default configuration file:</p>
+
+<div>
+<pre>rails generate sunspot_rails:install</pre>
+</div>
+
+
+<p>If <code>sunspot_solr</code> was installed, start the packaged Solr distribution with:</p>
+
+<p><code>bundle exec rake sunspot:solr:start # or sunspot:solr:run to start in foreground</code></p>
+
+<p>Now that Sunspot knows how to index the <code>Post</code> model, we need to get the existing data into Solr. Any time a <code>Post</code> is created, updated, or destroyed, Sunspot::Rails will automatically make the change to the index; you only need to do a full reindex if you’ve added or changed a <code>searchable</code> definition for a model.</p>
+
+<p><code>$ rake sunspot:reindex</code></p>
+
+<p>If <code>sunspot_solr</code> was installed, start the packaged Solr distribution with:</p>
+
+<div>
+<code>jhjguxin@jhjguxin-Aspire-4750:~$ heroku run:detached rake sunspot:solr:start RAILS_ENV=production rake sunspot:solr:start --app francisjiang
+or type:sunspot-solr start -- -p 8983 or sunspot-solr start -- -p 8983 -d data/solr/myapp</code>
+Try to start the solr
+<pre>
+<code>##with apache+solr+rails
+jhjguxin@jhjguxin-virtual-machine:/var/www/enki$ sudo gem install sunspot_solr
+Successfully installed escape-0.0.4
+Successfully installed sunspot_solr-1.3.0
+2 gems installed
+Installing ri documentation for escape-0.0.4...
+Installing ri documentation for sunspot_solr-1.3.0...
+Installing RDoc documentation for escape-0.0.4...
+Installing RDoc documentation for sunspot_solr-1.3.0...
+jhjguxin@jhjguxin-virtual-machine:/var/www/enki$ sudo sunspot-solr start -- -p 8983 -d solr/data/
+[sudo] password for jhjguxin: 
+java version "1.6.0_23"
+OpenJDK Runtime Environment (IcedTea6 1.11pre) (6b23~pre11-0ubuntu1.11.10.1)
+OpenJDK Client VM (build 20.0-b11, mixed mode, sharing)
+</code>
+</pre>
+
+Solr服务控制
+将以上内容添加到Rakefile后，将会多出4个task出来
+
+服务器启动:
+rake sunspot:solr:start
+初次启动，会安装一个embed的solr程序，那么开发环境中省去了安装配置Solr环境繁琐步骤。不过，production环境里可不要使用这个embed版。
+
+服务器停止:
+rake sunspot:solr:stop
+全部重建索引：
+rake sunspot:reindex
+如果你想看到运行日志，把服务跑在前端。可以使用一下命令:
+rake sunspot:solr:run
+使用以上命令，就能完成对Sunspot的控制。
+
+</div>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Francis Jiang</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-03T20:10:00+08:00" pubdate data-updated="true">Feb 3<span>rd</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rails/'>rails</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://jhjguxin.github.io/blog/2012/02/03/errno-econnrefused-connection-refused-connect-2-while-connecting-to-a-remote-solr-instance-from-sunspot/" data-via="jhjguxin" data-counturl="http://jhjguxin.github.io/blog/2012/02/03/errno-econnrefused-connection-refused-connect-2-while-connecting-to-a-remote-solr-instance-from-sunspot/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/02/01/zai-herokushang-bu-shu-%28tuo-guan-%29ni-de-railsying-yong/" title="Previous Post: 在Heroku上部署（托管）你的Rails应用">&laquo; 在Heroku上部署（托管）你的Rails应用</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/02/08/rails-form-for-with-associations-defined-and-multipart-set-to-true-not-working/" title="Next Post: Rails form_for with associations defined and multipart set to true not working">Rails form_for with associations defined and multipart set to true not working &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/">通过mongodump和mongorestore实现Mongodb备份和恢复 --by Chenzhou123520</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes/">Ruby on Rails 4.0 Release Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/rails-active-record-named-scopes/">Rails Active Record Named Scopes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/">晒晒我们的开源项目 ITEYE开源代码</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/">Single Sign-on 单点登录 Sso</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/jhjguxin">@jhjguxin</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'jhjguxin',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Francis Jiang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

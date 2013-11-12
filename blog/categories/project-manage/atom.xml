@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Project Manage | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/blog/categories/project-manage/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Git Submodule 的認識與正確使用！]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/04/19/git-submodule-de-ren-shi-yu-zheng-que-shi-yong-%21/"/>
+    <updated>2012-04-19T18:36:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/04/19/git-submodule-de-ren-shi-yu-zheng-que-shi-yong-!</id>
+    <content type="html"><![CDATA[<h2>Git Submodule 的認識與正確使用！</h2>
+
+<div>
+
+已經用了 git submodule 好一陣子了，今天看到了 <a href="http://johnleach.co.uk/words/323/git-submodules-in-n-easy-steps" target="_blank">Git submodules in N easy steps</a> 才覺得比較搞懂一些之前碰到的問題。趁機來整理、釐清之前常碰到的小問題吧~~
+<h2>什麼是 Git Submodule</h2>
+剛剛從 SVN 或 CVS 等 Client-Server 架構的版本控制系統切換到 Git 時，可能會有這個想法：「<em>能不能只取得一部分的程式碼、而非整個 Repository？</em>」因為在 SVN/CVS 可以針對 Repository 中的某個目錄 checkout，不需要是整個 Repository、甚至還可以用 SVN Externals 達到不同角色 （視覺、前端、後端）checkout 不同 File Layout（之前在無名小站時，超喜歡 svn:externals 的概念）。
+
+但 Git 是分散式的版本控制系統，每個人都是一個完整的 Repository，沒辦法像 SVN/CVS 指定到某個資料夾。例如你要取得 YUI 3 的 Git，只能 git clone https://github.com/yui/yui3.git、而不能指定到底下的目錄。
+
+SVN/CVS 你可以用目錄區隔大小專案、都在同一個大的 Repository。而 Git 的想法必須修正為<em>每個小專案就是一個 Repository</em>、或<em>不同團隊開發是一個 Repository</em>、甚至<em>功能獨立也可以是一個 Repository</em>。若說 SVN 是包容百川、<em>Git 就是各自獨立的小河流</em>。
+
+但<em>軟體開發團隊不太容易如此單純</em>，有時需要給外包開發、有時需要分工、有時需要用 Open Source，<em>光用以上的切分方式是沒辦法達成所有需求的</em>、還是得將各自獨立的小河流連接起來。例如我先前在 WebRebuild 與 COSCUP 分享的 JavaScript Platform，為了分享把原始碼放了一份到 Github : <a href="http://github.com/josephj/javascript-platform-yui" target="_blank">http://github.com/josephj/javascript-platform-yui</a>，但我的工作及部落格都有使用的需求，該怎麼做呢？如果每次都得 git clone 再 copy 檔案到兩個地方、這樣手工做真的是個很遜的解決方案。好在有 Git Submodule 可以幫忙解決!
+
+簡單來說，Git Submodule 可以<em>輕易地將別人的 git 掛入到你目前 git 的任何位置</em>。
+<h2>新增一個 Git Submodule</h2>
+例如我有目前本機有一個 josephj.git、在 /home/josephj/www 下，而我需要將 javascript platform 放到 /home/josephj/www/static/ 可以用以下幾行快速達成。
+<ul>
+    <li>切換到我的 repository 目錄：
+<code>$ cd /home/josephj/www</code></li>
+    <li>使用 <em>git submodule add [repository 位置] [欲放置的位置]</em> 增加一個新的 submodule：
+<code>$ git submodule add git@github.com:josephj/javascript-platform-yui.git static/platform</code>需要注意 [欲放置的位置] 不能以 / 結尾（會造成修改不生效）、也不能已經是現有的路徑喔（不能順利 Clone）。</li>
+    <li>按下去就會看到以下結果：
+<pre><code>$ git submodule add git://github.com/josephj/javascript-platform-yui.git static/platform Initialized empty Git repository in /home/josephj/www/static/platform/.git/ remote: Counting objects: 31, done. remote: Compressing objects: 100% (31/31), done. remote: Total 31 (delta 14), reused 0 (delta 0) Receiving objects: 100% (31/31), 6.06 KiB, done. Resolving deltas: 100% (14/14), done. </code></pre>
+這時在 /home/josephj/www/ 會產生一個 <em>.gitmodules</em> 記錄你的 Submodule 資訊。該 git 的<em>相關檔案也都會在此時被拉下來</em>。</li>
+    <li>用 git status 看一下：
+<pre><code>$ git status # On branch master # Changes to be committed: # (use "git reset HEAD ..." to unstage) # # new file: .gitmodules # new file: static/platform # </code></pre>
+會發現它只列出 submodule 目錄而非所有底下檔案，parent git 實際上也只會記錄 submodule 的 commit id 以供未來做比對用。這裡一個很重要的點是大家必須理解的：<em>parent git 與 submodule git 的關連性（被掛入的目錄、repository 位置）記錄在 .gitmodules 中，而版本控制則是靠 parent git 記住 submodule git 的 commit id。</em></li>
+    <li>先 commit 一下：
+<pre><code>$ git add .gitmodules static/platform git commit -m "Add submodule into version control";</code></pre>
+</li>
+    <li>但是你還必須做 init 的動作，你的 .git/config 才會有對應 submodule 的資訊。
+<pre><code>$ git submodule init </code></pre>
+</li>
+</ul>
+<h2>更新已安裝的 Submodule</h2>
+當初我第一次新增一個 Submodule 後，以為未來它都會像 SVN External 一樣、在我 git pull 的時候自動更新。但實際情況是你<em>必須手動處理才能更新 Submodule</em>。
+<ol>
+    <li>進入該目錄 Subomdule 目錄： <code>$ cd static/platform</code></li>
+    <li>向來源的 master branch 做 git pull 的動作（這裡的 git pull 不會更新你 parent git 的檔案） <code>$ git pull origin master</code></li>
+    <li>若 submodule 有更新的檔案，你可以到 parent git 觀看一下情況：
+<pre><code>$ cd ../../ $ git status # Not currently on any branch. # Changed but not updated: # (use "git add ..." to update what will be committed) # (use "git checkout -- ..." to discard changes in working directory) # # modified: static/platform (new commits) # no changes added to commit (use "git add" and/or "git commit -a")</code></pre>
+與第一次 git submodule add 相同，submodule 更新的檔案並不會在 git status 中要求你 commit 喔！</li>
+    <li>我們前面提到，submodule 的版本控制在於 submodule git 的 commit id，上面看到 static/platform 有 new commit。表示你既然把新的內容 pull 回來、應該要更新 submodule 的 commit id 到你的 git 中：
+<pre><code>$ git add static/platform $ git commit -m "static/platform submodule updated"</code></pre>
+如此一來，新的 submodule commit id 就被你的 repositiory 給記錄下來囉！</li>
+</ol>
+<h2>團隊使用 Submodule</h2>
+在一個多人的軟體開發團隊中，通常還是會有 Centralized Git Repositiory，像我們公司就採用了 gitosis 的解決方案。而像上述更新 Submodule 的情形，通常只有一兩個負責架構的人來做（大多是一開始把東西掛進來的人）、<em>其他人只是單純使用者的角色，並不需要負責更新的工作</em>。
+<ol>
+    <li>像上面我增加了一個 Submodule，對於團隊其他人來說，他們在下一次的 git pull 會看到以下的狀況：
+<pre><code>$ git status # On branch develop # Changed but not updated: # (use "git add ..." to update what will be committed) # (use "git checkout -- ..." to discard changes in working directory) # # modified: static/platform (new commits) # no changes added to commit (use "git add" and/or "git commit -a")</code></pre>
+這表示其他人也會拿到 .gitmodules 的設定，但他必須使用 git submodule init 將新的 Submodule 註冊到自己的 .git/config、未來才能使用。
+<pre><code>$ git submodule init Submodule 'static/platform' (http://github.com/josephj/javascript-platform-yui.git) registered for path 'static/platform'</code></pre>
+</li>
+    <li>接著其他人使用 git submodule update 把該 Submodule 的內容全部拉下來！
+<pre><code>$ git submodule update Cloning into static/platform... remote: Counting objects: 34, done. remote: Compressing objects: 100% (34/34), done. remote: Total 34 (delta 15), reused 0 (delta 0) Unpacking objects: 100% (34/34), done. Submodule path 'static/platform': checked out '117c5b3c5a195deac2e53aa118b78ef3f01ae371' </code></pre>
+</li>
+</ol>
+<h3>使用時機</h3>
+簡單整理一下：
+<ul>
+    <li><em>git submodule init</em>: 在 .gitmodules 第一次被其他人建立或有新增內容的時候，用 git submodule init <em>更新你的 .git/config、設定目錄與增加 submodule 的 remote URL</em>。</li>
+    <li><em>git submodule update</em>: 在 init 完有新的 submodule commit id 後就可以做了，會把所有相關檔案拉下來。若其他人更新 submodule 造成你拿到新的 commit id 時，你可以直接用 git submodule update 做更新即可、不需要做任何 add 或 commit 的動作！</li>
+</ul>
+可以想見，其他成員使用 git submodule update 的情況會遠比 git submodule init 多很多。
+<h2>修改 Submodule 的內容</h2>
+有時自己也是 Submodule 的 Owner，碰到要改 Code 時，要我切回原本的此 Git 開發位置有點麻煩... 不如就<em>直接改被當成 Submodule 掛進來的原始碼吧</em>！
+<ol>
+    <li>到 submodule 目錄去做些修改：
+<pre><code>$ cd static/platform $ vim README # 做些修改 </code></pre>
+</li>
+    <li>接著就是常見的 git add , git commit, git push
+<pre><code>$ git add README $ git commit -m "Add comments" $ git push </code></pre>
+</li>
+    <li>push 完回到根目錄git status 看一下！會看到
+<pre><code>$ git status # On branch master # Changed but not updated: # (use "git add ..." to update what will be committed) # (use "git checkout -- ..." to discard changes in working directory) # # modified: static/platform # no changes added to commit (use "git add" and/or "git commit -a")</code></pre>
+</li>
+    <li>這裡也需要再做一次 Commit 喔！
+<pre><code>$ git add static/platform $ git commit -m 'Submodule updated' $ git push </code></pre>
+</li>
+</ol>
+這裡有一點非常需要注意，因為 Submodule 的更新只記錄 commit id，所以<em>你必須先在 submodule 內做 commit、push 後、再到 parent git 做 push</em>，不然會出現版本錯亂的問題，別人跟你 submodule 的內容將會不一致。
+<h2>如何移除 Submodule</h2>
+這點也<em>非常地不直覺</em>，不是想像中 git submodule remove [欲移除的目錄] 這麼簡單...
+<ol>
+    <li>先砍掉目錄：
+<pre><code>$ git rm --cached [欲移除的目錄] $ rm -rf [欲移除的目錄]</code></pre>
+</li>
+    <li>再修改 .gitmodules
+<pre><code>$ vim .gitmodules</code></pre>
+將相關內容移除</li>
+    <li>再修改 .git/config
+<pre><code>$ vim .git/config</code></pre>
+將相關內容移除</li>
+    <li>最後再 commit，改變整個 Repository。
+<pre><code>$ git add .gitmodules $ git commit -m "Remove a submodule" </code></pre>
+</li>
+    <li>安全起見再做個 sync：
+<pre><code>$ git submodule sync</code></pre>
+</li>
+</ol>
+<h2>結語</h2>
+我們公司目前主要將 Submodule 運用在<em>與外包公司的合作</em>上，因為彼此 <span>Engine</span>ering 團隊負責的專案項目雖不同，但<em>有部分的開發會需要在我們的結構下開目錄，我們也不希望他們改到我們的程式</em>，此時 Git Submodule 提供了非常好的分工效果：把他們開發好的東西掛進來、更新即可。另有一點很重要的是， <em>Git Submodule 內還可以將其他的 Submodule 給掛進來，形成一個巢狀式的結構</em>，彈性非常地大。我們只要抓他們的大 Git 當 Submodule，下面怎麼掛就由外包公司決定。
+
+整篇文章看下來，會發現 <em>git submodule 的操作有許多需要注意的地方</em>，像是更新、修改、刪除都要遵循一定的程序，不然你 PUSH 回 Central Repository 時，別人 PULL 下來的 Submodule 可能並不會更新，就會產生混亂了 Orz...
+
+暇不掩瑜，Git Submodule 還是一個強大且團隊開發上非常重要的功能，就盡量使用前先搞懂、小心使用囉 ;)
+
+</div>
+
+
+<div>
+
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[安装GitLab]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/04/17/an-zhuang-gitlab/"/>
+    <updated>2012-04-17T10:22:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/04/17/an-zhuang-gitlab</id>
+    <content type="html"><![CDATA[<h2>安装GitLab</h2>
+
+<p>一、准备工作
+根据GitLab的官方文档要求，安装GitLab需要以下软件：
+ruby 1.9.2
+sqlite
+ubuntu/debian
+pygments lib – sudo pip install pygments
+gitolite
+因此在安装GitLab之前需要做一些准备工作。
+1、设置安装环境（安装一些必要软件）
+sudo apt-get update
+sudo apt-get dist-upgrade -y
+sudo apt-get install git-core openssh-server sendmail curl gcc libxml2-dev libxslt-dev sqlite3 libsqlite3-dev libcurl4-openssl-dev libreadline-dev libc6-dev libssl-dev libmysql++-dev make build-essential zlib1g-dev python-setuptools
+<em>安装VMWare Tools（这是在虚拟机环境下需要安装的，如果不是的可忽略）
+sudo apt-get update -y
+sudo apt-get dist-upgrade -y
+sudo apt-get install dkms build-essential gcc linux-headers-$(uname -r) -y
+sudo mkdir -p /media/cdrom
+sudo mount /dev/cdrom /media/cdrom
+cp /media/cdrom/VM</em> /tmp
+sudo umount /media/cdrom
+cd /tmp
+tar -xzvf VMware*.gz
+cd vmware-tools-distrib/
+sudo ./vmware-install.pl -d
+sudo apt-get autoremove -y
+sudo shutdown -r now
+上面关于虚拟机的部分是摘抄官网的，因为没环境测试，所以也只是原样照搬了。:)
+2、设置专门的帐号
+接下来我们需要创建一个专门的gitlabhq用户帐号来运行程序，这个帐户需要设置密码，因为需要将它加入到admin组来运行sudo：
+sudo useradd -s /bin/bash -m -G admin gitlabhq
+sudo passwd gitlabhq
+现在使用gitlabhq用户帐号登录机器：
+ssh gitlabhq@localhost
+3、配置git全局变量并生成SSH密钥
+git config –global user.email “admin@local.host”
+git config –global user.name “GitLabHQ Admin User”
+由于gitlabhq用户稍后要使用SSH密钥访问稍后创建git用户帐号，执行git命令，所以需要生成gitlabhq用户的SSH密钥：
+ssh-keygen -t rsa
+注意：在出现提示询问文件保存位置时直接回车，在要求输入和确认passphrase时也按回车。
+4、安装Ruby 1.9.2、RubyGem和Rails
+Ubuntu 11.10中的Ruby包，其版本是1.8的，所以需要安装包ruby1.9.2。由于在Ubuntu 11.10中的Ruby1.9.1包中ruby版本实际上是Ruby1.9.2，之所以包名为Ruby1.9.1是因为该版本为1.9.1的“库兼容版本”，所以可以直接安装包Ruby1.9.1即可，然后更新rubygem并安装rails。
+sudo apt-get install ruby1.9.1-full
+sudo update-alternatives –config ruby
+sudo update-alternatives –config gem
+sudo gem install rails
+注意两点：1)、02-03行命令是在安装了其他ruby版本包时使用；2)、如果在安装rails时出现“RubyGems will revert to legacy indexes degrading performance.”之类的错误时，修改~/.gemrc文件后重试（有时要试多次才进行安装，一般来说都会3－6次之间，下面的bundle命令也是如此，不知道是不是伟大的墙在起作用，看你的运气了！）：
+vi ~/.gemrc
+—
+:backtrace: false
+:benchmark: false
+:bulk_threshold: 1000
+:sources:
+&ndash; <a href="http://gems.rubyforge.org/">http://gems.rubyforge.org/</a>
+&ndash; <a href="http://gems.github.com/">http://gems.github.com/</a>
+&ndash; <a href="http://gems.rubyonrails.org/">http://gems.rubyonrails.org/</a>
+:update_sources: true
+:verbose: true
+5、安装和设置Gitolite
+Gitolite 是一款 Perl 语言开发的 Git 服务管理工具，通过公钥对用户进行认证，并能够通过配置文件对写操作进行基于分支和路径的的精细授权，它是采用 SSH 协议并且使用 SSH 公钥认证的。Gitolite开始于 2009年8月，其作者当时是受到了 Gitosis 的启发，开发了这款功能更为强大和易于安装的软件。对于Gitolite的命名，作者原意是 Gitosis 和 lite 的组合，不过因为 Gitolite 的功能越来越强大，已经超越了 Gitosis，因此作者笑称 Gitolite 可以看作是 Github-lite —— 轻量级的 Github。
+安装Gitolite也十分简单，首先添加git用户帐号并将其加入git组：
+sudo adduser \
+–system \
+–shell /bin/sh \
+–gecos ‘git version control’ \
+–group \
+–disabled-password \
+–home /home/git \
+git
+sudo usermod -a -G git <code>eval whoami</code>
+然后将生成的gitlabhq用户的公钥拷到git用户目录中：
+sudo cp ~/.ssh/id_rsa.pub /home/git/rails.pub
+接下来以git用户的名义将gitolite源文件下载的git用户家目录中：
+sudo -u git -H git clone git://github.com/gitlabhq/gitolite ~git/gitolite
+再以git用户的名义安装gitolite
+sudo -u git -H /home/git/gitolite/src/gl-system-install
+在这里该命令会提示关于目录的警告信息，不用理会。直接运行下列命令：
+sudo -u git -H sh -c “PATH=/home/git/bin:$PATH; gl-setup ~/rails.pub”
+在这里将会出现vim文本编辑器的编辑界面，请将其中的REPO_UMASK=0077改为REPO_UMASK=0007，然后保存退出（退出编辑状态ESC，然后使用:x）。关于如何在vim中编辑这里就不做说明了，我偷个懒，反正有谷歌和百度。:)
+最后设置库目录的权限：
+sudo chmod -R g+rwX ~git/repositories/
+sudo chown -R git:git ~git/repositories/
+OK，设置完了之后，重新进入一次gitlabhq用户，以使gitlabhq用户生效：
+exit
+ssh gitlabhq@localhost
+二、安装和设置GitLab
+1、安装GitLab
+cd ~
+git clone git://github.com/gitlabhq/gitlabhq.git ~/gitlabhq
+cd gitlabhq
+sudo easy_install pygments
+sudo gem install bundler
+sudo gem install linecache19 — –with-ruby-include=/usr/include/ruby-1.9.1/ruby/
+bundle install –without development test
+注意：linecache19的安装是必须要指定with-ruby-include参数的，否则将会在后面的bundle install中出错！
+2、设置数据库
+bundle exec rake db:setup RAILS_ENV=production
+bundle exec rake db:seed_fu RAILS_ENV=production
+注意：运行01行的rake db:setup语句时，如果出现“unititialized constant Rake::DSL”，则需要在GitLab根目录中的Rakefile文件中添加以下语句（参见<a href="http://stackoverflow.com">http://stackoverflow.com</a> /questions/6268518/uninitialized-constant-rakedsl-in-ruby-gem）来解决，如未出现上述出错信息，可忽略：
+require ‘rake/dsl_definition’
+require ‘rake’
+3、配置GitLab
+编辑GitLab的配置程序：
+vi ~gitlabhq/gitlabhq/config/gitlab.yml
+将下列内容
+git_host:
+system: gitolite
+admin_uri: git@localhost:gitolite-admin
+base_path: /home/git/repositories/
+host: gitlab
+git_user: git</p>
+
+<h1>port: 22</h1>
+
+<p>修改为：
+git_host:
+system: gitolite
+admin_uri: git@localhost:gitolite-admin
+base_path: /home/git/repositories/
+host: gitlabhq.your.domain
+git_user: git</p>
+
+<h1>port: 22</h1>
+
+<p>其中03和05行中的gitlabhq.your.domain是服务器的域名。
+启动服务
+cd ~gitlabhq/gitlabhq
+bundle exec rails s -e production
+三、测试服务
+如果一切OK的话，就可以在浏览器上输入：<a href="http://server.ip:3000/">http://server.ip:3000/</a> 来测试该服务了，使用以下信息登录：
+Email: <a href="&#x6d;&#97;&#105;&#x6c;&#116;&#x6f;&#58;&#x61;&#x64;&#109;&#105;&#x6e;&#x40;&#x6c;&#x6f;&#99;&#97;&#x6c;&#x2e;&#x68;&#x6f;&#115;&#x74;">&#97;&#100;&#109;&#x69;&#x6e;&#x40;&#x6c;&#x6f;&#x63;&#x61;&#x6c;&#46;&#x68;&#111;&#115;&#116;</a>
+Password: 5iveL!fe
+接下来您可以在admin中创建一个新的用户，注意该用户在创建时要花费一段时间，请耐心等待。在该用户生成成功后，您需要按照前面的方法在客户机上生成该用户的密钥（Windows下可以使用Git for Windows中的Git Bash来代替）：
+ssh-keygen -t rsa -C “your_email@youremail.com”
+然后用新用户登录，点击GitLab中My profile&gt;Keys&gt;Add new按钮，将生成的SSH公钥贴到弹出对话框的Key中，Title可随便填，我一般是使用用户<em>机器名这种格式，然后点击Save按钮。
+在保存用户公钥之后，就可测试是否可以通过公钥来访问服务器上的git用户，执行git命令：
+ssh -T <a href="&#109;&#x61;&#x69;&#x6c;&#116;&#111;&#x3a;&#103;&#x69;&#116;&#x40;&#103;&#105;&#116;&#x6c;&#97;&#98;&#x68;&#x71;&#46;&#x79;&#111;&#x75;&#114;&#x2e;&#x64;&#111;&#109;&#x61;&#x69;&#x6e;">&#x67;&#105;&#116;&#x40;&#103;&#105;&#116;&#108;&#x61;&#98;&#x68;&#x71;&#46;&#x79;&#x6f;&#117;&#114;&#46;&#100;&#111;&#x6d;&#97;&#x69;&#x6e;</a>
+其中，gitlabhq.your.domain是服务器的域名。如果出现”Agent admitted failure to sign using the key”错误，并提示输入git用户密码，那么请在客户机上使用以下命令将用户私钥加进来 （根据个人的密匙命名不同更改 id_rsa）：
+ssh-add ~/.ssh/id_rsa
+ssh -T <a href="&#109;&#97;&#105;&#108;&#116;&#x6f;&#x3a;&#x67;&#x69;&#x74;&#64;&#x67;&#105;&#116;&#x6c;&#x61;&#x62;&#104;&#x71;&#x2e;&#121;&#111;&#117;&#114;&#46;&#100;&#111;&#109;&#97;&#x69;&#x6e;">&#103;&#105;&#x74;&#x40;&#103;&#105;&#116;&#x6c;&#x61;&#98;&#104;&#113;&#46;&#121;&#x6f;&#x75;&#x72;&#46;&#100;&#x6f;&#109;&#97;&#x69;&#110;</a>
+hello your_email_youremail_com_1324608633, this is gitolite v2.2-11-g8c4d1aa running on git 1.7.5.4 the gitolite config gives you the following access: @R</em> @W_ testing
+再次访问git，如出现类似02行信息时，则表明设置成功。
+四、安裝和配置 Nginx和Passenger
+1、卸载Apache2
+sudo apt-get autoremove apache2<em>
+sudo dpkg –purge apache2</em>
+2、安装Nginx和Passenger模块
+sudo gem install passenger
+sudo passenger-install-ngnix-module
+注意：02行语句会检查编译Ngnix和Passenger模块所需要的工具，然后询问你是否有Ngnix的源码，如果没有的话，就选1，会自动下载，如果有的话，就选2，并告之源码所在位置。在这里选择1。
+3、创建运行Nginx服务的用户
+sudo adduser –system –no-create-home –disabled-login –disabled-password –group nginx
+4、将Nginx设置开机启动脚本
+wget -O init-deb.sh <a href="http://library.linode.com/assets/660-init-deb.sh">http://library.linode.com/assets/660-init-deb.sh</a>
+sudo mv init-deb.sh /etc/init.d/nginx
+sudo chmod +x /etc/init.d/nginx
+sudo /usr/sbin/update-rc.d -f nginx defaults
+5、将Nginx设置为GitLab的服务器
+sudo vi /opt/nginx/conf/nginx.conf</p>
+
+<p>user gitlabhq staff;</p>
+
+<h1>—</h1>
+
+<p>server {
+listen 80;
+server_name gitlabhq.your.domain;
+root /home/gitlabhq/gitlabhq/public;
+passenger_enabled on;
+}</p>
+
+<h1>—</h1>
+
+<p>其中，07行的gitlab.yourdomain.com要改为你的域名。
+6、启动Nginx
+sudo /etc/init.d/nginx start
+五、测试服务
+在浏览器中输入<a href="http://gitlab.yourdomain.com/%E6%9D%A5%E6%B5%8B%E8%AF%95GitLab%E8%83%BD%E6%98%AF%E5%90%A6%E6%AD%A3%E5%B8%B8%E5%B7%A5%E4%BD%9C%E3%80%82%E5%A6%82%E6%9E%9C%E4%B8%80%E5%88%87%E6%AD%A3%E5%B8%B8%E7%9A%84%E8%AF%9D%EF%BC%8C%E5%B0%B1%E5%8F%AF%E4%BB%A5%E6%89%93%E5%AE%8C%E6%94%B6%E5%8A%9F%E4%BA%86%EF%BC%81">http://gitlab.yourdomain.com/%E6%9D%A5%E6%B5%8B%E8%AF%95GitLab%E8%83%BD%E6%98%AF%E5%90%A6%E6%AD%A3%E5%B8%B8%E5%B7%A5%E4%BD%9C%E3%80%82%E5%A6%82%E6%9E%9C%E4%B8%80%E5%88%87%E6%AD%A3%E5%B8%B8%E7%9A%84%E8%AF%9D%EF%BC%8C%E5%B0%B1%E5%8F%AF%E4%BB%A5%E6%89%93%E5%AE%8C%E6%94%B6%E5%8A%9F%E4%BA%86%EF%BC%81</a></p>
+]]></content>
+  </entry>
+  
+</feed>

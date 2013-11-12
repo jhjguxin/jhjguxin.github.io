@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: hashlib | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/tags/hashlib/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[python hashlib md5]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/04/12/python-hashlib-md5/"/>
+    <updated>2012-04-12T17:53:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/04/12/python-hashlib-md5</id>
+    <content type="html"><![CDATA[<h2>python hashlib md5</h2>
+
+<blockquote>#-*- coding:utf-8 -*-
+from hashlib import md5
+content = 12
+content_str = str(content)
+ciphertext = md5(content_str).hexdigest() #加密
+print ciphertext
+
+#from hashlib import md5
+#ciphertext_str=raw_input() #写入要解密的密文,如827ccb0eea8a706c4c34a16891f84e7b
+#MD5是不可逆的密码加密，可以说除了暴力破解外无法还原，但同样的输入加密出来的结果是一致的，因此要比较输入是否正确，只要比较一下加密后的结果即可，而Python中可以使用hashlib进行MD5加密，具体方法如下
+
+for i in xrange(100000):
+ciphertext_tmp = md5(str(i)).hexdigest()
+if ciphertext_tmp == ciphertext:
+print 'the password is %d' % i
+break</blockquote>
+
+
+<p>python的base64加密解密及md5加密</p>
+
+<blockquote>import hashlib
+
+a = "a test string"
+print hashlib.md5(a).hexdigest()
+print hashlib.sha1(a).hexdigest()
+print hashlib.sha224(a).hexdigest()
+print hashlib.sha256(a).hexdigest()
+print hashlib.sha384(a).hexdigest()
+print hashlib.sha512(a).hexdigest()
+
+import base64
+str='haha'
+encoded = base64.b64encode(str)
+decoded = base64.b64decode(encoded)</blockquote>
+
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: tutorial | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/tags/tutorial/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[RSpec简明指南 By Yuanyi ZHANG]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/03/09/rspecjian-ming-zhi-nan-by-yuanyi-zhang/"/>
+    <updated>2012-03-09T18:05:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/03/09/rspecjian-ming-zhi-nan-by-yuanyi-zhang</id>
+    <content type="html"><![CDATA[<h2>RSpec简明指南 By Yuanyi ZHANG</h2>
+
+<p>这是<a href="http://blog.davidchelimsky.net/">David Chelimsky</a>写的一篇RSpec简明指南，原文在<a href="http://blog.davidchelimsky.net/articles/2007/05/14/an-introduction-to-rspec-part-i">这里</a>。</p>
+
+<p><span style="font-size: large;"><strong>简介</strong></span></p>
+
+<p>要了解RSpec，我们首先需要了解什么是行为驱动开发（Behaviour Driven Development，简称BDD），BDD是一种融合了可接受性测试驱动计划（Acceptance Test Driven Planning），域驱动设计（Domain Driven Design）以及测试驱动开发（Test Driven Development，简称TDD）的敏捷开发模型。RSpec为BDD开发提供TDD支持。</p>
+
+<p>你可以简单的将RSpec看作一个传统的单元测试框架，但我们更愿意将它看成是一种领域特定语言（Domain Specific Language，以下简称DSL），它的主要作用就是描述我们对系统执行某个样例(example)的期望行为(behavior)。</p>
+
+<p>这篇指南遵从TDD思想，但是我们将使用行为（behavior）和样例（example）来代替测试例（test case）和测试方法（test method），想知道我们为什么采用这样的术语，请参看<a href="http://dannorth.net/tags/agile/bdd/">Dan North</a>, <a href="http://daveastels.com/articles/2005/07/05/a-new-look-at-test-driven-development">Dave Astels</a>, 以及 <a href="http://exampler.com/">Brian Marick</a> 的相关文章。</p>
+
+<p><span style="font-size: large;"><strong>安装</strong></span></p>
+
+<p>目前RSpec的最新版本是1.0.5，需要Ruby184以上版本，可以通过下面这条命令安装：</p>
+
+<p><code># gem install rspec</code></p>
+
+<p><span style="font-size: large;"><strong>准备工作</strong></span></p>
+
+<p>整篇指南都围绕一个例子展开，因此在开始前，你最好先为这个例子建个目录：</p>
+
+<p><code>$ mkdir rspec_tutorial
+$ cd rspec_tutorial</code></p>
+
+<p><span style="font-size: large;"><strong>开始</strong></span></p>
+
+<p>我们首先要了解的是RSpec DSL的”describe”与”it”方法，这两个方法有很多其它的名字（但是我们不推荐使用它们），我们之所以使用这样的命名，只是想让你站在行为（behavior）而不是结构（structure）的角度进行思考。</p>
+
+<p>创建名为user_spec.rb的文件：</p>
+
+<p><code>describe User do
+end</code></p>
+
+<p>describe方法创建一个Behavior实例，所以你可以将”describe User”理解为”描述用户的行为（describe the behaviour of the User class）”，或许这个方法叫做“
+describe_the_behaviour_of”会更合适些，但这实在太冗长了，所以我们决定只选取第一个单词describe来作为这个方法的名字。</p>
+
+<p>现在你可以在shell中试试这条命令：</p>
+
+<p><code>$ spec user_spec.rb</code></p>
+
+<p>spec命令有很多选项，但大部分超出了本指南的范围，如果你感兴趣，可以只输入spec而不带任何参数来查看帮助信息。</p>
+
+<p>让我们接着回到上面那条命令，它应该会产生下面的输出：</p>
+
+<p><code>./user_spec.rb:1: uninitialized constant User (NameError)</code></p>
+
+<p>这是因为我们还没有创建User类，也就是说我们要描述的东西不存在，因此我们需要再创建一个user.rb来定义我们所要描述的对象：</p>
+
+<p><code>class User
+end</code></p>
+
+<p>并在user_spec.rb中包含它：</p>
+
+<p><code>require &lsquo;user&rsquo;
+describe User do
+end</code></p>
+
+<p>现在再次运行spec命令：</p>
+
+<p><code>$ spec user_spec.rb
+Finished in 6.0e-06 seconds
+0 examples, 0 failures</code></p>
+
+<p>这个输出是说我们还没有定义样例，所以现在我们就来定义一个：</p>
+
+<p><code>describe User do
+  it &ldquo;should be in any roles assigned to it&rdquo; do
+  end
+end</code></p>
+
+<p>it方法返回一个Example实例，因此我们可以将it方法理解成“用户行为的一个样例”。</p>
+
+<p>再次运行spec：</p>
+
+<p><code>$ spec user_spec.rb &mdash;format specdoc
+User
+&ndash; should be in any roles assigned to it
+Finished in 0.022865 seconds
+1 example, 0 failures</code></p>
+
+<p>specdoc参数格式化行为（describe方法创建的对象）以及样例（it方法创建的对象）的名字然后输出，这种格式来自于TestDox，一个为JUnit测试例及方法提供相似报告的工具。</p>
+
+<p>现在我们开始增加Ruby代码：</p>
+
+<p><code>describe User do
+  it &ldquo;should be in any roles assigned to it&rdquo; do
+    user.should be_in_role(&ldquo;assigned role&rdquo;)
+  end
+end</code></p>
+
+<p>这句话的意思是User应该能够胜任所有分配给他的角色，那么事实是这样么？让我们运行spec试试看：</p>
+
+<p><code>$ spec user_spec.rb &mdash;format specdoc
+User
+&ndash; should be in any roles assigned to it (ERROR &ndash; 1)
+1)
+NameError in ‘User should be in any roles assigned to it’
+undefined local variable or method `user’ for #&lt;#:0×14ecdd8&gt;
+./user_spec.rb:6:
+Finished in 0.017956 seconds
+1 example, 1 failure</code></p>
+
+<p>又出错了，是的，但在继续之前，让我们先仔细看看这段出错信息：</p>
+
+<ul>
+    <li>“ERROR -1)”告诉我们”should be in any roles assigned to it”这个样例出错了</li>
+    <li>“1)”则为我们详细描述了这个错误，当样例很多时，你就会发现这个编号非常有用</li>
+</ul>
+
+
+<p>还有一点需要注意：这段信息没有给出RSpec代码的backtrace，如果你需要它，可以通过–backtrace选项来获取。</p>
+
+<p>下面，我们继续我们的例子，上面的错误是因为我们没有创建User对象，那我们就创建一个：</p>
+
+<p><code>describe User do
+  it &ldquo;should be in any roles assigned to it&rdquo; do
+    user = User.new
+    user.should be_in_role(&ldquo;assigned role&rdquo;)
+  end
+end</code></p>
+
+<p><code>$ spec user_spec.rb &mdash;format specdoc
+User
+&ndash; should be in any roles assigned to it (ERROR &ndash; 1)
+1)
+NoMethodError in ‘User should be in any roles assigned to it’
+undefined method `in_role?’ for #
+./user_spec.rb:7:
+Finished in 0.020779 seconds
+1 example, 1 failure</code></p>
+
+<p>还是失败，不过这次是因为User对象缺少role_in?方法，修改user.rb:</p>
+
+<p><code>class User
+  def in_role?(role)
+  end</code></p>
+
+<p><code>$ spec user_spec.rb &mdash;format specdoc
+User
+&ndash; should be in any roles assigned to it (FAILED &ndash; 1)
+1)
+‘User should be in any roles assigned to it’ FAILED
+expected in_role?(”assigned role”) to return true, got nil
+./user_spec.rb:7:
+Finished in 0.0172110000000001 seconds
+1 example, 1 failure</code></p>
+
+<p>虽然又失败了，但我们的第一个目标其实已经达到了，我们得到了一段更有意义的错误描述”User should be in any roles assigned to it”。</p>
+
+<p>让这段代码避免失败很简单：</p>
+
+<p><code>class User
+  def in_role?(role)
+    true
+  end</code></p>
+
+<p><code>$ spec user_spec.rb &mdash;format specdoc
+User
+&ndash; should be in any roles assigned to it
+Finished in 0.018173 seconds
+1 example, 0 failures</code></p>
+
+<p>现在终于通过了，但是让我们再来看看这段代码：</p>
+
+<p><code>describe User do
+  it &ldquo;should be in any roles assigned to it&rdquo; do
+    user = User.new
+    user.should be_in_role(&ldquo;assigned role&rdquo;)
+  end
+end</code></p>
+
+<p>我们可以将这个样例理解成“用户应该接受所有分配给他的角色”，但问题是我们还没有分给他角色呢？</p>
+
+<p><code>describe User do
+  it &ldquo;should be in any roles assigned to it&rdquo; do
+    user = User.new
+    user.assign_role(&ldquo;assigned role&rdquo;)
+    user.should be_in_role(&ldquo;assigned role&rdquo;)
+  end
+end</code></p>
+
+<p>这段代码又会引发一个错误，因为User并没有assign_role这个方法：</p>
+
+<p><code>class User
+  def in_role?(role)
+    true
+  end
+  def assign_role(role)
+  end
+end</code></p>
+
+<p><code>$ spec user_spec.rb &mdash;format specdoc
+User
+&ndash; should be in any roles assigned to it
+Finished in 0.018998 seconds
+1 example, 0 failures</code></p>
+
+<p>样例再次通过，但是我们的任务还没结束，只要你再回头看看我们目前的代码，就会发现这个User的行为与我们的目标还有距离。</p>
+
+<p>现在，我们只是解决了“用户必须接受所有分配给他的角色”，但是还有一个问题就是”用户不应该接受没有分配给他的角色“。所以我们需要为用户行为再增加一个样例：</p>
+
+<p><code>describe User do
+  it &ldquo;should be in any roles assigned to it&rdquo; do
+    user = User.new
+    user.assign_role(&ldquo;assigned role&rdquo;)
+    user.should be_in_role(&ldquo;assigned role&rdquo;)
+  end
+  it “should NOT be in any roles not assigned to it” do
+    user = User.new
+    user.should_not be_in_role(”unassigned role”)
+  end
+end</code></p>
+
+<p><code>$ spec user_spec.rb &mdash;format specdoc
+User
+&ndash; should be in any roles assigned to it
+&ndash; should NOT be in any roles not assigned to it (FAILED &ndash; 1)
+1)
+‘User should NOT be in any roles not assigned to it’ FAILED
+expected in_role?(”unassigned role”) to return false, got true
+./user_spec.rb:12:
+Finished in 0.019014 seconds
+2 examples, 1 failure</code></p>
+
+<p>失败了，用户接受了没有分给他的角色，这需要我们对User的实现做些改动：</p>
+
+<p><code>class User
+  def in_role?(role)
+    role == &ldquo;assigned role&rdquo;
+  end
+  def assign_role(role)
+  end
+end</code></p>
+
+<p>现在，一切都搞定了，但是我们的代码与样例有些重复（它们都使用了”assigned role”），因此，有必要对User类进行重构：</p>
+
+<p><code>class User
+  def in_role?(role)
+    role == @role
+  end
+  def assign_role(role)
+    @role = role
+  end
+end</code></p>
+
+<p>随后，让我们再来测试一下：</p>
+
+<p><code>$ spec user_spec.rb &mdash;format specdoc
+User
+&ndash; should be in any roles assigned to it
+&ndash; should NOT be in any roles not assigned to it
+Finished in 0.018199 seconds
+2 examples, 0 failures</code></p>
+
+<p>事情就这么结束了么？你可能还有些疑惑，因为我们甚至可以将一个数字分配给用户，但这与”用户应该接受任何分配给他的角色”是吻合的，所以，这时候我们应该征求下我们的客户的意见，“每个用户在同一时间只能担当一个角色吗？”，如果客户的回答是Yes，那么很幸运，我们不需要对我们的代码进行改动，而只需对样例的描述进行一些修改，但如果客户的回答是No，那我们恐怕还得再做些工作。</p>
+]]></content>
+  </entry>
+  
+</feed>

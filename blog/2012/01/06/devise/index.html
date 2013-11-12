@@ -1,0 +1,542 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>devise - Francis's Octopress Blog</title>
+  <meta name="author" content="Francis Jiang">
+
+  
+  <meta name="description" content="devise IMPORTANT: Devise 2.0.0.rc is out. If you are upgrading, please read: github.com/plataformatec/devise/wiki/How-To:-Upgrade-to-Devise-2.0 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jhjguxin.github.io/blog/2012/01/06/devise">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Francis's Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-25901353-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Francis's Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jhjguxin.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/readme">Readme</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Devise</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-06T12:44:00+08:00" pubdate data-updated="true">Jan 6<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>devise</h2>
+
+<div>
+<div>
+
+<strong>IMPORTANT:</strong> Devise 2.0.0.rc is out. If you are upgrading, please read: <a href="https://github.com/plataformatec/devise/wiki/How-To:-Upgrade-to-Devise-2.0">github.com/plataformatec/devise/wiki/How-To:-Upgrade-to-Devise-2.0</a>
+<h2>Devise</h2>
+<a href="http://travis-ci.org/plataformatec/devise"><img src="https://secure.travis-ci.org/plataformatec/devise.png" alt="" /></a>
+
+Devise is a flexible authentication solution for Rails based on Warden. It:
+<ul>
+    <li>Is Rack based;</li>
+    <li>Is a complete MVC solution based on Rails engines;</li>
+    <li>Allows you to have multiple roles (or models/scopes) signed in at the same time;</li>
+    <li>Is based on a modularity concept: use just what you really need.</li>
+</ul>
+It’s comprised of 12 modules:
+<ul>
+    <li>Database Authenticatable: encrypts and stores a password in the database to validate the authenticity of a user while signing in. The authentication can be done both through POST requests or HTTP Basic Authentication.</li>
+    <li>Token Authenticatable: signs in a user based on an authentication token (also known as “single access token”). The token can be given both through query string or HTTP Basic Authentication.</li>
+    <li>Omniauthable: adds Omniauth (github.com/intridea/omniauth) support;</li>
+    <li>Confirmable: sends emails with confirmation instructions and verifies whether an account is already confirmed during sign in.</li>
+    <li>Recoverable: resets the user password and sends reset instructions.</li>
+    <li>Registerable: handles signing up users through a registration process, also allowing them to edit and destroy their account.</li>
+    <li>Rememberable: manages generating and clearing a token for remembering the user from a saved cookie.</li>
+    <li>Trackable: tracks sign in count, timestamps and IP address.</li>
+    <li>Timeoutable: expires sessions that have no activity in a specified period of time.</li>
+    <li>Validatable: provides validations of email and password. It’s optional and can be customized, so you’re able to define your own validations.</li>
+    <li>Lockable: locks an account after a specified number of failed sign-in attempts. Can unlock via email or after a specified time period.</li>
+    <li>Encryptable: adds support of other authentication mechanisms besides the built-in Bcrypt (the default).</li>
+</ul>
+<h2>Information</h2>
+<h3>The Devise wiki</h3>
+The Devise Wiki has lots of additional information about Devise including many “how-to” articles and answers to the most frequently asked questions. Please browse the Wiki after finishing this README:
+
+<a href="https://wiki.github.com/plataformatec/devise">wiki.github.com/plataformatec/devise</a>
+<h3>Bug reports</h3>
+If you discover a problem with Devise, we would like to know about it. However, we ask that you please review these guidelines before submitting a bug report:
+
+<a href="https://github.com/plataformatec/devise/wiki/Bug-reports">github.com/plataformatec/devise/wiki/Bug-reports</a>
+
+If you found a security bug, do <strong>NOT</strong> use the GitHub issue tracker. Send email or a private GitHub message to the maintainers listed at the bottom of the README.
+<h3>Mailing list</h3>
+If you have any questions, comments, or concerns, please use the Google Group instead of the GitHub issue tracker:
+
+<a href="https://groups.google.com/group/plataformatec-devise">groups.google.com/group/plataformatec-devise</a>
+<h3>RDocs</h3>
+You can view the Devise documentation in RDoc format here:
+
+<a href="http://rubydoc.info/github/plataformatec/devise/master/frames">rubydoc.info/github/plataformatec/devise/master/frames</a>
+
+If you need to use Devise with Rails 2.3, you can always run `gem server` from the command line after you install the gem to access the old documentation.
+<h3>Example applications</h3>
+There are a few example applications available on GitHub that demonstrate various features of Devise with different versions of Rails. You can view them here:
+
+<a href="https://github.com/plataformatec/devise/wiki/Example-Applications">github.com/plataformatec/devise/wiki/Example-Applications</a>
+<h3>Extensions</h3>
+Our community has created a number of extensions that add functionality above and beyond what is included with Devise. You can view a list of available extensions and add your own here:
+
+<a href="https://github.com/plataformatec/devise/wiki/Extensions">github.com/plataformatec/devise/wiki/Extensions</a>
+<h3>Contributing</h3>
+We hope that you will consider contributing to Devise. Please read this short overview for some information about how to get started:
+
+<a href="https://github.com/plataformatec/devise/wiki/Contributing">github.com/plataformatec/devise/wiki/Contributing</a>
+
+You will usually want to write tests for your changes. To run the test suite, `cd` into Devise’s top-level directory and run `bundle install` and `rake`. For the tests to pass, you will need to have a MongoDB server (version 2.0 or newer) running on your system.
+<h2>Installation</h2>
+You can use the latest Rails 3 gem with the latest Devise gem:
+<pre>gem install devise</pre>
+After you install Devise and add it to your Gemfile, you need to run the generator:
+<pre>rails generate devise:install</pre>
+The generator will install an initializer which describes ALL Devise’s configuration options and you MUST take a look at it. When you are done, you are ready to add Devise to any of your models using the generator:
+<pre>rails generate devise MODEL</pre>
+Replace MODEL by the class name used for the applications users, it’s frequently ‘User’ but could also be ‘Admin’. This will create a model (if one does not exist) and configure it with default Devise modules. Next, you’ll usually run db:migrate as the generator will have created a migration file (if your ORM supports them). This generator also configures your config/routes.rb file, continue reading this file to understand exactly what the generator produces and how to use it. Finally, if your server was already running, then restart it as Rails doesn’t automatically load methods from a new gem.
+
+Support for Rails 2.3.x can be found by installing Devise 1.0.x from the v1.0 branch.
+<h2>Starting with Rails?</h2>
+If you are building your first Rails application, we recommend you to <strong>not</strong> use Devise. Devise requires a good understanding of the Rails Framework. In such cases, we advise you to start a simple authentication system from scratch, today we have two resources:
+<ul>
+    <li>Michael Hartl’s online book: <a href="http://railstutorial.org/chapters/modeling-and-viewing-users-two#top">railstutorial.org/chapters/modeling-and-viewing-users-two#top</a></li>
+    <li>Ryan Bates’ Railscast: <a href="http://railscasts.com/episodes/250-authentication-from-scratch">railscasts.com/episodes/250-authentication-from-scratch</a></li>
+</ul>
+Once you have solidified your understanding of Rails and authentication mechanisms, we assure you Devise will be very pleasant to work with. :)
+<h2>Getting started</h2>
+This is a walkthrough with all steps you need to setup a devise resource, including model, migration, route files, and optional configuration.
+
+Devise must be set up within the model (or models) you want to use. Devise routes must be created inside your config/routes.rb file.
+
+We’re assuming here you want a User model with some Devise modules, as outlined below:
+<pre>class User &lt; ActiveRecord::Base
+  devise :database_authenticatable, :registerable, :confirmable, :recoverable, :rememberable, :trackable, :validatable
+end</pre>
+After you choose which modules to use, you need to set up your migrations. Luckily, Devise has some helpers to save you from this boring work:
+<pre>create_table :users do |t|
+  t.database_authenticatable
+  t.confirmable
+  t.recoverable
+  t.rememberable
+  t.trackable
+  t.timestamps
+end</pre>
+Devise doesn’t use <em>attr_accessible</em> or <em>attr_protected</em> inside its modules, so be sure to define attributes as accessible or protected in your model.
+
+Configure your routes after setting up your model. Open your config/routes.rb file and add:
+<pre>devise_for :users</pre>
+This will use your User model to create a set of needed routes (you can see them by running `rake routes`). If you invoked the devise generator, you noticed that this is exactly what the generator produces for us: model, routes and migrations.
+
+Don’t forget to run rake db:migrate and you are ready to go! But don’t stop reading here, we still have a lot to tell you.
+<h3>Controller filters and helpers</h3>
+Devise will create some helpers to use inside your controllers and views. To set up a controller with user authentication, just add this before_filter:
+<pre>before_filter :authenticate_user!</pre>
+To verify if a user is signed in, use the following helper:
+<pre>user_signed_in?</pre>
+For the current signed-in user, this helper is available:
+<pre>current_user</pre>
+You can access the session for this scope:
+<pre>user_session</pre>
+After signing in a user, confirming the account or updating the password, Devise will look for a scoped root path to redirect. Example: For a :user resource, it will use user_root_path if it exists, otherwise default root_path will be used. This means that you need to set the root inside your routes:
+<pre>root :to =&gt; "home#index"</pre>
+You can also overwrite after_sign_in_path_for and after_sign_out_path_for to customize your redirect hooks.
+
+Finally, you need to set up default url options for the mailer in each environment. Here is the configuration for config/environments/development.rb:
+<pre>config.action_mailer.default_url_options = { :host =&gt; 'localhost:3000' }</pre>
+Notice that if your devise model is not called “user” but “member”, then the helpers you should use are:
+<pre>before_filter :authenticate_member!
+
+member_signed_in?
+
+current_member
+
+member_session</pre>
+<h3>Configuring Models</h3>
+The devise method in your models also accepts some options to configure its modules. For example, you can choose which encryptor to use in database_authenticatable:
+<pre>devise :database_authenticatable, :registerable, :confirmable, :recoverable, :stretches =&gt; 20</pre>
+Besides :stretches, you can define :pepper, :encryptor, :confirm_within, :remember_for, :timeout_in, :unlock_in and other values. For details, see the initializer file that was created when you invoked the “devise:install” generator described above.
+<h3>Configuring multiple models</h3>
+Devise allows you to set up as many roles as you want. For example, you may have a User model and also want an Admin model with just authentication, trackable, lockable and timeoutable features and no confirmation or password-recovery features. Just follow these steps:
+<pre># Create a migration with the required fields
+create_table :admins do |t|
+  t.database_authenticatable
+  t.lockable
+  t.trackable
+  t.timestamps
+end
+
+# Inside your Admin model
+devise :database_authenticatable, :trackable, :timeoutable, :lockable
+
+# Inside your routes
+devise_for :admins
+
+# Inside your protected controller
+before_filter :authenticate_admin!
+
+# Inside your controllers and views
+admin_signed_in?
+current_admin
+admin_session</pre>
+<h3>Configuring views</h3>
+We built Devise to help you quickly develop an application that uses authentication. However, we don’t want to be in your way when you need to customize it.
+
+Since Devise is an engine, all its views are packaged inside the gem. These views will help you get started, but after sometime you may want to change them. If this is the case, you just need to invoke the following generator, and it will copy all views to your application:
+<pre>rails generate devise:views</pre>
+If you have more than one role in your application (such as “User” and “Admin”), you will notice that Devise uses the same views for all roles. Fortunately, Devise offers an easy way to customize views. All you need to do is set “config.scoped_views = true” inside “config/initializers/devise.rb”.
+
+After doing so, you will be able to have views based on the role like “users/sessions/new” and “admins/sessions/new”. If no view is found within the scope, Devise will use the default view at “devise/sessions/new”. You can also use the generator to generate scoped views:
+<pre>rails generate devise:views users</pre>
+<h3>Configuring controllers</h3>
+If the customization at the views level is not enough, you can customize each controller by following these steps:
+
+1) Create your custom controller, for example a Admins::SessionsController:
+<pre>class Admins::SessionsController &lt; Devise::SessionsController
+end</pre>
+2) Tell the router to use this controller:
+<pre>devise_for :admins, :controllers =&gt; { :sessions =&gt; "admins/sessions" }</pre>
+3) And since we changed the controller, it won’t use the “devise/sessions” views, so remember to copy “devise/sessions” to “admin/sessions”.
+
+Remember that Devise uses flash messages to let users know if sign in was successful or failed. Devise expects your application to call “flash[:notice]” and “flash[:alert]” as appropriate.
+<h3>Configuring routes</h3>
+Devise also ships with default routes. If you need to customize them, you should probably be able to do it through the devise_for method. It accepts several options like :class_name, :path_prefix and so on, including the possibility to change path names for I18n:
+<pre>devise_for :users, :path =&gt; "usuarios", :path_names =&gt; { :sign_in =&gt; 'login', :sign_out =&gt; 'logout', :password =&gt; 'secret', :confirmation =&gt; 'verification', :unlock =&gt; 'unblock', :registration =&gt; 'register', :sign_up =&gt; 'cmon_let_me_in' }</pre>
+Be sure to check devise_for documentation for details.
+
+If you have the need for more deep customization, for instance to also allow “/sign_in” besides “/users/sign_in”, all you need to do is to create your routes normally and wrap them in a <tt>devise_scope</tt> block in the router:
+<pre>devise_scope :user do
+  get "sign_in", :to =&gt; "devise/sessions#new"
+end</pre>
+This way you tell devise to use the scope :user when “/sign_in” is accessed. Notice <tt>devise_scope</tt> is also aliased as <tt>as</tt> and you can also give a block to <tt>devise_for</tt>, resulting in the same behavior:
+<pre>devise_for :users do
+  get "sign_in", :to =&gt; "devise/sessions#new"
+end</pre>
+Feel free to choose the one you prefer!
+<h3>I18n</h3>
+Devise uses flash messages with I18n with the flash keys :notice and :alert. To customize your app, you can set up your locale file:
+<pre>en:
+  devise:
+    sessions:
+      signed_in: 'Signed in successfully.'</pre>
+You can also create distinct messages based on the resource you’ve configured using the singular name given in routes:
+<pre>en:
+  devise:
+    sessions:
+      user:
+        signed_in: 'Welcome user, you are signed in.'
+      admin:
+        signed_in: 'Hello admin!'</pre>
+The Devise mailer uses a similar pattern to create subject messages:
+<pre>en:
+  devise:
+    mailer:
+      confirmation_instructions:
+        subject: 'Hello everybody!'
+        user_subject: 'Hello User! Please confirm your email'
+      reset_password_instructions:
+        subject: 'Reset instructions'</pre>
+Take a look at our locale file to check all available messages. You may also be interested in one of the many translations that are available on our wiki:
+
+<a href="https://github.com/plataformatec/devise/wiki/I18n">github.com/plataformatec/devise/wiki/I18n</a>
+<h3>Test helpers</h3>
+Devise includes some tests helpers for functional specs. To use them, you just need to include Devise::TestHelpers in your test class and use the sign_in and sign_out method. Such methods have the same signature as in controllers:
+<pre>sign_in :user, @user   # sign_in(scope, resource)
+sign_in @user          # sign_in(resource)
+
+sign_out :user         # sign_out(scope)
+sign_out @user         # sign_out(resource)</pre>
+You can include the Devise Test Helpers in all of your tests by adding the following to the bottom of your test/test_helper.rb file:
+<pre>class ActionController::TestCase
+  include Devise::TestHelpers
+end</pre>
+If you’re using RSpec and want the helpers automatically included within all <tt>describe</tt> blocks, add a file called spec/support/devise.rb with the following contents:
+<pre>RSpec.configure do |config|
+  config.include Devise::TestHelpers, :type =&gt; :controller
+end</pre>
+Do not use such helpers for integration tests such as Cucumber or Webrat. Instead, fill in the form or explicitly set the user in session. For more tips, check the wiki (<a href="https://wiki.github.com/plataformatec/devise">wiki.github.com/plataformatec/devise</a>).
+<h3>Omniauth</h3>
+Devise comes with Omniauth support out of the box to authenticate from other providers. You can read more about Omniauth support in the wiki:
+<ul>
+    <li><a href="https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview">github.com/plataformatec/devise/wiki/OmniAuth:-Overview</a></li>
+</ul>
+<h3>Other ORMs</h3>
+Devise supports ActiveRecord (default) and Mongoid. To choose other ORM, you just need to require it in the initializer file.
+<h3>Migrating from other solutions</h3>
+Devise implements encryption strategies for Clearance, Authlogic and Restful-Authentication. To make use of these strategies, you need set the desired encryptor in the encryptor initializer config option and add :encryptable to your model. You might also need to rename your encrypted password and salt columns to match Devise’s fields (encrypted_password and password_salt).
+<h2>Troubleshooting</h2>
+<h3>Heroku</h3>
+Using devise on Heroku with Ruby on Rails 3.1 requires setting:
+<pre>config.assets.initialize_on_precompile = false</pre>
+Read more about the potential issues at <a href="http://guides.rubyonrails.org/asset_pipeline.html">guides.rubyonrails.org/asset_pipeline.html</a>
+<h2>Additional information</h2>
+<h3>Warden</h3>
+Devise is based on Warden, which is a general Rack authentication framework created by Daniel Neighman. We encourage you to read more about Warden here:
+
+<a href="https://github.com/hassox/warden">github.com/hassox/warden</a>
+<h3>Contributors</h3>
+We have a long list of valued contributors. Check them all at:
+
+<a href="https://github.com/plataformatec/devise/contributors">github.com/plataformatec/devise/contributors</a>
+<h3>Maintainers</h3>
+<ul>
+    <li>José Valim (<a href="https://github.com/josevalim">github.com/josevalim</a>)</li>
+    <li>Carlos Antônio da Silva (<a href="https://github.com/carlosantoniodasilva">github.com/carlosantoniodasilva</a>)</li>
+    <li>Rodrigo Flores (<a href="https://github.com/rodrigoflores">github.com/rodrigoflores</a>)</li>
+</ul>
+<h2>License</h2>
+MIT License. Copyright 2011 Plataforma Tecnologia. <a href="http://blog.plataformatec.com.br/">blog.plataformatec.com.br</a>
+
+</div>
+</div>
+
+
+<div>标签： <a href="http://jhjguxin.hwcrazy.com/tag/devise/">devise</a> <a href="http://jhjguxin.hwcrazy.com/tag/gem/">gem</a> <a href="http://jhjguxin.hwcrazy.com/tag/rails/">rails</a> <a href="http://jhjguxin.hwcrazy.com/tag/ruby/">ruby</a></div>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Francis Jiang</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-06T12:44:00+08:00" pubdate data-updated="true">Jan 6<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://jhjguxin.github.io/blog/2012/01/06/devise/" data-via="jhjguxin" data-counturl="http://jhjguxin.github.io/blog/2012/01/06/devise/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2011/12/30/ruby-on-rails-3-dot-1-release-notes/" title="Previous Post: Ruby on Rails 3.1 Release Notes">&laquo; Ruby on Rails 3.1 Release Notes</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/01/07/showing-the-devise-edit-password-screen/" title="Next Post: Showing the devise edit password screen">Showing the devise edit password screen &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/">通过mongodump和mongorestore实现Mongodb备份和恢复 --by Chenzhou123520</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes/">Ruby on Rails 4.0 Release Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/rails-active-record-named-scopes/">Rails Active Record Named Scopes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/">晒晒我们的开源项目 ITEYE开源代码</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/">Single Sign-on 单点登录 Sso</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/jhjguxin">@jhjguxin</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'jhjguxin',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Francis Jiang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: gedit | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/tags/gedit/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Configuring Gedit for Rails]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/06/07/configuring-gedit-for-rails/"/>
+    <updated>2012-06-07T10:34:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/06/07/configuring-gedit-for-rails</id>
+    <content type="html"><![CDATA[<h2>Configuring Gedit for Rails</h2>
+
+<p>I haven’t kept my feelings about IDEs hidden, I’m a big believer in using text editors instead.</p>
+
+<p>I know, I should earn my chops and become a Vim guy, and some day I hope to sit down and make that conversion, but for now it’s all about Gedit for me. With a few plugins and a little TLC gedit can be a lighter version of the more powerful, more intensive ide.</p>
+
+<p>The first thing we’re going to install gMate, an addon designed to make Gedit run like TextMate</p>
+
+<blockquote>sudo add-apt-repository ppa:ubuntu-on-rails/ppa
+
+sudo apt-get update</blockquote>
+
+
+<blockquote>sudo apt-get install gedit-gmate</blockquote>
+
+
+<p>Additionally we’re going to install the standard plugins package</p>
+
+<blockquote>sudo apt-get install gedit-plugins</blockquote>
+
+
+<p>Now lets fire up Gedit and turn on our preferences.</p>
+
+<p>To get to our plugins go to Edit &gt; Preferences &gt; Plugins.</p>
+
+<p>We’re going to enable the following options:</p>
+
+<ul>
+    <li>Snippets</li>
+    <li>Code Comment</li>
+    <li>Embedded Terminal</li>
+    <li>Find in Files</li>
+    <li>Rails Extract Partial</li>
+    <li>Rails File Loader</li>
+    <li>Session Saver (Optional)</li>
+    <li>Smart Indent (Optional)</li>
+    <li>Tab Switch (Optional)</li>
+    <li>TextMate Style AutoCompletion</li>
+</ul>
+
+
+<p>This is going to enable a lot of different functionality, and while this is the setup I use, it may be more than you need.</p>
+
+<p>Now if you’re in a ruby file and you type def, tabbing over will add the end and place you straight on the method name, control+tab will switch between documents, and syntax highlighting will work correctly in html.erb files.</p>
+
+<p>Also, going to view &gt; bottom pane will display a terminal window that I find convenient for running irb.</p>
+
+<p>While these instructions will enable a lot of different useful environments, and the target of this post was rails, I do have to sadly add that Google Go, which I cover quite often, does not, to my knowledge, have a plugin for Gedit currently.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Gedit Keyboard Shortcuts]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/04/13/gedit-keyboard-shortcuts/"/>
+    <updated>2012-04-13T16:13:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/04/13/gedit-keyboard-shortcuts</id>
+    <content type="html"><![CDATA[<h2>Gedit Keyboard Shortcuts</h2>
+
+<p>Shortcut keys enable you to perform tasks more quickly than if you use a mouse. The following tables list all of Gedit&rsquo;s shortcut keys. These are in the <a href="http://live.gnome.org/Gedit/Manual">Gedit user manual</a>as of version 2.18.</p>
+
+<h2 id="Tabs">Tabs</h2>
+
+
+<div>
+<table>
+<tbody>
+<tr>
+<td><strong>Shortcut Key</strong></td>
+<td><strong>Command</strong></td>
+</tr>
+<tr>
+<td><tt>Ctrl + Alt + PageUp</tt></td>
+<td>Switches to the next tab to the left.</td>
+</tr>
+<tr>
+<td><tt>Ctrl + Alt + PageDown</tt></td>
+<td>Switches to the next tab to the right.</td>
+</tr>
+<tr>
+<td><tt>Ctrl + W</tt></td>
+<td>Close tab.</td>
+</tr>
+<tr>
+<td><tt>Ctrl + Shift + L</tt></td>
+<td>Save all tabs.</td>
+</tr>
+<tr>
+<td><tt>Ctrl + Shift + W</tt></td>
+<td>Close all tabs.</td>
+</tr>
+<tr>
+<td><tt>Alt + </tt><em>n</em></td>
+<td>Jump to <em>n</em>th tab.</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+<h2 id="Files">Files</h2>
+
+
+<div>
+<table>
+<tbody>
+<tr>
+<td><strong>Shortcut Key</strong></td>
+<td><strong>Command</strong></td>
+</tr>
+<tr>
+<td><tt>Ctrl + N</tt></td>
+<td>Create a new document.</td>
+</tr>
+<tr>
+<td><tt>Ctrl + O</tt></td>
+<td>Open a document.</td>
+</tr>
+<tr>
+<td><tt>Ctrl + L</tt></td>
+<td>Open a location.</td>
+</tr>
+<tr>
+<td><tt>Ctrl + S</tt></td>
+<td>Save the current document to disk.</td>
+</tr>
+<tr>
+<td><tt>Ctrl + Shift + S</tt></td>
+<td>Save the current document with a new filename.</td>
+</tr>
+<tr>
+<td><tt>Ctrl + P</tt></td>
+<td>Print the current document.</td>
+</tr>
+<tr>
+<td><tt>Ctrl + Shift + P</tt></td>
+<td>Print preview.</td>
+</tr>
+<tr>
+<td><tt>Ctrl + W</tt></td>
+<td>Close the current document.</td>
+</tr>
+<tr>
+<td><tt>Ctrl + Q</tt></td>
+<td>Quit Gedit.</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+<h2 id="Edit">Edit</h2>
+
+
+<div>
+<table>
+<tbody>
+<tr>
+<td><strong>Shortcut Key</strong></td>
+<td><strong>Command</strong></td>
+</tr>
+<tr>
+<td><tt>Ctrl + Z</tt></td>
+<td>Undo the last action.</td>
+</tr>
+<tr>
+<td><tt>Ctrl + Shift + Z</tt></td>
+<td>Redo the last undone action .</td>
+</tr>
+<tr>
+<td><tt>Ctrl + X</tt></td>
+<td>Cut the <span><span style="background-color: #ffd700;">select</span></span>ed text or region and place it on the clipboard.</td>
+</tr>
+<tr>
+<td><tt>Ctrl + C</tt></td>
+<td>Copy the <span><span style="background-color: #ffd700;">select</span></span>ed text or region onto the clipboard.</td>
+</tr>
+<tr>
+<td><tt>Ctrl + V</tt></td>
+<td>Paste the contents of the clipboard.</td>
+</tr>
+<tr>
+<td><tt>Ctrl + A</tt></td>
+<td><span><span style="background-color: #ffd700;">Select</span></span> all.</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+<h2 id="Edit_.28from_GTKTextView.29">Edit (from GTKTextView)</h2>
+
+
+<div>
+<table>
+<tbody>
+<tr>
+<td><strong>Shortcut Key</strong></td>
+<td><strong>Command</strong></td>
+</tr>
+<tr>
+<td><tt>Ctrl + D</tt></td>
+<td>Delete the line.</td>
+</tr>
+<tr>
+<td><tt>Ctrl + Left</tt></td>
+<td>Move the cursor to the beginning of the word or previous word if it's already in the beginning of the current one.</td>
+</tr>
+<tr>
+<td><tt>Ctrl + Right</tt></td>
+<td>Move the cursor to the end of the word or next word if it's already in the end of the current one.</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+<h2 id="Panes">Panes</h2>
+
+
+<div>
+<table>
+<tbody>
+<tr>
+<td><strong>Shortcut Key</strong></td>
+<td><strong>Command</strong></td>
+</tr>
+<tr>
+<td><tt>F9</tt></td>
+<td>Show/hide the side pane.</td>
+</tr>
+<tr>
+<td><tt>Ctrl + F9</tt></td>
+<td>Show/hide the bottom pane.</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+<h2 id="Search">Search</h2>
+
+
+<div>
+<table>
+<tbody>
+<tr>
+<td><strong>Shortcut Key</strong></td>
+<td><strong>Command</strong></td>
+</tr>
+<tr>
+<td><tt>Ctrl + F</tt></td>
+<td>Find a string.</td>
+</tr>
+<tr>
+<td><tt>Ctrl + G</tt></td>
+<td>Find the next instance of the string.</td>
+</tr>
+<tr>
+<td><tt>Ctrl + Shift + G</tt></td>
+<td>Find the previous instance of the string.</td>
+</tr>
+<tr>
+<td><tt>Ctrl + K</tt></td>
+<td>Interactive search.</td>
+</tr>
+<tr>
+<td><tt>Ctrl + H</tt></td>
+<td>Search and replace.</td>
+</tr>
+<tr>
+<td><tt>Ctrl + Shift + K</tt></td>
+<td>Clear highlight.</td>
+</tr>
+<tr>
+<td><tt>Ctrl + I</tt></td>
+<td>Goto line.</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+<h2 id="Tools">Tools</h2>
+
+
+<div>
+<table>
+<tbody>
+<tr>
+<td><strong>Shortcut Key</strong></td>
+<td><strong>Command</strong></td>
+</tr>
+<tr>
+<td><tt>F7</tt></td>
+<td>Check spelling (with plugin).</td>
+</tr>
+<tr>
+<td><tt>Alt + F12</tt></td>
+<td>Remove trailing spaces (with plugin).</td>
+</tr>
+<tr>
+<td><tt>Ctrl + T</tt></td>
+<td>Indent (with plugin).</td>
+</tr>
+<tr>
+<td><tt>Ctrl + Shift + T</tt></td>
+<td>Remove Indent (with plugin).</td>
+</tr>
+<tr>
+<td><tt>F8</tt></td>
+<td>Run "make" in current directory (with plugin).</td>
+</tr>
+<tr>
+<td><tt>Ctrl + Shift + D</tt></td>
+<td>Directory listing (with plugin).</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+<h2 id="Help">Help</h2>
+
+
+<div>
+<table>
+<tbody>
+<tr>
+<td><strong>Shortcut Key</strong></td>
+<td><strong>Command</strong></td>
+</tr>
+<tr>
+<td><tt>F1</tt></td>
+<td>Load Gedit's online help document.</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+]]></content>
+  </entry>
+  
+</feed>

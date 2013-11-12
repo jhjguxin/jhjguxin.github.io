@@ -1,0 +1,434 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>[進階]使用 Facade Pattern 取代 Model Callbacks by xdite - Francis's Octopress Blog</title>
+  <meta name="author" content="Francis Jiang">
+
+  
+  <meta name="description" content="[進階]使用 Facade Pattern 取代 Model Callbacks by xdite What is “callbacks”? Rails 的 ActiveRecord 提供了相當方便的 callbacks，能讓開發者在寫 Controller 時，能夠寫出更加 DRY 的程式碼： &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jhjguxin.github.io/blog/2012/03/20/jin-jie-shi-yong-facade-pattern-qu-dai-model-callbacks-by-xdite">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Francis's Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-25901353-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Francis's Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jhjguxin.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/readme">Readme</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">[進階]使用 Facade Pattern 取代 Model Callbacks by Xdite</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-20T15:24:00+08:00" pubdate data-updated="true">Mar 20<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>[進階]使用 Facade Pattern 取代 Model Callbacks by xdite</h2>
+
+<h2>What is “callbacks”?</h2>
+
+
+<p>Rails 的 ActiveRecord 提供了相當方便的 callbacks，能讓開發者在寫 Controller 時，能夠寫出更加 DRY 的程式碼：</p>
+
+<ul>
+    <li>before_crearte</li>
+    <li>before_save</li>
+    <li>after_create</li>
+    <li>after_save</li>
+    <li>…</li>
+</ul>
+
+
+<p>在從前，在 Controller 裡面想要再 object 儲存之後 do_something，直觀的思路會是這樣：</p>
+
+<p>class PostController
+  def create
+    @post = Post.new(params[:post])
+    @post.save
+    @post.do_something
+    redirect_to posts_path
+  end
+end </p>
+
+<p>當時的最佳模式：通常是建議開發者改用 callbacks 或者是 Observer 模式實作。避免 controller 的髒亂。</p>
+
+<ul>
+    <li>callbacks : after_create</li>
+</ul>
+
+
+<p>或者是使用 Observer</p>
+
+<p>class PostController &lt; ApplicationController
+  def create
+    @post = Post.new(params[:post])
+    @post.save
+    redirect_to posts_path
+  end
+end
+class PostObserver &lt; ActiveRecord::Observer
+  def after_create(post)
+    post.do_something
+  end
+end
+class Post &lt; ActiveRecord::Base
+  protected
+  def do_something
+  end
+end</p>
+
+<h2>使用 callbacks 所產生的問題</h2>
+
+
+<p>callbacks 雖然很方便，但也產生一些其他的問題。若這個 do_something 是很輕量的 db update，那這個問題還好。但如果是很 heavy 的 hit_3rd_party_api 呢？</p>
+
+<p>在幾個情形下，開發者會遇到不小的麻煩。</p>
+
+<ul>
+    <li>Model 測試：每次在測試時都會被這個 3rd_party_api 整到，因為外部通訊很慢。</li>
+    <li>do_something_api 是很 heavy 的操作：每次寫測試還是會被很慢的 db query 整到。</li>
+    <li>do_something_api 是很輕微的 update：但是綁定 after_save 操作，在要掃描資料庫，做大規模的某欄位修改時，會不小心觸發到不希望引發的 callbacks，造成不必要的效能問題。</li>
+</ul>
+
+
+<p>當然，開發者還是可以用其他招數去閃開：</p>
+
+<p>比如說若綁定 after_save 。</p>
+
+<p>可以在 do_somehting 內加入對 dirty object 的偵測，避免被觸發：</p>
+
+<p> def do_somthing
+  # 資料存在，且變動的欄位包括 content
+  if presisited? &amp;&amp; changed.include?(&ldquo;content&rdquo;)
+    the_real_thing
+  end
+ end</p>
+
+<p> 但這一招並不算理想，原因有幾：</p>
+
+<ol>
+    <li>每次儲存還是需要被掃描一次，可能有效能問題。</li>
+    <li>寫測試時還是會呼叫到可能不需要引發的 do_somehting。</li>
+    <li>if xxx ＆＆ yyy 這個 condiction chain 可能會無限延伸下去。</li>
+</ol>
+
+
+<p> Facade Pattern</p>
+
+<p>那麼要怎樣才能解決這個問題呢？其實我們應該用 Facade Pattern 解決這個問題。</p>
+
+<p>設計模式裡面有一招 Facade Pattern，這一招其實是沒有被寫進 <a href="http://designpatternsinruby.com/">Design Pattern in Ruby</a> 中的。Russ Olson 有寫了<a href="http://designpatternsinruby.com/section02/facade.html">一篇文章</a>解釋沒有收錄的原因：因為在 Ruby 中，這一招太簡單太直觀，所以不想收錄 XDDD。但他還是在網站上提供當時寫的草稿，供人參考。</p>
+
+<h3>What is Facade Pattern?</h3>
+
+
+<p>Facade Pattern 的目的是「將複雜的介面簡化，將複雜與瑣碎的步驟封裝起來，對外開放簡單的介面，讓客戶端能夠藉由呼叫簡單的介面而完成原本複雜的程式演算。」（<a href="http://www.dotblogs.com.tw/jameswu/archive/2008/06/26/4382.aspx">來源</a>）</p>
+
+<p>延伸閱讀: <a href="http://www.cnblogs.com/oomusou/archive/2007/04/24/725714.html">(原創) 我的Design Pattern之旅[5]：Facade Pattern (OO) (Design Pattern) (C/C++)</a></p>
+
+<h3>實際舉例：</h3>
+
+
+<p>在上述的例子中，其實 do_something 有可能只會在 PostController 用到，而非所有的 model 操作都「需要」用到。所以我們 <strong>不應該將 do_somehting 丟進 callbacks（等於全域觸發），再一一寫 case 去閃避執行</strong></p>
+
+<p>與其寫在 callbacks 裡。我們更應該寫的是一個 Service Class 將這一系列複雜昂貴的行為包裝起來，以簡單的介面執行。
+class PostController &lt; ApplicationController
+  def create
+  CreatePostService(params[:post])
+  redirect_to posts_path
+  end
+ end
+class CreatePostService
+  def self.create(params)
+    post = Post.new(params[:post])
+    post.save
+    post.do_something_a
+    post.do_something_b
+    post.do_something_c
+  end
+end  而在寫測試，只需要對 PostCreateService 這個商業邏輯 class 寫測試即可。而 PostController 和 Post Model 就不會被殃及到。</p>
+
+<h2>小結</h2>
+
+
+<p>不少開發者討厭測試的原因，不只是「因為」寫測試很麻煩的原因，「跑一輪測試超級久」也是讓大家很不爽的主因之一。</p>
+
+<p>其實不是這些測試框架寫的爛造成「寫測試很麻煩」、「執行測試超級久」。而是另有其他因素。</p>
+
+<p>許多資深開發者逐漸意識到，真正的主因是在於目前 Rails 的 model 的設計，耦合度太高了。只要沾到 db 就慢，偏偏 db 是世界的中心。只是測某些邏輯，搞到不小心觸發其他不需要測的東西。</p>
+
+<p>ActiveRecord 的問題在於，讓開發者太誤以為 ORM = model。其實開發者真正要寫的測試應該是對商業邏輯的測試，不是對 db 進行測試。</p>
+
+<p>所以才會出現了用 Facade Pattern 取代 callbacks 的手法。</p>
+
+<h2>其他</h2>
+
+
+<p>MVC 其實有其不足的部份。坦白說，Rails 也不是真正的 MVC，而是 <a href="http://andrzejonsoftware.blogspot.com/2011/09/rails-is-not-mvc.html">Model2</a></p>
+
+<p>目前 MVC 其實是不足的，演化下來，開發者會發現 User class 裡面會開始出現這些東西：</p>
+
+<ul>
+    <li>current_user.buy_book(book)</li>
+    <li>current_user.add_creadit_point(point)</li>
+</ul>
+
+
+<p>這屬於 User 裡面應該放的 method 嗎？well，你也可以說適合，也可以說不適合。</p>
+
+<p>適合的原因是：其實你也不知道應該放哪裡，這好像是 User 執行的事，跟他有關，那就放這裡好了！不然也不知道要擺哪裡。</p>
+
+<p>不適合的原因是：這是一個「商業購買行為」。不是所有人都會購物啊。這應該是一個商業購買邏輯。但是….也不知道要放在哪啊。</p>
+
+<p>一直到最近，James Copelin 提出了：<a href="http://en.wikipedia.org/wiki/Data,_Context,_and_Interaction">DCI</a> 去補充了現有的 MVC 的不足，才算勉強解決了目前浮現的這些問題。</p>
+
+<p>DCI ，與本篇談到的 Facade Pattern 算是頗類似的手法。</p>
+
+<p>有關於 DCI ( Data, Context, Interaction ) 的文章，我會在之後發表。我同時也推薦各位去看這方面的主題。這個方向應該會是 Rails 專案設計上未來演化的方向之一。</p>
+
+<p>&nbsp;</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Francis Jiang</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-20T15:24:00+08:00" pubdate data-updated="true">Mar 20<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://jhjguxin.github.io/blog/2012/03/20/jin-jie-shi-yong-facade-pattern-qu-dai-model-callbacks-by-xdite/" data-via="jhjguxin" data-counturl="http://jhjguxin.github.io/blog/2012/03/20/jin-jie-shi-yong-facade-pattern-qu-dai-model-callbacks-by-xdite/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/03/20/python-ruby-geek-by-djangoshe-qu-and-ruby-china/" title="Previous Post: python ruby geek by django社区and ruby-china">&laquo; python ruby geek by django社区and ruby-china</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/03/21/ooshe-ji-yuan-ze-zong-jie/" title="Next Post: OO设计原则总结">OO设计原则总结 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/">通过mongodump和mongorestore实现Mongodb备份和恢复 --by Chenzhou123520</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes/">Ruby on Rails 4.0 Release Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/rails-active-record-named-scopes/">Rails Active Record Named Scopes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/">晒晒我们的开源项目 ITEYE开源代码</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/">Single Sign-on 单点登录 Sso</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/jhjguxin">@jhjguxin</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'jhjguxin',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Francis Jiang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

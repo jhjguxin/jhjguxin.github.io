@@ -1,0 +1,743 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: linux | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/tags/linux/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[LVM (简体中文)]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/06/01/lvm-jian-ti-zhong-wen/"/>
+    <updated>2012-06-01T10:55:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/06/01/lvm-jian-ti-zhong-wen</id>
+    <content type="html"><![CDATA[<h2>LVM (简体中文)</h2>
+
+<h2> 介绍</h2>
+
+
+<p>LVM 是一个应用于 Linux 内核的本地卷管理器 (Logical Volume Manager)。 使用 LVM 你可以抽象你的存储空间，并且可以有很容易更改的“虚拟分区”。LVM的基本模块如下：</p>
+
+<ul>
+    <li><strong>Physical volume (PV)</strong>: 物理卷,例如一个硬盘,或一个Software RAID设备; 硬盘的一个分区 (或者甚至硬盘本身或者回环文件)，在它上面可以建立卷组。It has a special header and is divided into physical extents. Think of physical volumes as big building blocks which can be used to build your hard drive.</li>
+    <li><strong>Volume group (VG)</strong>: 卷组,将一组物理卷收集为一个管理单元;Group of physical volumes that are used as storage volume (as one disk). They contain logical volumes. Think of volume groups as hard drives.</li>
+    <li><strong>Logical volume(LV)</strong>: 逻辑卷,等同于传统分区,可看作便准的块设备,以容纳文件系统;A "virtual/logical partition" that resides in a volume group and is composed of physical extents. Think of logical volumes as normal partitions.</li>
+    <li><strong>Physical extent (PE)</strong>: 物理块,划分物理卷的数据块;A small part of a disk (usually 4MB) that can be assigned to a logical Volume. Think of physical extents as parts of disks that can be allocated to any partition.</li>
+</ul>
+
+
+<p>使用 LVM 你可以比正常的硬盘分区更容易的管理硬盘分区（逻辑卷）。例如，你可以：</p>
+
+<ul>
+    <li>使用卷组(VG)，使众多硬盘空间看起来像一个大硬盘。</li>
+    <li>使用逻辑卷（LV），可以创建跨越众多硬盘空间的分区。</li>
+    <li>可以根据需要，对分区（LV）和硬盘空间（VG）进行创建、删除、调整大小等操作。(it doesn't depend on position of the logical volumes within volume groups as with normal partitions)</li>
+    <li>Resize/create/delete partitions(LV) and disks(VG) <em>online</em> (filesystems on them still need to be resized, but some support online resizing)</li>
+    <li><em>Name</em> your disks(VG) and partitions(LV) as you like</li>
+    <li>Create small partitions(LV) and resize them "<em>dynamically</em>" as they get more filled (growing must be still done by hand, but you can do it online with some filesystems)</li>
+    <li>...</li>
+</ul>
+
+
+<p>示例:</p>
+
+<pre><strong>两块物理硬盘</strong>
+
+  硬盘1 (/dev/sda):
+     _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+    |分区1 50GB (Physical volume) |分区2 80GB (Physical volume)     |
+    |/dev/sda1                   |/dev/sda2                       |
+    |_ _ _ _ _ _ _ _ _ _ _ _ _ _ |_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ |
+
+  硬盘2 (/dev/sdb):
+     _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+    |分区1 120GB (Physical volume)                 |
+    |/dev/sdb1                                    |
+    | _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ __ _ _|</pre>
+
+
+<pre><strong>LVM方式</strong>
+
+  卷组VG1 (/dev/MyStorage/ = /dev/sda1 + /dev/sda2 + /dev/sdb1):
+     _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _  
+    |逻辑卷lv1 15GB         |逻辑卷lv2 35GB              |逻辑卷lv3 200GB               |
+    |/dev/MyStorage/rootvol|/dev/MyStorage/usrvol     |/dev/MyStorage/homevol       |
+    |_ _ _ _ _ _ _ _ _ _ _ |_ _ _ _ _ _ _ _ _ _ _ _ _ |_ _ _ _ _ _ _ _ _ _ _ _ _ _ _|</pre>
+
+
+<p>总而言之: With LVM you can use all your storage space as one big disk (volume group) and have more flexibility over your partitions (logical volumes).</p>
+
+<h2>Advantages</h2>
+
+
+<p>Here are some things you can do with LVM that you can&rsquo;t (or can&rsquo;t do easily) with just mdadm, MBR partitions, GPT partitions, parted/gparted and a file-level tool like rsync.</p>
+
+<ol>
+    <li>Online/live partition resizing</li>
+    <li>No need for an extended partition (not relevant for GPT)</li>
+    <li>Resize partitions regardless of their order on disk (no need to ensure surrounding available space)</li>
+    <li>Online/live migration of partitions being used by services without having to restart services</li>
+</ol>
+
+
+<p>These can be very helpful in a server situation, desktop less so, but you must decide if the features are worth the abstraction.</p>
+
+<h2>安装</h2>
+
+
+<p>在做其他工作之前，我们需要加载合适的模块：</p>
+
+<pre># modprobe dm-mod</pre>
+
+
+<p>如果你已经安装好了操作系统，并只是想利用增加或尝试一个LVM分区，请跳到这 <a title="Lvm" href="https://wiki.archlinux.org/index.php/Lvm#Partition_disks">partition disks</a>.</p>
+
+<h3>在 LVM 上安装 Arch Linux</h3>
+
+
+<p>在开始安装arch之前（即输入：/arch/setup之前），先使用cfdisk等工具来规划分区。因为grub不能从LVM逻辑卷引导启动 （版本1.0时），所以需要先创建一个/boot引导区，100MB应该够了。另外的解决办法就是使用lilo或者高于1.95版本的grub。</p>
+
+<h3>创建 LVM 分区</h3>
+
+
+<p>接下来，要创建LVM将使用的分区。文件类型使用'Linux LVM'，所以使用分区id 0x8e (文件系统类型：8E)。在需要使用LVM的每块硬盘上，各创建一个LVM分区。 Your logical volumes will reside inside these partitions so size them accordingly. If you will use only LVM and no other external partitions, use all of free space on each disk.</p>
+
+<div><strong> 警告: </strong> /boot不能包含在LVM分区里，因为grub (version&lt;1.95)不能从LVM中引导grub。</div>
+
+
+<div><strong> 小贴士: </strong>所有硬盘的所有LVM分区可以被设置成看起来就像一个大硬盘。</div>
+
+
+<h3>创建物理卷（PV）</h3>
+
+
+<p>接下来，要加载使用lvm所需的相应模块:</p>
+
+<pre># modprobe dm-mod</pre>
+
+
+<p>用命令'fdisk -l'查看那个分区的文件系统类型是'Linux LVM'，然后在其上创建一个物理卷组pv（假设是/dev/sda2)，输入如下命令:</p>
+
+<pre># pvcreate /dev/sda2</pre>
+
+
+<p>Substitute /dev/sda2 with all your partitions to create physical volumes on all of them. This command creates a header on each partition so it can be used for LVM. 查看物理卷情况：</p>
+
+<pre># pvdisplay</pre>
+
+
+<h3>创建卷组（VG）</h3>
+
+
+<p>创建完成物理卷之后，就是开始创建卷组了。 如果有两个以上的物理卷pv（比如下面例子，有两个/dev/sda2和/dev/sdb1），首先必须先在其中一个创建一个卷组vg，然后让该卷组vg 扩大到其他所有的物理卷pv（这里假设你只使用一个卷组vg来管理其他所有的物理卷pv。）:</p>
+
+<pre># vgcreate VolGroup00 /dev/sda2
+# vgextend VolGroup00 /dev/sdb1</pre>
+
+
+<p>其中，“VolGroup00”名字换成你自己起的名字即可。接下来看看卷组情况：</p>
+
+<pre># vgdisplay</pre>
+
+
+<div><strong> 注意: </strong>可以创建多于一个的卷组，但因此将让你的硬盘空间看起来不像一块硬盘。</div>
+
+
+<h3>创建逻辑卷（LV）</h3>
+
+
+<p>创建完卷组vg之后，就可以开始创建逻辑卷了。输入下面命令：</p>
+
+<pre># lvcreate -L 10G VolGroup00 -n lvolhome</pre>
+
+
+<p>其中10G是大小，VolGroup00是卷组vg名称，lvolhome是逻辑卷lv名称，这些都可以根据你自己喜欢设定，以后可以使用/dev/mapper/Volgroup00-lvolhome 或者 /dev/VolGroup00/lvolhome来操作.</p>
+
+<p>查看逻辑卷情况:</p>
+
+<pre># lvdisplay</pre>
+
+
+<div><strong> 注意: </strong>You may need to load the <em>device-mapper</em> kernel module (<strong>modprobe dm-mod</strong>) for the above commands to succeed.</div>
+
+
+<div><strong> 小贴士: </strong>一开始可以创建小一点的逻辑卷lv，然后留一部分未使用空间在卷组vg里，以后可以根据需要再扩展各个逻辑卷。</div>
+
+
+<h3>建立文件系统与挂载逻辑卷</h3>
+
+
+<p>Your logical volumes should now be located in <strong>/dev/mapper/</strong> and <strong>/dev/YourVolumeGroupName</strong>. If you can&rsquo;t find them use the next commands to bring up the module for creating device nodes and to make volume groups availabile:</p>
+
+<pre># modprobe dm-mod
+# vgscan
+# vgchange -ay</pre>
+
+
+<p>Now you can create filesystems on logical volumes and mount them as normal partitions (if you are installing Arch linux, skip this step):</p>
+
+<pre># mkfs.ext3 /dev/mapper/VolGroup00-lvolhome
+# mount /dev/mapper/VolGroup00-lvolhome /home</pre>
+
+
+<p>如果你正在安装Archlinux，到 <em>Prepare Hard Drive</em> 这一步时，转到第三项 <em>Set Filesystem Mountpoints</em> ，请 <em><strong>在进入安装前，阅读下面的 <a title="Arch LVM配置 (简体中文)" href="https://wiki.archlinux.org/index.php/Arch_LVM%E9%85%8D%E7%BD%AE_%28%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87%29#.E9.87.8D.E8.A6.81">重要</a>部分 !</strong></em></p>
+
+<h3>重要</h3>
+
+
+<p>有几点在使用/安装带有 LVM 的 Arch Linux 时你需要特别注意的地方。（括号里是相关的安装过程中的菜单）：</p>
+
+<h4>设置文件系统挂载点</h4>
+
+
+<ul>
+    <li>当选择挂载点时（除了/boot），千万不要选择实际存在的逻辑卷（比如：<code>/dev/sda2</code>），只需选择由lv创建的逻辑卷（比如: <code>/dev/mapper/Volgroup00-lvolhome</code>)。</li>
+</ul>
+
+
+<h4>配置系统</h4>
+
+
+<ul>
+    <li>确保在 <code>/etc/rc.conf</code> 中，把<code>USELVM="no"</code>修改成 <code>USELVM="yes"</code>。<code>rc.sysinit</code> 脚本处理 <code>USELVM</code> 变量时只会识别<code>yes</code> 或者 <code>YES</code>，不支持大小写混合。</li>
+</ul>
+
+
+<ul>
+    <li>确保 <em>lvm2</em> 在 <code>/etc/mkinitcpio.conf</code> HOOKS 部分的 <em>filesystems</em> 前面，这样您的内核就可以在启动时找到 LVM 卷。</li>
+    <li>If your root filesystem ( "/" ) is put onto a logical volume, make sure regenerate kernel image based on above modified <code>/etc/mkinitcpio.conf</code> by using below command so that bootloader can find your root during booting</li>
+</ul>
+
+
+<pre>     cd /boot 
+     mkinitcpio -p linux</pre>
+
+
+<ul>
+    <li>确保为 root 使用了正确的卷。</li>
+</ul>
+
+
+<dl><dd>对于 GRUB，编辑<code>/boot/grub/menu.lst</code> ：</dd></dl>
+
+
+<pre>     ...
+     (0) Arch Linux
+     title  Arch Linux
+     root   (hd0,0)
+     kernel /vmlinuz-linux <strong>root=/dev/mapper/VolGroup00-lvolroot</strong> resume=/dev/mapper/VolGroup00-lvolswap ro
+     initrd /initramfs-linux.img
+     ...</pre>
+
+
+<dl><dd>For SYSLINUX, edit <code>/boot/syslinux/syslinux.cfg</code>:</dd></dl>
+
+
+<pre>     ...
+     # (0) Arch Linux
+     LABEL arch
+       MENU LABEL Arch Linux
+       LINUX ../vmlinuz-linux
+       APPEND <strong>root=/dev/mapper/VolGroup00-lvolroot</strong> ro
+       INITRD ../initramfs-linux.img</pre>
+
+
+<dl><dd>对于 LILO ，检查 <code>/etc/lilo.conf</code>:</dd></dl>
+
+
+<pre>     ...
+     image=/boot/vmlinuz-linux
+       label=arch
+       append="<strong>root=/dev/mapper/VolGroup00-lvolroot</strong> resume=/dev/mapper/VolGroup00-lvolswap ro"
+       initrd=/boot/initramfs-linux.img
+     ...</pre>
+
+
+<h2>配置</h2>
+
+
+<h3>扩大逻辑卷</h3>
+
+
+<p>To grow a logical volume you first need to grow the logical volume and then the filesystem to use the newly created free space. Let&rsquo;s say we have a logical volume of 15GB with ext3 on it and we want to grow it to 20G. We need to do the following steps:</p>
+
+<pre># lvextend -L 20G VolGroup00/lvolhome (or lvresize -L +5G VolGroup00/lvolhome)
+# resize2fs /dev/VolGroup00/lvolhome</pre>
+
+
+<p>You may use lvresize insted of lvextend.</p>
+
+<p>If you want to fill all the free space on a volume group use the next command:</p>
+
+<pre># lvextend -l +100%FREE VolGroup00/lvolhome</pre>
+
+
+<div><strong> 警告: </strong>并非所有的文件系统都支持无损或在线扩大逻辑卷。</div>
+
+
+<div><strong> 注意: </strong>If you do not resize your filesystem, you will still have a volume with the same size as before (volume will be bigger but partly unused).</div>
+
+
+<h3>缩小逻辑卷</h3>
+
+
+<p>Because your filesystem is probably as big as the logical volume it resides on, you need to shrink the filesystem first and then shrink the logical volume. Depending on your filesystem, you may need to unmount it first. Let us say we have a logical volume of 15GB with ext3 on it and we want to shrink it to 10G. We need to do the following steps:</p>
+
+<pre># resize2fs /dev/VolGroup00/lvolhome 9G
+# lvreduce -L 10G VolGroup00/lvolhome (or lvresize -L -5G VolGroup00/lvolhome)
+# resize2fs /dev/VolGroup00/lvolhome</pre>
+
+
+<p>Here we shrunk the filesystem more than needed so that when we shrunk the logical volume we did not accidentally cut off the end of the filesystem. After that we normally grow the filesystem to fill all free space left on logical volume. You may use <code>lvresize</code> instead of <code>lvreduce</code>.</p>
+
+<div><strong> Warning: </strong>
+<ul>
+    <li>Do not reduce the filesystem size to less than the amount of space occupied by data or you risk data loss.</li>
+    <li>Not all filesystems support shrinking without loss of data and/or shrinking online.</li>
+</ul>
+</div>
+
+
+<div><strong> Note: </strong>It is better to reduce the filesystem to a smaller size than the logical volume, so that after resizing the logical volume, we do not accidentally cut off some data from the end of the filesystem.</div>
+
+
+<h3>Remove logical volume</h3>
+
+
+<div><strong> Warning: </strong>Before you remove a logical volume, make sure to move all data that you want to keep somewhere else, otherwise it will be lost!</div>
+
+
+<p>First, find out the name of the logical volume you want to remove. You can get a list of all logical volumes installed on the system with:</p>
+
+<pre># lvs</pre>
+
+
+<p>Next, look up the mountpoint for your chosen logical volume&hellip;:</p>
+
+<pre>$ df -h</pre>
+
+
+<p>&hellip; and unmount it:</p>
+
+<pre># umount /your_mountpoint</pre>
+
+
+<p>Finally, remove the logical volume:</p>
+
+<pre># lvremove /dev/yourVG/yourLV</pre>
+
+
+<p>Confirm by typing &ldquo;y&rdquo; and you are done.</p>
+
+<p>Dont forget, to update /etc/fstab:</p>
+
+<pre># sudo nano /etc/fstab</pre>
+
+
+<p>You can verify the removal of your logical volume by typing &ldquo;lvs&rdquo; as root again (see first step of this section).</p>
+
+<h3>添加分区到卷组中</h3>
+
+
+<p>To add a partition to your volume group you must first make its type &lsquo;Linux LVM&rsquo; (for example with <code>cfdisk</code>). Then you need to create a physical volume on it and extend the volume group over it:</p>
+
+<pre># pvcreate /dev/sdb1
+# vgextend VolGroup00 /dev/sdb1</pre>
+
+
+<p>Now you have free space in your volume group that can be used by logical volumes in this group.</p>
+
+<div><strong> Tip: </strong>You can add partitions from any disks to volume groups.</div>
+
+
+<h3>从卷组中移除卷</h3>
+
+
+<p>All of the data on that partition needs to be moved to another partition. Fortunately, LVM makes this easy:</p>
+
+<pre># pvmove /dev/sdb1</pre>
+
+
+<p>If you want to have the data on a specific physical volume, specify that as the second argument to <code>pvmove</code>:</p>
+
+<pre># pvmove /dev/sdb1 /dev/sdf1</pre>
+
+
+<p>Then the physical volume needs to be removed from the volume group:</p>
+
+<pre># vgreduce myVg /dev/sdb1</pre>
+
+
+<p>Or remove all empty physical volumes:</p>
+
+<pre># vgreduce --all vg0</pre>
+
+
+<p>And lastly, if you want to use the partition for something else, and want to avoid LVM thinking that the partition is a physical volume:</p>
+
+<pre># pvremove /dev/sdb1</pre>
+
+
+<h3>快照功能</h3>
+
+
+<h4>介绍</h4>
+
+
+<p>LVM可以给系统创建一个快照，由于使用了COW (copy-on-write) 策略，相比传统的备份更有效率。 The initial snapshot you take simply contains hard-links to the inodes of your actual data. So long as your data remains unchanged, the snapshot merely contains its inode pointers and not the data itself. Whenever you modify a file or directory that the snapshot points to, LVM automatically clones the data, the old copy referenced by the snapshot, and the new copy referenced by your active system. 这样的话，如果你只修改了不超过2G数据（包括原始的和快照的），你将可以只使用2G的空间，就能快照一个有35G的数据的系统。</p>
+
+<h4>配置</h4>
+
+
+<p>You create snapshot logical volumes just like normal ones.</p>
+
+<pre># lvcreate --size 100M --snapshot --name snap01 /dev/mapper/vg0-pv</pre>
+
+
+<p>With that volume, you may modify less than 100M of data, before the snapshot volume fills up.</p>
+
+<p>Todo: scripts to automate snapshots of root before updates, to rollback&hellip; updating menu.lst to boot snapshots (separate article?)</p>
+
+<p>snapshots are primarily used to provide a frozen copy of a filesystem to make backups; a backup taking two hours provides a more consistent image of the filesystem than directly backing up the partition.</p>
+
+<h2>常见问题</h2>
+
+
+<h3>LVM 命令不起作用</h3>
+
+
+<p>try preceeding commands with <em>lvm</em> like this:</p>
+
+<pre># lvm pvdisplay</pre>
+
+
+<h3>设定文件系统挂载点的页面不显示逻辑卷</h3>
+
+
+<p>If you are installing on a system where there is an existing volume group, you may find that even after doing &ldquo;modprobe dm-mod&rdquo; you don&rsquo;t see the list of logical volumes.</p>
+
+<p>In this case, you may also need to do:</p>
+
+<pre># vgchange -ay &lt;volgroup&gt;</pre>
+
+
+<p>in order to activate the volume group and make the logical volumes available.</p>
+
+<h3>Receiving Input/Output Errors after plugging in a removable device with LVM partitions</h3>
+
+
+<p>Symptoms:</p>
+
+<pre>~$ sudo vgscan
+ Reading all physical volumes.  This may take a while...
+ /dev/backupdrive1/backup: read failed after 0 of 4096 at 319836585984: Input/output error
+ /dev/backupdrive1/backup: read failed after 0 of 4096 at 319836643328: Input/output error
+ /dev/backupdrive1/backup: read failed after 0 of 4096 at 0: Input/output error
+ /dev/backupdrive1/backup: read failed after 0 of 4096 at 4096: Input/output error
+ Found volume group "backupdrive1" using metadata type lvm2
+ Found volume group "networkdrive" using metadata type lvm2</pre>
+
+
+<p>Cause:</p>
+
+<dl><dd>Removing an external LVM drive without deactivating the volume group(s) first. Before you disconnect, make sure to:</dd></dl>
+
+
+<pre># vgchange -an &lt;volume group name&gt;</pre>
+
+
+<p>Fix: (assuming you already tried to activate the volume group with vgchange -ay &lt;vg&gt;, and are receiving the Input/output errors</p>
+
+<pre># vgchange -an &lt;volume group name&gt;</pre>
+
+
+<dl><dd>Unplug the external drive and wait a few minutes</dd></dl>
+
+
+<pre># vgscan
+# vgchange -ay &lt;volume group name&gt;</pre>
+
+
+<h2>技巧</h2>
+
+
+<h2>更多资源</h2>
+
+
+<p>archwiki的其他关于LVM的文章：</p>
+
+<ul>
+    <li><a title="Installing with Software RAID or LVM" href="https://wiki.archlinux.org/index.php/Installing_with_Software_RAID_or_LVM">Installing with software RAID or LVM</a></li>
+    <li><a title="RAID Encryption LVM" href="https://wiki.archlinux.org/index.php/RAID_Encryption_LVM">RAID encryption LVM</a></li>
+</ul>
+
+
+<p>外部资源：</p>
+
+<ul>
+    <li><a href="http://en.wikipedia.org/wiki/Logical_Volume_Manager_%28Linux%29" rel="nofollow">LVM on wikipedia</a></li>
+    <li><a href="http://tldp.org/HOWTO/LVM-HOWTO/" rel="nofollow">LVM HOWTO on tldp.org </a></li>
+    <li><a href="http://www.gentoo.org/doc/en/lvm2.xml" rel="nofollow">Gentoo LVM2 installation at gentoo.org </a></li>
+    <li><a href="http://en.gentoo-wiki.com/wiki/LVM" rel="nofollow">LVM at en.gentoo-wiki.com</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[linux下svn命令大全 ]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/04/10/linuxxia-svnming-ling-da-quan/"/>
+    <updated>2012-04-10T11:38:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/04/10/linuxxia-svnming-ling-da-quan</id>
+    <content type="html"><![CDATA[<h2>linux下svn命令大全</h2>
+
+<p><strong>1、将文件checkout到本地目录</strong> <wbr>
+svn checkout path（path是服务器 <wbr>上的目录）
+例如：svn checkout svn://192.168.1.1/pro/domain
+简写：svn co</p>
+
+<p><strong>2、往版本库中添加新的文件</strong> <wbr>
+svn add file
+例如：svn add test.php(添加test.php)
+svn add *.php(添加当前目录下所有的php文件)</p>
+
+<p><strong>3、将改动的文件提交到版本库</strong> <wbr>
+svn commit -m “LogMessage“ [-N] [&mdash;no-unlock] PATH(如果选择了保持锁，就使用–no-unlock开关)
+例如：svn commit -m “add test file for my test“ test.php
+简写：svn ci</p>
+
+<p><strong>4、加锁/解锁</strong> <wbr>
+svn lock -m “LockMessage“ [&mdash;force] PATH
+例如：svn lock -m “lock test file“ test.php
+svn unlock PATH</p>
+
+<p><strong>5、更新到某个版本</strong> <wbr>
+svn update -r m path
+例如：
+svn update如果后面没有目录，默认将当前目录以及子目录下的所有文件都更新到最新版本 <wbr>。
+svn update -r 200 test.php(将版本库中的文件test.php还原到版本200)
+svn update test.php(更新，于版本库同步。如果在提交的时候提示过期的话，是因为冲突，需要先update，修改 <wbr>文件，然后清除svn resolved，最后再提交commit)
+简写：svn up</p>
+
+<p><strong>6、查看文件或者目录状态</strong> <wbr>
+1）svn status path（目录下的文件和子目录的状态，正常状态不显示）
+【?：不在svn的控制中；M：内容被修改；C：发生冲突；A：预定加入到版本库；K：被锁定】
+2）svn status -v path(显示文件和子目录状态)
+第一列保持相同，第二列显示工作版本号，第三和第四列显示最后一次修改的版本号和修改人。
+注：svn status、svn diff和 svn revert这三条命令在没有网络的情况下也可以执行的，原因是svn在本地的.svn中保留了本地版本的原始拷贝。
+简写：svn st</p>
+
+<p><strong>7、删除 <wbr>文件</wbr></strong> <wbr>
+svn delete path -m “delete test fle“
+例如：svn delete svn://192.168.1.1/pro/domain/test.php -m “delete test file”
+或者直接svn delete test.php 然后再svn ci -m ‘delete test file‘，推荐使用这种
+简写：svn (del, remove, rm)</p>
+
+<p><strong>8、查看日志</strong> <wbr>
+svn log path
+例如：svn log test.php 显示这个文件的所有修改记录，及其版本号的变化</p>
+
+<p><strong>9、查看文件详细信息 <wbr></wbr></strong>
+svn info path
+例如：svn info test.php</p>
+
+<p><strong>10、比较差异</strong> <wbr>
+svn diff path(将修改的文件与基础版本比较)
+例如：svn diff test.php
+svn diff -r m:n path(对版本m和版本n比较差异)
+例如：svn diff -r 200:201 test.php
+简写：svn di</p>
+
+<p><strong>11、将两个版本之间的差异合并到当前文件</strong> <wbr>
+svn merge -r m:n path
+例如：svn merge -r 200:205 test.php（将版本200与205之间的差异合并到当前文件，但是一般都会产生冲突，需要处理一下）</p>
+
+<p><strong>12、SVN 帮助</strong> <wbr>
+svn help
+svn help ci
+——————————————————————————</p>
+
+<p>以上是常用命令，下面写几个不经常用的</p>
+
+<p>——————————————————————————</p>
+
+<p><strong>13、版本库下的文件和目录列表</strong> <wbr>
+svn list path
+显示path目录下的所有属于版本库的文件和目录
+简写：svn ls</p>
+
+<p><strong>14、创建纳入版本控制下的新目录</strong> <wbr>
+svn mkdir: 创建纳入版本控制下的新目录。
+用法: 1、mkdir PATH…
+2、mkdir URL…
+创建版本控制的目录。
+1、每一个以工作副本 PATH 指定的目录，都会创建在本地端，并且加入新增
+调度，以待下一次的提交。
+2、每个以URL指定的目录，都会透过立即提交于仓库中创建。
+在这两个情况下，所有的中间目录都必须事先存在。</p>
+
+<p><strong>15、恢复本地修改</strong> <wbr>
+svn revert: 恢复原始未改变的工作副本文件 (恢复大部份的本地修改)。revert:
+用法: revert PATH…
+注意: 本子命令不会存取网络，并且会解除冲突的状况。但是它不会恢复
+被删除的目录</p>
+
+<p><strong>16、代码 <wbr>库URL变更</wbr></strong> <wbr>
+svn switch (sw): 更新工作副本至不同的URL。
+用法: 1、switch URL [PATH]
+2、switch –relocate FROM TO [PATH&hellip;]</p>
+
+<p>1、更新你的工作副本，映射到一个新的URL，其行为跟“svn update”很像，也会将
+服务器上文件与本地文件合并。这是将工作副本对应到同一仓库中某个分支或者标记的
+方法。
+2、改写工作副本的URL元数据，以反映单纯的URL上的改变。当仓库的根URL变动
+(比如方案名或是主机名称变动)，但是工作副本仍旧对映到同一仓库的同一目录时使用
+这个命令更新工作副本与仓库的对应关系。
+我的例子：svn switch &mdash;relocate <wbr><a href="http://59.41.99.254/mytt" rel="nofollow" target="_blank"><a href="http://59.41.99.254/mytt">http://59.41.99.254/mytt</a></a> <wbr><a href="http://www.mysvn.com/mytt" rel="nofollow" target="_blank"><a href="http://www.mysvn.com/mytt">http://www.mysvn.com/mytt</a></a> <wbr></p>
+
+<p><strong>17、解决 <wbr>冲突</wbr></strong> <wbr>
+svn resolved: 移除工作副本的目录或文件的“冲突”状态。
+用法: resolved PATH…
+注意: 本子命令不会依语法来解决冲突或是移除冲突标记；它只是移除冲突的
+相关文件，然后让 PATH 可以再次提交。</p>
+
+<p><strong>18、输出指定文件或URL的内容。</strong> <wbr>
+svn cat 目标[@版本]…如果指定了版本，将从指定的版本开始查找。
+svn cat -r PREV filename &gt; filename (PREV 是上一版本,也可以写具体版本号,这样输出结果是可以提交的)</wbr></wbr></wbr></wbr></wbr></wbr></wbr></wbr></wbr></wbr></wbr></wbr></wbr></wbr></wbr></wbr></wbr></wbr></wbr></wbr></wbr></wbr></wbr></p>
+
+<p><strong>19、</strong> <wbr><strong><a name="svn-ch-3-sect-7.1" rel="nofollow"></a>查找工作拷贝中的所有遗留的日志文件，删除进程中的锁 <wbr></wbr></strong><strong>。</strong></wbr></p>
+
+<p><a name="svn-ch-3-sect-7.1" rel="nofollow"></a>当Subversion改变你的工作拷贝（或是<code>.svn</code> <wbr>中 的任何信息），它会尽可能的小心，在修改任何事情之前，它把意图写到日志文件中去，然后执行log文件中的命令，然后删掉日志文件，这与分类帐的文件系统 架构类似。如果Subversion的操作中断了（举个例子：进程被杀死了，机器死掉了），日志文件会保存在硬盘上，通过重新执行日志文 件，Subversion可以完成上一次开始的操作，你的工作拷贝可以回到一致的状态。</wbr></p>
+
+<p><a name="svn-ch-3-sect-7.1" rel="nofollow"></a>这就是<strong>svn cleanup</strong> <wbr>所作的：它查找工作拷贝中的所有遗留的日志文件，删除进程中的锁。如果Subversion告诉你工作拷贝中的一部分已经“锁定 <wbr>”了，你就需要运行这个命令了。同样，<strong>svn status</strong> <wbr>将会使用<code>L</code> <wbr>显示锁定的项目：</wbr></wbr></wbr></wbr></p>
+
+<pre><a name="svn-ch-3-sect-7.1" rel="nofollow"></a>$ svn status
+ L somedir
+ M somedir/foo.c 
+ 
+ $ svn cleanup
+ $ svn status
+ M somedir/foo.c
+ 
+ <strong>20、</strong>  <strong><a name="svn-ch-3-sect-7.3" rel="nofollow"></a>拷贝用户的一个未被版本化的目录树到版本库。
+ </strong></pre>
+
+
+<p><a name="svn-ch-3-sect-7.3" rel="nofollow"></a><strong>svn import</strong> <wbr></wbr><a name="svn-ch-3-sect-7.3" rel="nofollow"></a>命令是拷贝用户的一个未被版本化的目录树到版本库最快的方法，如果需要，它也要建立一些中介文件。</p>
+
+<p><a name="svn-ch-3-sect-7.3" rel="nofollow"></a>$ svnadmin create /usr/local/svn/newrepos $ svn import mytree file:///usr/local/svn/newrepos/some/project Adding mytree/foo.c Adding mytree/bar.c Adding mytree/subdir Adding mytree/subdir/quux.h Committed revision 1.</p>
+
+<p><a name="svn-ch-3-sect-7.3" rel="nofollow"></a>在上一个例子里，将会拷贝目录<code>mytree</code> <wbr>到版本库的<code>some/project</code> <wbr>下：</wbr></wbr></p>
+
+<p><a name="svn-ch-3-sect-7.3" rel="nofollow"></a>$ svn list file:///usr/local/svn/newrepos/some/project bar.c foo.c subdir/</p>
+
+<p><a name="svn-ch-3-sect-7.3" rel="nofollow"></a>注意，在导入之后，原来的目录树并<em>没有</em> <wbr>转化成工作拷贝，为了开始工作，你还是需要运行<strong>svn checkout</strong> <wbr>导出一个工作拷贝。</wbr></wbr></p>
+
+<p>另附：为SVN <wbr>加入Email通知 <wbr>
+可以通过Subversion的Hook脚本的方式为SVN <wbr>加入邮件列表功能 <wbr>
+编译安装了Subversion后 在源码的tools 下有一个comm-email.pl的Perl脚本，在你的档案目录下有一个hooks目录，进入到hooks目录把post-commit.tmpl 改名为post-commit并给它可执行的权限。 <wbr>
+更改post-commit脚本 把comm-email.pl脚本的决对路径加上，否则 <wbr>SVN <wbr>找不到comm-email.pl <wbr></p>
+
+<p>REPOS=&ldquo;$1" <wbr>
+REV=&rdquo;$2" <wbr>
+/usr/local/svn <wbr>/resp/commit-email.pl &ldquo;$REPOS&rdquo; &ldquo;$REV&rdquo; <a href="&#x6d;&#x61;&#105;&#108;&#x74;&#111;&#x3a;&#x65;&#x6d;&#97;&#x69;&#108;&#x40;&#97;&#100;&#100;&#114;&#x65;&#x73;&#115;&#x31;&#x2e;&#x63;&#111;&#109;">&#101;&#109;&#x61;&#105;&#108;&#64;&#x61;&#100;&#100;&#x72;&#x65;&#115;&#115;&#x31;&#46;&#99;&#111;&#109;</a> email@address2.com <wbr></p>
+
+<h1>log-commit.py &mdash;repository &ldquo;$REPOS&rdquo; &mdash;revision &ldquo;$REV" <wbr></h1>
+
+<p>最后一行是用来记日志的 我不用这个功能 所以注释掉了</wbr></wbr></wbr></wbr></wbr></wbr></wbr></wbr></wbr></wbr></wbr></wbr></wbr></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[/usr 的来龙去脉]]></title>
+    <link href="http://jhjguxin.github.io/blog/2011/12/28/slash-usr-de-lai-long-qu-mai/"/>
+    <updated>2011-12-28T18:21:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2011/12/28/slash-usr-de-lai-long-qu-mai</id>
+    <content type="html"><![CDATA[<h2>/usr 的来龙去脉</h2>
+
+<p>在 linux 文件结构中，有一个很神奇的目录 —— /usr。之前一直没有怎么关注过它，反正程序都是安装在里边的，也没有什么值得追根溯源的东西。直到有一天 <a href="http://cnbeta.com/articles/160791.htm">fedora 要简化整个文件系统体系</a>，看到讨论才想到，usr 到底是什么的缩写呢，它又是怎么来的呢？</p>
+
+<p>讨论中，大部分观点认为：</p>
+
+<ul>
+    <li>usr 是 unix system resources 的缩写；</li>
+    <li>usr 是 user 的缩写；</li>
+    <li>usr 是 unix software resources 的缩写。</li>
+</ul>
+
+
+<p>根据常识判断，是 user 缩写的可能性不大，因为和 /home 冲突了嘛。不过是 system resources 还是 software resources 的缩写还真不好说。特此查了好多东西，却发现竟然连 <a href="http://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard">wikipedia 也模棱两可</a>。</p>
+
+<p>后来终于找到了 相关的文档和介绍。（<a href="http://tldp.org/LDP/Linux-Filesystem-Hierarchy/html/usr.html">via</a>，<a href="http://webcache.googleusercontent.com/search?q=cache:HBW07QkS9DsJ:tldp.org/LDP/Linux-Filesystem-Hierarchy/html/usr.html+&amp;cd=1&amp;hl=en&amp;ct=clnk">cache</a>）</p>
+
+<blockquote>/usr usually contains by far the largest share of data on a system. Hence, this is one of the most important directories in the system as it contains all the user binaries, their documentation, libraries, header files, etc…. X and its supporting libraries can be found here. User programs like telnet, ftp, etc…. are also placed here. In the original Unix implementations, /usr was where the home directories of the users were placed (that is to say, /usr/someone was then the directory now known as /home/someone). In current Unices, /usr is where user-land programs and data (as opposed to ’system land’ programs and data) are. <strong>The name hasn’t changed, but it’s meaning has narrowed and lengthened from “everything user related” to “user usable programs and data”. As such, some people may now refer to this directory as meaning ‘User System Resources’ and not ‘user’ as was originally intended.</strong>（via<a href="http://tldp.org/LDP/Linux-Filesystem-Hierarchy/html/usr.html">1</a>,<a href="http://en.wikipedia.org/wiki/Unix_directory_structure">2</a>）</blockquote>
+
+
+<p>/usr 是系统核心所在，包含了所有的共享文件。它是 unix 系统中最重要的目录之一，涵盖了二进制文件，各种文档，各种头文件，x，还有各种库文件；还有诸多程序，例如 ftp，telnet 等等。</p>
+
+<p>曾经的 /usr 还是用户的家目录，存放着各种用户文件 —— 现在已经被 /home 取代了（例如 /usr/someone 已经改为 /home/someone）。现代的 /usr 只专门存放各种程序和数据，用户目录已经转移。虽然  /usr 名称未改，不过其含义已经从“用户目录”变成了“unix 系统资源”目录。值得注意的是，在一些 unix 系统上，仍然把 /usr/someone 当做用户家目录，如 Minix。</p>
+
+<p>至此，真相大白。看来就像前一阵子的 <a href="http://linux.solidot.org/linux/11/03/31/0958237.shtml">/var/run 移到 /run</a> 一样。</p>
+
+<p>真的是不看不知道，一看吓一跳呀。原来 linux 几经进化，好多目录的诞生和用途已经产生了根本的变化。历史车轮在前进，长江后浪推前浪，正所谓：学习历史，收获真知；尽心竭力，前进不止。</p>
+
+<h2><strong>附录：/usr 目录结构</strong></h2>
+
+
+<ul>
+    <li><strong>/usr/bin</strong> : 所有可执行文件，如 gcc，firefox 等（指不包含在 <strong>/sbin</strong> 和 <strong>/bin</strong> 内的）；</li>
+    <li><strong>/usr/include</strong> : 各种头文件，编译文件等时需要使用；
+<ul>
+    <li><strong>/usr/include/’package-name’</strong> : 程序特定的头文件；</li>
+</ul>
+</li>
+    <li><strong>/usr/lib</strong> : 所以可执行文件所需要的库文件；</li>
+    <li><strong>/usr/local </strong>: /usr 通常只包含系统发行时自带的程序，而 /usr/local 则是本地系统管理员用来自由添加程序的目录；</li>
+    <li><strong>/usr/X11R6</strong> : x 系统的二进制文件，库文件，文档，字体等。它不等同于 /usr 的作用，只有 x 才能调用这些库文件等，其他程序不读取或者使用。因为 linux 没有原生图形界面，而且 linux 大部分情况下是 for server 的，所以图形界面没有意义；其中 X11R6 代表 version 11 release 6；
+<ul>
+    <li><strong>/usr/X11R6/bin</strong> : x 的二进制文件，包含运行 x 的必须文件；</li>
+    <li><strong>/usr/X11R6/include</strong> : x 相关的头文件；</li>
+    <li><strong>/usr/X11R6/lib</strong> : x 库文件；</li>
+    <li><strong>/usr/X11R6/lib/modules</strong> : x 的模块，启动时加载。缺少 video4linux, DRI and GLX 和 输入输出设备 模块，将工作不正常；</li>
+    <li><strong>/usr/X11R6/lib/X11/fonts</strong> : x font server 的字体文件；</li>
+</ul>
+</li>
+    <li><strong>/usr/doc</strong> : 文档。实际是<strong> /usr/share/doc </strong>的软链接；</li>
+    <li><strong>/usr/etc</strong> : 一个极少用到的配置文件存放地；</li>
+    <li><strong>/usr/games</strong> : 曾经包含游戏等文件，现在很少用到；</li>
+    <li><strong>/usr/info</strong> : 系统相关信息，是 <strong>/usr/share/info </strong>的软链接；</li>
+    <li><strong>/usr/man</strong> : man 手册，已经移至 <strong>/usr/share/man</strong>；</li>
+    <li><strong>/usr/sbin</strong> : 类似 /sbin，root 可以执行。但此目录不包含在环境变量 $PATH 中，它包含的程序类似于 chroot, useradd, in.tftpd and pppconfig；</li>
+    <li><strong>/usr/share</strong> : 它包含了各种程序间的共享文件，如字体，图标，文档等。（/usr/local 对应的目录是  /usr/loca/share）;
+<ul>
+    <li><strong>/usr/share/doc</strong> : 类似应用程序的 man 手册。它包含程序的说明文件，默认配置文件等；</li>
+    <li><strong>/usr/share/info</strong> : 不常用，已经被 man 代替；</li>
+    <li><strong>/usr/share/man</strong> : app 的 manual；</li>
+    <li><strong>/usr/share/icons</strong> : 应用程序的图标等文件，分为 png，svg 等多种格式；</li>
+    <li><strong>/usr/share/fonts</strong> : 字体文件，系统范围内可使用，~/.fonts 仅当前用户可用；</li>
+</ul>
+</li>
+    <li><strong>/usr/src</strong> : linux 内核的源码和说明文档等；
+<ul>
+    <li><strong>/usr/src/linux</strong> : linux 源代码；</li>
+    <li><strong>/usr/src/linux/.config</strong> : 内核编译过程产生的文件；通常由命令 ‘make config’ ， ‘make menuconfig’ 或 ‘make xconfig’ 执行后产生；</li>
+    <li><strong>/usr/src/linux/.depend, /usr/src/linux/.hdepend</strong> : ‘make dep’ 检测编译依赖时需要的文件，由 /usr/src/linux/.config 产生；</li>
+    <li><strong>/usr/src/linux/COPYING</strong> : GNU license；</li>
+    <li><strong>/usr/src/linux/Makefile</strong> : 编译内核所需的 Makefile；</li>
+    <li><strong>/usr/src/linux/Rules.make</strong> : 当有多个 Makefile 时，根据它的规则执行 make；</li>
+</ul>
+</li>
+    <li><strong>/usr/tmp</strong> : 已经被众多发行版抛弃的临时文件夹。</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

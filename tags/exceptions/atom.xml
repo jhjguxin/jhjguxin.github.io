@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: Exceptions | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/tags/exceptions/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Ruby 异常处理 begin ...end]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/02/09/ruby-yi-chang-chu-li-begin-dot-dot-dot-end/"/>
+    <updated>2012-02-09T14:24:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/02/09/ruby-yi-chang-chu-li-begin-dot-dot-dot-end</id>
+    <content type="html"><![CDATA[<h2>Ruby 异常处理 begin &hellip;end</h2>
+
+<p>在java中，异常的捕捉是在try &hellip; catch当中进行，而ruby则是在begin &hellip; end代码块中进行异常的捕捉，在该代码块中使用rescue关键字进行捕捉异常类型，注意哦，这个是关键字，而不是方法。
+Ruby代码
+begin
+   &hellip;&hellip;                                #可能出现异常的代码 <br/>
+rescue   errorType1             #要捕捉的异常类型 <br/>
+   &hellip;&hellip;                                #处理异常的代码 <br/>
+rescue   errorType2             #要捕捉的异常类型 <br/>
+   &hellip;&hellip;                                #处理异常的代码 <br/>
+end
+以上代码就是一个大概的捕捉异常的例子，在begin和end代码块中通过rescue进行异常类型的捕捉然后进行适当的处理，可是如果抛出的异常类型并没有显示的捕捉如何处理呢？那就是在最后使用else，如下：
+Ruby代码
+begin
+   &hellip;&hellip;                                #可能出现异常的代码 <br/>
+rescue   errorType1             #要捕捉的异常类型 <br/>
+   &hellip;&hellip;                                #处理异常的代码 <br/>
+rescue   errorType2             #要捕捉的异常类型 <br/>
+   &hellip;&hellip;                                #处理异常的代码 <br/>
+else
+   &hellip;&hellip;                                #如果以上代码类型都没有捕捉到，则运行该段代码 <br/>
+end</p>
+
+<p>这时又有一个问题，如果我想获取异常信息又该如何做呢？请看下面的代码：
+Ruby代码
+begin
+   raise ArgumentError, &ldquo;Bad data&rdquo;
+rescue => err <br/>
+   puts err <br/>
+end
+通 过rescue => variable的方式，就可以将异常保存为一个variable了。又解决了一个问题，还有什么问题呢？啊，对了，在java的使用当中，比如使用 Connection进行数据库连接后，最后一定要进行资源的清理，都是在finally块当中进行的，可是在ruby中又如何进行这些资源的清理呢？看 看下面的代码：
+Ruby代码
+begin
+   raise ArgumentError, &ldquo;Bad data&rdquo;
+rescue => err <br/>
+   puts err <br/>
+ensure
+   &hellip;                        #执行清理工作 <br/>
+end</p>
+
+<pre>
+module GitHelper
+  def list_user_repos(user="jhjguxin", options={})
+    skip_fork = options[:skip_fork] || false
+    sort_by = options[:sort_by] || "created_at"
+    github = Github.new
+    begin 
+      repos=github.repos.list_repos :user => user
+    #rescue   errorType1             #要捕捉的异常类型
+    #......                                #处理异常的代码 
+    rescue => err   
+      puts err
+      return repos=[]
+    ensure #这里的代码在总是被执行，可以做一些清理工作
+      puts "process finished ..."
+    end
+    if skip_fork
+      repos.each do |r|
+        repos.delete(r) if r.fork==true
+        #breakpoint
+      end
+
+    else
+      repos
+    end
+  end
+end
+</pre>
+
+
+
+]]></content>
+  </entry>
+  
+</feed>

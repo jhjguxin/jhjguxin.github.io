@@ -1,0 +1,323 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>大型网站架构不得不考虑的10个问题 - Francis's Octopress Blog</title>
+  <meta name="author" content="Francis Jiang">
+
+  
+  <meta name="description" content="大型网站架构不得不考虑的10个问题 这里的大型网站架构只包括高互动性高交互性的数据型大型网站，基于大家众所周知的原因，我们就不谈新闻类和一些依靠HTML静态化就可以实现的架构 了，我们以高负载高数据交换高数据流动性的网站为例，比如海内，开心网等类似的web2.0系列架构。 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jhjguxin.github.io/blog/2011/12/28/da-xing-wang-zhan-jia-gou-bu-de-bu-kao-lu-de-10ge-wen-ti">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Francis's Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-25901353-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Francis's Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jhjguxin.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/readme">Readme</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">大型网站架构不得不考虑的10个问题</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-28T18:41:00+08:00" pubdate data-updated="true">Dec 28<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>大型网站架构不得不考虑的10个问题</h2>
+
+<p>这里的大型网站架构只包括高互动性高交互性的数据型大型网站，基于大家众所周知的原因，我们就不谈新闻类和一些依靠HTML静态化就可以实现的架构 了，我们以高负载高数据交换高数据流动性的网站为例，比如海内，开心网等类似的web2.0系列架构。我们这里不讨论是PHP还是JSP或者.NET环 境，我们从架构的方面去看问题，实现语言方面并不是问题，语言的优势在于实现而不是好坏，不论你选择任何语言，架构都是必须要面对的。</p>
+
+<p>这里讨论一下大型网站需要注意和考虑的问题。</p>
+
+<p>1、海量数据的处理</p>
+
+<p>众所周知，对于一些相对小的站点来说，数据量并不是很大，select和update就可以解决我们面对的问题，本身负载量不是很大，最多再加几个 索引就可以搞定。对于大型网站，每天的数据量可能就上百万，如果一个设计不好的多对多关系，在前期是没有任何问题的，但是随着用户的增长，数据量会是几何 级的增长的。在这个时候我们对于一个表的select和update的时候(还不说多表联合查询)的成本的非常高的。</p>
+
+<p>2、数据并发的处理</p>
+
+<p>在一些时候，2.0的CTO都有个尚方宝剑，就是缓存。对于缓存，在高并发高处理的时候也是个大问题。在整个应用程序下，缓存是全局共享的，然而在 我们进行修改的时候就，如果两个或者多个请求同时对缓存有更新的要求的情况下，应用程序会直接的死掉。这个时候，就需要一个好的数据并发处理策略以及缓存 策略。</p>
+
+<p>另外，就是数据库的死锁问题，也许平时我们感觉不到，死锁在高并发的情况下的出现的概率是非常高的，磁盘缓存就是一个大问题。</p>
+
+<p>3、文件存贮的问题</p>
+
+<p>对于一些支持文件上传的2.0的站点，在庆幸硬盘容量越来越大的时候我们更多的应该考虑的是文件应该如何被存储并且被有效的索引。常见的方案是对文 件按照日期和类型进行存贮。但是当文件量是海量的数据的情况下，如果一块硬盘存贮了500个G的琐碎文件，那么维护的时候和使用的时候磁盘的Io就是一个 巨大的问题，哪怕你的带宽足够，但是你的磁盘也未必响应过来。如果这个时候还涉及上传，磁盘很容易就over了。</p>
+
+<p>也许用raid和专用存贮服务器能解决眼下的问题，但是还有个问题就是各地的访问问题，也许我们的服务器在北京，可能在云南或者新疆的访问速度如何解决?如果做分布式，那么我们的文件索引以及架构该如何规划。</p>
+
+<p>所以我们不得不承认，文件存贮是个很不容易的问题</p>
+
+<p>4、数据关系的处理</p>
+
+<p>我们可以很容易的规划出一个符合第三范式的数据库，里面布满了多对多关系，还能用GUID来替换INDENTIFY COLUMN 但是，多对多关系充斥的2.0时代，第三范式是第一个应该被抛弃的。必须有效的把多表联合查询降到最低。</p>
+
+<p>5、数据索引的问题</p>
+
+<p>众所周知，索引是提高数据库效率查询的最方面最廉价最容易实现的方案。但是，在高UPDATE的情况下，update和delete付出的成本会高的无法想想，笔者遇到过一个情况，在更新一个聚焦索引的时候需要10分钟来完成，那么对于站点来说，这些基本上是不可忍受的。</p>
+
+<p>索引和更新是一对天生的冤家，问题A，D，E这些是我们在做架构的时候不得不考虑的问题，并且也可能是花费时间最多的问题。</p>
+
+<p>6、分布式处理</p>
+
+<p>对于2.0网站由于其高互动性，CDN实现的效果基本上为0，内容是实时更新的，我们常规的处理。为了保证各地的访问速度，我们就需要面对一个绝大的问题，就是如何有效的实现数据同步和更新，实现各地服务器的实时通讯有是一个不得不需要考虑的问题。</p>
+
+<p>7、Ajax的利弊分析</p>
+
+<p>成也AJAX，败也AJAX，AJAX成为了主流趋势，突然发现基于XMLHTTP的post和get是如此的容易。客户端get或者post 到服务器数据，服务器接到数据请求之后返回来，这是一个很正常的AJAX请求。但是在AJAX处理的时候，如果我们使用一个抓包工具的话，对数据返回和处 理是一目了然。对于一些计算量大的AJAX请求的话，我们可以构造一个发包机，很容易就可以把一个webserver干掉。</p>
+
+<p>8、数据安全性的分析</p>
+
+<p>对于HTTP协议来说，数据包都是明文传输的，也许我们可以说我们可以用加密啊，但是对于G问题来说的话，加密的过程就可能是明文了(比如我们知道 的QQ，可以很容易的判断他的加密，并有效的写一个跟他一样的加密和解密方法出来的)。当你站点流量不是很大的时候没有人会在乎你，但是当你流量上来之 后，那么所谓的外挂，所谓的群发就会接踵而来(从qq一开始的群发可见端倪)。也许我们可以很的意的说，我们可以采用更高级别的判断甚至HTTPS来实 现，注意，当你做这些处理的时候付出的将是海量的database，io以及CPU的成本。对于一些群发，基本上是不可能的。笔者已经可以实现对于百度空 间和qq空间的群发了。大家愿意试试，实际上并不是很难。</p>
+
+<p>9、数据同步和集群的处理的问题</p>
+
+<p>当我们的一台databaseserver不堪重负的时候，这个时候我们就需要做基于数据库的负载和集群了。而这个时候可能是最让人困扰的的问题 了，数据基于网络传输根据数据库的设计的不同，数据延迟是很可怕的问题，也是不可避免的问题，这样的话，我们就需要通过另外的手段来保证在这延迟的几秒或 者更长的几分钟时间内，实现有效的交互。比如数据散列，分割，内容处理等等问题。</p>
+
+<p>10、数据共享的渠道以及OPENAPI趋势</p>
+
+<p>Openapi已经成为一个不可避免的趋势，从google，facebook，myspace到21kaiyun.com，都在考虑这个问题，它 可以更有效的留住用户并激发用户的更多的兴趣以及让更多的人帮助你做最有效的开发。这个时候一个有效的数据共享平台，数据开放平台就成为必不可少的途径 了，而在开放的接口的情况保证数据的安全性和性能，又是一个我们必须要认真思考的问题了。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Francis Jiang</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-28T18:41:00+08:00" pubdate data-updated="true">Dec 28<span>th</span>, 2011</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/wang-wen/'>网文</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://jhjguxin.github.io/blog/2011/12/28/da-xing-wang-zhan-jia-gou-bu-de-bu-kao-lu-de-10ge-wen-ti/" data-via="jhjguxin" data-counturl="http://jhjguxin.github.io/blog/2011/12/28/da-xing-wang-zhan-jia-gou-bu-de-bu-kao-lu-de-10ge-wen-ti/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2011/12/28/slash-usr-de-lai-long-qu-mai/" title="Previous Post: /usr 的来龙去脉">&laquo; /usr 的来龙去脉</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2011/12/28/bu-yao-zi-cheng-wei-cheng-xu-yuan/" title="Next Post: 不要自称为程序员">不要自称为程序员 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/">通过mongodump和mongorestore实现Mongodb备份和恢复 --by Chenzhou123520</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes/">Ruby on Rails 4.0 Release Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/rails-active-record-named-scopes/">Rails Active Record Named Scopes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/">晒晒我们的开源项目 ITEYE开源代码</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/">Single Sign-on 单点登录 Sso</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/jhjguxin">@jhjguxin</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'jhjguxin',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Francis Jiang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,2066 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Francis's Octopress Blog</title>
+  <meta name="author" content="Francis Jiang">
+
+  
+  <meta name="description" content="解决Illegal mix of collations (latin1_swedish_ci,IMPLICIT) and (utf8_general_ci,COER 部署完项目，测试一下，诶，数据出来了 没有多大问题（暗舒一口气）。继续测吧，一点新建完了，报错了，看看什么错误 一看完了 java. &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jhjguxin.github.io/blog/page/4">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Francis's Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-25901353-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Francis's Octopress Blog</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jhjguxin.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/readme">Readme</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/06/13/jie-jue-illegal-mix-of-collations-latin1-swedish-ci-implicit-and-utf8-general-ci-coer/">解决Illegal Mix of Collations (latin1_swedish_ci,IMPLICIT) and (utf8_general_ci,COER</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-13T10:56:00+08:00" pubdate data-updated="true">Jun 13<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>解决Illegal mix of collations (latin1_swedish_ci,IMPLICIT) and (utf8_general_ci,COER</h2>
+
+<p>部署完项目，测试一下，诶，数据出来了 没有多大问题（暗舒一口气）。继续测吧，一点新建完了，报错了，看看什么错误</p>
+
+<p>一看完了 java.sql.SQLException: Illegal mix of collations (latin1_swedish_ci,IMPLICIT)</p>
+
+<p>and (utf8_general_ci,COERCIBLE) for operation &lsquo;=&rsquo; 是这个错误 ，什么原因呢，第一次遇到。</p>
+
+<p>头大了。去查文档说是：结果集中有两种字符集。 我晕了 ，怎么会这样呢，看看表结构，一种啊。 继续查吧。</p>
+
+<table width="620" border="0" cellspacing="1" cellpadding="1" align="center">
+<tbody>
+<tr>
+<td bgcolor="#FFE7CE" width="464" height="27"> 代码如下</td>
+<td align="center" bgcolor="#FFE7CE" width="109">复制代码</td>
+</tr>
+<tr>
+<td id="copy7096" colspan="2" valign="top" bgcolor="#FFFFFF" height="auto">SHOW VARIABLES LIKE &#8216;character_set_%&#8217;; 查看一下 显示+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;-+
+
+| Variable_name | Value |
+
++&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;-+
+
+| character_set_client | utf8|
+
+| character_set_connection | utf8|
+
+| character_set_database | latin1 |
+
+| character_set_results | utf8|
+
+| character_set_server | latin1 |
+
+| character_set_system | utf8 |
+
+| character_sets_dir | /home/jh/<a href="http://www.111cn.net/list-110/" target="_blank">mysql</a>/share/mysql/charsets |</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>+&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;+&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;+</p>
+
+<p>再用 SHOW VARIABLES LIKE &lsquo;collation_%&rsquo;; 查看一下 显示</p>
+
+<table width="620" border="0" cellspacing="1" cellpadding="1" align="center">
+<tbody>
+<tr>
+<td bgcolor="#FFE7CE" width="464" height="27"> 代码如下</td>
+<td align="center" bgcolor="#FFE7CE" width="109">复制代码</td>
+</tr>
+<tr>
+<td id="copy1112" colspan="2" valign="top" bgcolor="#FFFFFF" height="auto">+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;-+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;-+| Variable_name | Value |
+
++&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;-+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;-+
+
+| collation_connection | utf8_swedish_ci |
+
+| collation_database | latin1_swedish_ci |
+
+| collation_server | latin1_swedish_ci |
+
++&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;-+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;-+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>原来如此啊 哈哈 知道错在哪里 剩下的就好办了</p>
+
+<p><strong>解决方法：</strong></p>
+
+<p>依次执行：</p>
+
+<table width="620" border="0" cellspacing="1" cellpadding="1" align="center">
+<tbody>
+<tr>
+<td bgcolor="#FFE7CE" width="464" height="27"> 代码如下</td>
+<td align="center" bgcolor="#FFE7CE" width="109">复制代码</td>
+</tr>
+<tr>
+<td id="copy2457" colspan="2" valign="top" bgcolor="#FFFFFF" height="auto">set character_set_database =utf8;
+
+&nbsp;
+
+set character_set_results =utf8;
+
+&nbsp;
+
+set character_set_server =utf8;
+
+&nbsp;
+
+set character_set_system =utf8; &#8211;此处utf-8也可以
+
+&nbsp;
+
+然后执行：
+
+&nbsp;
+
+SET collation_server = utf8_general_ci
+
+&nbsp;
+
+&nbsp;
+
+SET collation_database = utf8_general_ci</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>执行完之后，请检查mysql下每个<a href="http://www.111cn.net/database/database.html" target="_blank">数据库</a>，表，字段是否都是utf8，不是则改过来，这样子就不会出现</p>
+
+<p>&nbsp;</p>
+
+<p>最笨的方法是重装一下数据库。（一般不要用这种方法呀）</p>
+
+<p>最终解决方法：</p>
+
+<p>1.1 如果是windows版本的mysql，那么在安装的时候，系统就会提示用哪种编码。</p>
+
+<p>如果安装的时候设置错误了，修改mysql安装目录下的my.ini文件：</p>
+
+<table width="620" border="0" cellspacing="1" cellpadding="1" align="center">
+<tbody>
+<tr>
+<td bgcolor="#FFE7CE" width="464" height="27"> 代码如下</td>
+<td align="center" bgcolor="#FFE7CE" width="109">复制代码</td>
+</tr>
+<tr>
+<td id="copy1531" colspan="2" valign="top" bgcolor="#FFFFFF" height="auto">[mysql]default-character-set=utf8
+
+&#8230;
+
+# The default character set that will be used when a new schema or table is
+
+# created and no character set is defined
+
+default-character-set=utf8</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>配置好后，重启mysql。</p>
+
+<p>1.2 如果是linux版本的mysql</p>
+
+<p>&nbsp;</p>
+
+<p>修改mysql的配置文件,使数据库与服务器操作系统的字符集设置一致。</p>
+
+<p>vi /etc/my.cnf 设置(如果没有发现这个文件，就新建1个)</p>
+
+<table width="620" border="0" cellspacing="1" cellpadding="1" align="center">
+<tbody>
+<tr>
+<td bgcolor="#FFE7CE" width="464" height="27"> 代码如下</td>
+<td align="center" bgcolor="#FFE7CE" width="109">复制代码</td>
+</tr>
+<tr>
+<td id="copy7728" colspan="2" valign="top" bgcolor="#FFFFFF" height="auto">[mysqld]datadir=/var/lib/mysql
+
+socket=/var/lib/mysql/mysql.sock
+
+default-character-set=utf8</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>(增加的关键一句,使得数据库缺省以utf8存储)</p>
+
+<p>当然，修改后，要重启数据库。（这样设置后对新建的数据库表才起作用）</p>
+
+<p>&nbsp;</p>
+
+<table width="620" border="0" cellspacing="1" cellpadding="1" align="center">
+<tbody>
+<tr>
+<td bgcolor="#FFE7CE" width="464" height="27"> 代码如下</td>
+<td align="center" bgcolor="#FFE7CE" width="109">复制代码</td>
+</tr>
+<tr>
+<td id="copy8374" colspan="2" valign="top" bgcolor="#FFFFFF" height="auto">用SHOW VARIABLES LIKE &#8216;character_set_%&#8217;;命令查看到如下内容：+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;+
+
+| Variable_name | Value |
+
++&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;+
+
+| character_set_client | utf8|
+
+| character_set_connection | utf8|
+
+| |character_set_database |utf8 |
+
+| character_set_filesystem | binary |
+
+| character_set_results | utf8|
+
+| character_set_server | utf8 |
+
+| character_set_system | utf8 |
+
+| character_sets_dir | /home/jh/mysql/share/mysql/charsets |
+
++&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>发现关键项目已经用了utf8，但这样还不够，还要保证客户端也是用utf8的字符集来操作的。</p>
+
+<p>登录的时候，要用以下命令：mysql &mdash;default-character-set=utf8 -u root -p</p>
+
+<p>再次用SHOW VARIABLES LIKE &lsquo;character_set_%&rsquo;;命令查看，结果变成了：</p>
+
+<table width="620" border="0" cellspacing="1" cellpadding="1" align="center">
+<tbody>
+<tr>
+<td bgcolor="#FFE7CE" width="464" height="27"> 代码如下</td>
+<td align="center" bgcolor="#FFE7CE" width="109">复制代码</td>
+</tr>
+<tr>
+<td id="copy4025" colspan="2" valign="top" bgcolor="#FFFFFF" height="auto">+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;+| Variable_name | Value |
+
++&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;+
+
+| character_set_client | utf8 |
+
+| character_set_connection | utf8 |
+
+| character_set_database | utf8 |
+
+| character_set_filesystem | binary |
+
+| character_set_results | utf8 |
+
+| character_set_server | utf8 |
+
+| character_set_system | utf8 |
+
+| character_sets_dir | /home/jh/mysql/share/mysql/charsets/ |</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>+&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;+&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;+</p>
+
+<p>这样才能保证客户端所发命令都是基于utf8格式的，比如说建立数据库和表，默认就会以utf8编码，而无须再次指定。（再次说一句对新建的数据库和表起作用）。</p>
+
+<p>另外：</p>
+
+<p>第三种方法：网上看到的，先记录一下。</p>
+
+<p>1.如果安装mysql的编码已不能更改,很多朋友是购买虚拟主机建立网站,无权更改MYSQL的安装编码,这一关我们可以跳过,因为只要后面的步聚正确,一样能解决乱码问题
+2.修改数据库编码，如果是数据库编码不正确: 可以在<a href="http://www.111cn.net/phper/php.html" target="_blank">php</a>myadmin 执行如下命令: ALTER DATABASE <code>test</code> DEFAULT CHARACTER SET utf8 COLLATE utf8_bin
+以上命令就是将test数据库的编码设为utf8
+3.修改表的编码：</p>
+
+<table width="620" border="0" cellspacing="1" cellpadding="1" align="center">
+<tbody>
+<tr>
+<td bgcolor="#FFE7CE" width="464" height="27"> 代码如下</td>
+<td align="center" bgcolor="#FFE7CE" width="109">复制代码</td>
+</tr>
+<tr>
+<td id="copy1726" colspan="2" valign="top" bgcolor="#FFFFFF" height="auto">ALTER TABLE `category` DEFAULT CHARACTER SET utf8 COLLATE utf8_bin</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>以上命令就是将一个表category的编码改为utf8
+4.修改字段的编码：</p>
+
+<table width="620" border="0" cellspacing="1" cellpadding="1" align="center">
+<tbody>
+<tr>
+<td bgcolor="#FFE7CE" width="464" height="27"> 代码如下</td>
+<td align="center" bgcolor="#FFE7CE" width="109">复制代码</td>
+</tr>
+<tr>
+<td id="copy2640" colspan="2" valign="top" bgcolor="#FFFFFF" height="auto">
+<pre>mysql&gt; use askjane_development;
+Database changed
+mysql&gt; alter database mydb character set utf8;
+ERROR 1 (HY000): Can't create/write to file './mydb/db.opt' (Errcode: 2)
+mysql&gt; ALTER TABLE tags CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;Query OK, 2 rows affected (0.35 sec)</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>以上命令就是将test表中 dd的字段编码改为utf8
+5.如果是这种情况容易解决，只需检查下页面，修改源文件的charset即可
+, //这个正确就无问题了
+6.这种情况也是修改页面charset即可.</p>
+
+<p>&nbsp;</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/06/07/logs-are-streams-not-files/">Logs Are Streams, Not Files</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-07T21:55:00+08:00" pubdate data-updated="true">Jun 7<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Logs Are Streams, Not Files</h2>
+
+<p>Server daemons (such as PostgreSQL or Nginx) and applications (such as a Rails or Django app) sometimes offer a configuration parameter for a path to the program’s logfile. This can lead us to think of logs as files.</p>
+
+<p>But a better conceptual model is to treat logs as time-ordered streams: there is no beginning or end, but rather an ongoing, collated collection of events which we may wish to view in realtime as they happen (e.g. via <code>tail -f</code> or <code>heroku logs &mdash;tail</code>) or which we may wish to search in some time window (e.g. via <code>grep</code> or Splunk).</p>
+
+<h2>Using the power of unix for logs</h2>
+
+
+<p>Unix provides some excellent tools for handling streams. There are two default output streams, <code>stdout</code> and<code>stderr</code>, available automatically to all programs. Streams can be turned into files with a redirect operator, but they can also be channeled in more powerful ways, such as splitting the streams to multiple locations or pipelining the stream to another program for further processing.</p>
+
+<p>A program that uses <code>stdout</code> for its logging can easily log to any file you wish:</p>
+
+<pre><code>$ mydaemon &gt;&gt; /var/log/mydaemon.log</code></pre>
+
+
+<p>(Typically you would not invoke this command directly, but would run this from an init program such as Upstart or Systemd.)</p>
+
+<p>Programs that send their logs directly to a logfile lose all the power and flexibility of unix streams. What’s worse is that they end up reinventing some of these capabilities, badly. How many programs end up re-writing log rotation, for example?</p>
+
+<h2>Distributed logging with syslog</h2>
+
+
+<p>Logging on any reasonably large distributed system will generally end up using the syslog protocol to send logs from many components to a single location. Programs that treat logs as files are now on the wrong path: if they wisht to log to syslog, each program needs to implement syslog internally &ndash; and provide yet more logging configuration options to set the various syslog fields.</p>
+
+<p>A program using <code>stdout</code> for logging can use syslog without needing to implement any syslog awareness into the program, by piping to the standard <code>logger</code> command available on all modern unixes:</p>
+
+<pre><code>$ mydaemon | logger</code></pre>
+
+
+<p>Perhaps we want to split the stream and log to a local file as well as syslog:</p>
+
+<pre><code>$ mydaemon | tee /var/log/mydaemon.log | logger</code></pre>
+
+
+<p>A program which uses <code>stdout</code> is equipped to log in a variety of ways without adding any weight to its codebase or configuration format.</p>
+
+<h2>Other distributed logging protocols</h2>
+
+
+<p>Syslog is an entrenched standard for distributed logging, but there are other, more modern options as well.<a href="http://www.splunk.com/">Splunk</a>, fast becoming a indispensable tool for anyone running a large software service, can accept syslog; but it also has its own custom protocol which offers additional features like authentication and encryption.<a href="https://github.com/facebook/scribe/wiki">Scribe</a> is another example of a modern logging protocol.</p>
+
+<p>Programs that log to <code>stdout</code> can be adapted to work with a new protocol without needing to modify the program. Simply pipe the program’s output to a receiving daemon just as you would with the <code>logger</code> program for syslog. Treating your logs as streams is a form of <a href="http://en.wikipedia.org/wiki/Future_proof">future-proofing</a> for your application.</p>
+
+<h2>Logging in the Ruby world</h2>
+
+
+<p>Most Rack frameworks (Sinatra, Ramaze, etc) and Rack webservers (Mongrel, Thin, etc) do the right thing: they log to <code>stdout</code>. If you run them in the foreground, as is typical of development mode, you see the output right in your terminal. This is exactly what you want. If you run in production mode, you can redirect the output to a file, to syslog, to both, or to any other logging system that can accept an input stream.</p>
+
+<p>Unfortunately, Rails stands out as a major exception to this simple principle. It creates its own log directory and writes various files into it; some plugins even take it upon themselves to write their own, separate logfiles. This hurts the local development experience: what you see in your terminal isn’t complete, so you have to open a separate window with <code>tail -f log/*.log</code> to get the information you want. But it hurts the deployment experience even more, because you end up having to tinker around with a bunch of Rails logger configuration options to get your logs from all your web machines to merge into a single stream.</p>
+
+<h2>Logging on Heroku</h2>
+
+
+<p>The need to treat application logs as a stream is especially poignant with <a href="http://blog.heroku.com/archives/2010/12/13/logging/">Heroku&rsquo;s new logging system</a>. On the backend, we route logs with a syslog router written in Erlang called <a href="https://github.com/heroku/logplex">Logplex</a>.</p>
+
+<p>Logplex handles input streams (which we call “sinks”) from many different sources: all the dynos running on the app, system components like our HTTP router, and (currently in alpha) logs from add-on providers. Sinks are merged together into channels (each app has its own channel) which is a unified stream of all logs relevant to the app. This allows developers to see a holistic view of everything happening with their app, or to filter down to logs from a particular type of sink (for example: just logs from the HTTP router, or just logs from worker processes).</p>
+
+<p>Further, log streams can also be sent outbound, which we call “drains.” Users can configure syslog drains, and we’re currently working up a technical design for how add-on providers can automatically add drains. This latter item will enable a new class of log search and archival add-on, most notably the emerging syslog-as-a-service products like <a href="http://www.loggly.com/">Loggly</a> and <a href="https://papertrailapp.com/">Papertrail</a>.</p>
+
+<p>This logging system works quite well, and it gets even better with the new features on the way &ndash; but it only works where all programs output their logs as streams. Programs that write logfiles, such as Rails in its default configuration, don’t make sense in this world.</p>
+
+<p>As a workaround, Heroku injects the <a href="https://github.com/ddollar/rails_log_stdout/blob/master/init.rb">rails_log_stdout</a> plugin into Rails apps at deploy time. We’d prefer not to have to do this (injecting code is a dicey way to solve problems), but it’s the best way to get Rails logs into the app’s logstream without requiring extra configuration from the app developer.</p>
+
+<h2>Conclusion</h2>
+
+
+<p>Logs are a stream, and it behooves everyone to treat them as such. Your programs should log to <code>stdout</code>and/or <code>stderr</code> and omit any attempt to handle log paths, log rotation, or sending logs over the syslog protocol. Directing where the program’s log stream goes can be left up to the runtime container: a local terminal or IDE (in development environments), an Upstart / Systemd launch script (in traditional hosting environments), or a system like Logplex/Heroku (in a platform environment).</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/06/07/configuring-gedit-for-rails/">Configuring Gedit for Rails</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-07T10:34:00+08:00" pubdate data-updated="true">Jun 7<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Configuring Gedit for Rails</h2>
+
+<p>I haven’t kept my feelings about IDEs hidden, I’m a big believer in using text editors instead.</p>
+
+<p>I know, I should earn my chops and become a Vim guy, and some day I hope to sit down and make that conversion, but for now it’s all about Gedit for me. With a few plugins and a little TLC gedit can be a lighter version of the more powerful, more intensive ide.</p>
+
+<p>The first thing we’re going to install gMate, an addon designed to make Gedit run like TextMate</p>
+
+<blockquote>sudo add-apt-repository ppa:ubuntu-on-rails/ppa
+
+sudo apt-get update</blockquote>
+
+
+<blockquote>sudo apt-get install gedit-gmate</blockquote>
+
+
+<p>Additionally we’re going to install the standard plugins package</p>
+
+<blockquote>sudo apt-get install gedit-plugins</blockquote>
+
+
+<p>Now lets fire up Gedit and turn on our preferences.</p>
+
+<p>To get to our plugins go to Edit &gt; Preferences &gt; Plugins.</p>
+
+<p>We’re going to enable the following options:</p>
+
+<ul>
+    <li>Snippets</li>
+    <li>Code Comment</li>
+    <li>Embedded Terminal</li>
+    <li>Find in Files</li>
+    <li>Rails Extract Partial</li>
+    <li>Rails File Loader</li>
+    <li>Session Saver (Optional)</li>
+    <li>Smart Indent (Optional)</li>
+    <li>Tab Switch (Optional)</li>
+    <li>TextMate Style AutoCompletion</li>
+</ul>
+
+
+<p>This is going to enable a lot of different functionality, and while this is the setup I use, it may be more than you need.</p>
+
+<p>Now if you’re in a ruby file and you type def, tabbing over will add the end and place you straight on the method name, control+tab will switch between documents, and syntax highlighting will work correctly in html.erb files.</p>
+
+<p>Also, going to view &gt; bottom pane will display a terminal window that I find convenient for running irb.</p>
+
+<p>While these instructions will enable a lot of different useful environments, and the target of this post was rails, I do have to sadly add that Google Go, which I cover quite often, does not, to my knowledge, have a plugin for Gedit currently.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/06/06/chuang-jian-ji-yu-rails-3de-chun-jing-ajax-crudcheng-xu/">创建基于Rails 3的纯净Ajax CRUD程序</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-06T22:50:00+08:00" pubdate data-updated="true">Jun 6<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>创建基于Rails 3的纯净Ajax CRUD程序</h2>
+
+<p>Rails 3利用scaffold可以很容易地创建CRUD程序，但那是多页面的，现在很多场景需要使用Ajax在一个页面上实现CRUD。这对Rails 来说也是很简单的，下面就来创建一个符合Rails风格的Ajax CRUD程序。整个过程大概15分钟，建议先把整个代码照应敲一遍，然后再慢慢理解。</p>
+
+<h3>目标：</h3>
+
+
+<p>只有1个页面，CRUD全部基于Ajax在一个页面完成。使用无入侵式的Javascript风格。</p>
+
+<h3>平台：</h3>
+
+
+<p>适用于Rails 3.<em>，使用jQuery+sqlite。
+Rails 3.1开始默认自带jQuery，如果是Rails 3.0.</em>需要手动添加jQuery。
+如果想用Prototype要把那些js做相应修改。</p>
+
+<p>Let’s GO：</p>
+
+<h3>1、创建项目</h3>
+
+
+<pre title="">rails new AjaxCRUD
+# 创建scaffold
+rails g scaffold Entry name:string address:text phone:string email:string
+# 建立数据库和表
+rake db:create
+rake db:migrate</pre>
+
+
+<h3>2、修改controller</h3>
+
+
+<p>因为创建的是基于Ajax的CRUD，所以controller返回的数据要支持‘.js’格式，可以把默认的json格式删掉，其实除了index会返回网页，其它都是返回js，所以index外的html格式返回也可以删除。</p>
+
+<pre title="">respond_to do |format|
+format.html
+format.js
+end</pre>
+
+
+<p>基于个思想，修改后的controller如下：</p>
+
+<pre title="">class EntriesController &lt; ApplicationController
+  def index
+    @entries = Entry.all
+    @entry = Entry.new
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.js
+    end
+  end
+
+  def show
+    @entry = Entry.find(params[:id])
+
+    respond_to do |format|
+      format.html # show.html.erb
+      format.js
+    end
+  end
+
+  def new
+    @entry = Entry.new
+
+    respond_to do |format|
+      format.html # new.html.erb
+      format.js
+    end
+  end
+
+  def edit
+    @entry = Entry.find(params[:id])
+
+    respond_to do |format|
+      format.html
+      format.js
+    end
+  end
+
+  def create
+    @entry = Entry.new(params[:entry])
+
+    respond_to do |format|
+      if @entry.save
+        format.html { redirect_to @entry, notice: 'Entry was successfully created.' }
+        format.js
+      else
+        format.html { render action: "new" }
+        format.js { render action: "new" }
+      end
+    end
+  end
+
+  def update
+    @entry = Entry.find(params[:id])
+
+    respond_to do |format|
+      if @entry.update_attributes(params[:entry])
+        format.html { redirect_to @entry, notice: 'Entry was successfully updated.' }
+        format.js
+      else
+        format.html { render action: "edit" }
+        format.js { render action: "edit" }
+      end
+    end
+  end
+
+  def destroy
+    @entry = Entry.find(params[:id])
+    @entry.destroy
+
+    respond_to do |format|
+      format.html { redirect_to entries_url }
+      format.js
+    end
+  end
+end</pre>
+
+
+<h3>3、修改Views</h3>
+
+
+<p>修改index页面(app/views/entries/index.html.erb)来显示Entry表单。</p>
+
+<pre title=""><h1>Listing entries</h1>
+<table id="entries">
+<tbody>
+<tr>
+<th>Name</th>
+<th>Phone</th>
+<th>Email</th>
+<th>Address</th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</tbody>
+</table>
+<h2>Entry form</h2>
+<div id="form">"form" %></div></pre>
+
+
+<p>注意：为了后面用jQuery操作DOM，table设置id=”entries”。</p>
+
+<p>修改partial（app/views/entries/_form.html.erb）,注意在form_for中添加remote以发送异步请求。</p>
+
+<pre title=""><%= form_for(@entry, :remote => true) do |f| %>
+  <% if @entry.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@entry.errors.count, "error") %> prohibited this entry from being saved:</h2>
+
+      <ul>
+      <% @entry.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :phone %><br />
+    <%= f.text_field :phone %>
+  </div>
+  <div class="field">
+    <%= f.label :email %><br />
+    <%= f.text_field :email %>
+  </div>
+  <div class="field">
+    <%= f.label :address %><br />
+    <%= f.text_area :address, :rows => 3 %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %></pre>
+
+
+<p>新建Entry partial(app/views/entries/_entry.html.erb)。
+为了发送AJAX请求，edit，destroy都设置remote=true。
+为了区分不同的entry，调用dom_id来根据entry生成不同的id</p>
+
+<pre title=""><tr id="<%= dom_id entry %>">
+  <td><%= entry.name %></td>
+  <td><%= entry.phone %></td>
+  <td><%= entry.email %></td>
+  <td><%= simple_format entry.address %></td>
+  <td><%= link_to 'Show', entry %></td>
+  <td><%= link_to 'Edit', edit_entry_path(entry), :remote => true %></td>
+  <td><%= link_to 'Destroy', entry, confirm: 'Are you sure?', method: :delete, :remote => true %></td>
+</tr></pre>
+
+
+<h3>4、添加js.erb来响应Ajax请求</h3>
+
+
+<p>下面是关键，首先先说下操作流程：浏览器发起Ajax请求(CRUD)–&gt;controller收到请求，并调用model更新数据–&gt;返回js代码–&gt;浏览器收到js代码，使用jQuery来更新index页面中的DOM对象，包括列表和表单。</p>
+
+<p>新建 app/views/entries/create.js.erb 响应添加Entry的请求
+1、在index页面的entry列表中添加刚才新增的entry对象。
+2、清空index页面中添加entry表单中的数据。</p>
+
+<pre title="">$('<%= escape_javascript(render(:partial => @entry)) %>').appendTo('#entries').hide().fadeIn();
+$("#new_entry")[0].reset();</pre>
+
+
+<p>escape_javascript(render(:partial =&gt; @entry))可以缩写成：j render @entry。</p>
+
+<p>新建 app/views/entries/edit.js.erb 处理点击编辑时的请求
+在index页面的新建entry的form中填充要编辑entry的数据。</p>
+
+<pre title="">$("#form > form").replaceWith("<%= j render "form" %>");</pre>
+
+
+<p>新建 app/views/entries/update.js.erb 来更新列表中的Entry对象。新建Entry并清空form</p>
+
+<pre title="">$("#<%= dom_id @entry %>").replaceWith("<%= j render @entry %>");
+<% @entry = Entry.new # reset for new form %>
+$(".edit_entry").replaceWith("<%= j render "form" %>")
+$(".new_entry")[0].reset();</pre>
+
+
+<p>新建 app/views/entries/destroy.js.erb 来删除list中的Entry</p>
+
+<pre title="">$("#<%= dom_id @entry %>").remove();</pre>
+
+
+<h3>5、设置主页</h3>
+
+
+<p>设置entries页面为主页。修改 config/routes.rb</p>
+
+<pre title="">AjaxCRUD::Application.routes.draw do
+  resources :entries
+  root :to => "entries#index"
+end</pre>
+
+
+<p>删除静态首页文件。</p>
+
+<pre title="">rm public/index.html</pre>
+
+
+<h3>6、启动程序</h3>
+
+
+<pre title="">rails s</pre>
+
+
+<p>此时打开 <a href="http://127.0.0.1:3000">http://127.0.0.1:3000</a>
+就可以使用了。</p>
+
+<blockquote>源代码托管在
+<a title="Rails基于Ajax的CRUD源代码" href="https://github.com/camelsong/AjaxCRUD" target="_blank">https://github.com/camelsong/AjaxCRUD</a></blockquote>
+
+
+<p>英文原文地址：<a href="http://codefundas.blogspot.com/2010/12/create-ajax-based-curd-using-rails-3.html">http://codefundas.blogspot.com/2010/12/create-ajax-based-curd-using-rails-3.html</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/06/01/lvm-jian-ti-zhong-wen/">LVM (简体中文)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-01T10:55:00+08:00" pubdate data-updated="true">Jun 1<span>st</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>LVM (简体中文)</h2>
+
+<h2> 介绍</h2>
+
+
+<p>LVM 是一个应用于 Linux 内核的本地卷管理器 (Logical Volume Manager)。 使用 LVM 你可以抽象你的存储空间，并且可以有很容易更改的“虚拟分区”。LVM的基本模块如下：</p>
+
+<ul>
+    <li><strong>Physical volume (PV)</strong>: 物理卷,例如一个硬盘,或一个Software RAID设备; 硬盘的一个分区 (或者甚至硬盘本身或者回环文件)，在它上面可以建立卷组。It has a special header and is divided into physical extents. Think of physical volumes as big building blocks which can be used to build your hard drive.</li>
+    <li><strong>Volume group (VG)</strong>: 卷组,将一组物理卷收集为一个管理单元;Group of physical volumes that are used as storage volume (as one disk). They contain logical volumes. Think of volume groups as hard drives.</li>
+    <li><strong>Logical volume(LV)</strong>: 逻辑卷,等同于传统分区,可看作便准的块设备,以容纳文件系统;A &#8220;virtual/logical partition&#8221; that resides in a volume group and is composed of physical extents. Think of logical volumes as normal partitions.</li>
+    <li><strong>Physical extent (PE)</strong>: 物理块,划分物理卷的数据块;A small part of a disk (usually 4MB) that can be assigned to a logical Volume. Think of physical extents as parts of disks that can be allocated to any partition.</li>
+</ul>
+
+
+<p>使用 LVM 你可以比正常的硬盘分区更容易的管理硬盘分区（逻辑卷）。例如，你可以：</p>
+
+<ul>
+    <li>使用卷组(VG)，使众多硬盘空间看起来像一个大硬盘。</li>
+    <li>使用逻辑卷（LV），可以创建跨越众多硬盘空间的分区。</li>
+    <li>可以根据需要，对分区（LV）和硬盘空间（VG）进行创建、删除、调整大小等操作。(it doesn&#8217;t depend on position of the logical volumes within volume groups as with normal partitions)</li>
+    <li>Resize/create/delete partitions(LV) and disks(VG) <em>online</em> (filesystems on them still need to be resized, but some support online resizing)</li>
+    <li><em>Name</em> your disks(VG) and partitions(LV) as you like</li>
+    <li>Create small partitions(LV) and resize them &#8221;<em>dynamically</em>&#8221; as they get more filled (growing must be still done by hand, but you can do it online with some filesystems)</li>
+    <li>&#8230;</li>
+</ul>
+
+
+<p>示例:</p>
+
+<pre><strong>两块物理硬盘</strong>
+
+  硬盘1 (/dev/sda):
+     _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+    |分区1 50GB (Physical volume) |分区2 80GB (Physical volume)     |
+    |/dev/sda1                   |/dev/sda2                       |
+    |_ _ _ _ _ _ _ _ _ _ _ _ _ _ |_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ |
+
+  硬盘2 (/dev/sdb):
+     _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+    |分区1 120GB (Physical volume)                 |
+    |/dev/sdb1                                    |
+    | _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ __ _ _|</pre>
+
+
+<pre><strong>LVM方式</strong>
+
+  卷组VG1 (/dev/MyStorage/ = /dev/sda1 + /dev/sda2 + /dev/sdb1):
+     _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _  
+    |逻辑卷lv1 15GB         |逻辑卷lv2 35GB              |逻辑卷lv3 200GB               |
+    |/dev/MyStorage/rootvol|/dev/MyStorage/usrvol     |/dev/MyStorage/homevol       |
+    |_ _ _ _ _ _ _ _ _ _ _ |_ _ _ _ _ _ _ _ _ _ _ _ _ |_ _ _ _ _ _ _ _ _ _ _ _ _ _ _|</pre>
+
+
+<p>总而言之: With LVM you can use all your storage space as one big disk (volume group) and have more flexibility over your partitions (logical volumes).</p>
+
+<h2>Advantages</h2>
+
+
+<p>Here are some things you can do with LVM that you can&rsquo;t (or can&rsquo;t do easily) with just mdadm, MBR partitions, GPT partitions, parted/gparted and a file-level tool like rsync.</p>
+
+<ol>
+    <li>Online/live partition resizing</li>
+    <li>No need for an extended partition (not relevant for GPT)</li>
+    <li>Resize partitions regardless of their order on disk (no need to ensure surrounding available space)</li>
+    <li>Online/live migration of partitions being used by services without having to restart services</li>
+</ol>
+
+
+<p>These can be very helpful in a server situation, desktop less so, but you must decide if the features are worth the abstraction.</p>
+
+<h2>安装</h2>
+
+
+<p>在做其他工作之前，我们需要加载合适的模块：</p>
+
+<pre># modprobe dm-mod</pre>
+
+
+<p>如果你已经安装好了操作系统，并只是想利用增加或尝试一个LVM分区，请跳到这 <a title="Lvm" href="https://wiki.archlinux.org/index.php/Lvm#Partition_disks">partition disks</a>.</p>
+
+<h3>在 LVM 上安装 Arch Linux</h3>
+
+
+<p>在开始安装arch之前（即输入：/arch/setup之前），先使用cfdisk等工具来规划分区。因为grub不能从LVM逻辑卷引导启动 （版本1.0时），所以需要先创建一个/boot引导区，100MB应该够了。另外的解决办法就是使用lilo或者高于1.95版本的grub。</p>
+
+<h3>创建 LVM 分区</h3>
+
+
+<p>接下来，要创建LVM将使用的分区。文件类型使用&#8217;Linux LVM&#8217;，所以使用分区id 0x8e (文件系统类型：8E)。在需要使用LVM的每块硬盘上，各创建一个LVM分区。 Your logical volumes will reside inside these partitions so size them accordingly. If you will use only LVM and no other external partitions, use all of free space on each disk.</p>
+
+<div><strong> 警告: </strong> /boot不能包含在LVM分区里，因为grub (version&lt;1.95)不能从LVM中引导grub。</div>
+
+
+<div><strong> 小贴士: </strong>所有硬盘的所有LVM分区可以被设置成看起来就像一个大硬盘。</div>
+
+
+<h3>创建物理卷（PV）</h3>
+
+
+<p>接下来，要加载使用lvm所需的相应模块:</p>
+
+<pre># modprobe dm-mod</pre>
+
+
+<p>用命令&#8217;fdisk -l&#8217;查看那个分区的文件系统类型是&#8217;Linux LVM&#8217;，然后在其上创建一个物理卷组pv（假设是/dev/sda2)，输入如下命令:</p>
+
+<pre># pvcreate /dev/sda2</pre>
+
+
+<p>Substitute /dev/sda2 with all your partitions to create physical volumes on all of them. This command creates a header on each partition so it can be used for LVM. 查看物理卷情况：</p>
+
+<pre># pvdisplay</pre>
+
+
+<h3>创建卷组（VG）</h3>
+
+
+<p>创建完成物理卷之后，就是开始创建卷组了。 如果有两个以上的物理卷pv（比如下面例子，有两个/dev/sda2和/dev/sdb1），首先必须先在其中一个创建一个卷组vg，然后让该卷组vg 扩大到其他所有的物理卷pv（这里假设你只使用一个卷组vg来管理其他所有的物理卷pv。）:</p>
+
+<pre># vgcreate VolGroup00 /dev/sda2
+# vgextend VolGroup00 /dev/sdb1</pre>
+
+
+<p>其中，“VolGroup00”名字换成你自己起的名字即可。接下来看看卷组情况：</p>
+
+<pre># vgdisplay</pre>
+
+
+<div><strong> 注意: </strong>可以创建多于一个的卷组，但因此将让你的硬盘空间看起来不像一块硬盘。</div>
+
+
+<h3>创建逻辑卷（LV）</h3>
+
+
+<p>创建完卷组vg之后，就可以开始创建逻辑卷了。输入下面命令：</p>
+
+<pre># lvcreate -L 10G VolGroup00 -n lvolhome</pre>
+
+
+<p>其中10G是大小，VolGroup00是卷组vg名称，lvolhome是逻辑卷lv名称，这些都可以根据你自己喜欢设定，以后可以使用/dev/mapper/Volgroup00-lvolhome 或者 /dev/VolGroup00/lvolhome来操作.</p>
+
+<p>查看逻辑卷情况:</p>
+
+<pre># lvdisplay</pre>
+
+
+<div><strong> 注意: </strong>You may need to load the <em>device-mapper</em> kernel module (<strong>modprobe dm-mod</strong>) for the above commands to succeed.</div>
+
+
+<div><strong> 小贴士: </strong>一开始可以创建小一点的逻辑卷lv，然后留一部分未使用空间在卷组vg里，以后可以根据需要再扩展各个逻辑卷。</div>
+
+
+<h3>建立文件系统与挂载逻辑卷</h3>
+
+
+<p>Your logical volumes should now be located in <strong>/dev/mapper/</strong> and <strong>/dev/YourVolumeGroupName</strong>. If you can&rsquo;t find them use the next commands to bring up the module for creating device nodes and to make volume groups availabile:</p>
+
+<pre># modprobe dm-mod
+# vgscan
+# vgchange -ay</pre>
+
+
+<p>Now you can create filesystems on logical volumes and mount them as normal partitions (if you are installing Arch linux, skip this step):</p>
+
+<pre># mkfs.ext3 /dev/mapper/VolGroup00-lvolhome
+# mount /dev/mapper/VolGroup00-lvolhome /home</pre>
+
+
+<p>如果你正在安装Archlinux，到 <em>Prepare Hard Drive</em> 这一步时，转到第三项 <em>Set Filesystem Mountpoints</em> ，请 <em><strong>在进入安装前，阅读下面的 <a title="Arch LVM配置 (简体中文)" href="https://wiki.archlinux.org/index.php/Arch_LVM%E9%85%8D%E7%BD%AE_%28%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87%29#.E9.87.8D.E8.A6.81">重要</a>部分 !</strong></em></p>
+
+<h3>重要</h3>
+
+
+<p>有几点在使用/安装带有 LVM 的 Arch Linux 时你需要特别注意的地方。（括号里是相关的安装过程中的菜单）：</p>
+
+<h4>设置文件系统挂载点</h4>
+
+
+<ul>
+    <li>当选择挂载点时（除了/boot），千万不要选择实际存在的逻辑卷（比如：<code>/dev/sda2</code>），只需选择由lv创建的逻辑卷（比如: <code>/dev/mapper/Volgroup00-lvolhome</code>)。</li>
+</ul>
+
+
+<h4>配置系统</h4>
+
+
+<ul>
+    <li>确保在 <code>/etc/rc.conf</code> 中，把<code>USELVM="no"</code>修改成 <code>USELVM="yes"</code>。<code>rc.sysinit</code> 脚本处理 <code>USELVM</code> 变量时只会识别<code>yes</code> 或者 <code>YES</code>，不支持大小写混合。</li>
+</ul>
+
+
+<ul>
+    <li>确保 <em>lvm2</em> 在 <code>/etc/mkinitcpio.conf</code> HOOKS 部分的 <em>filesystems</em> 前面，这样您的内核就可以在启动时找到 LVM 卷。</li>
+    <li>If your root filesystem ( &#8220;/&#8221; ) is put onto a logical volume, make sure regenerate kernel image based on above modified <code>/etc/mkinitcpio.conf</code> by using below command so that bootloader can find your root during booting</li>
+</ul>
+
+
+<pre>     cd /boot 
+     mkinitcpio -p linux</pre>
+
+
+<ul>
+    <li>确保为 root 使用了正确的卷。</li>
+</ul>
+
+
+<dl><dd>对于 GRUB，编辑<code>/boot/grub/menu.lst</code> ：</dd></dl>
+
+
+<pre>     ...
+     (0) Arch Linux
+     title  Arch Linux
+     root   (hd0,0)
+     kernel /vmlinuz-linux <strong>root=/dev/mapper/VolGroup00-lvolroot</strong> resume=/dev/mapper/VolGroup00-lvolswap ro
+     initrd /initramfs-linux.img
+     ...</pre>
+
+
+<dl><dd>For SYSLINUX, edit <code>/boot/syslinux/syslinux.cfg</code>:</dd></dl>
+
+
+<pre>     ...
+     # (0) Arch Linux
+     LABEL arch
+       MENU LABEL Arch Linux
+       LINUX ../vmlinuz-linux
+       APPEND <strong>root=/dev/mapper/VolGroup00-lvolroot</strong> ro
+       INITRD ../initramfs-linux.img</pre>
+
+
+<dl><dd>对于 LILO ，检查 <code>/etc/lilo.conf</code>:</dd></dl>
+
+
+<pre>     ...
+     image=/boot/vmlinuz-linux
+       label=arch
+       append="<strong>root=/dev/mapper/VolGroup00-lvolroot</strong> resume=/dev/mapper/VolGroup00-lvolswap ro"
+       initrd=/boot/initramfs-linux.img
+     ...</pre>
+
+
+<h2>配置</h2>
+
+
+<h3>扩大逻辑卷</h3>
+
+
+<p>To grow a logical volume you first need to grow the logical volume and then the filesystem to use the newly created free space. Let&rsquo;s say we have a logical volume of 15GB with ext3 on it and we want to grow it to 20G. We need to do the following steps:</p>
+
+<pre># lvextend -L 20G VolGroup00/lvolhome (or lvresize -L +5G VolGroup00/lvolhome)
+# resize2fs /dev/VolGroup00/lvolhome</pre>
+
+
+<p>You may use lvresize insted of lvextend.</p>
+
+<p>If you want to fill all the free space on a volume group use the next command:</p>
+
+<pre># lvextend -l +100%FREE VolGroup00/lvolhome</pre>
+
+
+<div><strong> 警告: </strong>并非所有的文件系统都支持无损或在线扩大逻辑卷。</div>
+
+
+<div><strong> 注意: </strong>If you do not resize your filesystem, you will still have a volume with the same size as before (volume will be bigger but partly unused).</div>
+
+
+<h3>缩小逻辑卷</h3>
+
+
+<p>Because your filesystem is probably as big as the logical volume it resides on, you need to shrink the filesystem first and then shrink the logical volume. Depending on your filesystem, you may need to unmount it first. Let us say we have a logical volume of 15GB with ext3 on it and we want to shrink it to 10G. We need to do the following steps:</p>
+
+<pre># resize2fs /dev/VolGroup00/lvolhome 9G
+# lvreduce -L 10G VolGroup00/lvolhome (or lvresize -L -5G VolGroup00/lvolhome)
+# resize2fs /dev/VolGroup00/lvolhome</pre>
+
+
+<p>Here we shrunk the filesystem more than needed so that when we shrunk the logical volume we did not accidentally cut off the end of the filesystem. After that we normally grow the filesystem to fill all free space left on logical volume. You may use <code>lvresize</code> instead of <code>lvreduce</code>.</p>
+
+<div><strong> Warning: </strong>
+<ul>
+    <li>Do not reduce the filesystem size to less than the amount of space occupied by data or you risk data loss.</li>
+    <li>Not all filesystems support shrinking without loss of data and/or shrinking online.</li>
+</ul>
+</div>
+
+
+<div><strong> Note: </strong>It is better to reduce the filesystem to a smaller size than the logical volume, so that after resizing the logical volume, we do not accidentally cut off some data from the end of the filesystem.</div>
+
+
+<h3>Remove logical volume</h3>
+
+
+<div><strong> Warning: </strong>Before you remove a logical volume, make sure to move all data that you want to keep somewhere else, otherwise it will be lost!</div>
+
+
+<p>First, find out the name of the logical volume you want to remove. You can get a list of all logical volumes installed on the system with:</p>
+
+<pre># lvs</pre>
+
+
+<p>Next, look up the mountpoint for your chosen logical volume&hellip;:</p>
+
+<pre>$ df -h</pre>
+
+
+<p>&hellip; and unmount it:</p>
+
+<pre># umount /your_mountpoint</pre>
+
+
+<p>Finally, remove the logical volume:</p>
+
+<pre># lvremove /dev/yourVG/yourLV</pre>
+
+
+<p>Confirm by typing &ldquo;y&rdquo; and you are done.</p>
+
+<p>Dont forget, to update /etc/fstab:</p>
+
+<pre># sudo nano /etc/fstab</pre>
+
+
+<p>You can verify the removal of your logical volume by typing &ldquo;lvs&rdquo; as root again (see first step of this section).</p>
+
+<h3>添加分区到卷组中</h3>
+
+
+<p>To add a partition to your volume group you must first make its type &lsquo;Linux LVM&rsquo; (for example with <code>cfdisk</code>). Then you need to create a physical volume on it and extend the volume group over it:</p>
+
+<pre># pvcreate /dev/sdb1
+# vgextend VolGroup00 /dev/sdb1</pre>
+
+
+<p>Now you have free space in your volume group that can be used by logical volumes in this group.</p>
+
+<div><strong> Tip: </strong>You can add partitions from any disks to volume groups.</div>
+
+
+<h3>从卷组中移除卷</h3>
+
+
+<p>All of the data on that partition needs to be moved to another partition. Fortunately, LVM makes this easy:</p>
+
+<pre># pvmove /dev/sdb1</pre>
+
+
+<p>If you want to have the data on a specific physical volume, specify that as the second argument to <code>pvmove</code>:</p>
+
+<pre># pvmove /dev/sdb1 /dev/sdf1</pre>
+
+
+<p>Then the physical volume needs to be removed from the volume group:</p>
+
+<pre># vgreduce myVg /dev/sdb1</pre>
+
+
+<p>Or remove all empty physical volumes:</p>
+
+<pre># vgreduce --all vg0</pre>
+
+
+<p>And lastly, if you want to use the partition for something else, and want to avoid LVM thinking that the partition is a physical volume:</p>
+
+<pre># pvremove /dev/sdb1</pre>
+
+
+<h3>快照功能</h3>
+
+
+<h4>介绍</h4>
+
+
+<p>LVM可以给系统创建一个快照，由于使用了COW (copy-on-write) 策略，相比传统的备份更有效率。 The initial snapshot you take simply contains hard-links to the inodes of your actual data. So long as your data remains unchanged, the snapshot merely contains its inode pointers and not the data itself. Whenever you modify a file or directory that the snapshot points to, LVM automatically clones the data, the old copy referenced by the snapshot, and the new copy referenced by your active system. 这样的话，如果你只修改了不超过2G数据（包括原始的和快照的），你将可以只使用2G的空间，就能快照一个有35G的数据的系统。</p>
+
+<h4>配置</h4>
+
+
+<p>You create snapshot logical volumes just like normal ones.</p>
+
+<pre># lvcreate --size 100M --snapshot --name snap01 /dev/mapper/vg0-pv</pre>
+
+
+<p>With that volume, you may modify less than 100M of data, before the snapshot volume fills up.</p>
+
+<p>Todo: scripts to automate snapshots of root before updates, to rollback&hellip; updating menu.lst to boot snapshots (separate article?)</p>
+
+<p>snapshots are primarily used to provide a frozen copy of a filesystem to make backups; a backup taking two hours provides a more consistent image of the filesystem than directly backing up the partition.</p>
+
+<h2>常见问题</h2>
+
+
+<h3>LVM 命令不起作用</h3>
+
+
+<p>try preceeding commands with <em>lvm</em> like this:</p>
+
+<pre># lvm pvdisplay</pre>
+
+
+<h3>设定文件系统挂载点的页面不显示逻辑卷</h3>
+
+
+<p>If you are installing on a system where there is an existing volume group, you may find that even after doing &ldquo;modprobe dm-mod&rdquo; you don&rsquo;t see the list of logical volumes.</p>
+
+<p>In this case, you may also need to do:</p>
+
+<pre># vgchange -ay &lt;volgroup&gt;</pre>
+
+
+<p>in order to activate the volume group and make the logical volumes available.</p>
+
+<h3>Receiving Input/Output Errors after plugging in a removable device with LVM partitions</h3>
+
+
+<p>Symptoms:</p>
+
+<pre>~$ sudo vgscan
+ Reading all physical volumes.  This may take a while...
+ /dev/backupdrive1/backup: read failed after 0 of 4096 at 319836585984: Input/output error
+ /dev/backupdrive1/backup: read failed after 0 of 4096 at 319836643328: Input/output error
+ /dev/backupdrive1/backup: read failed after 0 of 4096 at 0: Input/output error
+ /dev/backupdrive1/backup: read failed after 0 of 4096 at 4096: Input/output error
+ Found volume group "backupdrive1" using metadata type lvm2
+ Found volume group "networkdrive" using metadata type lvm2</pre>
+
+
+<p>Cause:</p>
+
+<dl><dd>Removing an external LVM drive without deactivating the volume group(s) first. Before you disconnect, make sure to:</dd></dl>
+
+
+<pre># vgchange -an &lt;volume group name&gt;</pre>
+
+
+<p>Fix: (assuming you already tried to activate the volume group with vgchange -ay &lt;vg&gt;, and are receiving the Input/output errors</p>
+
+<pre># vgchange -an &lt;volume group name&gt;</pre>
+
+
+<dl><dd>Unplug the external drive and wait a few minutes</dd></dl>
+
+
+<pre># vgscan
+# vgchange -ay &lt;volume group name&gt;</pre>
+
+
+<h2>技巧</h2>
+
+
+<h2>更多资源</h2>
+
+
+<p>archwiki的其他关于LVM的文章：</p>
+
+<ul>
+    <li><a title="Installing with Software RAID or LVM" href="https://wiki.archlinux.org/index.php/Installing_with_Software_RAID_or_LVM">Installing with software RAID or LVM</a></li>
+    <li><a title="RAID Encryption LVM" href="https://wiki.archlinux.org/index.php/RAID_Encryption_LVM">RAID encryption LVM</a></li>
+</ul>
+
+
+<p>外部资源：</p>
+
+<ul>
+    <li><a href="http://en.wikipedia.org/wiki/Logical_Volume_Manager_%28Linux%29" rel="nofollow">LVM on wikipedia</a></li>
+    <li><a href="http://tldp.org/HOWTO/LVM-HOWTO/" rel="nofollow">LVM HOWTO on tldp.org </a></li>
+    <li><a href="http://www.gentoo.org/doc/en/lvm2.xml" rel="nofollow">Gentoo LVM2 installation at gentoo.org </a></li>
+    <li><a href="http://en.gentoo-wiki.com/wiki/LVM" rel="nofollow">LVM at en.gentoo-wiki.com</a></li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/30/rails-devise-handling-devise-error-messages/">Rails - Devise - Handling - Devise_error_messages</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-30T13:10:00+08:00" pubdate data-updated="true">May 30<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>rails &ndash; Devise &ndash; Handling &ndash; devise_error_messages</h2>
+
+<p>in my user edit page, there is a line as follows:</p>
+
+<pre><code>&lt;%= devise_error_messages! %&gt; </code></pre>
+
+
+<p>The problem is this does not output errors the stand way that the rest of the app does:</p>
+
+<pre><code>&lt;% flash.each do |key, value| %&gt;     &lt;divpun" style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; border-image: initial; vertical-align: baseline; background-image: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: transparent; color: rgb(0, 0, 0); "&gt;&lt;%= key %&gt;"&gt;&lt;%= value %&gt;&lt;/div&gt; &lt;% end %&gt; </code></pre>
+
+
+<p>My question, is how to I get the devise error message to work like the others that use the flash.each?</p>
+
+<p>Thanks</p>
+
+<p>I&rsquo;m trying to figure this out myself. I just found this issue logged on Github<a href="https://github.com/plataformatec/devise/issues/issue/504/#comment_574788" rel="nofollow"><a href="https://github.com/plataformatec/devise/issues/issue/504/#comment_574788">https://github.com/plataformatec/devise/issues/issue/504/#comment_574788</a></a></p>
+
+<p>Jose is saying that <code>devise_error_messsages!</code> method is just a <em>stub</em> (though it contains implementation) and that we&rsquo;re supposed to override/replace it. It would have been nice if this was pointed out somewhere in the wiki, which is why i guess there are a few people like us that have been guessing.</p>
+
+<p>So I&rsquo;m going to try reopening the module and redefine the method, effectively overriding the default implementation. I&rsquo;ll let you know how it goes.</p>
+
+<h2>Update</h2>
+
+
+<p>Yep, that works. I created <code>app/helpers/deivse_helper.rb</code> and overrode it like so:</p>
+
+<pre><code>module DeviseHelper   def devise_error_messages!     'KABOOM!'   end end </code></pre>
+
+
+<p>So knowing this, I can modify the method to display error messages the way I want it to.</p>
+
+<p>To help you solve your original problem: Here&rsquo;s the original <a href="https://github.com/plataformatec/devise/blob/master/app/helpers/devise_helper.rb#L6" rel="nofollow"><code>devise_helper.rb</code> on Github</a>. Take a look at how the error messages are being traversed, specifically <a href="https://github.com/plataformatec/devise/blob/master/app/helpers/devise_helper.rb#L5" rel="nofollow">Line 5</a>.</p>
+
+<pre><code>messages = resource.errors.full_messages.map { |msg| content_tag(:li, msg) }.join </code></pre>
+
+
+<p>That should help you get started. :)</p>
+
+<h2>Another update</h2>
+
+
+<p>The <code>resource</code> object is actually the model that is being used by devise (go figure).</p>
+
+<pre><code>resource.class         #=&gt; User resource.errors.class  #=&gt; ActiveModel::Error </code></pre>
+
+
+<p>It also appears to be defined in a higher scope (probably coming from the controller), so it can be accessed in a variety of places.</p>
+
+<p>Anywhere in your Helper</p>
+
+<pre><code>module DeviseHelper   def devise_error_messages1!     resource.errors.full_messages.map { |msg| content_tag(:li, msg) }.join   end   def devise_error_messages2!     resource.errors.full_messages.map { |msg| content_tag(:p, msg) }.join   end end </code></pre>
+
+
+<p>Your View</p>
+
+<pre><code>&lt;div&gt;&lt;%= resource.errors.inspect %&gt;&lt;/div&gt;</code></pre>
+
+
+<p>More info look at <a href="http://stackoverflow.com/questions/4101641/rails-devise-handling-devise-error-messages"><a href="http://stackoverflow.com/questions/4101641/rails-devise-handling-devise-error-messages">http://stackoverflow.com/questions/4101641/rails-devise-handling-devise-error-messages</a></a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/25/howto-easily-create-a-boot-info-summary/">HOWTO : Easily Create a Boot-Info Summary</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-25T20:16:00+08:00" pubdate data-updated="true">May 25<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>HOWTO : easily create a Boot-Info summary</h2>
+
+<p><strong>Boot-Repair</strong> is a simple tool to repair frequent boot issues you may encounter in Ubuntu like when you can&rsquo;t boot Ubuntu after installing Windows or another Linux distribution, or when you can&rsquo;t boot Windows after installing Ubuntu, or when GRUB is not displayed anymore, some upgrade breaks GRUB, etc.</p>
+
+<p>Boot-Repair lets you fix these issues with a simple click, which (generally reinstalls GRUB and) restores access to the operating systems you had installed before the issue.</p>
+
+<p>Boot-Repair also has advanced options to backup table partitions, backup bootsectors, create a Boot-Info-Summary (to get help by email or forum), or change the default repair parameters: configure GRUB, add kernel options (acpi=off &hellip;), purge GRUB, change the default OS, restore a Windows-compatible MBR, repair a broken filesystem, specify the disk where GRUB should be installed, etc.</p>
+
+<p>Boot-Repair is a free software, licensed under GNU-GPL. Boot-Repair should be <a href="https://bugs.launchpad.net/boot-repair/+bug/806291">soon</a> included in Ubuntu official repositories, until then use it at your own risks.</p>
+
+<p><img title="http://pix.toile-libre.org/upload/original/1335260967.png" src="http://pix.toile-libre.org/upload/original/1335260967.png" alt="http://pix.toile-libre.org/upload/original/1335260967.png" /></p>
+
+<p>&nbsp;</p>
+
+<h1 id="Getting_Boot-Repair">Getting Boot-Repair</h1>
+
+
+<p>&nbsp;</p>
+
+<h2 id="A1st_option_:_get_a_CD_including_Boot-Repair">1st option : get a CD including Boot-Repair</h2>
+
+
+<p>The easiest way to use Boot-Repair is to burn one of the following disks and boot on it.</p>
+
+<ul>
+    <li><a href="https://sourceforge.net/projects/boot-repair-cd/files/">Boot-Repair-Disk</a> is a CD starting Boot-Repair automatically. (English only, 32&amp;64bits compatible, based on Debian-live so Wifi drivers are not recent).</li>
+    <li>Boot-Repair is also included in <a href="https://help.ubuntu.com/community/UbuntuSecureRemix">Ubuntu-Secure-Remix</a> (multi-languages, ok for Wifi, based on Ubuntu 12.04 LTS, run Boot-Repair from the Dash)</li>
+</ul>
+
+
+<p>Remark : you can also install the ISO on a <a href="https://help.ubuntu.com/community/Installation/FromUSBStick">live-USB</a> (eg via <a href="http://unetbootin.sourceforge.net/">UnetBootin</a>, <a href="http://www.linuxliveusb.com/">LiliUSB</a> or <a href="https://help.ubuntu.com/community/MultiSystem">MultiSystem</a>).</p>
+
+<p>&nbsp;</p>
+
+<h2 id="A2nd_option_:_install_Boot-Repair_in_Ubuntu">2nd option : install Boot-Repair in Ubuntu</h2>
+
+
+<p>Remark: this can also be performed from a live-CD or live-USB.</p>
+
+<p>Either add ‘ppa:yannubuntu/boot-repair’ to your Software Sources via the Software Centre or, for speeds-sake, add it using a new Terminal session:</p>
+
+<p>&nbsp;</p>
+
+<pre>sudo add-apt-repository ppa:yannubuntu/boot-repair &amp;&amp; sudo apt-get update
+sudo apt-get install -y boot-repair &amp;&amp; boot-repair</pre>
+
+
+<p>Boot-Repair can be installed &amp; used from any Ubuntu session (normal session, or live-CD, or live-USB). PPA packages are available for Ubuntu 10.04, 10.10, 11.04, 11.10 and 12.04.</p>
+
+<p>&nbsp;</p>
+
+<h2>Adding this PPA to your system</h2>
+
+
+<p id="yui_3_2_0_1_1337949503297112">You can update your system with unsupported packages from this untrusted PPA by adding <strong>ppa:yannubuntu/boot-repair</strong> to your system&#8217;s Software Sources. (<a href="https://launchpad.net/+help-soyuz/ppa-sources-list.html" target="help">Read about installing</a>)</p>
+
+
+
+
+<div><a href="https://launchpad.net/%7Eyannubuntu/+archive/boot-repair/+index#">Technical details about this PPA</a></div>
+
+
+<p>This PPA can be added to your system manually by copying the lines below and adding them to your system&rsquo;s software sources.</p>
+
+<div id="series-widget-div"><form id="yui_3_2_0_1_1337949503297108">Display sources.list entries for:</form></div>
+
+
+<pre id="sources-list-entries">deb <a href="http://ppa.launchpad.net/yannubuntu/boot-repair/ubuntu">http://ppa.launchpad.net/yannubuntu/boot-repair/ubuntu</a> precise main
+deb-src <a href="http://ppa.launchpad.net/yannubuntu/boot-repair/ubuntu">http://ppa.launchpad.net/yannubuntu/boot-repair/ubuntu</a> precise main</pre>
+
+
+<dl id="signing-key"><dt>Signing key:</dt><dd><a href="http://keyserver.ubuntu.com:11371/pks/lookup?search=0x3C48D16124B50277AF10D27F32B18A1260D8DA0B&amp;op=index"> <code>1024R/60D8DA0B</code> </a> (<a href="https://launchpad.net/+help-soyuz/ppa-sources-list.html" target="help">What is this?</a>)</dd></dl>
+
+
+<h1 id="Using_Boot-Repair">Using Boot-Repair</h1>
+
+
+<p>&nbsp;</p>
+
+<h2 id="Recommended_repair">Recommended repair</h2>
+
+
+<ul>
+    <li>launch Boot-Repair from either :
+<ul>
+    <li>the dash (Unity)</li>
+    <li>System-&gt;Administration-&gt;Boot-Repair menu (Gnome)</li>
+    <li>by typing &#8216;boot-repair&#8217; in a terminal</li>
+</ul>
+</li>
+    <li>Then try &#8220;Recommended repair&#8221; button. When repair is finished, note the URL that appeared on a paper, then reboot and check if you recovered access to your OSs.</li>
+</ul>
+
+
+<p>If the repair did not succeed, indicate the URL to people who help you by email or forum.</p>
+
+<p>&nbsp;</p>
+
+<h2 id="Advanced_options">Advanced options</h2>
+
+
+<p><img title="http://pix.toile-libre.org/upload/img/1335263156.png" src="http://pix.toile-libre.org/upload/img/1335263156.png" alt="http://pix.toile-libre.org/upload/img/1335263156.png" /> <img title="http://pix.toile-libre.org/upload/img/1335263804.png" src="http://pix.toile-libre.org/upload/img/1335263804.png" alt="http://pix.toile-libre.org/upload/img/1335263804.png" /> <img title="http://pix.toile-libre.org/upload/img/1335263271.png" src="http://pix.toile-libre.org/upload/img/1335263271.png" alt="http://pix.toile-libre.org/upload/img/1335263271.png" /> <img title="http://pix.toile-libre.org/upload/img/1335263417.png" src="http://pix.toile-libre.org/upload/img/1335263417.png" alt="http://pix.toile-libre.org/upload/img/1335263417.png" /> <img title="http://pix.toile-libre.org/upload/img/1335263366.png" src="http://pix.toile-libre.org/upload/img/1335263366.png" alt="http://pix.toile-libre.org/upload/img/1335263366.png" /></p>
+
+<p>&nbsp;</p>
+
+<h1 id="External_Links">External Links</h1>
+
+
+<ul>
+    <li><a href="https://sourceforge.net/p/boot-repair/">Official website of Boot-Repair</a></li>
+    <li><a href="http://ubuntuforums.org/showthread.php?p=10871917#post10871917">Topic &#8220;Boot-repair: Graphical tool to repair the PC boot in 1 clic !&#8221;</a> - on Ubuntu forum, for any questions/comments.</li>
+    <li><a href="http://ubuntuforums.org/showthread.php?t=1821980">HOWTO : easily create a Boot-Info summary with Boot-Repair</a></li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/25/find-city/">Find_city</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-25T15:45:00+08:00" pubdate data-updated="true">May 25<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>find_city</h2>
+
+<ol>
+<li>base on sina api</li>
+</ol>
+
+
+<p>&nbsp;</p>
+
+<p>&nbsp;
+<code>require &lsquo;json&rsquo;</p>
+
+<p>class FindCity
+  CityHash = JSON.parse <code>curl http://api.t.sina.com.cn/provinces.json</code>
+  def initialize</p>
+
+<pre><code>@cityhash=CityHash
+@municipality=[6,11,12,50,81,82]
+</code></pre>
+
+<p>  end
+  def getcity(province_id=nil, city_id=nil)</p>
+
+<pre><code>province_id.to_i
+city_id.to_i
+if @municipality.include? province_id
+  @cityhash["provinces"].each do |provinces|
+    if provinces["id"] == province_id
+      return provinces["name"]
+    end
+  end
+else
+  @cityhash["provinces"].each do |provinces|
+    if provinces["id"] == province_id
+      provinces["citys"].each do |city|
+        return city[city_id.to_s] if city[city_id.to_s]
+      end
+    end
+  end
+end
+return nil
+</code></pre>
+
+<p>  end
+end</p>
+
+<p>if <strong>FILE</strong>==$0
+  #<strong><strong><strong><strong><strong><strong><strong><strong><em>*******以下测试代码</em></strong></strong></strong></strong></strong></strong></strong></strong>
+  time_start = Time.now
+  city = FindCity.new
+  list=[[6,2],[11,1],[43,2]]</p>
+
+<p>  list.each do |l|</p>
+
+<pre><code>puts city.getcity l[0],l[1]
+</code></pre>
+
+<p>  end</p>
+
+<p>  puts &ldquo;total time:#{Time.now-time_start}&rdquo;
+end</code></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/23/parse-a-web-page-and-extract-some-json-arrays/">Parse a Web Page and Extract Some Json Arrays</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-23T10:29:00+08:00" pubdate data-updated="true">May 23<span>rd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Parse a web page and extract some json arrays</h2>
+
+<p>So I have some basic code below, which fetches the json from <a href="http://www.highcharts.com/demo/" rel="nofollow"><a href="http://www.highcharts.com/demo/">http://www.highcharts.com/demo/</a></a>. But I want to be able to extract a hash, more specifically this:</p>
+
+<pre><code>series: [{
+                    name: 'Tokyo',
+                    data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
+                }, {
+                    name: 'New York',
+                    data: [-0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5]
+                }, {
+                    name: 'Berlin',
+                    data: [-0.9, 0.6, 3.5, 8.4, 13.5, 17.0, 18.6, 17.9, 14.3, 9.0, 3.9, 1.0]
+                }, {
+                    name: 'London',
+                    data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
+                }]
+            });</code></pre>
+
+
+<p>&nbsp;</p>
+
+<p>Into to a hash so that I can access the different data points. Currently the script just spits out everything. Code below:</p>
+
+<pre><code>require "json"
+require "open-uri"
+
+
+$LOAD_PATH &lt;&lt; File.dirname(__FILE__)
+
+result = JSON.parse(open("http://www.highcharts.com/demo/").read)</code></pre>
+
+
+<p>&nbsp;</p>
+
+<p>There is no direct conversion since source is JavaScript code (not even valid JSON). There are many ways to accomplish this task (one ways more strict than others, generic escaping control may be tricky), but that&rsquo;s how I&rsquo;d do it: HTML &ndash;&gt; JS &ndash;&gt; JSON &ndash;&gt; Ruby array.</p>
+
+<pre><code>require 'open-uri'
+require 'json'
+
+html = open("http://www.highcharts.com/demo/").read
+js = html.match(/series: (\[\{.*?\}\])/m)[1]
+json = js.gsub(/(\w+):/i, '"\1":').gsub(/'/, '"')
+series = JSON.parse(json)
+# =&gt; [{"name"=&gt;"Tokyo", "data"=&gt;[7.0, 6.9, 9.5, 14.5, 18.2, ... </code></pre>
+
+
+<p>&nbsp;</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/22/devise-logout-link-non-functional/">Devise Logout Link Non-functional</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-22T13:37:00+08:00" pubdate data-updated="true">May 22<span>nd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Devise logout link non-functional</h2>
+
+<p>Resources: <a href="http://stackoverflow.com/questions/6110047/rails-devise-override-sessionscontroller"><a href="http://stackoverflow.com/questions/6110047/rails-devise-override-sessionscontroller">http://stackoverflow.com/questions/6110047/rails-devise-override-sessionscontroller</a></a></p>
+
+<p>the problem: In a nutshell, when I try to install a logout link to my app it fails to work. Here&rsquo;s as much context as I can think to put here (if you want anything else, please poke me)&hellip;</p>
+
+<p>I&rsquo;ve got this in a haml view:</p>
+
+<pre><code>= link_to("Logout", destroy_user_session_path, :method =&gt; :delete) </code></pre>
+
+
+<p>It generates this in the view:</p>
+
+<pre><code>&lt;a href="/users/sign_out" data-method="delete" rel="nofollow"&gt;Logout&lt;/a&gt; </code></pre>
+
+
+<p>I verified that in my config/initializers/devise.rb I have this setting uncommented and correct:</p>
+
+<pre><code>config.sign_out_via = :delete </code></pre>
+
+
+<p>I validated the following route:</p>
+
+<pre><code>destroy_user_session DELETE /users/sign_out(.:format) {:action=&gt;"destroy", :controller=&gt;"devise/sessions"} </code></pre>
+
+
+<p>I also have this bit of trickery in my routes.rb, and I suspect this is related to my issue:</p>
+
+<pre><code>devise_for :users, :controllers =&gt; {:sessions =&gt; "devise/sessions", :registrations =&gt; "users"} resources :users </code></pre>
+
+
+<p>This last bit is because I want to manage (edit, create and delete) users in my own controller.</p>
+
+<p>The error message I&rsquo;m getting is as follows:</p>
+
+<pre><code>ActiveRecord::RecordNotFound in UsersController#show Couldn't find User with ID=sign_out Rails.root: /home/jaydel/projects/mbsquared-projects/Wilson-Goldrick app/controllers/users_controller.rb:16:in `show' </code></pre>
+
+
+<p>In my server logs I see this for the request:</p>
+
+<pre><code>Started GET "/users/sign_out" for 127.0.0.1 at 2011-08-04 13:08:51 -0500   Processing by UsersController#show as HTML   Parameters: {"id"=&gt;"sign_out"} </code></pre>
+
+
+<p>Outside it&rsquo;s slightly overcast and in the mid 80s. I&rsquo;m wearing a red shirt.</p>
+
+<p>Anyone have any ideas?</p>
+
+<p>1</p>
+
+<blockquote>The problem lies in the fact that in your logs the signout request is a GET request.
+<pre><code>Started GET "/users/sign_out" </code></pre>
+But the signout route is a DELETE
+<pre><code>destroy_user_session DELETE /users/sign_out(.:format) </code></pre>
+The reason why you are getting the exception is that is it getting confused with one of the routes created by <code>resources :users</code> which would be something like
+<pre><code>edit_user GET /users/(:id)(.:format) {:action=&gt;"edit", :controller=&gt;"users"} </code></pre>
+Basically &#8216;sign_out&#8217; is being mistaken as a id.
+
+I&#8217;m not sure why the delete link is not going through as a DELETE request. Though changing
+<pre><code>config.sign_out_via = :delete </code></pre>
+to be :get might solve the problem.</blockquote>
+
+
+<p>2</p>
+
+<blockquote>I think the more correct way to fix this, REST-wise, would be to change your logout links to use the DELETE method. It&#8217;s a very easy fix, changing this:
+
+link_to &#8220;Log out&#8221;, destroy_user_session_path
+
+to this:
+
+link_to &#8220;Log out&#8221;, destroy_user_session_path, :method =&gt; :delete</blockquote>
+
+
+<p>3</p>
+
+<blockquote>I had the same problem with rails 3.2 when I deleted from <code>application.js</code> this line:
+<pre><code>//= require jquery_ujs </code></pre>
+So, I think you have to insert this line in your <code>application.js</code> if you haven&#8217;t it there.
+
+PS. This behavior means that rails adapter for <code>jquery</code> doesn&#8217;t function. So you should make sure if it is loaded in your html in browser. You should test it in development mode because you will have compressed js in production and it will be very difficult to find something there.
+
+&nbsp;</blockquote>
+
+
+<p>&nbsp;</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/5/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/3/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/10/08/tong-guo-mongodumphe-mongorestoreshi-xian-mongodbbei-fen-he-hui-fu-by-chenzhou123520/">通过mongodump和mongorestore实现Mongodb备份和恢复 &#8211;by Chenzhou123520</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/ruby-on-rails-4-dot-0-release-notes/">Ruby on Rails 4.0 Release Notes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/06/rails-active-record-named-scopes/">Rails Active Record Named Scopes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/27/shai-shai-wo-men-de-kai-yuan-xiang-mu-iteyekai-yuan-dai-ma/">晒晒我们的开源项目 ITEYE开源代码</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/26/single-sign-on-dan-dian-deng-lu-sso/">Single Sign-on 单点登录 Sso</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/jhjguxin">@jhjguxin</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'jhjguxin',
+            count: 10,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Francis Jiang -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

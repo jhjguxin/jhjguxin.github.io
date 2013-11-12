@@ -1,0 +1,830 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: ruby | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/tags/ruby/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Ruby Performance Tricks --Posted by Sergey Potapov]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/09/05/ruby-performance-tricks-posted-by-sergey-potapov/"/>
+    <updated>2012-09-05T08:58:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/09/05/ruby-performance-tricks-posted-by-sergey-potapov</id>
+    <content type="html"><![CDATA[<h2>Ruby Performance Tricks &mdash;Posted by Sergey Potapov</h2>
+
+<p><a href="http://greyblake.com/blog/2012/09/02/ruby-perfomance-tricks/"><a href="http://greyblake.com/blog/2012/09/02/ruby-perfomance-tricks/">http://greyblake.com/blog/2012/09/02/ruby-perfomance-tricks/</a></a></p>
+
+<p>I did some benchmarks to find out which alternatives to write code work faster. I wanna share it with you. All benchmarks are made against ruby 1.9.3p194 MRI.</p>
+
+<h2>Do not use exceptions for a control flow</h2>
+
+
+<p>The next example is pretty stupid but it shows how exceptions slow against conditional statements.</p>
+
+<pre>require 'benchmark'
+
+class Obj
+  def with_condition
+    respond_to?(:mythical_method) ? self.mythical_method : nil
+  end
+
+  def with_rescue
+    self.mythical_method
+  rescue NoMethodError
+    nil
+  end
+end
+
+obj = Obj.new
+N = 10_000_000
+
+puts RUBY_DESCRIPTION
+
+Benchmark.bm(15, "rescue/condition") do |x|
+  rescue_report     = x.report("rescue:")    { N.times { obj.with_rescue  } }
+  condition_report  = x.report("condition:") { N.times { obj.with_if      } }
+  [rescue_report / condition_report]
+end</pre>
+
+
+<p>MRI 1.9.3:</p>
+
+<p><code>ruby 1.9.3p194 (2012-04-20 revision 35410) [x86_64-linux]
+user system total real
+rescue: 111.530000 2.650000 114.180000 (115.837103)
+condition: 2.620000 0.010000 2.630000 ( 2.633154)
+rescue/condition: 42.568702 265.000000 NaN ( 43.991767)
+</code></p>
+
+<p>MRI 1.8.7 (REE has similar result):</p>
+
+<pre>ruby 1.8.7 (2011-12-28 patchlevel 357) [x86_64-linux]
+                        user     system      total        real
+rescue:            80.510000   0.940000  81.450000 ( 81.529022)
+if:                 3.320000   0.000000   3.320000 (  3.330166)
+rescue/condition:  24.250000        inf       -nan ( 24.481970)</pre>
+
+
+<h2>String concatenation</h2>
+
+
+<p>Avoid using <code>+=</code> to concatenate strings in favor of <code>&lt;&lt;</code> method. The result is absolutely the same: add a string to the end of an existing one. What is the difference then?</p>
+
+<p>See the example:</p>
+
+<pre>str1 = "first"
+str2 = "second"
+str1.object_id       # =&gt; 16241320
+
+str1 += str2    # str1 = str1 + str2
+str1.object_id  # =&gt; 16241240, id is changed
+
+str1 &lt;&lt; str2 str1.object_id  # =&gt; 16241240, id is the same</pre>
+
+
+<p>When you use <code>+=</code> ruby creates a temporal object which is result of <code>str1 + str2</code>. Then it overrides <code>str1</code> variable with reference to the new built object. On other hand <code>&lt;&lt;</code> modifies existing one. As a result of using <code>+=</code> you have the next disadvantages:</p>
+
+<ul>
+    <li>More calculation to join strings.</li>
+    <li>Redundant string object in memory (previous value of <code>str1</code>), which approximates time when <a href="http://en.wikipedia.org/wiki/Garbage_collection_%28computer_science%29">GC</a> will trigger.</li>
+</ul>
+
+
+<p>How <code>+=</code> is slow? Basically it depends on length of strings you have operation with.</p>
+
+<pre>require 'benchmark'
+
+N = 1000
+BASIC_LENGTH = 10
+
+5.times do |factor|
+  length = BASIC_LENGTH * (10 ** factor)
+  puts "_" * 60 + "\nLENGTH: #{length}"
+
+  Benchmark.bm(10, '+= VS &lt;</pre>
+
+
+<p>Output:</p>
+
+<pre>____________________________________________________________
+LENGTH: 10
+                 user     system      total        real
++=           0.000000   0.000000   0.000000 (  0.004671)
+&lt;&lt;           0.000000   0.000000   0.000000 (  0.000176)
++= VS &lt;&lt;          NaN        NaN        NaN ( 26.508796)
+____________________________________________________________
+LENGTH: 100
+                 user     system      total        real
++=           0.020000   0.000000   0.020000 (  0.022995)
+&lt;&lt;           0.000000   0.000000   0.000000 (  0.000226)
++= VS &lt;&lt;          Inf        NaN        NaN (101.845829)
+____________________________________________________________
+LENGTH: 1000
+                 user     system      total        real
++=           0.270000   0.120000   0.390000 (  0.390888)
+&lt;&lt;           0.000000   0.000000   0.000000 (  0.001730)
++= VS &lt;&lt;          Inf        Inf        NaN (225.920077)
+____________________________________________________________
+LENGTH: 10000
+                 user     system      total        real
++=           3.660000   1.570000   5.230000 (  5.233861)
+&lt;&lt;           0.000000   0.010000   0.010000 (  0.015099)
++= VS &lt;&lt;          Inf 157.000000        NaN (346.629692)
+____________________________________________________________
+LENGTH: 100000
+                 user     system      total        real
++=          31.270000  16.990000  48.260000 ( 48.328511)
+&lt;&lt;           0.050000   0.050000   0.100000 (  0.105993)
++= VS &lt;&lt;   625.400000 339.800000        NaN (455.961373)</pre>
+
+
+<h2>Be careful with calculation within iterators</h2>
+
+
+<p>Assume you need to write a function to convert an array into a hash where keys and values are same as elements of the array:</p>
+
+<p>&nbsp;</p>
+
+<pre>func([1, 2, 3])  # =&gt; {1 =&gt; 1, 2 =&gt; 2, 3 =&gt; 3}</pre>
+
+
+<p>The next solution would satisfy the requirements:</p>
+
+<pre>def func(array)
+  array.inject({}) { |h, e| h.merge(e =&gt; e) }
+end</pre>
+
+
+<p>And would be extremely slow with big portions of data because it contains nested methods (<code>inject</code> and <code>merge</code>), so it’s <strong>O(n<sup>2</sup>) </strong>algorithm. But it’s obviously that it must be <strong>O(n) </strong>. Consider the next:</p>
+
+<p>&nbsp;</p>
+
+<pre>def func(array)
+  array.inject({}) { |h, e| h[e] = e; h }
+end</pre>
+
+
+<p>In this case we do only one iteration over an array without any hard calculation within the iterator.</p>
+
+<p>See the benchmark:</p>
+
+<pre>require 'benchmark'
+
+def n_func(array)
+  array.inject({}) { |h, e| h[e] = e; h }
+end
+
+def n2_func(array)
+  array.inject({}) { |h, e| h.merge(e =&gt; e) }
+end
+
+BASE_SIZE = 10
+
+4.times do |factor|
+  size   = BASE_SIZE * (10 ** factor)
+  params = (0..size).to_a
+  puts "_" * 60 + "\nSIZE: #{size}"
+  Benchmark.bm(10) do |x|
+    x.report("O(n)" ) { n_func(params)  }
+    x.report("O(n2)") { n2_func(params) }
+  end
+end</pre>
+
+
+<p>Output:</p>
+
+<pre>____________________________________________________________
+SIZE: 10
+                user     system      total        real
+O(n)        0.000000   0.000000   0.000000 (  0.000014)
+O(n2)       0.000000   0.000000   0.000000 (  0.000033)
+____________________________________________________________
+SIZE: 100
+                user     system      total        real
+O(n)        0.000000   0.000000   0.000000 (  0.000043)
+O(n2)       0.000000   0.000000   0.000000 (  0.001070)
+____________________________________________________________
+SIZE: 1000
+                user     system      total        real
+O(n)        0.000000   0.000000   0.000000 (  0.000347)
+O(n2)       0.130000   0.000000   0.130000 (  0.127638)
+____________________________________________________________
+SIZE: 10000
+                user     system      total        real
+O(n)        0.020000   0.000000   0.020000 (  0.019067)
+O(n2)      17.850000   0.080000  17.930000 ( 17.983827)</pre>
+
+
+<pre></pre>
+
+
+<p>It’s an obvious and trivial example. Just keep in mind to not do hard calculation within iterators if it’s possible.</p>
+
+<h2>Use bang! methods</h2>
+
+
+<p>In many cases bang methods do the same as there non-bang analogues but without duplication an object. The previous example with <code>merge!</code> would be much faster:</p>
+
+<pre>require 'benchmark'
+
+def merge!(array)
+  array.inject({}) { |h, e| h.merge!(e =&gt; e) }
+end
+
+def merge(array)
+  array.inject({}) { |h, e| h.merge(e =&gt; e) }
+end
+
+N = 10_000
+array = (0..N).to_a
+
+Benchmark.bm(10) do |x|
+  x.report("merge!") { merge!(array) }
+  x.report("merge")  { merge(array)  }
+end</pre>
+
+
+<p>Output:</p>
+
+<pre>                 user     system      total        real
+merge!       0.010000   0.000000   0.010000 (  0.011370)
+merge       17.710000   0.000000  17.710000 ( 17.840856)</pre>
+
+
+<pre></pre>
+
+
+<p>&nbsp;</p>
+
+<h2>Use instance variables</h2>
+
+
+<p>Accessing instance variable directly is about two times faster than accessing them with accessor methods:</p>
+
+<pre>require 'benchmark'
+
+class Metric
+  attr_accessor :var
+
+  def initialize(n)
+    @n   = n
+    @var = 22
+  end
+
+  def run
+    Benchmark.bm(10) do |x|
+      x.report("@var") { @n.times { @var } }
+      x.report("var" ) { @n.times { var  } }
+      x.report("@var =")     { @n.times {|i| @var = i     } }
+      x.report("self.var =") { @n.times {|i| self.var = i } }
+    end
+  end
+end
+
+metric = Metric.new(100_000_000)
+metric.run</pre>
+
+
+<p>Output:</p>
+
+<pre>                 user     system      total        real
+@var         6.980000   0.010000   6.990000 (  7.193725)
+var         13.040000   0.000000  13.040000 ( 13.131711)
+@var =       7.960000   0.000000   7.960000 (  8.242603)
+self.var =  14.910000   0.010000  14.920000 ( 15.960125)</pre>
+
+
+<p>Parallel assignment is slower</p>
+
+<pre>require 'benchmark'
+
+N = 10_000_000
+
+Benchmark.bm(15) do |x|
+  x.report('parallel') do
+    N.times do
+      a, b = 10, 20
+    end
+  end
+
+  x.report('consequentially') do |x|
+    N.times do
+      a = 10
+      b = 20
+    end
+  end
+end</pre>
+
+
+<p>Output:</p>
+
+<pre>                      user     system      total        real
+parallel          1.900000   0.000000   1.900000 (  1.928063)
+consequentially   0.880000   0.000000   0.880000 (  0.879675)</pre>
+
+
+<pre></pre>
+
+
+<p>&nbsp;</p>
+
+<h2>Dynamic method defention</h2>
+
+
+<p>What is the faster way to define method dynamically: <code>class_eval</code> with a code string or using <code>define_method</code>? Which way generated methods work faster?</p>
+
+<pre>require 'benchmark'
+
+class Metric
+  N = 1_000_000
+
+  def self.class_eval_with_string
+    N.times do |i|
+      class_eval(&lt;</pre>
+
+
+<p>Output:</p>
+
+<pre>                             user     system      total        real
+class_eval with string 219.840000   0.720000 220.560000 (221.933074)
+define_method           61.280000   0.240000  61.520000 ( 62.070911)
+string method            0.110000   0.000000   0.110000 (  0.111433)
+dynamic method           0.150000   0.000000   0.150000 (  0.156537)</pre>
+
+
+<p>So <code>class_eval</code> works slower but it’s preferred since methods generated with <code>class_eval</code>and a string of code work faster.</p>
+
+<h2>Links</h2>
+
+
+<ul>
+    <li><a href="http://www.simonecarletti.com/blog/2010/01/how-slow-are-ruby-exceptions/">How Slow Are Ruby Exceptions</a></li>
+    <li><a href="http://www.igvita.com/2008/07/08/6-optimization-tips-for-ruby-mri/">6 Optimization Tips for Ruby MRI</a> (NOTE: <code>Symbol#to_proc</code> was ported to Ruby and it’s not slow anymore)</li>
+    <li><a href="http://my.safaribooksonline.com/book/web-development/ruby/9780321540034">“Writing Efficient Ruby Code” by Dr. Stefan Kaes</a></li>
+    <li><a href="http://programmingzen.com/2007/02/10/top-10-ruby-on-rails-performance-tips/">Top 10 Ruby on Rails performance tips </a></li>
+    <li><a href="http://blog.monitis.com/index.php/2012/02/08/20-ruby-performance-tips/">20 Ruby Performance Tips</a></li>
+    <li><a href="http://rob-bell.net/2009/06/a-beginners-guide-to-big-o-notation/">A Beginner’s Guide to Big O Notation</a></li>
+</ul>
+
+
+<p>Danke.</p>
+
+<pre><footer>Posted by Sergey Potapov <time datetime="2012-09-02T23:34:00+03:00" pubdate="" data-updated="true">Sep 2nd, 2012</time>  <a href="http://greyblake.com/blog/categories/accessor/">accessor</a>, <a href="http://greyblake.com/blog/categories/concatenation/">concatenation</a>, <a href="http://greyblake.com/blog/categories/exception/">exception</a>, <a href="http://greyblake.com/blog/categories/performance/">performance</a>, <a href="http://greyblake.com/blog/categories/reader/">reader</a>,<a href="http://greyblake.com/blog/categories/ruby/">ruby</a>, <a href="http://greyblake.com/blog/categories/string/">string</a>, <a href="http://greyblake.com/blog/categories/variable/">variable</a>, <a href="http://greyblake.com/blog/categories/writer/">writer</a></footer></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Rails date_select fields hidden and ]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/07/27/rails-date-select-fields-hidden-and/"/>
+    <updated>2012-07-27T17:08:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/07/27/rails-date-select-fields-hidden-and</id>
+    <content type="html"><![CDATA[<h2>Rails date_select fields hidden and</h2>
+
+<p>Another 2 hours wasted. Today I was trying to use the date_select helper, but I could not figure out why the fields kept showing up as hidden inputs instead of select boxes.</p>
+
+<p>Poked around for a long long long time, before catching this tidbit</p>
+
+<pre>: order – Set to an array containing :day, :month and :year do customize the order in which the select fields are shown. If you leave out any of the symbols, the respective select will not be shown (like when you set :discard_xxx =&gt; true. Defaults to the order defined in the respective locale (e.g. [:year, :month, :day] in the en locale that ships with Rails).</pre>
+
+
+<p>For some god forsaken reason, the “order” on the date_select field in my app was not set, or is defaulted to something else. I have no idea where this happens, or how it happens. But adding and order param fixed my problem</p>
+
+<pre>f.datetime_select :start_time, :order => [:year, :month, :day]</pre>
+
+
+<ul>
+    <li><code>:discard_day</code> - Set to true if you don't want to show a day select. This includes the day as a hidden field instead of showing a select field. Also note that this implicitly sets the day to be the first of the given month in order to not create invalid dates like 31 February.</li>
+    <li><code>:discard_month</code> - Set to true if you don't want to show a month select. This includes the month as a hidden field instead of showing a select field. Also note that this implicitly sets :discard_day to true.</li>
+    <li><code>:discard_year</code> - Set to true if you don't want to show a year select. This includes the year as a hidden field instead of showing a select field.</li>
+    <li><code>:order</code> - Set to an array containing <code>:day</code>, <code>:month</code> and <code>:year</code> to customize the order in which the select fields are shown. If you leave out any of the symbols, the respective select will not be shown (like when you set <code>:discard_xxx =&gt; true</code>. Defaults to the order defined in the respective locale (e.g. [:year, :month, :day] in the en locale that ships with <a href="http://api.rubyonrails.org/classes/Rails.html">Rails</a>).</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Single table inheritance (单表继承)]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/06/18/single-table-inheritance-dan-biao-ji-cheng/"/>
+    <updated>2012-06-18T15:40:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/06/18/single-table-inheritance-dan-biao-ji-cheng</id>
+    <content type="html"><![CDATA[<h2>Single table inheritance (单表继承)</h2>
+
+<p>Active Record allows inheritance by storing the name of the class in a column that by default is named “type” (can be changed by overwriting <code>Base.inheritance_column</code>). This means that an inheritance looking like this:</p>
+
+<pre data-result="[object Object]">class Company &lt; ActiveRecord::Base; end
+class Firm &lt; Company; end
+class Client &lt; Company; end
+class PriorityClient &lt; Client; end</pre>
+
+
+<p>When you do <code>Firm.create(:name =&gt; &ldquo;37signals&rdquo;)</code>, this record will be saved in the companies table with type = “Firm”. You can then fetch this row again using <code>Company.where(:name =&gt; &lsquo;37signals&rsquo;).first</code> and it will return a Firm object.</p>
+
+<p>If you don’t have a type column defined in your table, single-table inheritance won’t be triggered. In that case, it’ll work just like normal subclasses with no special magic for differentiating between them or reloading the right type with find.</p>
+
+<p>Note, all the attributes for all the cases are kept in the same table. Read more: <a href="http://www.martinfowler.com/eaaCatalog/singleTableInheritance.html">www.martinfowler.com/eaaCatalog/singleTableInheritance.html</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[15 Things for a Ruby Beginner]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/06/16/15-things-for-a-ruby-beginner/"/>
+    <updated>2012-06-16T22:47:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/06/16/15-things-for-a-ruby-beginner</id>
+    <content type="html"><![CDATA[<h2>15 Things for a Ruby Beginner</h2>
+
+<p><em>The following is a post I had recently sent the <a href="https://groups.google.com/group/bangalorerug">Bangalore Ruby User Group</a>. It has been slightly modified to address a larger audience.</em></p>
+
+<p>There were many Ruby beginners in last week&rsquo;s meetup, and the common question we heard was &lsquo;after the very basics, what next?&rsquo;</p>
+
+<p>The best way to learn Ruby best practices is to pair with an experienced dev; the way I learned was by inheriting a reasonably small, but well-written codebase from an amazing colleague. In the absence of either, here is a checklist of 15 things (since &lsquo;N things that you need to know about X&rsquo; is the in-thing these days!) that I&rsquo;d recommend a Ruby beginner to consider:</p>
+
+<h3>1. The very basics</h3>
+
+
+<p>Our very own <a href="http://rubymonk.com/" target="_blank">rubymonk.com</a> has a Ruby primer which was written for exactly this purpose; we open our inbox everyday to gushing feedback from people who&rsquo;ve found it to be a great way to learn Ruby. Try it and let us know how it goes!</p>
+
+<p><a href="http://tryruby.org/" target="_blank">tryruby.org</a> also has a basic introduction to Ruby, and has been around longer. <a href="http://rubykoans.com/" target="_blank">Edgecase&rsquo;s Ruby Koan</a> is an interesting concept, and covers the language both in breadth and depth, and is a very strong recommendation. It should take you anywhere between 5-10 hours to finish all of the Koans. Do try it!</p>
+
+<p>&nbsp;</p>
+
+<p>I have heard good things about <a href="http://ruby.learncodethehardway.org/" target="_blank">Learn Ruby the Hardway</a>, but haven&rsquo;t tried it out myself. Okay, I just skimmed through portions of it and I&rsquo;m not really happy &ndash; LRTH seems to be mostly a line-to-line translation of Python code to Ruby. It uses  &lsquo;while&rsquo; loop in places where equivalent Ruby idioms (Enumerables) would have made more sense. Also there is no mention of blocks, metaprogramming and duck-typing, which pretty much is a deal-breaker for me. But to be fair, the target audience for LRTH seem to be non-programmers for whom the concept of loops and objects would be new, and for them it does the job very well.</p>
+
+<p>Wait, have you read Why&rsquo;s Poignant Guide to Ruby? If this is the first time you&rsquo;re hearing about why the lucky stiff, read <a href="http://www.smashingmagazine.com/2010/05/15/why-a-tale-of-a-post-modern-genius/" target="_blank">this amazing piece on <em>why by the Smashing Magazine</a>. And definitely read The Poignant Guide: <a href="http://mislav.uniqpath.com/poignant-guide/" target="_blank"><a href="http://mislav.uniqpath.com/">http://mislav.uniqpath.com/</a><wbr>poignant-guide/</wbr></a>. It is full of cats, foxes, chunky bacon, cartoons that doesn&rsquo;t always make much sense, space travel and what not. This was one of my first introductions to the Ruby community, and the guide lent the language and the community a fun, quirky and happy aura. You may or may not take away much Ruby knowledge from the guide &ndash; I couldn&rsquo;t when I read it for the first time. However you&rsquo;ll definitely understand some of the quirkiness and philosophies that influence the Ruby community. I&rsquo;m a huge fan of </em>why, and here is my favourite quote:</p>
+
+<p>&nbsp;</p>
+
+<blockquote>when you don't create things, you become defined by your tastes rather than ability. your tastes only narrow &amp; exclude people. so create.</blockquote>
+
+
+<p>&nbsp;</p>
+
+<h3>2. The ecosystem - RVM/rbenv, RubyGems, Bundler, Git and Github</h3>
+
+
+<p>I think all of these tools are mandatory for being a productive Ruby programmer. You&rsquo;ll encounter them soon enough:</p>
+
+<ul>
+<li><p>RVM/rbenv: these are tools used to manage multiple Ruby versions on the same machine. I&rsquo;ve been using RVM without complaint for quite a while, though there are people who will go up in arms against RVM for various reasons. As a beginner, you should be comfortable with either.</p></li>
+<li><p>RubyGems: a gem for anything, a gem for everything. If you are using RVM, it will install RubyGems by default for you. <a href="http://docs.rubygems.org/read/chapter/4" target="_blank"><a href="http://docs.rubygems.org/read/chapter/4">http://docs.rubygems.org/read/chapter/4</a></a></p></li>
+<li><p>Bundler: You&rsquo;ll learn it easy enough if you are using Rails. But even for non-Rails projects, Bundler is now the de-facto tool to handle gems and dependencies. It is one of those tools that when you see for the first time you would wonder how you ever lived without it.</p></li>
+<li><p>Git: You are a git if you don&rsquo;t use git yet. If you are not even using any version control at all, good for you &ndash; there aren&rsquo;t bad practices that you need to unlearn. If you are on SVN, or God forbid CVS, jump now.<a href="http://git-scm.com/book/en/Getting-Started-About-Version-Control" target="_blank"><a href="http://git-scm.com/book/en/">http://git-scm.com/book/en/</a><wbr>Getting-Started-About-Version-<wbr>Control</wbr></wbr></a></p></li>
+<li><p>Github: You have a Github handle, right? &lsquo;nuff said.</p></li>
+</ul>
+
+
+<h3>3. Editor</h3>
+
+
+<p>I don&rsquo;t care. Pick one, use it well. If you&rsquo;re on Vim and is on Insert mode all the time, then use Notepad instead. It would be more productive. Learn your editor.</p>
+
+<p>Here is a list of editors/IDEs people generally use for Ruby development:</p>
+
+<ul>
+<li>Sublime Text</li>
+<li>Textmate</li>
+<li>RubyMine (My favourite, but needs a lot of memory and CPU)</li>
+<li>Vim</li>
+<li>emacs</li>
+<li>Aptana RadRails (recently saw a couple of people using it. don&rsquo;t know how good it is)</li>
+<li>Redcar (I&rsquo;ve used it very occassionaly, am yet to see someone using it as a primary editor)</li>
+</ul>
+
+
+<p>If you are using Sublime Text, install and use its corresponding Ruby package. Ditto for Textmate.</p>
+
+<p>If you are on Vim, using the right set of plugins is a requisite to be productive. There is the popular<a href="https://github.com/carlhuda/janus" target="_blank"><a href="https://github.com/carlhuda/janus">https://github.com/carlhuda/janus</a></a> and Srushti's <a href="https://github.com/srushti/vim-get" target="_blank"><a href="https://github.com/srushti/vim-get">https://github.com/srushti/vim-get</a></a> which I use when I work with Vim. Even if you don&rsquo;t go for these plugin distributions, spend enough time to find the right plugins for Ruby development.</p>
+
+<p>I don&rsquo;t know about the best plugins for emacs, but there are people who use emacs to develop in Ruby. Even Matz uses emacs; search and you shall find.</p>
+
+<h3>4. Ditch 'while', 'for' and array accumulation</h3>
+
+
+<p>Read this: <a href="http://martinfowler.com/bliki/CollectionClosureMethod.html" target="_blank"><a href="http://martinfowler.com/bliki/">http://martinfowler.com/bliki/</a><wbr>CollectionClosureMethod.html</wbr></a></p>
+
+<p>An apparent sign of a programmer who does not Ruby well is code that uses &lsquo;for&rsquo; and &lsquo;while&rsquo; loops for iteration and accumulation. I&rsquo;m hardpressed to remember occasions where I had to use them instead of the Enumerable methods #<em>each, #map, #select, #inject, #reject </em>and #<em>detect.</em> Learn these methods, chew on them, and use it everywhere!</p>
+
+<p>(infinite loops are almost always written using the loop do..end construct though. but how often do you write infinite loops anyway?)</p>
+
+<h3>5. Hash</h3>
+
+
+<p>At the time when I started writing Ruby, the languages that I had written in for a reasonable period of time before were CA-Clipper, Borland Turbo C and some VB 6.</p>
+
+<p>The first two did not have a hash, associative array or dictionary &ndash; whichever you prefer to call it.<strong> </strong>As to VB6, the only thing I can remember is DataGrid and ADODB. Ah, the failed promises of drag and drop programming!</p>
+
+<p>So Hash was a revelation and I started using it anywhere and everywhere. Do you want to build a CRUD app to manage customer info? Forget databases, I&rsquo;ll build a Hash and serialize to and deserialize from a YAML file. There were even more crimes committed using Hash that I dare not mention here. You would have gone through enough exercises that uses Hash when working through RubyMonk or Ruby Koans. But if you haven&rsquo;t, make sure you understand Hashes well enough. Specifically:</p>
+
+<ul>
+<li>iterating over a hash</li>
+<li>assigning default values for undefined keys in a hash</li>
+<li>Hash#keys and Hash#values for extracting just the keys and values</li>
+<li>In Ruby 1.8 Hashes are un-ordered: ie, you can&rsquo;t rely on the ordering of the hash to be same as the order in which you added elements. In Ruby 1.9, a Hash is sorted on the basis of order of insertion.</li>
+</ul>
+
+
+<h3>6. JSON and YAML</h3>
+
+
+<p>These are not Ruby specific concepts, but find great use in the ecosystem. Know them well, they&rsquo;ll come in handy.</p>
+
+<h3>7. Understand Immutability and how Ruby passes object references around</h3>
+
+
+<p>This has slightly got to do with the above point &ndash; all the Enumerable methods are immutable, and it is a good introduction to how functional Ruby veer towards immutability.  Immutability is more of a good programming practice than a Ruby specific idea &ndash; it helps you write clean predictable code, leave aside concurrent programming and race conditions. A method that mutates its parameter is a vile creature, don&rsquo;t bring it forth into existence.</p>
+
+<p>If you come from a C programming background, building new objects willy-nilly would be a little hard to digest. So much memory put to waste! I remember reading somewhere that programmers who use high level languages leave a higher carbon footprint because their code is inefficient. I leave you to ponder over it.</p>
+
+<p>For understanding some quirks around Ruby&rsquo;s immutability and interesting effects of how Ruby passes object references around, figure out where Array#clone is used. I remember wasting many a debugger breakpoint during my early days of Ruby because I didn&rsquo;t realize this. Don&rsquo;t let that happen to you! Understand the difference between a shallow clone and a deep clone. Even better, go write your own deep_clone routine! (limit yourselves to objects that can have strings, numbers, arrays and hashes)</p>
+
+<p>Also read: <a href="http://ruby-doc.org/docs/Newcomers/ruby.html#objects" target="_blank"><a href="http://ruby-doc.org/docs/Newcomers/ruby.html#objects">http://ruby-doc.org/docs/Newcomers/ruby.html#objects</a></a></p>
+
+<h3>8. Ruby's Object Hierarchy</h3>
+
+
+<p>&nbsp;</p>
+
+<div>
+<pre># All objects are instances of the class Object. 
+"a string".is_a? BasicObject         # true
+
+# All classes are instances of the class Class.
+String.is_a? Class                   # true
+
+# Class is a subclass of BasicObject.
+Class.is_a? BasicObject              # true
+
+# Class is not an instance of BasicObject
+Class.instance_of? BasicObject       # false
+
+# BasicObject is an instance and a sub-class of Class
+BasicObject.is_a? Class              # true
+BasicObject.instance_of? Class       # true</pre>
+</div>
+
+
+<p>&nbsp;</p>
+
+<p>Okay, I lost it. It is pretty crazy: <a href="http://stackoverflow.com/questions/4967556/ruby-craziness-class-vs-object" target="_blank"><a href="http://stackoverflow.com/questions/4967556/ruby-craziness-class-vs-object">http://stackoverflow.com/questions/4967556/ruby-craziness-class-vs-object</a></a>. As a beginner, you wouldn&rsquo;t need to understand the nitty-gritties. I&rsquo;ve been programming in Ruby for about three years now, and it still confuses the heck out of me.</p>
+
+<p>For now it is safe to understand that BasicObject is usually the root object of all objects in Ruby. And everything in Ruby is an object. This has a very useful side-effect (try this in IRB):</p>
+
+<div>
+<pre>"some random string".methods - Object.methods</pre>
+</div>
+
+
+<p>Also,</p>
+
+<div>
+<pre>Array.new.methods - Object.methods</pre>
+</div>
+
+
+<p>&nbsp;</p>
+
+<p>The above commands will show you methods that are specific to just strings and arrays, excluding all methods that are always present in any Ruby object (inherited from Object -like instance_of, is_a? etc.).</p>
+
+<p><strong>Tip:</strong>You might have noticed that the &lsquo;&ndash;&rsquo; operator gives you the difference between two arrays. Whenever you need a general purpose method and wonder whether Ruby comes with it, just try some plausible syntax in IRB. You might be surprised at what you find.</p>
+
+<p>Even though Ruby lets you Object Oriented and procedural code, the language leans toward OO. Ruby treats even methods as objects:</p>
+
+<div>
+<pre>"some string".method(:length) # gives you an object of the Method class.</pre>
+</div>
+
+
+<p>The method object can be asked to run by invoking the &lsquo;call&rsquo; method on it.</p>
+
+<p>&nbsp;</p>
+
+<h3>9. Creating your own Objects</h3>
+
+
+<p>Did you notice that the title wasn&rsquo;t &lsquo;Creating Classes&rsquo;. That was one of the most useful advices I&rsquo;ve ever received: Always think in terms of objects &ndash; not classes. Thinking in terms of Classes can subtly make you evolve your design upfront. Don&rsquo;t. Let your objects guide you in how your class definition should look. As a rough analogy, when building a home, the blueprint is valuable only as a reference for building the actual home. You imagine what your home should look like and draw a blueprint accordingly, not the other way round.</p>
+
+<p>Start with sparse classes, add methods and attributes as your objects demand it. Srushti puts it better: Imagine you&rsquo;re an instance, and think about what you want to do and how you want to do it. You don&rsquo;t want to give up your secrets (encapsulation). You don&rsquo;t ask other people for information so you can do their work for them, you just tell them to do stuff for you (tell, don&rsquo;t ask)</p>
+
+<p>Ruby has a very simple syntax for defining classes and building objects. If you come from a Java/C# background, it&rsquo;d be the first thing you look for. But even if you are a die-hard procedural ninja, trust me, thinking in terms of objects will help you write better programs, tackle complexity and be a more capable programmer.</p>
+
+<p>So, what are the things that are specific to Ruby that you need to be aware of?</p>
+
+<p>&nbsp;</p>
+
+<ul>
+<li>Message Passing. &ldquo;abcd&rdquo;.length is in fact &ldquo;abcd&rdquo;.send(:length).</li>
+<li>Module vs Classes (hint: they&rsquo;re very similar, but you can&rsquo;t instantiate a Module)</li>
+<li>Mixins (Ruby&rsquo;s answer to multiple inheritance and the greatest thing <em>before</em> sliced bread)</li>
+<li>attr_reader, attr_writer, attr_accessor.</li>
+<li>instance methods and class methods</li>
+<li>instance variables and class variables.</li>
+</ul>
+
+
+<p>And we all know that you don&rsquo;t use class variables unless you have a very good reason. Class methods aren&rsquo;t that bad, but are usually a smell. Whenever you find yourselves writing a class method, take a step back and make sure it can&rsquo;t be rephrased as an instance method, perhaps in a child object?</p>
+
+<p>There is a lot more to OO, some less specific to Ruby. As you go deep into the rabbit hole, ponder over these blanket statements:</p>
+
+<ul>
+<li>Primitives (Hash, Array etc.) are evil! Build objects.</li>
+<li>Inheritance is evil! Use Composition.</li>
+<li>Conditions (if..else, switch..case) are evil! Use Polymorphism.</li>
+</ul>
+
+
+<h3>10. Ruby is interpreted. It is malleable. Use that to your advantage.</h3>
+
+
+<p>Interpreted programs are almost always slower than native code (which includes JIT). By choosing to use such a language, you are accepting a compromise in the speed/efficiency of your programs. But this gives you a great advantage: the flexibility to change your code at runtime. Though we can&rsquo;t claim &lsquo;code is data, data is code&rsquo; like those hipster LISPers do, there is tremendous power in the dynamism (no reference to type systems) of Ruby. Learn it, use it, change the world!</p>
+
+<p>I had briefly mentioned the &lsquo;send&rsquo; method that is available for every object in Ruby:</p>
+
+<div>
+<pre>   "abcd".send(:length)</pre>
+</div>
+
+
+<p>is same as</p>
+
+<div>
+<pre>   "abcd".length</pre>
+</div>
+
+
+<p>That means you can do things like this:</p>
+
+<p>&nbsp;</p>
+
+<div>
+<pre>puts "Hi, which method do you like to invoke on a string today?"
+method_name = gets.strip
+puts "a random string".send(method_name)</pre>
+</div>
+
+
+<p>&nbsp;</p>
+
+<p>Did you see that? Unlike fully compiled languages like C/C++, Ruby lets you call arbitrary methods during runtime! (you can pass arguments to the method as parameters to the &lsquo;send&rsquo; method)</p>
+
+<p>Leave aside calling arbitrary methods, running arbitrary code during runtime is a breeze:</p>
+
+<div>
+<pre>puts "What code do you want to run today, dear sir?"
+arbitrary_code = STDIN.read         # press ctrl+d to stop input
+eval(arbitrary_code)</pre>
+</div>
+
+
+<p>Try it, type in some short valid Ruby code and see it in action.</p>
+
+<p>&nbsp;</p>
+
+<p>Now that you know &lsquo;eval&rsquo; exists, forget about it. It is too dangerous to be almost ever used. It is unsafe and unscoped, but there are better things to achieve similar and useful results. The point of this exercise though was to see Ruby&rsquo;s dynamic nature in action. Since Ruby is interpreted, there is no limitation on what can be done during runtime. This can be used to great good as we will see in Metaprogramming.</p>
+
+<h3>11. Metaprogramming</h3>
+
+
+<p>Metaprogramming in Ruby more or less gives you ways to create/remove/redefine methods at runtime. If you have used Rails, you would have seen that you would write something like</p>
+
+<div>
+<pre>class User &lt; ActiveRecord::Base
+end</pre>
+</div>
+
+
+<p>and magically, the User class gives you methods like user.name, user.find_by_name, user.find_by_name_and_id. Depending on the fields in the database, Rails defines methods for you to use. This uses Metaprogramming where Rails defines the methods at runtime after consulting the table schema.</p>
+
+<p>(talking about &lsquo;magic&rsquo;, usually when someone complain about &lsquo;magic&rsquo; in Ruby code, she is most probably referring to some sort of metaprogramming in the code)</p>
+
+<p>Metaprogramming is one of Ruby&rsquo;s most powerful concepts (anything borrowed from FP is yummy!), but it is open to use and abuse. They say that someone who knows metaprogramming well enough, but not enough to know where not to use it, is a danger to himself and society. The internet is rife with discussions around it and you&rsquo;ll find no shortage of flame wars, opinions and thankfully, documentation.</p>
+
+<p>These are the methods you would want to look up to get a decent overview of metaprogramming in Ruby:</p>
+
+<ul>
+<li>define_method</li>
+<li>method_missing</li>
+<li>instance_eval</li>
+<li>class_eval</li>
+</ul>
+
+
+<p>I would also recommend Yehuda Katz&rsquo;s excellent explanation of Metaprogramming by relating it to the context of &lsquo;self&rsquo;: <a href="http://yehudakatz.com/2009/11/15/metaprogramming-in-ruby-its-all-about-the-self/" target="_blank"><a href="http://yehudakatz.com/2009/11/">http://yehudakatz.com/2009/11/</a><wbr>15/metaprogramming-in-ruby-its-all-about-the-self/</wbr></a></p>
+
+<p>Metaprogramming is a bit advanced, and if you don&rsquo;t understand all or any of it the first time, don&rsquo;t worry. Come back and take a look again later. Rinse and repeat. It is an acquired taste, give it time!</p>
+
+<h3>12. Closures (Blocks, Lambdas et al.)</h3>
+
+
+<p>Blocks are my favourite. They move mountains. Rather, they let you write beautiful DSLs when coupled with the right dose of metaprogramming. Have you seen factory_girl&rsquo;s syntax? It is an unholy mix of method_missing and &lsquo;yield&rsquo;.</p>
+
+<pre><span>Factory :user, aliases: [:author, :commenter] do first_name "John" last_name "Doe" date_of_birth { 18.years.ago } end</span></pre>
+
+
+<p>It is not really hard to build a DSL that reads like this, and there is no better resource to learn all of this than <a href="http://rubysource.com/functional-programming-techniques-with-ruby-part-ii/" target="_blank"><a href="http://rubysource.com/">http://rubysource.com/</a><wbr>functional-programming-<wbr>techniques-with-ruby-part-ii/</wbr></wbr></a>. The first part of that series looks into the functional and immutable aspects of Ruby, and is also a recommended read:<a href="http://rubysource.com/functional-programming-techniques-with-ruby-part-i/" target="_blank"><a href="http://rubysource.com/">http://rubysource.com/</a><wbr>functional-programming-<wbr>techniques-with-ruby-part-i/</wbr></wbr></a></p>
+
+<h3>13. Styleguides</h3>
+
+
+<p>Whenever you are in doubt, or the self becomes too much with you, go read the Ruby style guides.</p>
+
+<p>Github&rsquo;s simpler style guide: <a href="https://github.com/styleguide/ruby" target="_blank"><a href="https://github.com/styleguide/">https://github.com/styleguide/</a><wbr>ruby</wbr></a></p>
+
+<p>The comprehensive one: <a href="https://github.com/bbatsov/ruby-style-guide" target="_blank"><a href="https://github.com/bbatsov/">https://github.com/bbatsov/</a><wbr>ruby-style-guide</wbr></a></p>
+
+<h3>14. Simplicity is virtue</h3>
+
+
+<p>Knowing what constructs to use where is a matter of knowledge and experience. Every approach has trade-offs in terms of readability, maintainability and efficiency. The battle between these have been the recurring theme in the battles programmers fight in their heads for years. Knowing the the trade-offs will help you make more informed decisions, but it might not always be enough. Some things need to be tried, tested and failed, and that is fine.</p>
+
+<p>But be vary of <a href="http://c2.com/cgi/wiki?PrematureOptimization" target="_blank">Premature Optimization</a>. When you have a choice between clever, short and maybe faster code Vs longer but readable code, go for readability.  Ruby makes it easy to write really bad code that people would fear to touch with a long pole. It also lets you write  beautiful and concise code. When you contemplate between the two, remember the joke about the psychopath who&rsquo;ll inherit your codebase, knows where you live, and pings you from your local network! The choice is yours.</p>
+
+<h3>15. None of this matters</h3>
+
+
+<p>If you are overwhelmed by this document or any links referenced from here, just ignore it. Remember the<a href="http://norvig.com/21-days.html" target="_blank">10,000 hours rule</a>. Happily go about writing code the way you know best! And write a bit more code. Try to pair with someone who knows things a bit more. Go read some well-written Ruby code from Github. Then come back and see what you&rsquo;ve learned.</p>
+
+<p>None of this is rocket science, but it takes time and practice for concepts to sink in, and that is just fine.</p>
+
+<hr />
+
+
+<p>Have further questions? There are tons of resource on the internet to answer your questions!</p>
+
+<p>Join one of your local Ruby Usergroups. The Ruby community is extremely helpful and accomodating towards newbies. Check this page to locate a usergroup near you: <a href="http://www.rubyinside.com/how-to-find-ruby-user-groups-3067.html">How To Find Ruby User Groups</a></p>
+
+<p>Participate in the usergroups, ask your questions. Also hop on to Ruby&rsquo;s IRC channel <a href="http://irc.lc/freenode/ruby-lang">#ruby-lang on Freenode</a>. Irrespective of the forum, just make sure that you give enough context about your question to help others understand your problem. If you haven&rsquo;t read ESR&rsquo;s &ldquo;<a href="http://www.catb.org/~esr/faqs/smart-questions.html" target="_blank">Ask questions the smart way</a>&rdquo; yet, <em>this</em> is the time. Go read it now and get enlightened on the ways of the interwebs!</p>
+
+<p>And remember to have fun! In Matz&rsquo;s own words:</p>
+
+<blockquote> "For me the purpose of life is partly to have joy. Programmers often feel joy when they can concentrate on the creative side of programming, So Ruby is designed to make programmers happy."</blockquote>
+
+
+<p>Happy hacking!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Configuring Gedit for Rails]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/06/07/configuring-gedit-for-rails/"/>
+    <updated>2012-06-07T10:34:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/06/07/configuring-gedit-for-rails</id>
+    <content type="html"><![CDATA[<h2>Configuring Gedit for Rails</h2>
+
+<p>I haven’t kept my feelings about IDEs hidden, I’m a big believer in using text editors instead.</p>
+
+<p>I know, I should earn my chops and become a Vim guy, and some day I hope to sit down and make that conversion, but for now it’s all about Gedit for me. With a few plugins and a little TLC gedit can be a lighter version of the more powerful, more intensive ide.</p>
+
+<p>The first thing we’re going to install gMate, an addon designed to make Gedit run like TextMate</p>
+
+<blockquote>sudo add-apt-repository ppa:ubuntu-on-rails/ppa
+
+sudo apt-get update</blockquote>
+
+
+<blockquote>sudo apt-get install gedit-gmate</blockquote>
+
+
+<p>Additionally we’re going to install the standard plugins package</p>
+
+<blockquote>sudo apt-get install gedit-plugins</blockquote>
+
+
+<p>Now lets fire up Gedit and turn on our preferences.</p>
+
+<p>To get to our plugins go to Edit &gt; Preferences &gt; Plugins.</p>
+
+<p>We’re going to enable the following options:</p>
+
+<ul>
+    <li>Snippets</li>
+    <li>Code Comment</li>
+    <li>Embedded Terminal</li>
+    <li>Find in Files</li>
+    <li>Rails Extract Partial</li>
+    <li>Rails File Loader</li>
+    <li>Session Saver (Optional)</li>
+    <li>Smart Indent (Optional)</li>
+    <li>Tab Switch (Optional)</li>
+    <li>TextMate Style AutoCompletion</li>
+</ul>
+
+
+<p>This is going to enable a lot of different functionality, and while this is the setup I use, it may be more than you need.</p>
+
+<p>Now if you’re in a ruby file and you type def, tabbing over will add the end and place you straight on the method name, control+tab will switch between documents, and syntax highlighting will work correctly in html.erb files.</p>
+
+<p>Also, going to view &gt; bottom pane will display a terminal window that I find convenient for running irb.</p>
+
+<p>While these instructions will enable a lot of different useful environments, and the target of this post was rails, I do have to sadly add that Google Go, which I cover quite often, does not, to my knowledge, have a plugin for Gedit currently.</p>
+]]></content>
+  </entry>
+  
+</feed>

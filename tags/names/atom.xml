@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: Names | Francis's Octopress Blog]]></title>
+  <link href="http://jhjguxin.github.io/tags/names/atom.xml" rel="self"/>
+  <link href="http://jhjguxin.github.io/"/>
+  <updated>2013-11-12T19:23:30+08:00</updated>
+  <id>http://jhjguxin.github.io/</id>
+  <author>
+    <name><![CDATA[Francis Jiang]]></name>
+    <email><![CDATA[864248765@qq.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Rails里的Magic Column Names]]></title>
+    <link href="http://jhjguxin.github.io/blog/2012/08/27/railsli-de-magic-column-names/"/>
+    <updated>2012-08-27T00:37:00+08:00</updated>
+    <id>http://jhjguxin.github.io/blog/2012/08/27/railsli-de-magic-column-names</id>
+    <content type="html"><![CDATA[<h2>Rails里的Magic Column Names</h2>
+
+<p>Active Record有一些富有“魔力”的列名:</p>
+
+<p><strong>created_at， created_on， updated_at， updated_on</strong>
+在create或者update一行时Rails对<em>at形式的列用timestamp自动更新，对</em>on形式的列用date自动更新</p>
+
+<p><strong>lock_version</strong>
+如果一个表有lock_version这个列，则Rails会跟踪一行的版本号并执行乐观锁</p>
+
+<p><strong>type</strong>
+单表继承时跟踪一行的type</p>
+
+<p><strong>id</strong>
+表的默认主键名</p>
+
+<p><strong>xxx_id</strong>
+对以复数形式的xxx命名的表的引用的默认外键名</p>
+
+<p><strong>xxx_count</strong>
+对子表xxx维护一个计数器cache</p>
+
+<p><strong>position</strong>
+acts_as_list时用来表示一个list中该行的position</p>
+
+<p><strong>parent_id</strong>
+acts_as_tree时用来表示该行的parent的id</p>
+]]></content>
+  </entry>
+  
+</feed>
